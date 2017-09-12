@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
-<plugin>
+<!--plugin>
 
    <extension
          id="product"
@@ -14,5 +14,35 @@
          </property>
       </product>
    </extension>
+
+</plugin-->
+
+<plugin>
+   <extension
+         id="com.make.equo.application"
+         name="com.make.equo.application"
+         point="org.eclipse.core.runtime.applications">
+	   <application
+	         cardinality="*"
+	         thread="any"
+	         visible="true">
+	      <run
+	            class="org.eclipse.e4.ui.internal.workbench.swt.E4Application">
+	      </run>
+	   </application>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.swt.examples.addressbook.app"
+            name="Equo">
+         <property
+               name="appName"
+               value="Equo">
+         </property>
+      </product>
+   </extension>
+   
 
 </plugin>

@@ -17,3 +17,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.services;bundle-version="1.3.0",
  org.eclipse.e4.ui.workbench.swt;bundle-version="0.14.100",
  org.eclipse.jface;bundle-version="3.13.0"
+Export-Package: com.make.equo.api
+Bundle-ActivationPolicy: lazy
