@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Equo Application Consumer
+Bundle-SymbolicName: com.make.equo.application.client;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Make Technology
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.osgi,
+ org.eclipse.equinox.app;bundle-version="1.3.400",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.0.0",
+ org.eclipse.e4.ui.workbench.swt;bundle-version="0.14.100",
+ com.make.equo.application.provider;bundle-version="1.0.0",
+ com.make.equo.application.api
+Export-Package: com.make.equo.application.consumer
+Bundle-Activator: com.make.equo.application.consumer.Activator
+Bundle-ActivationPolicy: lazy
