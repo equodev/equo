@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Equo Server
+Bundle-SymbolicName: com.make.equo.server
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Make Technology
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: com.make.equo.server.Activator
+Require-Bundle: org.eclipse.osgi,
+ org.eclipse.equinox.app,
+ com.make.equo.application.provider,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.e4.ui.workbench.swt
+Bundle-ActivationPolicy: lazy
