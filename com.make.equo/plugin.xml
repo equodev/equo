@@ -20,22 +20,22 @@
 <plugin>
    <extension
          id="com.make.equo.application"
-         name="com.make.equo.application"
+         name="Address Book"
          point="org.eclipse.core.runtime.applications">
-	   <application
-	         cardinality="*"
-	         thread="any"
-	         visible="true">
-	      <run
-	            class="org.eclipse.e4.ui.internal.workbench.swt.E4Application">
-	      </run>
-	   </application>
+      <application
+            cardinality="*"
+            icon="container_obj.gif"
+            thread="any">
+         <run
+               class="com.make.equo.application.Application">
+         </run>
+      </application>
    </extension>
-   <extension
+    <extension
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.eclipse.swt.examples.addressbook.app"
+            application="com.make.equo.application"
             name="Equo">
          <property
                name="appName"

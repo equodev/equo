@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Equo Framework
-Bundle-SymbolicName: com.make.equo;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.make.equo.application.provider;singleton:=true
+Bundle-Version: 1.0.0
 Bundle-Vendor: Make Technology
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
@@ -11,11 +11,17 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.core.di.extensions,
- com.make.cef;bundle-version="1.0.0",
  org.eclipse.e4.core.contexts;bundle-version="1.6.0",
  org.eclipse.e4.ui.model.workbench;bundle-version="2.0.0",
  org.eclipse.e4.ui.services;bundle-version="1.3.0",
  org.eclipse.e4.ui.workbench.swt;bundle-version="0.14.100",
- org.eclipse.jface;bundle-version="3.13.0"
-Export-Package: com.make.equo.api
+ org.eclipse.jface;bundle-version="3.13.0",
+ org.eclipse.osgi.services;bundle-version="3.6.0",
+ com.make.equo.application.api;bundle-version="1.0.0"
+Require-Capability: osgi.extender;
+ filter:="(&(osgi.extender=osgi.component)(version>=1.3)(!(version>=2.0)))"
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: com.make.equo.application.Activator
+Import-Package: com.make.equo.application.api;version="1.0.0",
+ org.osgi.service.component.annotations;version="[1.3.0,2.0.0)";resolution:=optional
+Service-Component: OSGI-INF/com.make.equo.application.ApplicationLauncherImpl.xml
