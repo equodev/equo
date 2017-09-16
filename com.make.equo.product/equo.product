@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Equo" uid="equo" id="com.make.equo.product" application="org.eclipse.swt.examples.addressbook.app" useFeatures="false" includeLaunchers="true">
+<product name="Equo" uid="equo" id="com.make.equo.product" application="com.make.equo.application" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -23,13 +23,7 @@
    </vm>
 
    <plugins>
-      <plugin id="com.github.jnr.ffi"/>
-      <plugin id="com.github.jnr.jffi"/>
-      <plugin id="com.github.jnr.jffi.native" fragment="true"/>
-      <plugin id="com.github.jnr.x86asm"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.make.cef"/>
-      <plugin id="com.make.cef.osx.x86_64" fragment="true"/>
       <plugin id="com.make.equo"/>
       <plugin id="javax.annotation"/>
       <plugin id="javax.inject"/>
@@ -86,8 +80,12 @@
       <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.event"/>
       <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.region" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.supplement"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.osgi"/>
@@ -96,12 +94,6 @@
       <plugin id="org.eclipse.osgi.util"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.examples.addressbook"/>
-      <plugin id="org.objectweb.asm"/>
-      <plugin id="org.objectweb.asm.analysis"/>
-      <plugin id="org.objectweb.asm.commons"/>
-      <plugin id="org.objectweb.asm.tree"/>
-      <plugin id="org.objectweb.asm.util"/>
       <plugin id="org.w3c.css.sac"/>
       <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>
