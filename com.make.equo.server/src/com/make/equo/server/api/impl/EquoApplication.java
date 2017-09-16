@@ -15,8 +15,6 @@ import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.application.ApplicationDescriptor;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.make.equo.application.api.ApplicationLauncher;
-import com.make.equo.server.api.ApplicationLauncherServiceTracker;
 import com.make.equo.server.api.IEquoApplication;
 
 public class EquoApplication implements IEquoApplication {
@@ -242,7 +240,7 @@ public class EquoApplication implements IEquoApplication {
 //		
 //		Bundle installBundle = context.installBundle("file:/Users/seba/Desktop/plugins/product/repository/plugins/com.make.equo_1.0.0.201709120819.jar");
 		Bundle apiBundle = context.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.api_1.0.0.jar");
-		Bundle providerBundle = context.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.provider_1.0.0.201709152344.jar");
+		Bundle providerBundle = context.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.provider_1.0.0.jar");
 //		Bundle providerBundle = context.installBundle("file:/Users/seba/Desktop/plugins/main_thread/com.make.equo.application.provider_1.0.0.201709152100.jar");
 		
 		

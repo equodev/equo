@@ -7,8 +7,5 @@ Bundle-Vendor: Make Technology
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.make.equo.server.Activator
 Require-Bundle: org.eclipse.osgi,
- org.eclipse.equinox.app,
- com.make.equo.application.provider,
- org.eclipse.e4.ui.workbench,
- org.eclipse.e4.ui.workbench.swt
+ org.eclipse.equinox.app
 Bundle-ActivationPolicy: lazy
