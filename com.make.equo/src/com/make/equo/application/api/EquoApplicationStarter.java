@@ -1,4 +1,4 @@
-package com.make.equo.api;
+package com.make.equo.application.api;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -6,7 +6,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.application.ApplicationDescriptor;
 import org.osgi.service.application.ApplicationException;
 
-import com.make.equo.Activator;
+import com.make.equo.application.Activator;
 
 public class EquoApplicationStarter {
 

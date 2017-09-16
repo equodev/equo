@@ -1,4 +1,4 @@
-package com.make.equo.parts;
+package com.make.equo.application.parts;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -8,11 +8,9 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import com.make.swtcef.Chromium;
-
 public class MainPagePart {
 
-	private Chromium browser;
+//	private Chromium browser;
 
 	@Inject
 	public MainPagePart(Composite parent) {
@@ -25,13 +23,13 @@ public class MainPagePart {
 		composite.setLayout(GridLayoutFactory.fillDefaults().create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		browser = new Chromium(composite, SWT.NONE);
-		// browser = new Chromium(parent, SWT.NONE);
-		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+//		browser = new Chromium(composite, SWT.NONE);
+//		// browser = new Chromium(parent, SWT.NONE);
+//		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		setUrl("netflix.com");
 	}
 	
 	public void setUrl(String url) {
-		browser.setUrl(url);
+//		browser.setUrl(url);
 	}
 }

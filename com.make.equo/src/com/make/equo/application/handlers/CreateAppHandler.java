@@ -1,4 +1,4 @@
-package com.make.equo.handlers;
+package com.make.equo.application.handlers;
 
 import javax.inject.Named;
 
