@@ -1,0 +1,4 @@
+*.class
+**/bin/
+this.config/
+this.installLocation/
