@@ -7,7 +7,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.osgi.service.application.ApplicationException;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
