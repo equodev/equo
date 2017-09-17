@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.osgi,
  com.make.equo.application.provider;bundle-version="1.0.0",
  com.make.equo.application.api,
  org.eclipse.e4.ui.workbench
-Export-Package: com.make.equo.application.consumer
-Bundle-Activator: com.make.equo.application.consumer.Activator
+Export-Package: com.make.equo.application.client
+Bundle-Activator: com.make.equo.application.client.Activator
 Bundle-ActivationPolicy: lazy

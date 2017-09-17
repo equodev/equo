@@ -1,4 +1,4 @@
-package com.make.equo.application.consumer;
+package com.make.equo.application.client;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

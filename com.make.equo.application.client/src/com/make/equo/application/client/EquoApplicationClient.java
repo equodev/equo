@@ -1,4 +1,4 @@
-package com.make.equo.application.consumer;
+package com.make.equo.application.client;
 
 import java.util.HashMap;
 import java.util.Map;
