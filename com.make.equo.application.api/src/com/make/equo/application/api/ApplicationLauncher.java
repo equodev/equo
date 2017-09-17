@@ -1,8 +1,8 @@
 package com.make.equo.application.api;
 
-import org.osgi.framework.BundleContext;
+import java.util.Map;
 
 public interface ApplicationLauncher {
 	
-	void launch(BundleContext context);
+	void launch(Map<String, String[]> arguments);
 }

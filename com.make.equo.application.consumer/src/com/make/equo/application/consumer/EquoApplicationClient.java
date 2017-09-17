@@ -1,13 +1,16 @@
 package com.make.equo.application.consumer;
 
-import com.make.equo.application.api.ApplicationLauncher;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
+
+import com.make.equo.application.api.ApplicationLauncher;
 
 public class EquoApplicationClient {
 
@@ -93,8 +96,10 @@ public class EquoApplicationClient {
 						+ "      org.objectweb.asm,\n" + "      org.objectweb.asm.analysis,\n"
 						+ "      org.objectweb.asm.commons,\n" + "      org.objectweb.asm.tree,\n"
 						+ "      org.objectweb.asm.util,\n" + "      org.w3c.css.sac,\n" + "      org.w3c.dom.events,\n"
-						+ "      org.w3c.dom.smil,\n" + "      org.w3c.dom.svg,");
-		initProps.put("osgi.bundles.defaultStartLevel", "1");
+						+ "      org.w3c.dom.smil,\n" + "      org.eclipse.update.configurator,\n"
+						+ "      org.eclipse.e4.ui.workbench.addons.swt,\n" + "      org.eclipse.ui.cocoa,\n"
+						+ "      org.w3c.dom.svg,");
+		initProps.put("osgi.bundles.defaultStartLevel", "4");
 		// according to config.ini
 		initProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product");
 		initProps.put("osgi.dev",
@@ -105,7 +110,7 @@ public class EquoApplicationClient {
 		initProps.put("eclipse.consoleLog", "true");
 		initProps.put("osgi.os", "macosx");
 		initProps.put("eclipse.consoleLog", "true");
-		initProps.put("eclipse.application", "com.make.equo.application");
+//		initProps.put("eclipse.application", "com.make.equo.application");
 //		initProps.put("osgi.parentClassloader","app");
 
 		// initProps.put("osgi.user.area", "this.userArea");
@@ -113,7 +118,7 @@ public class EquoApplicationClient {
 
 		// initProps.put("eclipse.ignoreApp", "true");
 		
-		initProps.put("eclipse.application.launchDefault", "true");
+		initProps.put("eclipse.application.launchDefault", "false");
 		initProps.put("eclipse.allowAppRelaunch", "true");
 		// osgiWayRun(initProps);
 		EclipseStarter.setInitialProperties(initProps);
@@ -126,10 +131,13 @@ public class EquoApplicationClient {
 		// "-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-consoleLog",
 		// "-clearPersistedState", "-application",
 		// "org.eclipse.e4.ui.workbench.swt.E4Application"};
-		String[] equinoxArgs = { "-data", "/Users/seba/eclipse-workspace/../runtime-equo.product", "-dev",
+//		String[] equinoxArgs = { "-data", "/Users/seba/eclipse-workspace/../runtime-New_configuration(3)", "-dev",
+//				"file:/Users/seba/eclipse-workspace/.metadata/.plugins/org.eclipse.pde.core/New_configuration (3)/dev.properties",
+//				"-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-consoleLog", "-clearPersistedState"};
+		
+		String[] equinoxArgs = { "-data", "/Users/seba/eclipse-workspace/../runtime-equo.product4", "-dev",
 				"file:/Users/seba/eclipse-workspace/.metadata/.plugins/org.eclipse.pde.core/equo.product/dev.properties",
-				"-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-consoleLog", "-clearPersistedState",
-				"-application", "com.make.equo.application"};
+				"-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-consoleLog", "-clearPersistedState"};
 		// EclipseStarter.run(equinoxArgs, null);
 		//
 		BundleContext context = EclipseStarter.startup(equinoxArgs, null);
@@ -141,7 +149,7 @@ public class EquoApplicationClient {
 		Bundle providerBundle = context.installBundle(
 				"file:/Users/seba/Desktop/plugins/com.make.equo.application.provider_1.0.0.jar");
 
-//		apiBundle.start();
+		apiBundle.start();
 		providerBundle.start();
 
 		// ServiceReference<?> serviceReference =
@@ -157,13 +165,39 @@ public class EquoApplicationClient {
 //				.getServiceReference(com.make.equo.application.api.ApplicationLauncher.class.getName());
 //		com.make.equo.application.api.ApplicationLauncher service = (com.make.equo.application.api.ApplicationLauncher) context.getService(reference);
 //		service.launch(context);
+		
+//		String[] args = { 
+//				"-appName", "com.make.equo.application",
+//				"-application", "org.eclipse.e4.ui.workbench.swt.E4Application",
+//				"-" + IWorkbench.XMI_URI_ARG, "com.make.equo.application.provider/Application.e4xmi",
+//				"-XstartOnFirstThread"};
+	
+		String[] args = { 
+				"-appName", "com.make.equo.application",
+				"-application", "org.eclipse.e4.ui.workbench.swt.E4Application",
+				"-" + IWorkbench.XMI_URI_ARG, "com.make.equo.application.provider/Application.e4xmi",
+				"-clearPersistedState",
+				"-XstartOnFirstThread"};
+		
+//		ServiceReference<?> serviceReference = providerBundle.getBundleContext().getAllServiceReferences("org.osgi.service.application.ApplicationDescriptor", "(service.pid=com.make.equo.application)")[0];
+//		ApplicationDescriptor app = (ApplicationDescriptor) context.getService(serviceReference);
+		
+//		 ServiceReference<?> serviceReference =
+//		 context.getServiceReference("com.make.equo.application.api.ApplicationLauncher");
+//		 ApplicationLauncher app= (ApplicationLauncher)
+//		 context.getService(serviceReference);
+		 
+		
+		Map<String, String[]> arguments = new HashMap<String, String[]>();
+		arguments.put(IApplicationContext.APPLICATION_ARGS, args);
+//		app.launch(null);
 
 		ServiceTracker<ApplicationLauncher, Object> serviceTracker = new ApplicationLauncherServiceTracker(context);
 		serviceTracker.open();
 		ApplicationLauncher service2 = (ApplicationLauncher) serviceTracker.getService();
 		Map<String, Object> appArguments = new HashMap<>();
 		// appArguments.put("eclipse.application.default", true);
-		service2.launch(context);
+		service2.launch(arguments);
 
 		// Class<? extends Object> class1 = context.getService(reference).getClass();
 		// System.out.println(class1.getClassLoader());

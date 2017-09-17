@@ -1,5 +1,7 @@
 package com.make.equo.application;
 
+import java.util.Map;
+
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -13,20 +15,22 @@ import com.make.equo.application.api.ApplicationLauncher;
 @Component
 public class ApplicationLauncherImpl implements ApplicationLauncher {
 
+	
 	@Override
-	public void launch(BundleContext context) {
+	public void launch(Map<String, String[]> arguments) {
 		System.out.println("bundle conteeeexttt");
 //		Activator.context = context;
 //		System.out.println("bundle conteeaaaadasdaeexttt");
 ////		context.getse
 		ServiceReference<?> serviceReference;
 		try {
+			BundleContext context = Activator.getContext();
 			serviceReference = context.getAllServiceReferences("org.osgi.service.application.ApplicationDescriptor", "(service.pid=com.make.equo.application)")[0];
 			ApplicationDescriptor app = (ApplicationDescriptor) context.getService(serviceReference);
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					try {
-						app.launch(null);
+						app.launch(arguments);
 					} catch (ApplicationException e) {
 						System.out.println("falla aca mal");
 						e.printStackTrace();

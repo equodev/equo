@@ -18,31 +18,18 @@
 </plugin-->
 
 <plugin>
-   <extension
-         id="com.make.equo.application"
-         name="Address Book"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="*"
-            icon="container_obj.gif"
-            thread="any">
-         <run
-               class="com.make.equo.application.Application">
-         </run>
-      </application>
-   </extension>
-    <extension
-         id="product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="com.make.equo.application"
-            name="Equo">
-         <property
-               name="appName"
-               value="Equo">
-         </property>
-      </product>
-   </extension>
-   
+
+<extension
+      id="com.make.equo.application"
+      point="org.eclipse.core.runtime.applications">
+   <application
+         cardinality="*"
+         thread="any"
+         visible="true">
+      <run
+            class="org.eclipse.e4.ui.internal.workbench.swt.E4Application">
+      </run>
+   </application>
+</extension>
 
 </plugin>
