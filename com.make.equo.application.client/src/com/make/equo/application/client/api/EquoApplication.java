@@ -8,9 +8,65 @@ import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-public class EquoApplicationClient {
+public class EquoApplication {
 
-	public static Object start() throws Exception {
+	private final String name; // required
+	private final String url; // optional if js script is provided (?)
+
+	private EquoApplication(EquoApplicationBuilder builder) throws Exception {
+		this.name = builder.name;
+		this.url = builder.url;
+		this.start();
+	};
+
+	private static class EquoApplicationBuilder {
+
+		private String name;
+		private String url;
+
+		private final UrlMandatoryFieldBuilder urlMandatoryFieldBuilder;
+		private final OptionalFieldsBuilder optionalFieldsBuilder;
+
+		public EquoApplicationBuilder(String name) {
+			this.urlMandatoryFieldBuilder = new UrlMandatoryFieldBuilder(this);
+			this.optionalFieldsBuilder = new OptionalFieldsBuilder(this);
+		}
+
+		public UrlMandatoryFieldBuilder name(String name) {
+			this.name = name;
+			return this.urlMandatoryFieldBuilder;
+		}
+	}
+
+	public static class UrlMandatoryFieldBuilder {
+
+		private EquoApplicationBuilder builder;
+
+		private UrlMandatoryFieldBuilder(EquoApplicationBuilder equoApplicationBuilder) {
+			this.builder = equoApplicationBuilder;
+		}
+
+		public OptionalFieldsBuilder withSingleView(String url) {
+			builder.url = url;
+			return builder.optionalFieldsBuilder;
+		}
+
+	}
+
+	public static class OptionalFieldsBuilder {
+
+		private EquoApplicationBuilder builder;
+
+		private OptionalFieldsBuilder(EquoApplicationBuilder nameMandatoryFieldBuilder) {
+			this.builder = nameMandatoryFieldBuilder;
+		}
+
+		public EquoApplication start() throws Exception {
+			return new EquoApplication(builder);
+		}
+	}
+
+	public Object start() throws Exception {
 		Map<String, String> initProps = new HashMap<String, String>();
 
 		initProps.put("osgi.clean", "true");
@@ -52,7 +108,7 @@ public class EquoApplicationClient {
 		Bundle providerBundle = context
 				.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.provider_1.0.0.jar");
 		providerBundle.start();
-		
+
 		String[] args = { "-appName", "com.make.equo.application", "-application",
 				"org.eclipse.e4.ui.workbench.swt.E4Application", "-" + IWorkbench.XMI_URI_ARG,
 				"com.make.equo.application.provider/Application.e4xmi", "-clearPersistedState",
@@ -62,12 +118,8 @@ public class EquoApplicationClient {
 		return EclipseStarter.run(args);
 	}
 
-	public static void main(String args[]) {
-		try {
-			start();
-		} catch (Exception e) {
-			System.out.println("Unable to run the Equo app");
-			e.printStackTrace();
-		}
+	public static UrlMandatoryFieldBuilder name(String name) {
+		EquoApplicationBuilder equoApplicationBuilder = new EquoApplicationBuilder(name);
+		return equoApplicationBuilder.name(name);
 	}
 }
