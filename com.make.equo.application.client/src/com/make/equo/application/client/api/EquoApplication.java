@@ -157,9 +157,14 @@ public class EquoApplication {
 				" org.w3c.dom.events,\n" +
 				" org.w3c.dom.smil,\n" +
 				" org.w3c.dom.svg,\n" +
-				" org.eclipse.update.configurator@3:start");
+				" org.eclipse.update.configurator@3:start,\n" +
+				" org.eclipse.ui.workbench,\n" +
+				" org.eclipse.ui,\n" +
+				" org.eclipse.help,\n" +
+				" org.eclipse.e4.ui.workbench.addons.swt,\n" +
+				" org.eclipse.ui.cocoa");
 		initProps.put("osgi.bundles.defaultStartLevel", "4");
-		initProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product4");
+		initProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product5");
 		initProps.put("osgi.dev",
 				"file:/Users/seba/eclipse-workspace/.metadata/.plugins/org.eclipse.pde.core/equo.product/dev.properties");
 		initProps.put("osgi.os", "macosx");
