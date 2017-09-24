@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.make.equo.application.api.ApplicationLauncherImpl">
-   <service>
-      <provide interface="com.make.equo.application.api.ApplicationLauncher"/>
-   </service>
-   <implementation class="com.make.equo.application.api.ApplicationLauncherImpl"/>
-</scr:component>

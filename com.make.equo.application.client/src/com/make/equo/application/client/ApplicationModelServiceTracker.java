@@ -8,15 +8,15 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.make.equo.application.api.ApplicationLauncher;
+import com.make.equo.application.api.ApplicationModelService;
 
-public class ApplicationLauncherServiceTracker extends ServiceTracker<ApplicationLauncher, Object> {
+public class ApplicationModelServiceTracker extends ServiceTracker<ApplicationModelService, Object> {
 
-	public ApplicationLauncherServiceTracker(BundleContext context) {
-		super(context, ApplicationLauncher.class.getName(), null);
+	public ApplicationModelServiceTracker(BundleContext context) {
+		super(context, ApplicationModelService.class.getName(), null);
 	}
 
-	public Object addingService(ServiceReference<ApplicationLauncher> reference) {
+	public Object addingService(ServiceReference<ApplicationModelService> reference) {
 		Object o = context.getService(reference); // the returned value uses service impl OSGi ClassLoader
 		if (o == null)
 			return null;
@@ -27,9 +27,9 @@ public class ApplicationLauncherServiceTracker extends ServiceTracker<Applicatio
 		// Obviously this side can see the Java type since I can declare the variable
 		// here (since it is provided in the normal java.exe -classpath using J2SE
 		// ClassLoader)
-		ApplicationLauncher applicationLauncherService = null;
+		ApplicationModelService applicationLauncherService = null;
 		try {
-			applicationLauncherService = (ApplicationLauncher) o; // this is the ClassCastException (same name, //
+			applicationLauncherService = (ApplicationModelService) o; // this is the ClassCastException (same name, //
 																	// different ClassLoaders, so not same type)
 		} catch (ClassCastException eat) {
 			// execution ends up in here
@@ -38,10 +38,10 @@ public class ApplicationLauncherServiceTracker extends ServiceTracker<Applicatio
 			System.out.println("print the eat exception here. Se come la excepcion.");
 		}
 		if (applicationLauncherService == null) {
-			ClassLoader cl = ApplicationLauncher.class.getClassLoader();
-			o = Proxy.newProxyInstance(cl, new Class<?>[] { ApplicationLauncher.class },
+			ClassLoader cl = ApplicationModelService.class.getClassLoader();
+			o = Proxy.newProxyInstance(cl, new Class<?>[] { ApplicationModelService.class },
 					new Invoker(o));
-			applicationLauncherService = (ApplicationLauncher) o; // this works now, no exception occurs
+			applicationLauncherService = (ApplicationModelService) o; // this works now, no exception occurs
 		}
 
 		// OK now we INVOKE a method inside activated OSGi bundle
@@ -53,7 +53,7 @@ public class ApplicationLauncherServiceTracker extends ServiceTracker<Applicatio
 		return o;
 	}
 
-	public void removedService(ServiceReference<ApplicationLauncher> reference, Object service) {
+	public void removedService(ServiceReference<ApplicationModelService> reference, Object service) {
 		context.ungetService(reference);
 	}
 
