@@ -3,15 +3,25 @@ package com.make.equo.application.parts;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 public class MainPagePart {
+	
+	public static final String MAIN_URL_KEY = "mainUrl";
+
+	public static final String ID = "com.make.equo.part.main";
 
 //	private Chromium browser;
 
+	@Inject
+	private MPart thisPart;
+
+//	private Chromium browser;
+	
 	@Inject
 	public MainPagePart(Composite parent) {
 		
@@ -23,8 +33,9 @@ public class MainPagePart {
 		composite.setLayout(GridLayoutFactory.fillDefaults().create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
+		System.out.println("the url is " + thisPart.getProperties().get(MAIN_URL_KEY));
 //		browser = new Chromium(composite, SWT.NONE);
-//		// browser = new Chromium(parent, SWT.NONE);
+//		 browser = new Chromium(parent, SWT.NONE);
 //		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		setUrl("netflix.com");
 	}
