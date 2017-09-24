@@ -20,6 +20,7 @@ public class LifeCycleManager {
 		BundleContext context = Activator.getContext();
 		ServiceReference<?> serviceReference = context.getServiceReference(ApplicationModelService.class.getName());
 		ApplicationModelService service = (ApplicationModelService) context.getService(serviceReference);
+		mainApplication.getChildren().remove(0);
 		mainApplication.getChildren().add(service.getMainWindow());
 		System.out.println("viene bien terminaaa lifecycle");
 //		Display.getDefault().syncExec(new Runnable() {

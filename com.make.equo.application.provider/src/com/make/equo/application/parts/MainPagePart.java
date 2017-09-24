@@ -8,6 +8,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 public class MainPagePart {
 	
@@ -33,7 +34,12 @@ public class MainPagePart {
 		composite.setLayout(GridLayoutFactory.fillDefaults().create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		System.out.println("the url is " + thisPart.getProperties().get(MAIN_URL_KEY));
+		String url = thisPart.getProperties().get(MAIN_URL_KEY);
+		if (url != null) {
+			System.out.println("the url is " + url);
+			Label label = new Label(composite, SWT.NONE);
+			label.setText(url);
+		}
 //		browser = new Chromium(composite, SWT.NONE);
 //		 browser = new Chromium(parent, SWT.NONE);
 //		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());

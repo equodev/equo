@@ -20,8 +20,10 @@ public class ApplicationModelServiceImpl implements ApplicationModelService {
 	@Override
 	public void initializeAppModel(String name) {
 		mWindowTemp = MBasicFactory.INSTANCE.createTrimmedWindow();
-		mWindowTemp.setHeight(200);
-		mWindowTemp.setWidth(400);
+		mWindowTemp.setX(42);
+		mWindowTemp.setY(80);
+		mWindowTemp.setHeight(563);
+		mWindowTemp.setWidth(900);
 		mWindowTemp.setElementId("com.make.equo.trimmedwindow.mainpage");
 		mWindowTemp.setLabel(name);
 //		application.getChildren().add(mWindow);
@@ -30,10 +32,10 @@ public class ApplicationModelServiceImpl implements ApplicationModelService {
 	@Override
 	public void setMainWindowUrl(String url) {
 		MPart mainPart = MBasicFactory.INSTANCE.createPart();
-		mWindowTemp.getChildren().add(mainPart);
 		mainPart.setElementId(MainPagePart.ID);
 		mainPart.setContributionURI("bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.MainPagePart");
 		mainPart.getProperties().put(MainPagePart.MAIN_URL_KEY, url);
+		mWindowTemp.getChildren().add(mainPart);
 	}
 
 	@Override
