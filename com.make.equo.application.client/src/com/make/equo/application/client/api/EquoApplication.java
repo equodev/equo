@@ -92,14 +92,15 @@ public class EquoApplication {
 				+ " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n" + " javax.annotation,\n" + " javax.inject,\n"
 				+ " javax.xml,\n" + " org.apache.batik.css,\n" + " org.apache.batik.util,\n"
 				+ " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n" + " org.apache.commons.logging,\n"
-				+ " org.apache.felix.gogo.command,\n" + " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n"
-				+ " org.eclipse.core.commands,\n" + " org.eclipse.core.contenttype,\n"
-				+ " org.eclipse.core.databinding,\n" + " org.eclipse.core.databinding.beans,\n"
-				+ " org.eclipse.core.databinding.observable,\n" + " org.eclipse.core.databinding.property,\n"
-				+ " org.eclipse.core.expressions,\n" + " org.eclipse.core.filesystem,\n"
-				+ " org.eclipse.core.filesystem.macosx,\n" + " org.eclipse.core.jobs,\n"
-				+ " org.eclipse.core.resources,\n" + " org.eclipse.core.runtime@1:start,\n"
-				+ " org.eclipse.e4.core.commands,\n" + " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
+				+ " org.apache.felix.gogo.command,\n" + " org.apache.felix.gogo.shell,\n"
+				+ " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n" + " org.eclipse.core.commands,\n"
+				+ " org.eclipse.core.contenttype,\n" + " org.eclipse.core.databinding,\n"
+				+ " org.eclipse.core.databinding.beans,\n" + " org.eclipse.core.databinding.observable,\n"
+				+ " org.eclipse.core.databinding.property,\n" + " org.eclipse.core.expressions,\n"
+				+ " org.eclipse.core.filesystem,\n" + " org.eclipse.core.filesystem.macosx,\n"
+				+ " org.eclipse.core.jobs,\n" + " org.eclipse.core.resources,\n"
+				+ " org.eclipse.core.runtime@1:start,\n" + " org.eclipse.e4.core.commands,\n"
+				+ " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
 				+ " org.eclipse.e4.core.di.annotations,\n" + " org.eclipse.e4.core.di.extensions,\n"
 				+ " org.eclipse.e4.core.di.extensions.supplier,\n" + " org.eclipse.e4.core.services,\n"
 				+ " org.eclipse.e4.emf.xpath,\n" + " org.eclipse.e4.ui.bindings,\n" + " org.eclipse.e4.ui.css.core,\n"
@@ -121,7 +122,8 @@ public class EquoApplication {
 				+ " org.objectweb.asm.tree,\n" + " org.objectweb.asm.util,\n" + " org.w3c.css.sac,\n"
 				+ " org.w3c.dom.events,\n" + " org.w3c.dom.smil,\n" + " org.w3c.dom.svg,\n"
 				+ " org.eclipse.update.configurator@3:start,\n" + " org.eclipse.ui.workbench,\n" + " org.eclipse.ui,\n"
-				+ " org.eclipse.help,\n" + " org.eclipse.e4.ui.workbench.addons.swt,\n" + " org.eclipse.ui.cocoa");
+				+ " org.eclipse.help,\n" + " org.eclipse.e4.ui.workbench.addons.swt,\n"
+				+ " org.eclipse.equinox.console,\n" + " org.eclipse.ui.cocoa");
 		initProps.put("osgi.bundles.defaultStartLevel", "4");
 		initProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product5");
 		initProps.put("osgi.dev",
@@ -144,8 +146,8 @@ public class EquoApplication {
 
 		String[] equinoxArgs = { "-data", "/Users/seba/eclipse-workspace/../runtime-equo.product6", "-dev",
 				"file:/Users/seba/eclipse-workspace/.metadata/.plugins/org.eclipse.pde.core/equo.product/dev.properties",
-				"-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-consoleLog", "-clearPersistedState",
-				"-application", "com.make.equo.application" };
+				"-os", "macosx", "-ws", "cocoa", "-arch", "x86_64", "-console", "-noexit", "-consoleLog",
+				"-clearPersistedState", "-application", "com.make.equo.application" };
 
 		BundleContext context = EclipseStarter.startup(equinoxArgs, null);
 		Bundle apiBundle = context
@@ -180,7 +182,7 @@ public class EquoApplication {
 		String[] args = { "-appName", "com.make.equo.application", "-application",
 				"org.eclipse.e4.ui.workbench.swt.E4Application", "-" + IWorkbench.XMI_URI_ARG,
 				"com.make.equo.application.provider/Application.e4xmi", "-clearPersistedState",
-				 "-" + IWorkbench.LIFE_CYCLE_URI_ARG,
+				"-" + IWorkbench.LIFE_CYCLE_URI_ARG,
 				"bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager",
 				"-XstartOnFirstThread" };
 		EclipseStarter.run(args);
