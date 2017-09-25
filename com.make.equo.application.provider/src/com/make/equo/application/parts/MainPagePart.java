@@ -8,7 +8,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+
+import com.make.swtcef.Chromium;
 
 public class MainPagePart {
 	
@@ -16,12 +17,10 @@ public class MainPagePart {
 
 	public static final String ID = "com.make.equo.part.main";
 
-//	private Chromium browser;
-
 	@Inject
 	private MPart thisPart;
 
-//	private Chromium browser;
+	private Chromium browser;
 	
 	@Inject
 	public MainPagePart(Composite parent) {
@@ -37,16 +36,10 @@ public class MainPagePart {
 		String url = thisPart.getProperties().get(MAIN_URL_KEY);
 		if (url != null) {
 			System.out.println("the url is " + url);
-			Label label = new Label(composite, SWT.NONE);
-			label.setText(url);
+			browser = new Chromium(composite, SWT.NONE);
+			browser.setUrl(url);
 		}
-//		browser = new Chromium(composite, SWT.NONE);
-//		 browser = new Chromium(parent, SWT.NONE);
-//		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		setUrl("netflix.com");
-	}
-	
-	public void setUrl(String url) {
-//		browser.setUrl(url);
+
+		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 	}
 }
