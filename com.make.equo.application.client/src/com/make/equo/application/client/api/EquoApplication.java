@@ -15,48 +15,39 @@ import com.make.equo.application.client.ApplicationModelServiceTracker;
 public class EquoApplication {
 
 	private static ApplicationModelService applicationModelService;
-	private final String name; // required
-	private final String url; // optional if js script is provided (?)
 
 	private EquoApplication(EquoApplicationBuilder builder) throws Exception {
-		this.name = builder.name;
-		this.url = builder.url;
 		applicationModelService.buildModelApp();
 		run();
 	};
 
 	private static class EquoApplicationBuilder {
 
-		private String name;
-		private String url;
-
-		private final UrlMandatoryFieldBuilder urlMandatoryFieldBuilder;
-		private final OptionalFieldsBuilder optionalFieldsBuilder;
+		private final UrlMandatoryBuilder urlMandatoryFieldBuilder;
+		private final OptionalFieldBuilder optionalBuilder;
 
 		public EquoApplicationBuilder(String name) {
-			this.urlMandatoryFieldBuilder = new UrlMandatoryFieldBuilder(this);
-			this.optionalFieldsBuilder = new OptionalFieldsBuilder(this);
+			this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
+			this.optionalBuilder = new OptionalFieldBuilder(this);
 		}
 
-		public UrlMandatoryFieldBuilder name(String name) {
-			this.name = name;
+		public UrlMandatoryBuilder name(String name) {
 			applicationModelService.initializeAppModel(name);
 			return this.urlMandatoryFieldBuilder;
 		}
 	}
 
-	public static class UrlMandatoryFieldBuilder {
+	public static class UrlMandatoryBuilder {
 
 		private EquoApplicationBuilder builder;
 
-		private UrlMandatoryFieldBuilder(EquoApplicationBuilder equoApplicationBuilder) {
+		private UrlMandatoryBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 			this.builder = equoApplicationBuilder;
 		}
 
-		public OptionalFieldsBuilder withSingleView(String url) {
-			builder.url = url;
+		public OptionalFieldBuilder withSingleView(String url) {
 			setMainWindowUrl(url);
-			return builder.optionalFieldsBuilder;
+			return builder.optionalBuilder;
 		}
 
 		private void setMainWindowUrl(String url) {
@@ -64,16 +55,20 @@ public class EquoApplication {
 		}
 	}
 
-	public static class OptionalFieldsBuilder {
+	public static class OptionalFieldBuilder {
 
 		private EquoApplicationBuilder builder;
 
-		private OptionalFieldsBuilder(EquoApplicationBuilder nameMandatoryFieldBuilder) {
-			this.builder = nameMandatoryFieldBuilder;
+		private OptionalFieldBuilder(EquoApplicationBuilder equoApplicationBuilder) {
+			this.builder = equoApplicationBuilder;
 		}
 
 		public EquoApplication start() throws Exception {
 			return new EquoApplication(builder);
+		}
+
+		public MenuBuilder withMainMenu(String menuLabel) {
+			return new MenuBuilder(this, applicationModelService).withMainMenu(menuLabel);
 		}
 	}
 
@@ -150,12 +145,16 @@ public class EquoApplication {
 				"-clearPersistedState", "-application", "com.make.equo.application" };
 
 		BundleContext context = EclipseStarter.startup(equinoxArgs, null);
+		Bundle modelBundle = context
+				.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.model_1.0.0.jar");
 		Bundle apiBundle = context
 				.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.api_1.0.0.jar");
 		Bundle providerBundle = context
 				.installBundle("file:/Users/seba/Desktop/plugins/com.make.equo.application.provider_1.0.0.jar");
+
 		apiBundle.start();
 		providerBundle.start();
+		modelBundle.start();
 
 		loadAppModelService(context);
 	}
@@ -167,7 +166,7 @@ public class EquoApplication {
 		applicationModelService = (ApplicationModelService) serviceTracker.getService();
 	}
 
-	public static UrlMandatoryFieldBuilder name(String name) {
+	public static UrlMandatoryBuilder name(String name) {
 		EquoApplicationBuilder equoApplicationBuilder = new EquoApplicationBuilder(name);
 		try {
 			initializeE4App();

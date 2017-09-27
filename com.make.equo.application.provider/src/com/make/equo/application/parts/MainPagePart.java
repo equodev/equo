@@ -9,37 +9,33 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.make.equo.application.util.IConstants;
 import com.make.swtcef.Chromium;
 
 public class MainPagePart {
-	
-	public static final String MAIN_URL_KEY = "mainUrl";
-
-	public static final String ID = "com.make.equo.part.main";
 
 	@Inject
 	private MPart thisPart;
 
 	private Chromium browser;
-	
+
 	@Inject
 	public MainPagePart(Composite parent) {
-		
+
 	}
-	
+
 	@PostConstruct
-    public void createControls(Composite parent) {
+	public void createControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(GridLayoutFactory.fillDefaults().create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		String url = thisPart.getProperties().get(MAIN_URL_KEY);
+		String url = thisPart.getProperties().get(IConstants.MAIN_URL_KEY);
 		if (url != null) {
 			System.out.println("the url is " + url);
 			browser = new Chromium(composite, SWT.NONE);
 			browser.setUrl(url);
+			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}
-
-		browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 	}
 }
