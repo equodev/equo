@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Equo Model
-Bundle-SymbolicName: com.make.equo.application.model
-Bundle-Version: 1.0.0
-Bundle-Vendor: Make Technology
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: com.make.equo.application.model
