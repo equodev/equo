@@ -27,7 +27,9 @@ public enum EquoBundleManager {
 
 	private static final String EQUO_APPLICATION_ID = "com.make.equo.application";
 
-	private static final String EQUO_API_PACKAGE = EQUO_APPLICATION_ID;
+	private static final String EQUO_API_PACKAGE = EQUO_APPLICATION_ID + ".api";
+	
+	private static final String EQUO_MODEL_PACKAGE = EQUO_APPLICATION_ID + ".model";
 
 	private static final String EXPORT_PACKAGE = "Export-Package";
 
@@ -155,7 +157,7 @@ public enum EquoBundleManager {
 				}
 				atts.putValue(EXPORT_PACKAGE,
 						buildPackagesList(new File(parentPath), equoApplicationClazz.getPackage().getName()));
-				atts.putValue(IMPORT_PACKAGE, EQUO_API_PACKAGE);
+				atts.putValue(IMPORT_PACKAGE, buildImportPackageList());
 				manifest.write(manifestStream);
 			} catch (IOException e) {
 				System.out.println("Unable to generate MANIFEST.MF");
@@ -163,11 +165,20 @@ public enum EquoBundleManager {
 			} finally {
 				IOUtils.closeQuietly(manifestStream);
 			}
-			// for development we return the bin or target dir, see how to handle it in
+			// TODO for development we are returning the bin or target dir, see how to handle it in
 			// build time...
 			return getBuildDirectory(manifestFile);
 		}
 		throw new RuntimeException("There is no Java Project for the " + equoApplicationClazz.getName() + " class.");
+	}
+
+	private String buildImportPackageList() {
+		final String SEPARATOR = ", ";
+		StringBuilder builder = new StringBuilder();
+		builder.append(EQUO_API_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(EQUO_MODEL_PACKAGE);
+		return builder.toString();
 	}
 
 	public Map<String, String> initializeBundleProperties(File appBundleFile) {
