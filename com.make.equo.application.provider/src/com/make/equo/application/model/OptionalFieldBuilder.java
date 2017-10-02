@@ -11,8 +11,8 @@ public final class OptionalFieldBuilder {
 		this.equoApplicationBuilder = equoApplicationBuilder;
 	}
 
-	public void start() throws Exception {
-		// Do nothing
+	public EquoApplication start() {
+		return equoApplicationBuilder.equoApplication;
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {

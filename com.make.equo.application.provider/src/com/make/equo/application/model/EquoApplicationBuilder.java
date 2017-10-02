@@ -9,12 +9,14 @@ import com.make.equo.application.util.IConstants;
 
 public final class EquoApplicationBuilder {
 
-	final UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	final OptionalFieldBuilder optionalBuilder;
+	EquoApplication equoApplication;
 	final MApplication mApplication;
 	MTrimmedWindow mWindow;
+	private final UrlMandatoryBuilder urlMandatoryFieldBuilder;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
+		this.equoApplication = equoApplication;
 		this.mApplication = equoApplication.mApplication;
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
 		this.optionalBuilder = new OptionalFieldBuilder(this);
