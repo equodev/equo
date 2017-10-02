@@ -40,4 +40,12 @@ public class MenuItemBuilder {
 	public MenuBuilder addMenu(String menuLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenu(menuLabel);
 	}
+
+	public MenuBuilder withMainMenu(String menuLabel) {
+		return new MenuBuilder(menuBuilder.optionalFieldBuilder).addMenu(menuLabel);
+	}
+
+	public EquoApplication start() {
+		return menuBuilder.optionalFieldBuilder.start();
+	}
 }
