@@ -48,4 +48,8 @@ public class MenuItemBuilder {
 	public EquoApplication start() {
 		return menuBuilder.optionalFieldBuilder.start();
 	}
+
+	public MenuItemSeparatorBuilder addMenuSeparator() {
+		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
+	}
 }
