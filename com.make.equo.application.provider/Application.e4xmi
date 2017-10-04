@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="ASCII"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_cParoJWREeejT9iXCdYVRA" elementId="com.make.equo.application">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_k_uqsJWREeejT9iXCdYVRA" elementId="com.make.equo.trimmedwindow.mainpage" label="Main Page"/>
+  <bindingTables xmi:id="_cnwcwKhhEeeGBq8Bjdtmgw" elementId="com.make.equo.application.bindingtable.default" bindingContext="_fDq7AKhgEeeGBq8Bjdtmgw"/>
+  <rootContext xmi:id="_fDq7AKhgEeeGBq8Bjdtmgw" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="Key bindings valid for dialogs and windows&#xA;"/>
+  <rootContext xmi:id="_kDFbUKhgEeeGBq8Bjdtmgw" elementId="org.eclipse.ui.contexts.dialog" name="Dialog Binding Context"/>
+  <rootContext xmi:id="_mNgrgKhgEeeGBq8Bjdtmgw" elementId="org.eclipse.ui.contexts.window" name="Window Binding Context"/>
   <addons xmi:id="_cParoZWREeejT9iXCdYVRA" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_cParopWREeejT9iXCdYVRA" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_cParo5WREeejT9iXCdYVRA" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
