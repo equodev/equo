@@ -22,5 +22,20 @@ public interface IConstants {
 	
 	public static final String HANDLER_SUFFIX = ".handler";
 	
+	public static final String PARAMETER_SUFFIX = ".parameter";
+	
 	public static final String RUNNABLE_OBJECT = "runnable";
+	
+	public static final String DEFAULT_BINDING_TABLE = "com.make.equo.application.bindingtable.default";
+	
+	public static final String DIALOGS_AND_WINDOWS_BINDING_CONTEXT = "org.eclipse.ui.contexts.dialogAndWindow";
+	
+	public static final String WINDOWS_BINDING_CONTEXT = "org.eclipse.ui.contexts.window";
+	
+	public static final String DIALOGS_BINDING_CONTEXT = "org.eclipse.ui.contexts.dialog";
+	
+	public static final String USER_KEY_BINDING_TAG = "type:user";
+	
+	public static final String COMMAND_ID_PARAMETER = "commandId";
+	
 }

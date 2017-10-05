@@ -33,7 +33,7 @@ public class MenuItemBuilder {
 		return newMenuItem;
 	}
 	
-	public MenuItemBuilder onClick(Runnable runnable) {
+	public HandlerBuilder onClick(Runnable runnable) {
 		return new HandlerBuilder(this).onClick(runnable);
 	}
 	
@@ -52,4 +52,5 @@ public class MenuItemBuilder {
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
+	
 }
