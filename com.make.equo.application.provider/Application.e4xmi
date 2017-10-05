@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_cParoJWREeejT9iXCdYVRA" elementId="com.make.equo.application">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_k_uqsJWREeejT9iXCdYVRA" elementId="com.make.equo.trimmedwindow.mainpage" label="Main Page"/>
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_ZrHcsKk2EeeouNGhrCi_PQ" elementId="com.make.equo.trimmedwindow.mainpage" width="1024" height="768"/>
   <bindingTables xmi:id="_cnwcwKhhEeeGBq8Bjdtmgw" elementId="com.make.equo.application.bindingtable.default" bindingContext="_fDq7AKhgEeeGBq8Bjdtmgw"/>
   <rootContext xmi:id="_fDq7AKhgEeeGBq8Bjdtmgw" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="Key bindings valid for dialogs and windows&#xA;"/>
   <rootContext xmi:id="_kDFbUKhgEeeGBq8Bjdtmgw" elementId="org.eclipse.ui.contexts.dialog" name="Dialog Binding Context"/>
