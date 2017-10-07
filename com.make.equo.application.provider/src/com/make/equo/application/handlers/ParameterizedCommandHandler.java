@@ -9,7 +9,6 @@ public class ParameterizedCommandHandler {
 
 	@Execute
 	public void execute(@Named("commandId") String commandId, MApplication mApplication) {
-		System.out.println("sisis parametrizadoooo handler");
 		Runnable runnable = (Runnable) mApplication.getTransientData().get(commandId);
 		runnable.run();
 	}
