@@ -34,7 +34,8 @@ public class ShorcutBuilder {
 			MCommandParameter commandParameter = createCommandParameter(IConstants.COMMAND_ID_PARAMETER);
 			command.getParameters().add(commandParameter);
 			
-			MKeyBinding keyBinding = createKeyBinding(shortcut, command);
+			MKeyBinding keyBinding = createKeyBinding(command.getElementId(), shortcut);
+			keyBinding.setCommand(command);
 			MParameter parameter = createMParameter(IConstants.COMMAND_ID_PARAMETER, command.getElementId());
 			keyBinding.getParameters().add(parameter);
 			
@@ -44,7 +45,9 @@ public class ShorcutBuilder {
 			
 			mBindingTable.getBindings().add(keyBinding);
 			
-//			MKeyBinding globalShorcut = createGlobalShorcut(menuItem.getElementId(), shortcut);
+			MKeyBinding globalShorcut = createGlobalShorcut(menuItem.getElementId(), shortcut);
+			MBindingTable parentPartBindingTable = handlerBuilder.getMenuItemBuilder().menuBuilder.optionalFieldBuilder.equoApplicationBuilder.urlMandatoryFieldBuilder.getBindingTable();
+			parentPartBindingTable.getBindings().add(globalShorcut);
 //			Optional<MBindingTable> globalBindingTable = getBindingTable("com.make.equo.application.bindingtable.default");
 //			globalBindingTable.get().getBindings().add(globalShorcut);
 		} else {
@@ -58,11 +61,14 @@ public class ShorcutBuilder {
 		MCommand newCommand = createNewCommand(id);
 		MCommandParameter commandParameter = createCommandParameter(IConstants.COMMAND_ID_PARAMETER);
 		newCommand.getParameters().add(commandParameter);
+		
 		MHandler newHandler = createNewHandler(id, "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler");
 		newHandler.setCommand(newCommand);
 		
-		MKeyBinding globalKeyBinding = createKeyBinding(shortcut, newCommand);
-		addParameterTo(globalKeyBinding, newCommand);
+		MKeyBinding globalKeyBinding = createKeyBinding(newCommand.getElementId(), shortcut);
+		globalKeyBinding.setCommand(newCommand);
+		MParameter parameter = createMParameter(IConstants.COMMAND_ID_PARAMETER, newCommand.getElementId());
+		globalKeyBinding.getParameters().add(parameter);
 		
 		MApplication mApplication = handlerBuilder.getMenuItemBuilder().menuBuilder.optionalFieldBuilder.equoApplicationBuilder.mApplication;
 		mApplication.getCommands().add(newCommand);
@@ -73,11 +79,11 @@ public class ShorcutBuilder {
 		return globalKeyBinding;
 	}
 	
-	private void addParameterTo(MKeyBinding globalKeyBinding, MCommand command) {
-		String commandId = command.getElementId();
-		MParameter parameter = createMParameter(commandId, commandId);
-		globalKeyBinding.getParameters().add(parameter);
-	}
+//	private void addParameterTo(MKeyBinding globalKeyBinding, MCommand command) {
+//		String commandId = command.getElementId();
+//		MParameter parameter = createMParameter(commandId, commandId);
+//		globalKeyBinding.getParameters().add(parameter);
+//	}
 
 	private MCommandParameter createCommandParameter(String id) {
 		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();
@@ -101,11 +107,10 @@ public class ShorcutBuilder {
 		return newCommand;
 	}
 	
-	private MKeyBinding createKeyBinding(String shortcut, MCommand command) {
+	private MKeyBinding createKeyBinding(String id, String shortcut) {
 		MKeyBinding keyBinding = MCommandsFactory.INSTANCE.createKeyBinding();
 		keyBinding.setKeySequence(shortcut);
-		keyBinding.setElementId(command.getElementId() + ".keybinding");
-		keyBinding.setCommand(command);
+		keyBinding.setElementId(id + ".keybinding");
 		keyBinding.getTags().add(IConstants.USER_KEY_BINDING_TAG);
 		return keyBinding;
 	}

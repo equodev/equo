@@ -2,7 +2,7 @@ package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
-public final class OptionalFieldBuilder {
+public class OptionalFieldBuilder {
 
 	EquoApplicationBuilder equoApplicationBuilder;
 	MMenu mainMenu;

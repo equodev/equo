@@ -26,13 +26,12 @@ public class MainPagePart {
 
 	@PostConstruct
 	public void createControls(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(GridLayoutFactory.fillDefaults().create());
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
 		String url = thisPart.getProperties().get(IConstants.MAIN_URL_KEY);
 		if (url != null) {
 			System.out.println("the url is " + url);
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(GridLayoutFactory.fillDefaults().create());
+			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 			browser = new Chromium(composite, SWT.NONE);
 			browser.setUrl(url);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
