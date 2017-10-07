@@ -12,35 +12,44 @@ public class UrlMandatoryBuilder {
 
 	private EquoApplicationBuilder equoAppBuilder;
 	private MBindingTable mainPartBindingTable;
+	private MPart part;
 
 	UrlMandatoryBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoAppBuilder = equoApplicationBuilder;
 	}
 
-	public OptionalFieldBuilder withSingleView(String url) {
+	public OptionalViewBuilder withSingleView(String url) {
 		setMainWindowUrl(url);
-		return equoAppBuilder.getOptionalBuilder();
+		return new OptionalViewBuilder(this);
 	}
 
 	private void setMainWindowUrl(String url) {
-		MPart mainPart = MBasicFactory.INSTANCE.createPart();
-		mainPart.setElementId(IConstants.MAIN_PART_ID);
-		mainPart.setContributionURI("bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.MainPagePart");
-		mainPart.getProperties().put(IConstants.MAIN_URL_KEY, url);
+		part = MBasicFactory.INSTANCE.createPart();
+		part.setElementId(IConstants.MAIN_PART_ID);
+		part.setContributionURI("bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.MainPagePart");
+		part.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		//Get the Window binding context.
 		MBindingContext mBindingContext = equoAppBuilder.getmApplication().getBindingContexts().get(1);
-		mainPart.getBindingContexts().add(mBindingContext);
+		part.getBindingContexts().add(mBindingContext);
 		
 		mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
 		mainPartBindingTable.setBindingContext(mBindingContext);
 		mainPartBindingTable.setElementId("com.make.equo.application.provider.bindingtable.mainpart");
 		equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
 		
-		equoAppBuilder.getmWindow().getChildren().add(mainPart);
+		equoAppBuilder.getmWindow().getChildren().add(part);
 	}
 	
 	MBindingTable getBindingTable() {
 		return mainPartBindingTable;
+	}
+
+	EquoApplicationBuilder getEquoApplicationBuilder() {
+		return equoAppBuilder;
+	}
+
+	MPart getPart() {
+		return part;
 	}
 }

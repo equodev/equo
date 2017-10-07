@@ -32,9 +32,9 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 		return this;
 	}
 	
-	public MenuItemBuilder addShorcut(String shortcut) {
-		new MenuItemShortcutBuilder(this.menuItemBuilder).addShorcut(shortcut);
-		new GlobalShortcutBuilder(this.getEquoApplicationBuilder(), this.menuItemBuilder.getMenuItem().getElementId(), this.getRunnable()).addGlobalShortcut(shortcut);
+	public MenuItemBuilder addShorcut(String keySequence) {
+		new MenuItemShortcutBuilder(this.menuItemBuilder).addShorcut(keySequence);
+		new GlobalShortcutBuilder(this.getEquoApplicationBuilder(), this.menuItemBuilder.getMenuItem().getElementId(), this.getRunnable()).addGlobalShortcut(keySequence);
 		return this.menuItemBuilder;
 	}
 
