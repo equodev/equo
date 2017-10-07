@@ -29,7 +29,7 @@ public class LifeCycleManager {
 		Class<?> equoApplicationClazz = equoAppBundle.loadClass(equoAppClassName);
 		IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();
 		
-		equoApp.buildApp(new EquoApplication(mainApplication));
+		equoApp.buildApp(new EquoApplication(new EquoApplicationModel(mainApplication)));
 	}
 
 	private Optional<String> getArgValue(String[] appArgs, String argName) {

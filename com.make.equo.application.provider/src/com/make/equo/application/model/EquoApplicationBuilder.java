@@ -20,7 +20,7 @@ public class EquoApplicationBuilder {
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
-		this.mApplication = equoApplication.mApplication;
+		this.mApplication = equoApplication.getEquoApplicationModel().getMainApplication();
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
 		this.optionalBuilder = new OptionalFieldBuilder(this);
 	}

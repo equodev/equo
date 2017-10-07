@@ -1,13 +1,13 @@
 package com.make.equo.application.model;
 
-import org.eclipse.e4.ui.model.application.MApplication;
+import com.make.equo.application.EquoApplicationModel;
 
 public class EquoApplication {
 	
-	MApplication mApplication;
+	private EquoApplicationModel equoApplicationModel;
 
-	public EquoApplication(MApplication mApplication) {
-		this.mApplication = mApplication;
+	public EquoApplication(EquoApplicationModel equoApplicationModel) {
+		this.equoApplicationModel = equoApplicationModel;
 	}
 
 	public UrlMandatoryBuilder name(String name) {
@@ -20,4 +20,8 @@ public class EquoApplication {
 		return null;
 	}
 
+	EquoApplicationModel getEquoApplicationModel() {
+		return equoApplicationModel;
+	}
+	
 }
