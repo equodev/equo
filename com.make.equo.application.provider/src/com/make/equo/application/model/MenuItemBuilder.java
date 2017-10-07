@@ -6,13 +6,13 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 public class MenuItemBuilder {
 
-	MHandledMenuItem menuItem;
-	MenuBuilder menuBuilder;
+	private MHandledMenuItem menuItem;
+	private MenuBuilder menuBuilder;
 
 	public MenuItemBuilder(MenuBuilder menuBuilder) {
 		this.menuBuilder = menuBuilder;
 	}
-	
+
 	public MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
 		this.menuItem = menuItemBuilder.menuItem;
 		this.menuBuilder = menuItemBuilder.menuBuilder;
@@ -25,7 +25,7 @@ public class MenuItemBuilder {
 
 	private MHandledMenuItem createMenuItem(String menuItemlabel) {
 		MHandledMenuItem newMenuItem = MenuFactoryImpl.eINSTANCE.createHandledMenuItem();
-		MMenu parentMenu = menuBuilder.menu;
+		MMenu parentMenu = menuBuilder.getMenu();
 		String menuItemId = parentMenu.getElementId() + "." + menuItemlabel.replaceAll("\\s+", "").toLowerCase();
 		newMenuItem.setElementId(menuItemId);
 		newMenuItem.setLabel(menuItemlabel);
@@ -42,15 +42,23 @@ public class MenuItemBuilder {
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
-		return new MenuBuilder(menuBuilder.optionalFieldBuilder).addMenu(menuLabel);
+		return new MenuBuilder(menuBuilder.getOptionalFieldBuilder()).addMenu(menuLabel);
 	}
 
 	public EquoApplication start() {
-		return menuBuilder.optionalFieldBuilder.start();
+		return menuBuilder.getOptionalFieldBuilder().start();
 	}
 
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
+	}
+	
+	MHandledMenuItem getMenuItem() {
+		return menuItem;
+	}
+
+	MenuBuilder getMenuBuilder() {
+		return menuBuilder;
 	}
 	
 }

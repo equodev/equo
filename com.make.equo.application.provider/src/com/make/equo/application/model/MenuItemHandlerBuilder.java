@@ -12,15 +12,15 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 	private Runnable runnable;
 
 	public MenuItemHandlerBuilder(MenuItemBuilder menuItemBuilder) {
-		super(menuItemBuilder.menuBuilder.optionalFieldBuilder.equoApplicationBuilder);
+		super(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder());
 		this.menuItemBuilder = menuItemBuilder;
 	}
 
 	public MenuItemHandlerBuilder onClick(Runnable runnable) {
 		this.runnable = runnable;
-		MHandledMenuItem menuItem = this.menuItemBuilder.menuItem;
+		MHandledMenuItem menuItem = this.menuItemBuilder.getMenuItem();
 		
-		String id = menuItemBuilder.menuItem.getElementId();
+		String id = menuItem.getElementId();
 		
 		MCommand newCommand = createCommandAndHandler(id);
 		
@@ -34,7 +34,7 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 	
 	public MenuItemBuilder addShorcut(String shortcut) {
 		new MenuItemShortcutBuilder(this.menuItemBuilder).addShorcut(shortcut);
-		new GlobalShortcutBuilder(this.getEquoApplicationBuilder(), this.menuItemBuilder.menuItem.getElementId(), this.getRunnable()).addGlobalShortcut(shortcut);
+		new GlobalShortcutBuilder(this.getEquoApplicationBuilder(), this.menuItemBuilder.getMenuItem().getElementId(), this.getRunnable()).addGlobalShortcut(shortcut);
 		return this.menuItemBuilder;
 	}
 

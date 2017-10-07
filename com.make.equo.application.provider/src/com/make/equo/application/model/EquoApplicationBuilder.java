@@ -12,11 +12,11 @@ import com.make.equo.application.util.IConstants;
 
 public class EquoApplicationBuilder {
 
-	final OptionalFieldBuilder optionalBuilder;
-	EquoApplication equoApplication;
-	final MApplication mApplication;
-	MTrimmedWindow mWindow;
-	UrlMandatoryBuilder urlMandatoryFieldBuilder;
+	private OptionalFieldBuilder optionalBuilder;
+	private EquoApplication equoApplication;
+	private final MApplication mApplication;
+	private MTrimmedWindow mWindow;
+	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
@@ -27,21 +27,21 @@ public class EquoApplicationBuilder {
 
 	public UrlMandatoryBuilder name(String name) {
 		String appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
-		mWindow = (MTrimmedWindow) mApplication.getChildren().get(0);
-		mWindow.setLabel(name);
+		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
+		getmWindow().setLabel(name);
 		MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
 		mainMenu.setElementId(appId + "." + "mainmenu");
-		mWindow.setMainMenu(mainMenu);
+		getmWindow().setMainMenu(mainMenu);
 		
 		createDefaultBindingContexts();
 
 		MBindingTable mainWindowBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
-		mainWindowBindingTable.setBindingContext(mApplication.getBindingContexts().get(0));
+		mainWindowBindingTable.setBindingContext(getmApplication().getBindingContexts().get(0));
 		mainWindowBindingTable.setElementId(IConstants.DEFAULT_BINDING_TABLE);
 		
-		mApplication.getBindingTables().add(mainWindowBindingTable);
+		getmApplication().getBindingTables().add(mainWindowBindingTable);
 		
-		return this.urlMandatoryFieldBuilder;
+		return this.getUrlMandatoryFieldBuilder();
 	}
 
 	private void createDefaultBindingContexts() {
@@ -58,8 +58,28 @@ public class EquoApplicationBuilder {
 		dialogBindingContext.setName("Dialogs Binding Context");
 		
 		//keep this order, the order in which they are added is important.
-		mApplication.getBindingContexts().add(windowAndDialogBindingContext);
-		mApplication.getBindingContexts().add(windowBindingContext);
-		mApplication.getBindingContexts().add(dialogBindingContext);
+		getmApplication().getBindingContexts().add(windowAndDialogBindingContext);
+		getmApplication().getBindingContexts().add(windowBindingContext);
+		getmApplication().getBindingContexts().add(dialogBindingContext);
+	}
+
+	OptionalFieldBuilder getOptionalBuilder() {
+		return optionalBuilder;
+	}
+
+	UrlMandatoryBuilder getUrlMandatoryFieldBuilder() {
+		return urlMandatoryFieldBuilder;
+	}
+
+	MApplication getmApplication() {
+		return mApplication;
+	}
+
+	EquoApplication getEquoApplication() {
+		return equoApplication;
+	}
+
+	MTrimmedWindow getmWindow() {
+		return mWindow;
 	}
 }

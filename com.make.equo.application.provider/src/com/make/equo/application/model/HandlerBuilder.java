@@ -48,7 +48,7 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 		MHandler newHandler = createNewHandler(id, PARAMETERIZED_COMMAND_CONTRIBUTION_URI);
 		newHandler.setCommand(newCommand);
 		
-		MApplication mApplication = getEquoApplicationBuilder().mApplication;
+		MApplication mApplication = getEquoApplicationBuilder().getmApplication();
 		mApplication.getCommands().add(newCommand);
 		mApplication.getHandlers().add(newHandler);
 		

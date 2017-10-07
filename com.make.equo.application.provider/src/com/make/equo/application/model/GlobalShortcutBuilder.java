@@ -19,7 +19,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 	public void addGlobalShortcut(String shortcut) {
 		MCommand newCommand = createCommandAndHandler(elementId + GLOBAL_SUFFIX);
 		MKeyBinding globalKeyBinding = createKeyBinding(newCommand, shortcut);
-		MBindingTable parentPartBindingTable = getEquoApplicationBuilder().urlMandatoryFieldBuilder.getBindingTable();
+		MBindingTable parentPartBindingTable = getEquoApplicationBuilder().getUrlMandatoryFieldBuilder().getBindingTable();
 		parentPartBindingTable.getBindings().add(globalKeyBinding);
 	}
 

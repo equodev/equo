@@ -19,7 +19,7 @@ public class UrlMandatoryBuilder {
 
 	public OptionalFieldBuilder withSingleView(String url) {
 		setMainWindowUrl(url);
-		return equoAppBuilder.optionalBuilder;
+		return equoAppBuilder.getOptionalBuilder();
 	}
 
 	private void setMainWindowUrl(String url) {
@@ -29,15 +29,15 @@ public class UrlMandatoryBuilder {
 		mainPart.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		//Get the Window binding context.
-		MBindingContext mBindingContext = equoAppBuilder.mApplication.getBindingContexts().get(1);
+		MBindingContext mBindingContext = equoAppBuilder.getmApplication().getBindingContexts().get(1);
 		mainPart.getBindingContexts().add(mBindingContext);
 		
 		mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
 		mainPartBindingTable.setBindingContext(mBindingContext);
 		mainPartBindingTable.setElementId("com.make.equo.application.provider.bindingtable.mainpart");
-		equoAppBuilder.mApplication.getBindingTables().add(mainPartBindingTable);
+		equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
 		
-		equoAppBuilder.mWindow.getChildren().add(mainPart);
+		equoAppBuilder.getmWindow().getChildren().add(mainPart);
 	}
 	
 	MBindingTable getBindingTable() {

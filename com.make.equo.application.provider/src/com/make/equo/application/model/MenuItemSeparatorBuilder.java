@@ -15,7 +15,7 @@ public class MenuItemSeparatorBuilder {
 
 	public MenuItemSeparatorBuilder addMenuItemSeparator() {
 		MMenuSeparator menuSeparator = MenuFactoryImpl.eINSTANCE.createMenuSeparator();
-		MMenu parentMenu = menuBuilder.menu;
+		MMenu parentMenu = menuBuilder.getMenu();
 		parentMenu.getChildren().add(menuSeparator);
 		return this;
 	}

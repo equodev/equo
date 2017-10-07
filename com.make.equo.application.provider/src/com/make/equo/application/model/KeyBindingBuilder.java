@@ -28,7 +28,7 @@ interface KeyBindingBuilder extends MParameterBuilder{
 	}
 	
 	default Optional<MBindingTable> getDefaultBindingTable(EquoApplicationBuilder equoApplicationBuilder) {
-		MApplication mApplication = equoApplicationBuilder.mApplication;
+		MApplication mApplication = equoApplicationBuilder.getmApplication();
 		for (MBindingTable mBindingTable : mApplication.getBindingTables()) {
 			if (mBindingTable.getElementId().equals(IConstants.DEFAULT_BINDING_TABLE)) {
 				return Optional.of(mBindingTable);

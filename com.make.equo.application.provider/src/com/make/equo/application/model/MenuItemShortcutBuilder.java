@@ -16,10 +16,10 @@ class MenuItemShortcutBuilder implements KeyBindingBuilder {
 	}
 	
 	public void addShorcut(String shortcut) {
-		Optional<MBindingTable> bindingTable = getDefaultBindingTable(menuItemBuilder.menuBuilder.optionalFieldBuilder.equoApplicationBuilder);
+		Optional<MBindingTable> bindingTable = getDefaultBindingTable(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder());
 		if (bindingTable.isPresent()) {
 			MBindingTable mBindingTable = bindingTable.get();
-			MHandledMenuItem menuItem = menuItemBuilder.menuItem;
+			MHandledMenuItem menuItem = menuItemBuilder.getMenuItem();
 			MCommand command = menuItem.getCommand();
 			
 			MKeyBinding keyBinding = createKeyBinding(command, shortcut);

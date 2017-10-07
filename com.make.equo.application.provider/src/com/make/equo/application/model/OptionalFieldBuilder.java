@@ -4,19 +4,27 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
 public class OptionalFieldBuilder {
 
-	EquoApplicationBuilder equoApplicationBuilder;
-	MMenu mainMenu;
+	private EquoApplicationBuilder equoApplicationBuilder;
+	private MMenu mainMenu;
 
 	OptionalFieldBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoApplicationBuilder = equoApplicationBuilder;
 	}
 
 	public EquoApplication start() {
-		return equoApplicationBuilder.equoApplication;
+		return equoApplicationBuilder.getEquoApplication();
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
-		mainMenu = equoApplicationBuilder.mWindow.getMainMenu();
+		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
 		return new MenuBuilder(this).addMenu(menuLabel);
+	}
+
+	EquoApplicationBuilder getEquoApplicationBuilder() {
+		return equoApplicationBuilder;
+	}
+
+	MMenu getMainMenu() {
+		return mainMenu;
 	}
 }
