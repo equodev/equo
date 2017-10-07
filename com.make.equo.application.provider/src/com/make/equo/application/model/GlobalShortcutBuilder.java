@@ -10,7 +10,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 	private String elementId;
 	private Runnable runnable;
 
-	public GlobalShortcutBuilder(EquoApplicationBuilder equoApplicationBuilder, String elementId, Runnable runnable) {
+	GlobalShortcutBuilder(EquoApplicationBuilder equoApplicationBuilder, String elementId, Runnable runnable) {
 		super(equoApplicationBuilder);
 		this.elementId = elementId;
 		this.runnable = runnable;

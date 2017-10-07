@@ -9,7 +9,7 @@ import org.eclipse.e4.ui.model.application.commands.impl.CommandsFactoryImpl;
 
 import com.make.equo.application.util.IConstants;
 
-public abstract class HandlerBuilder implements MParameterBuilder {
+abstract class HandlerBuilder implements MParameterBuilder {
 	
 	private static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler";
 	private EquoApplicationBuilder equoApplicationBuilder;

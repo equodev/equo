@@ -11,7 +11,7 @@ class MenuItemShortcutBuilder implements KeyBindingBuilder {
 
 	private MenuItemBuilder menuItemBuilder;
 
-	public MenuItemShortcutBuilder(MenuItemBuilder menuItemBuilder) {
+	MenuItemShortcutBuilder(MenuItemBuilder menuItemBuilder) {
 		this.menuItemBuilder = menuItemBuilder;
 	}
 	

@@ -8,9 +8,8 @@ public class MenuItemSeparatorBuilder {
 
 	private MenuBuilder menuBuilder;
 
-	public MenuItemSeparatorBuilder(MenuBuilder menuBuilder) {
-		this.menuBuilder = menuBuilder;
-		
+	MenuItemSeparatorBuilder(MenuBuilder menuBuilder) {
+		this.menuBuilder = menuBuilder;	
 	}
 
 	public MenuItemSeparatorBuilder addMenuItemSeparator() {

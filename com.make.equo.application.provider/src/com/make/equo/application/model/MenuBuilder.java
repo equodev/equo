@@ -9,12 +9,12 @@ public class MenuBuilder {
 	private MMenu parentMenu;
 	private MMenu menu;
 
-	public MenuBuilder(OptionalFieldBuilder optionalFieldBuilder) {
+	MenuBuilder(OptionalFieldBuilder optionalFieldBuilder) {
 		this.parentMenu = optionalFieldBuilder.getMainMenu();
 		this.optionalFieldBuilder = optionalFieldBuilder;
 	}
 
-	public MenuBuilder(MenuBuilder menuBuilder) {
+	MenuBuilder(MenuBuilder menuBuilder) {
 		this.parentMenu = menuBuilder.menu;
 		this.menu = menuBuilder.menu;
 		this.optionalFieldBuilder = menuBuilder.optionalFieldBuilder;

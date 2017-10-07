@@ -11,7 +11,7 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 	private MenuItemBuilder menuItemBuilder;
 	private Runnable runnable;
 
-	public MenuItemHandlerBuilder(MenuItemBuilder menuItemBuilder) {
+	MenuItemHandlerBuilder(MenuItemBuilder menuItemBuilder) {
 		super(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder());
 		this.menuItemBuilder = menuItemBuilder;
 	}

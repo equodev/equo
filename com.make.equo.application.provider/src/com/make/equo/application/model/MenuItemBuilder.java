@@ -9,11 +9,11 @@ public class MenuItemBuilder {
 	private MHandledMenuItem menuItem;
 	private MenuBuilder menuBuilder;
 
-	public MenuItemBuilder(MenuBuilder menuBuilder) {
+	MenuItemBuilder(MenuBuilder menuBuilder) {
 		this.menuBuilder = menuBuilder;
 	}
 
-	public MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
+	MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
 		this.menuItem = menuItemBuilder.menuItem;
 		this.menuBuilder = menuItemBuilder.menuBuilder;
 	}
