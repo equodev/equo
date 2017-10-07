@@ -15,11 +15,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 
 import com.make.equo.application.util.IConstants;
 
-public class ShorcutBuilder {
+public class ShortcutBuilder {
 
 	private HandlerBuilder handlerBuilder;
 
-	public ShorcutBuilder(HandlerBuilder handlerBuilder) {
+	public ShortcutBuilder(HandlerBuilder handlerBuilder) {
 		this.handlerBuilder = handlerBuilder;
 	}
 	
@@ -42,17 +42,14 @@ public class ShorcutBuilder {
 			MApplication mApplication = handlerBuilder.getMenuItemBuilder().menuBuilder.optionalFieldBuilder.equoApplicationBuilder.mApplication;
 			mApplication.getTransientData().put(command.getElementId(), handlerBuilder.getRunnable());
 			
-			
 			mBindingTable.getBindings().add(keyBinding);
 			
 			MKeyBinding globalShorcut = createGlobalShorcut(menuItem.getElementId(), shortcut);
 			MBindingTable parentPartBindingTable = handlerBuilder.getMenuItemBuilder().menuBuilder.optionalFieldBuilder.equoApplicationBuilder.urlMandatoryFieldBuilder.getBindingTable();
 			parentPartBindingTable.getBindings().add(globalShorcut);
-//			Optional<MBindingTable> globalBindingTable = getBindingTable("com.make.equo.application.bindingtable.default");
-//			globalBindingTable.get().getBindings().add(globalShorcut);
 		} else {
-			//TODO add logging.
-			System.out.println("There is no default binding table.");
+			//TODO add logging
+			System.out.println("There is no default binding table created for the " + shortcut + " shortcut");
 		}
 		return new MenuItemBuilder(handlerBuilder.getMenuItemBuilder());
 	}
@@ -78,12 +75,6 @@ public class ShorcutBuilder {
 		
 		return globalKeyBinding;
 	}
-	
-//	private void addParameterTo(MKeyBinding globalKeyBinding, MCommand command) {
-//		String commandId = command.getElementId();
-//		MParameter parameter = createMParameter(commandId, commandId);
-//		globalKeyBinding.getParameters().add(parameter);
-//	}
 
 	private MCommandParameter createCommandParameter(String id) {
 		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();

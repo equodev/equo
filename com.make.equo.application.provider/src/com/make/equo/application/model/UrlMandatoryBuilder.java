@@ -28,15 +28,9 @@ public class UrlMandatoryBuilder {
 		mainPart.setContributionURI("bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.MainPagePart");
 		mainPart.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
-//		MBindingContext mainPartBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
-//		mainPartBindingContext.setElementId("com.make.equo.application.provider.bindingcontext.mainpart");
-//		mainPartBindingContext.setName("Part Binding Context");
+		//Get the Window binding context.
 		MBindingContext mBindingContext = equoAppBuilder.mApplication.getBindingContexts().get(1);
-//		mBindingContext.getChildren().add(mainPartBindingContext);
-		System.out.println("binding context is " + mBindingContext);
 		mainPart.getBindingContexts().add(mBindingContext);
-//		mBindingContext.getChildren().add(mainPartBindingContext);
-//		mainPart.getBindingContexts().add(mainPartBindingContext);
 		
 		mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
 		mainPartBindingTable.setBindingContext(mBindingContext);

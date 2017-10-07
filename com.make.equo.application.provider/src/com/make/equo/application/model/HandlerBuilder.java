@@ -74,7 +74,7 @@ public class HandlerBuilder {
 	}
 	
 	public MenuItemBuilder addShorcut(String shortcut) {
-		return new ShorcutBuilder(this).addShorcut(shortcut);
+		return new ShortcutBuilder(this).addShorcut(shortcut);
 	}
 	
 	Runnable getRunnable() {

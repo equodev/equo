@@ -52,11 +52,12 @@ public class EquoApplicationBuilder {
 		MBindingContext windowBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
 		windowBindingContext.setElementId(IConstants.WINDOWS_BINDING_CONTEXT);
 		windowBindingContext.setName("Windows Binding Context");
-//		
+
 		MBindingContext dialogBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
 		dialogBindingContext.setElementId(IConstants.DIALOGS_BINDING_CONTEXT);
 		dialogBindingContext.setName("Dialogs Binding Context");
 		
+		//keep this order, the order in which they are added is important.
 		mApplication.getBindingContexts().add(windowAndDialogBindingContext);
 		mApplication.getBindingContexts().add(windowBindingContext);
 		mApplication.getBindingContexts().add(dialogBindingContext);
