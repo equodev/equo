@@ -33,8 +33,8 @@ public class MenuItemBuilder {
 		return newMenuItem;
 	}
 	
-	public HandlerBuilder onClick(Runnable runnable) {
-		return new HandlerBuilder(this).onClick(runnable);
+	public MenuItemHandlerBuilder onClick(Runnable runnable) {
+		return new MenuItemHandlerBuilder(this).onClick(runnable);
 	}
 	
 	public MenuBuilder addMenu(String menuLabel) {
