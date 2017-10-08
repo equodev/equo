@@ -32,6 +32,7 @@ TODO: Se podría separar mas entre features y use cases. Además algunas feature
 - Ready to use communication framework from Java to Javascript and vice versa, using direct calls, websockets, socketio or http.
 - VS Code plugin to develop applications based on the framework.
 - Support for Servo.
+- Give predefined Equo application templates (paid and free). For Example, media applications: this should probably a subcase of an EquoApplication, easing the way media apps are developed. Think about monetizing it as a template.
 
 ## Use Cases
 - Develop new, modern, state of the art desktop applications based on Chrome, HTML and Java.
