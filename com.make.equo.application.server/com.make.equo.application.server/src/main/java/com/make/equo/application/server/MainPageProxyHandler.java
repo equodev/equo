@@ -56,23 +56,6 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		}
 	}
 
-	//issue https://gitlab.com/maketechnology/equo-framework/issues/31
-	@Override
-	protected String filterServerResponseHeader(HttpServletRequest clientRequest, Response serverResponse,
-			String headerName, String headerValue) {
-//		if (headerName.equalsIgnoreCase("location")) {
-//			URI targetUri = serverResponse.getRequest().getURI();
-//			String toReplace = targetUri.getScheme() + "://" + targetUri.getAuthority();
-//			if (headerValue.startsWith(toReplace)) {
-//				headerValue = clientRequest.getScheme() + "://" + clientRequest.getHeader("host");
-//				// + headerValue.substring(toReplace.length());
-//				System.out.println("Rewrote location header to " + headerValue);
-//				return headerValue;
-//			}
-//		}
-		return super.filterServerResponseHeader(clientRequest, serverResponse, headerName, headerValue);
-	}
-
 	@Override
 	protected String rewriteTarget(HttpServletRequest request) {
 		URI rewrittenURI = URI.create(appUrl.toString()).normalize();
