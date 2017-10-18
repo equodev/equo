@@ -78,19 +78,10 @@ public class EquoHttpProxy {
         ServletHolder holder = new ServletHolder("mainPageProxyHandler", mainPageProxyHandler);
         holder.setName("mainPageProxyHandler");
 		
-//		ServletHandler handler = new ServletHandler();
-//		ServletHolder holder = handler.addServletWithMapping(MainPageProxyHandler.class, "/*");
-//		holder.setInitParameter("proxyTo", url);
 		holder.setInitParameter("appUrl", url);
-//		holder.setInitParameter("prefix", "/");
-		holder.setInitParameter("debug","true");
 		holder.setAsyncSupported(true);
 		
 		contextHandler.addServlet(holder, "/*");
-		
-//		FilterHolder filter = contextHandler.getServletHandler().addFilterWithMapping(.class,"/*",0);
-	    
-//		contextHandler.setServletHandler(handler);
 
 		return contextHandler;
 	}

@@ -26,23 +26,11 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
         return new HttpClient(factory);
 	}
 	
-	protected void addProxyHeaders(HttpServletRequest clientRequest, Request proxyRequest)
-    {
-        addViaHeader(proxyRequest);
-        addXForwardedHeaders(clientRequest, proxyRequest);
-    }
-
-    protected void addViaHeader(Request proxyRequest)
-    {
-        proxyRequest.header(HttpHeader.VIA, "http/1.1 " + getViaHost());
-    }
-
     protected void addXForwardedHeaders(HttpServletRequest clientRequest, Request proxyRequest)
     {
-//        proxyRequest.header(HttpHeader.X_FORWARDED_FOR, clientRequest.getRemoteAddr());
-//        proxyRequest.header(HttpHeader.X_FORWARDED_PROTO, clientRequest.getScheme());
-//        proxyRequest.header(HttpHeader.X_FORWARDED_HOST, clientRequest.getHeader(HttpHeader.HOST.asString()));
-//        proxyRequest.header(HttpHeader.X_FORWARDED_SERVER, clientRequest.getLocalName());
+        proxyRequest.header(HttpHeader.X_FORWARDED_FOR, clientRequest.getRemoteAddr());
+        proxyRequest.header(HttpHeader.X_FORWARDED_PROTO, clientRequest.getScheme());
+        proxyRequest.header(HttpHeader.X_FORWARDED_SERVER, clientRequest.getLocalName());
     }
 
 	@Override
@@ -60,9 +48,11 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		try {
 			appUrl = System.getProperty("appUrl", appUrl);
 		} catch (SecurityException e) {
+			//TODO log exception
+			System.out.println("Error while trying to read appUrl System property" + e);
 		}
 		if (null == appUrl) {
-			appUrl = "https://netflix.com";
+			appUrl = "http://www.equo.wemaketechnology.com/";
 		}
 	}
 
