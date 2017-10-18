@@ -58,7 +58,7 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 
 	@Override
 	protected String rewriteTarget(HttpServletRequest request) {
-		URI rewrittenURI = URI.create(appUrl.toString()).normalize();
+		URI rewrittenURI = URI.create(appUrl).normalize();
 		return rewrittenURI.toString();
 	}
 

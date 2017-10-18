@@ -18,17 +18,18 @@ import com.make.equo.application.server.util.IConstants;
 public class EquoHttpProxy {
 
 	private String url;
-	private ServerConnector httpConnector;
+	private Server server;
 
 	public EquoHttpProxy(String url) {
 		this.url = url;
 	}
 
 	public void startProxy() throws Exception {
-		Server server = createNewServer();
+		server = createNewServer();
 		while (true) {
 			try {
 				server.start();
+				System.out.println("Address is " + getAdress());
 				break;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -47,8 +48,8 @@ public class EquoHttpProxy {
 	private Server createNewServer() {
 		Server server = new Server();
 
-		httpConnector = new ServerConnector(server);
-		httpConnector.setPort(9898);
+		ServerConnector httpConnector = new ServerConnector(server);
+//		httpConnector.setPort(9898);
 
 		HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
@@ -90,7 +91,7 @@ public class EquoHttpProxy {
 	}
 
 	public String getAdress() {
-		return httpConnector.getHost() + ":" + httpConnector.getPort();
+		return "localhost" + ":" + ((ServerConnector)server.getConnectors()[0]).getLocalPort();
 	}
 
 }

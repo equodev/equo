@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Equo Server
+Bundle-SymbolicName: com.make.equo.application.server
+Bundle-Version: 1.0.0
+Export-Package: .,
+ com.make.equo.application.server,
+ com.make.equo.application.server.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
