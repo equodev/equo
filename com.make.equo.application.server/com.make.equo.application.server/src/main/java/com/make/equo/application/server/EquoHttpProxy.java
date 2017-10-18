@@ -1,77 +1,68 @@
 package com.make.equo.application.server;
 
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.NetworkTrafficServerConnector;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class EquoHttpProxy {
 
-	// private static final String MAIN_URL = "www.netflix.com";
 	private String url;
-	private Server server;
-	// private SocketConnector socketConnector;
 
 	public EquoHttpProxy(String url) {
 		this.url = url;
 	}
 
 	public void startReverseProxy() throws Exception {
-//		int timeout = (int) Duration.ofHours(1).getSeconds() * 1000;
 		Server server = createNewServer();
-
-		// socketConnector = new SocketConnector();
-		// socketConnector.setHost("127.0.0.1");
-		// socketConnector.setPort(8888);
-
-		// server.setConnectors(new Connector[] { socketConnector });
-
-		// Setup proxy handler to handle CONNECT methods
-		// ConnectHandler proxy = new ConnectHandler();
-		// server.setHandler(proxy);
-
-		// Setup proxy servlet
-		// ServletContextHandler context = new ServletContextHandler(proxy, "/",
-		// ServletContextHandler.SESSIONS);
-		//
-		// ServletHolder proxyServlet = new ServletHolder(MainPageProxyHandler.class);
-		// proxyServlet.setInitParameter("ProxyTo", url);
-		// proxyServlet.setInitParameter("Prefix", "/");
-		// context.addServlet(proxyServlet, "/*");
-
-		// server.start();
-
+		while (true) {
+			try {
+				server.start();
+				break;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		try {
-			System.out.println(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");
-			server.start();
 			System.in.read();
-			System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");
 			server.stop();
 			server.join();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(1);
+			System.exit(100);
 		}
 	}
 
 	private Server createNewServer() {
-		server = new Server();
-		server.setHandler(createNewHandlers(server));
-		server.addConnector(createNewConnector(server));
-		return server;
-	}
+		Server server = new Server();
 
-	private ServerConnector createNewConnector(Server server) {
-		NetworkTrafficServerConnector connector = new NetworkTrafficServerConnector(server);
-		// Set some timeout options to make debugging easier.
-		connector.setSoLingerTime(-1);
-		connector.setPort(8888);
-		return connector;
+		ServerConnector connector = new ServerConnector(server);
+		connector.setPort(9898);
+
+		HttpConfiguration https = new HttpConfiguration();
+        https.addCustomizer(new SecureRequestCustomizer());
+		SslContextFactory sslContextFactory = new SslContextFactory();
+		sslContextFactory.setKeyStorePath(EmbeddedServer.class.getResource(
+				"/keystore.jks").toExternalForm());
+		sslContextFactory.setKeyStorePassword("123456");
+		sslContextFactory.setKeyManagerPassword("123456");
+		ServerConnector sslConnector = new ServerConnector(server,
+				new SslConnectionFactory(sslContextFactory, "http/1.1"),
+				new HttpConnectionFactory(https));
+		sslConnector.setPort(9998);
+
+		server.setConnectors(new Connector[] { connector, sslConnector });
 		
-
+		server.setHandler(createNewHandlers(server));
+		return server;
 	}
 
 	private Handler createNewHandlers(Server server) {
@@ -89,8 +80,9 @@ public class EquoHttpProxy {
 		
 //		ServletHandler handler = new ServletHandler();
 //		ServletHolder holder = handler.addServletWithMapping(MainPageProxyHandler.class, "/*");
-		holder.setInitParameter("proxyTo", url);
-		holder.setInitParameter("prefix", "/");
+//		holder.setInitParameter("proxyTo", url);
+		holder.setInitParameter("appUrl", url);
+//		holder.setInitParameter("prefix", "/");
 		holder.setInitParameter("debug","true");
 		holder.setAsyncSupported(true);
 		
