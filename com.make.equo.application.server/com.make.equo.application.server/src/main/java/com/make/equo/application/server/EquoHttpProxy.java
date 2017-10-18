@@ -13,15 +13,18 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
+import com.make.equo.application.server.util.IConstants;
+
 public class EquoHttpProxy {
 
 	private String url;
+	private ServerConnector httpConnector;
 
 	public EquoHttpProxy(String url) {
 		this.url = url;
 	}
 
-	public void startReverseProxy() throws Exception {
+	public void startProxy() throws Exception {
 		Server server = createNewServer();
 		while (true) {
 			try {
@@ -44,13 +47,13 @@ public class EquoHttpProxy {
 	private Server createNewServer() {
 		Server server = new Server();
 
-		ServerConnector connector = new ServerConnector(server);
-		connector.setPort(9898);
+		httpConnector = new ServerConnector(server);
+		httpConnector.setPort(9898);
 
 		HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
 		SslContextFactory sslContextFactory = new SslContextFactory();
-		sslContextFactory.setKeyStorePath(EmbeddedServer.class.getResource(
+		sslContextFactory.setKeyStorePath(EquoHttpProxy.class.getResource(
 				"/keystore.jks").toExternalForm());
 		sslContextFactory.setKeyStorePassword("123456");
 		sslContextFactory.setKeyManagerPassword("123456");
@@ -59,7 +62,7 @@ public class EquoHttpProxy {
 				new HttpConnectionFactory(https));
 		sslConnector.setPort(9998);
 
-		server.setConnectors(new Connector[] { connector, sslConnector });
+		server.setConnectors(new Connector[] { httpConnector, sslConnector });
 		
 		server.setHandler(createNewHandlers(server));
 		return server;
@@ -75,10 +78,10 @@ public class EquoHttpProxy {
 		ServletContextHandler contextHandler = new ServletContextHandler();
 
 		MainPageProxyHandler mainPageProxyHandler = new MainPageProxyHandler();
-        ServletHolder holder = new ServletHolder("mainPageProxyHandler", mainPageProxyHandler);
-        holder.setName("mainPageProxyHandler");
+        ServletHolder holder = new ServletHolder(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME, mainPageProxyHandler);
+        holder.setName(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME);
 		
-		holder.setInitParameter("appUrl", url);
+		holder.setInitParameter(IConstants.APP_URL_PARAM, url);
 		holder.setAsyncSupported(true);
 		
 		contextHandler.addServlet(holder, "/*");
@@ -87,9 +90,7 @@ public class EquoHttpProxy {
 	}
 
 	public String getAdress() {
-		// return server.getHandler().getServer().ge
-		return null;
-		// return socketConnector.getHost() + ":" + socketConnector.getPort();
+		return httpConnector.getHost() + ":" + httpConnector.getPort();
 	}
 
 }
