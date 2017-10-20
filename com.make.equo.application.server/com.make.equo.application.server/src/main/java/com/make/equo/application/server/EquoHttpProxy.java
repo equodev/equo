@@ -29,6 +29,7 @@ public class EquoHttpProxy {
 		while (true) {
 			try {
 				server.start();
+				//TODO log the address
 				System.out.println("Address is " + getAdress());
 				break;
 			} catch (Exception e) {
