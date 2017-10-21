@@ -153,13 +153,57 @@
       <requirement
           name="com.make.equo.application.provider"/>
       <requirement
-          name="com.make.equo.application.server"/>
+          name="org.eclipse.jetty.client"/>
       <requirement
-          name="com.make.equo.releng"/>
+          name="org.eclipse.jetty.http"/>
+      <requirement
+          name="org.eclipse.jetty.io"/>
+      <requirement
+          name="org.eclipse.jetty.proxy"/>
+      <requirement
+          name="org.eclipse.jetty.security"/>
+      <requirement
+          name="org.eclipse.jetty.server"/>
+      <requirement
+          name="org.eclipse.jetty.servlet"/>
+      <requirement
+          name="org.eclipse.jetty.util"/>
+      <requirement
+          name="org.eclipse.jetty.webapp"/>
+      <requirement
+          name="org.eclipse.jetty.xml"/>
+      <requirement
+          name="org.eclipse.e4.ui.model.workbench"/>
+      <requirement
+          name="org.eclipse.e4.core.contexts"/>
+      <requirement
+          name="org.eclipse.swt"/>
+      <requirement
+          name="org.eclipse.e4.core.di"/>
+      <requirement
+          name="org.eclipse.e4.ui.workbench"/>
+      <requirement
+          name="org.eclipse.e4.ui.di"/>
+      <requirement
+          name="org.eclipse.e4.core.di.extensions"/>
+      <requirement
+          name="org.eclipse.e4.ui.services"/>
+      <requirement
+          name="org.eclipse.e4.ui.workbench.swt"/>
+      <requirement
+          name="org.eclipse.osgi.services"/>
+      <requirement
+          name="org.eclipse.equinox.ds"/>
+      <requirement
+          name="org.eclipse.update.configurator"/>
+      <requirement
+          name="org.eclipse.equinox.event"/>
+      <requirement
+          name="org.eclipse.e4.core.services"/>
+      <requirement
+          name="org.eclipse.ui"/>
       <requirement
           name="org.json"/>
-      <requirement
-          name="org.eclipse.fx.osgi"/>
       <requirement
           name="org.dom4j"/>
       <requirement
@@ -169,17 +213,7 @@
       <requirement
           name="javax.websocket"/>
       <requirement
-          name="com.google.gson"/>
-      <requirement
-          name="org.jnario.lib"
-          versionRange="[1.1.0,2.0.0)"/>
-      <requirement
-          name="org.eclipse.jdt.junit.runners.feature.feature.group"/>
-      <requirement
           name="org.eclipse.pde.junit.runtime"/>
-      <requirement
-          name="org.mozilla.javascript"
-          versionRange="[1.7.4,2.0.0)"/>
       <requirement
           name="org.apache.log4j"/>
       <requirement
@@ -187,33 +221,11 @@
       <requirement
           name="org.hamcrest.library"/>
       <requirement
-          name="org.eclipse.nebula.widgets.paperclips.feature.feature.group"/>
-      <requirement
           name="org.assertj.core"/>
       <requirement
           name="org.jboss.tools.locus.mockito"/>
       <requirement
-          name="com.github.eclipsecolortheme.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.ecf.filetransfer.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.ecf.core.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.ecf.core.feature.group"/>
-      <requirement
-          name="org.apache.commons.compress"/>
-      <requirement
-          name="org.eclipse.epp.mpc.feature.group"/>
-      <requirement
-          name="org.zeroturnaround.zt-process-killer"/>
-      <requirement
-          name="com.sun.jna"/>
-      <requirement
           name="com.make.cef.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.egit.feature.group"/>
-      <requirement
-          name="org.eclipse.egit.ui"/>
       <sourceLocator
           rootFolder="${git.clone.location}">
         <predicate
@@ -225,25 +237,17 @@
         <repository
             url="http://download.eclipse.org/releases/neon/"/>
         <repository
+        		url="http://download.eclipse.org/eclipse/updates/4.6"/>
+        <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
             url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
-        <repository
-            url="http://www.jnario.org/updates/snapshot"/>
-        <repository
-            url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
-        <repository
             url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
-        <repository
-            url="http://download.eclipse.org/efxclipse/runtime-released/2.1.0/site"/>
         <repository
             url="http://download.eclipse.org/nebula/snapshot/"/>
         <repository
             url="https://repository.jboss.org/nexus/content/unzip/unzip/org/jboss/tools/locus/update.site/1.5.0-SNAPSHOT/update.site-1.5.0-SNAPSHOT.zip-unzip/"/>
-        <repository
-            url="http://eclipse-color-theme.github.io/update/"/>
         <repository
             url="http://maketechnology.github.io/p2plugins/"/>
         <repository
@@ -251,15 +255,10 @@
         <repository
             url="http://fappel.github.io/test-libraries/"/>
         <repository
-            url="http://download.eclipse.org/tools/ajdt/46/dev/update"/>
-        <repository
             url="http://download.eclipse.org/egit/updates"/>
         <repository
             url="http://maketechpub.gitlab.io/cefswt/repository"/>
       </repositoryList>
-      <sourceLocator
-          rootFolder="${git.clone.location}"
-          locateNestedProjects="true"/>
       <repositoryList
           name="Oxygen">
         <repository
