@@ -88,6 +88,66 @@
         url="http://download.eclipse.org/recommenders/updates/stable/"/>
   </setupTask>
   <setupTask
+      xsi:type="setup.p2:P2Task"
+      id="tools"
+      label="Tools">
+    <requirement
+        name="com.github.eclipsecolortheme.feature.feature.group"/>
+    <requirement
+        name="net.jeeeyul.eclipse.themes.feature.feature.group"/>
+    <requirement
+        name="fr.obeo.releng.targetplatform-feature.feature.group"/>
+    <requirement
+        name="org.eclipse.ajdt.feature.group"/>
+    <requirement
+        name="org.eclipse.contribution.weaving.feature.group"/>
+    <repository
+        url="http://eclipse.jeeeyul.net/update/"/>
+    <repository
+        url="http://eclipse-color-theme.github.io/update/"/>
+    <repository
+        url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest"/>
+    <repository
+        url="http://download.eclipse.org/tools/ajdt/46/dev/update"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      id="tycho"
+      label="Tycho">
+    <requirement
+        name="org.eclipse.m2e.feature.feature.group"/>
+    <requirement
+        name="org.sonatype.tycho.m2e.feature.feature.group"/>
+    <requirement
+        name="org.sonatype.m2e.buildhelper.feature.feature.group"/>
+    <repository
+        url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
+    <repository
+        url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-buildhelper/0.15.0/N/0.15.0.201405280027/"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Test Plugins">
+    <requirement
+        name="org.eclipse.rcptt.platform.feature.group"/>
+    <requirement
+        name="org.eclipse.jdt.junit.runners.feature.feature.group"/>
+    <requirement
+        name="org.eclipse.pde.junit.runtime"/>
+    <requirement
+        name="org.jnario.m2e.feature.group"
+        versionRange="[1.1.0,2.0.0)"/>
+    <requirement
+        name="org.jnario.sdk.feature.group"
+        versionRange="[1.1.0,2.0.0)"/>
+    <repository
+        url="http://download.eclipse.org/rcptt/release/2.1.0/repository"/>
+    <repository
+        url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
+    <repository
+        url="http://www.jnario.org/updates/snapshot"/>
+  </setupTask>
+  <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone"
       location="${workspace.location/git}"
@@ -237,7 +297,7 @@
         <repository
             url="http://download.eclipse.org/releases/neon/"/>
         <repository
-        		url="http://download.eclipse.org/eclipse/updates/4.6"/>
+            url="http://download.eclipse.org/eclipse/updates/4.6"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
