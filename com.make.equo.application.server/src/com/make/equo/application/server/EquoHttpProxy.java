@@ -30,7 +30,7 @@ public class EquoHttpProxy {
 			try {
 				server.start();
 				//TODO log the address
-				System.out.println("Address is " + getAdress());
+				System.out.println("Address is " + getAddress());
 				break;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -91,8 +91,23 @@ public class EquoHttpProxy {
 		return contextHandler;
 	}
 
-	public String getAdress() {
-		return "localhost" + ":" + ((ServerConnector)server.getConnectors()[0]).getLocalPort();
+	public String getAddress() {
+		if (server != null) {
+			ServerConnector serverConnector = (ServerConnector)server.getConnectors()[0];
+			if (serverConnector != null) {
+				int localPort = serverConnector.getLocalPort();
+				if (localPort == -1) {
+					return null;
+				} else {
+					return "localhost" + ":" + localPort;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean isStarted() {
+		return server != null && server.isStarted();
 	}
 
 }
