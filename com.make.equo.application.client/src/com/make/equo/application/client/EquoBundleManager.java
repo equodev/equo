@@ -28,7 +28,7 @@ public enum EquoBundleManager {
 	private static final String EQUO_APPLICATION_ID = "com.make.equo.application";
 
 	private static final String EQUO_API_PACKAGE = EQUO_APPLICATION_ID + ".api";
-	
+
 	private static final String EQUO_MODEL_PACKAGE = EQUO_APPLICATION_ID + ".model";
 
 	private static final String EXPORT_PACKAGE = "Export-Package";
@@ -165,7 +165,8 @@ public enum EquoBundleManager {
 			} finally {
 				IOUtils.closeQuietly(manifestStream);
 			}
-			// TODO for development we are returning the bin or target dir, see how to handle it in
+			// TODO for development we are returning the bin or target dir, see how to
+			// handle it in
 			// build time...
 			return getBuildDirectory(manifestFile);
 		}
@@ -188,25 +189,25 @@ public enum EquoBundleManager {
 		bundleInitProps.put("osgi.clean", "true");
 		bundleInitProps.put("osgi.dev", "true");
 		// initProps.put("osgi.debug", "true");
-//		bundleInitProps.put("osgi.install.area", "this.installLocation");
+		// bundleInitProps.put("osgi.install.area", "this.installLocation");
 		bundleInitProps.put("osgi.instance.area", "this.workspace");
 		bundleInitProps.put("osgi.configuration.area", "generated");
 
 		bundleInitProps.put("osgi.bundles", appBundleFile.getAbsolutePath() + ",\n"
-				+ " com.make.equo.application.provider,\n" + "com.github.jnr.ffi,\n" + " com.github.jnr.jffi,\n"
-				+ " com.github.jnr.jffi.native,\n" + " com.github.jnr.x86asm,\n" + " com.ibm.icu,\n"
-				+ " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n" + " javax.annotation,\n" + " javax.inject,\n"
-				+ " javax.xml,\n" + " org.apache.batik.css,\n" + " org.apache.batik.util,\n"
-				+ " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n" + " org.apache.commons.logging,\n"
-				+ " org.apache.felix.gogo.command,\n" + " org.apache.felix.gogo.shell,\n"
-				+ " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n" + " org.eclipse.core.commands,\n"
-				+ " org.eclipse.core.contenttype,\n" + " org.eclipse.core.databinding,\n"
-				+ " org.eclipse.core.databinding.beans,\n" + " org.eclipse.core.databinding.observable,\n"
-				+ " org.eclipse.core.databinding.property,\n" + " org.eclipse.core.expressions,\n"
-				+ " org.eclipse.core.filesystem,\n" + " org.eclipse.core.filesystem.macosx,\n"
-				+ " org.eclipse.core.jobs,\n" + " org.eclipse.core.resources,\n"
-				+ " org.eclipse.core.runtime@1:start,\n" + " org.eclipse.e4.core.commands,\n"
-				+ " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
+				+ " com.make.equo.application.provider,\n" + " com.make.equo.application.server,\n"
+				+ "com.github.jnr.ffi,\n" + " com.github.jnr.jffi,\n" + " com.github.jnr.jffi.native,\n"
+				+ " com.github.jnr.x86asm,\n" + " com.ibm.icu,\n" + " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n"
+				+ " javax.annotation,\n" + " javax.inject,\n" + " javax.xml,\n" + " org.apache.batik.css,\n"
+				+ " org.apache.batik.util,\n" + " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n"
+				+ " org.apache.commons.logging,\n" + " org.apache.felix.gogo.command,\n"
+				+ " org.apache.felix.gogo.shell,\n" + " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n"
+				+ " org.eclipse.core.commands,\n" + " org.eclipse.core.contenttype,\n"
+				+ " org.eclipse.core.databinding,\n" + " org.eclipse.core.databinding.beans,\n"
+				+ " org.eclipse.core.databinding.observable,\n" + " org.eclipse.core.databinding.property,\n"
+				+ " org.eclipse.core.expressions,\n" + " org.eclipse.core.filesystem,\n"
+				+ " org.eclipse.core.filesystem.macosx,\n" + " org.eclipse.core.jobs,\n"
+				+ " org.eclipse.core.resources,\n" + " org.eclipse.core.runtime@1:start,\n"
+				+ " org.eclipse.e4.core.commands,\n" + " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
 				+ " org.eclipse.e4.core.di.annotations,\n" + " org.eclipse.e4.core.di.extensions,\n"
 				+ " org.eclipse.e4.core.di.extensions.supplier,\n" + " org.eclipse.e4.core.services,\n"
 				+ " org.eclipse.e4.emf.xpath,\n" + " org.eclipse.e4.ui.bindings,\n" + " org.eclipse.e4.ui.css.core,\n"
@@ -228,8 +229,11 @@ public enum EquoBundleManager {
 				+ " org.objectweb.asm.tree,\n" + " org.objectweb.asm.util,\n" + " org.w3c.css.sac,\n"
 				+ " org.w3c.dom.events,\n" + " org.w3c.dom.smil,\n" + " org.w3c.dom.svg,\n"
 				+ " org.eclipse.update.configurator@3:start,\n" + " org.eclipse.ui.workbench,\n" + " org.eclipse.ui,\n"
-				+ " org.eclipse.help,\n" + " org.eclipse.e4.ui.workbench.addons.swt,\n"
-				+ " org.eclipse.equinox.console,\n" + " org.eclipse.ui.cocoa");
+				+ " org.eclipse.help,\n" + " org.eclipse.e4.ui.workbench.addons.swt,\n" + " org.eclipse.jetty.server,\n"
+				+ " org.eclipse.jetty.servlet,\n" + " org.eclipse.jetty.util,\n" + " javax.servlet,\n"
+				+ " org.eclipse.jetty.client,\n" + " org.eclipse.jetty.http,\n" + " org.eclipse.jetty.proxy,\n"
+				+ " org.eclipse.jetty.io,\n" + " org.eclipse.jetty.security,\n" + " org.eclipse.equinox.console,\n"
+				+ " org.eclipse.ui.cocoa");
 		bundleInitProps.put("osgi.bundles.defaultStartLevel", "4");
 		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product5");
 		bundleInitProps.put("osgi.dev",
@@ -240,7 +244,7 @@ public enum EquoBundleManager {
 		bundleInitProps.put("eclipse.consoleLog", "true");
 		bundleInitProps.put("osgi.os", "macosx");
 		bundleInitProps.put("eclipse.consoleLog", "true");
-//		bundleInitProps.put("eclipse.application", EQUO_APPLICATION_ID);
+		// bundleInitProps.put("eclipse.application", EQUO_APPLICATION_ID);
 		// initProps.put("osgi.parentClassloader","app");
 
 		bundleInitProps.put("osgi.noShutdown", "false");
@@ -254,7 +258,7 @@ public enum EquoBundleManager {
 
 	/**
 	 * Since the User application is always added as the first bundle, the id is "1"
-	 *  
+	 * 
 	 * @return the id of the user app bundle, 1
 	 */
 	public String getEquoAppBundleId() {
