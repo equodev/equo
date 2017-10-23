@@ -22,16 +22,15 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 	@Override
 	protected HttpClient newHttpClient() {
 		SslContextFactory factory = new SslContextFactory();
-        factory.setTrustAll(true);
-        return new HttpClient(factory);
+		factory.setTrustAll(true);
+		return new HttpClient(factory);
 	}
-	
-    protected void addXForwardedHeaders(HttpServletRequest clientRequest, Request proxyRequest)
-    {
-        proxyRequest.header(HttpHeader.X_FORWARDED_FOR, clientRequest.getRemoteAddr());
-        proxyRequest.header(HttpHeader.X_FORWARDED_PROTO, clientRequest.getScheme());
-        proxyRequest.header(HttpHeader.X_FORWARDED_SERVER, clientRequest.getLocalName());
-    }
+
+	protected void addXForwardedHeaders(HttpServletRequest clientRequest, Request proxyRequest) {
+		proxyRequest.header(HttpHeader.X_FORWARDED_FOR, clientRequest.getRemoteAddr());
+		proxyRequest.header(HttpHeader.X_FORWARDED_PROTO, clientRequest.getScheme());
+		proxyRequest.header(HttpHeader.X_FORWARDED_SERVER, clientRequest.getLocalName());
+	}
 
 	@Override
 	protected ContentTransformer newServerResponseContentTransformer(HttpServletRequest clientRequest,
@@ -48,7 +47,7 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		try {
 			appUrl = System.getProperty("appUrl", appUrl);
 		} catch (SecurityException e) {
-			//TODO log exception
+			// TODO log exception
 			System.out.println("Error while trying to read appUrl System property" + e);
 		}
 		if (null == appUrl) {
@@ -58,7 +57,13 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 
 	@Override
 	protected String rewriteTarget(HttpServletRequest request) {
-		URI rewrittenURI = URI.create(appUrl).normalize();
+		String pathInfo = request.getPathInfo();
+		URI rewrittenURI;
+		if (pathInfo != null) {
+			rewrittenURI = URI.create(appUrl + pathInfo).normalize();
+		} else {
+;			rewrittenURI = URI.create(appUrl);
+		}
 		return rewrittenURI.toString();
 	}
 
