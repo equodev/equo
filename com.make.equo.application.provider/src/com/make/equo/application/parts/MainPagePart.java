@@ -10,7 +10,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import com.make.equo.application.server.EquoHttpProxyExecutor;
+import com.make.equo.application.server.EquoHttpProxy;
 import com.make.equo.application.util.IConstants;
 import com.make.swtcef.Chromium;
 
@@ -21,9 +21,7 @@ public class MainPagePart {
 
 	private Chromium browser;
 
-	private EquoHttpProxyExecutor equoHttpProxyExecutor;
-
-	private Thread mainServerThread;
+	private EquoHttpProxy equoHttpProxy;
 
 	@Inject
 	public MainPagePart(Composite parent) {
@@ -47,30 +45,28 @@ public class MainPagePart {
 	private String startEquoServer(String url) {
 		// TODO use proper logging...
 		System.out.println("Creating Equo server proxy...");
-		equoHttpProxyExecutor = new EquoHttpProxyExecutor(url);
-		mainServerThread = new Thread(equoHttpProxyExecutor);
-		mainServerThread.start();
-		while (!equoHttpProxyExecutor.isStarted()) {
-			// wait until the Equo server is started
-			System.out.println("Equo Server is being started");
+		equoHttpProxy = new EquoHttpProxy(url);
+		try {
+			equoHttpProxy.startProxy();
+			while (!equoHttpProxy.isStarted()) {
+				// wait until the Equo server is started
+				System.out.println("Equo Server is being started");
+			}
+			String address = equoHttpProxy.getAddress();
+			// TODO use proper logging...
+			System.out.println("Equo proxy started with address " + address);
+			return address;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		String address = equoHttpProxyExecutor.getAddress();
-		// TODO use proper logging...
-		System.out.println("Equo proxy started with address " + address);
-		return address;
+		return null;
 	}
 
 	@PreDestroy
 	public void preDestroy() {
-		if (mainServerThread != null) {
-			equoHttpProxyExecutor.stop();
-			try {
-				mainServerThread.join();
-			} catch (InterruptedException e) {
-				// TODO use proper logging...
-				e.printStackTrace();
-			}
+		if (equoHttpProxy != null) {
+			equoHttpProxy.stop();
 		}
-
 	}
 }

@@ -29,20 +29,12 @@ public class EquoHttpProxy {
 		while (true) {
 			try {
 				server.start();
-				//TODO log the address
+				// TODO log the address
 				System.out.println("Address is " + getAddress());
 				break;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		try {
-			System.in.read();
-			server.stop();
-			server.join();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(100);
 		}
 	}
 
@@ -50,29 +42,27 @@ public class EquoHttpProxy {
 		Server server = new Server();
 
 		ServerConnector httpConnector = new ServerConnector(server);
-//		httpConnector.setPort(9898);
+		// httpConnector.setPort(9898);
 
 		HttpConfiguration https = new HttpConfiguration();
-        https.addCustomizer(new SecureRequestCustomizer());
+		https.addCustomizer(new SecureRequestCustomizer());
 		SslContextFactory sslContextFactory = new SslContextFactory();
-		sslContextFactory.setKeyStorePath(EquoHttpProxy.class.getResource(
-				"/keystore.jks").toExternalForm());
+		sslContextFactory.setKeyStorePath(EquoHttpProxy.class.getResource("/keystore.jks").toExternalForm());
 		sslContextFactory.setKeyStorePassword("123456");
 		sslContextFactory.setKeyManagerPassword("123456");
 		ServerConnector sslConnector = new ServerConnector(server,
-				new SslConnectionFactory(sslContextFactory, "http/1.1"),
-				new HttpConnectionFactory(https));
+				new SslConnectionFactory(sslContextFactory, "http/1.1"), new HttpConnectionFactory(https));
 		sslConnector.setPort(9998);
 
 		server.setConnectors(new Connector[] { httpConnector, sslConnector });
-		
+
 		server.setHandler(createNewHandlers(server));
 		return server;
 	}
 
 	private Handler createNewHandlers(Server server) {
 		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[] { createProxyHandler()});
+		handlers.setHandlers(new Handler[] { createProxyHandler() });
 		return handlers;
 	}
 
@@ -80,12 +70,12 @@ public class EquoHttpProxy {
 		ServletContextHandler contextHandler = new ServletContextHandler();
 
 		MainPageProxyHandler mainPageProxyHandler = new MainPageProxyHandler();
-        ServletHolder holder = new ServletHolder(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME, mainPageProxyHandler);
-        holder.setName(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME);
-		
+		ServletHolder holder = new ServletHolder(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME, mainPageProxyHandler);
+		holder.setName(IConstants.MAIN_PAGE_PROXY_HANDLER_NAME);
+
 		holder.setInitParameter(IConstants.APP_URL_PARAM, url);
 		holder.setAsyncSupported(true);
-		
+
 		contextHandler.addServlet(holder, "/*");
 
 		return contextHandler;
@@ -93,7 +83,7 @@ public class EquoHttpProxy {
 
 	public String getAddress() {
 		if (server != null) {
-			ServerConnector serverConnector = (ServerConnector)server.getConnectors()[0];
+			ServerConnector serverConnector = (ServerConnector) server.getConnectors()[0];
 			if (serverConnector != null) {
 				int localPort = serverConnector.getLocalPort();
 				if (localPort == -1) {
@@ -105,9 +95,19 @@ public class EquoHttpProxy {
 		}
 		return null;
 	}
-	
+
 	public boolean isStarted() {
 		return server != null && server.isStarted();
+	}
+
+	public void stop() {
+		try {
+			server.stop();
+			server.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(100);
+		}
 	}
 
 }
