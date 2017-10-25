@@ -23,7 +23,14 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 	protected HttpClient newHttpClient() {
 		SslContextFactory factory = new SslContextFactory();
 		factory.setTrustAll(true);
-		return new HttpClient(factory);
+		HttpClient httpClient = new HttpClient(factory) {
+			@Override
+			protected void doStart() throws Exception {
+				super.doStart();
+				this.setCookieStore(new EquoApplicationCookieStore(appUrl));
+			}
+		};
+		return httpClient;
 	}
 
 	protected void addXForwardedHeaders(HttpServletRequest clientRequest, Request proxyRequest) {
@@ -40,7 +47,6 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 
 	@Override
 	public void init() throws ServletException {
-		super.init();
 		ServletConfig config = getServletConfig();
 		appUrl = config.getInitParameter("appUrl");
 		// Allow override with system property
@@ -53,6 +59,7 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		if (null == appUrl) {
 			appUrl = "http://www.equo.wemaketechnology.com/";
 		}
+		super.init();
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		if (pathInfo != null) {
 			rewrittenURI = URI.create(appUrl + pathInfo).normalize();
 		} else {
-;			rewrittenURI = URI.create(appUrl);
+			rewrittenURI = URI.create(appUrl);
 		}
 		return rewrittenURI.toString();
 	}
