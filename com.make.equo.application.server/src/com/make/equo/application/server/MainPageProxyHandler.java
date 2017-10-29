@@ -4,6 +4,7 @@ import java.net.URI;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.UnavailableException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,10 +15,13 @@ import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.proxy.AsyncMiddleManServlet;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
+import com.make.equo.application.server.util.IConstants;
+
 public class MainPageProxyHandler extends AsyncMiddleManServlet {
 
 	private static final long serialVersionUID = 1094851237951702329L;
 	private String appUrl;
+	private String jsScripts;
 
 	@Override
 	protected HttpClient newHttpClient() {
@@ -42,22 +46,24 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 	@Override
 	protected ContentTransformer newServerResponseContentTransformer(HttpServletRequest clientRequest,
 			HttpServletResponse proxyResponse, Response serverResponse) {
-		return ContentTransformer.IDENTITY;
+		return new EquoAppContentTransformer(clientRequest, jsScripts);
 	}
 
 	@Override
 	public void init() throws ServletException {
 		ServletConfig config = getServletConfig();
-		appUrl = config.getInitParameter("appUrl");
+		appUrl = config.getInitParameter(IConstants.APP_URL_PARAM);
+		if (appUrl == null) {
+			throw new UnavailableException("Init parameter 'appUrl' is required.");
+		}
+		jsScripts = config.getInitParameter(IConstants.APP_JS_SCRIPTS_PARAM);
 		// Allow override with system property
 		try {
-			appUrl = System.getProperty("appUrl", appUrl);
+			appUrl = System.getProperty(IConstants.APP_URL_PARAM, appUrl);
+			jsScripts = System.getProperty(IConstants.APP_JS_SCRIPTS_PARAM, jsScripts);
 		} catch (SecurityException e) {
 			// TODO log exception
 			System.out.println("Error while trying to read appUrl System property" + e);
-		}
-		if (null == appUrl) {
-			appUrl = "http://www.equo.wemaketechnology.com/";
 		}
 		super.init();
 	}
