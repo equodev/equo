@@ -37,5 +37,7 @@ public interface IConstants {
 	public static final String USER_KEY_BINDING_TAG = "type:user";
 	
 	public static final String COMMAND_ID_PARAMETER = "commandId";
+
+	public static final String CUSTOM_SCRIPTS = "customScripts";
 	
 }

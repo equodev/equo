@@ -1,10 +1,22 @@
 package com.make.equo.application.server;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -12,11 +24,19 @@ import com.make.equo.application.server.util.IConstants;
 
 public class EquoHttpProxy {
 
+	private static final String URL_PATH = "urlPath";
+	private static final String PATH_TO_STRING_REG = "/PATHTOSTRING";
 	private String url;
+	private List<String> jsScripts;
 	private Server server;
+	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
+	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"http://localhost:PORT/PATHTOSTRING\"></script>";
+	
+	public static final String PORT = "PORT";
 
 	public EquoHttpProxy(String url) {
 		this.url = url;
+		this.jsScripts = new ArrayList<>();
 	}
 
 	public void startProxy() throws Exception {
@@ -46,21 +66,95 @@ public class EquoHttpProxy {
 
 	private Handler createNewHandlers(Server server) {
 		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[] { createProxyHandler(handlers) });
+		handlers.setHandlers(new Handler[] { createServlets(handlers), new DefaultHandler() });
 		return handlers;
 	}
 
-	private Handler createProxyHandler(HandlerList handlers) {
+	private Handler createServlets(HandlerList handlers) {
 		ServletContextHandler contextHandler = new ServletContextHandler(handlers, "/", ServletContextHandler.SESSIONS);
 
+		try {
+			createLocalScriptsServletHandlers(contextHandler);
+		} catch (URISyntaxException | IOException e) {
+			//TODO log exception
+			e.printStackTrace();
+		}
+		
 		ServletHolder proxyServlet = new ServletHolder(MainPageProxyHandler.class);
-
 		proxyServlet.setInitParameter(IConstants.APP_URL_PARAM, url);
+		proxyServlet.setInitParameter(IConstants.APP_JS_SCRIPTS_PARAM, convertJsScriptsToString());
 		proxyServlet.setAsyncSupported(true);
-
 		contextHandler.addServlet(proxyServlet, "/*");
 
 		return contextHandler;
+	}
+
+	private List<String> createLocalScriptsServletHandlers(ServletContextHandler contextHandler)
+			throws URISyntaxException, IOException {
+		List<String> localScripts = getLocalScripts();
+		List<String> servletHandlersPaths = new ArrayList<>();
+		for (String localScript : localScripts) {
+			URL url = new URL(localScript);
+			File file = new File(FileLocator.resolve(url).toURI());
+			String absolutePath = file.getParentFile().getAbsolutePath();
+			if (!servletHandlersPaths.contains(absolutePath)) {
+				ServletHolder holderHome = new ServletHolder(absolutePath, DefaultServlet.class);
+				holderHome.setInitParameter("resourceBase", absolutePath);
+				holderHome.setInitParameter("dirAllowed", "true");
+				holderHome.setInitParameter("pathInfoOnly", "true");
+				contextHandler.addServlet(holderHome, absolutePath + "/*");
+				servletHandlersPaths.add(absolutePath);
+			}
+		}
+		return servletHandlersPaths;
+	}
+
+	private List<String> getLocalScripts() {
+		List<String> fileScripts = new ArrayList<>();
+		for (String scriptPath : jsScripts) {
+			if (isLocalScript(scriptPath)) {
+				fileScripts.add(scriptPath);
+			}
+		}
+		return fileScripts;
+	}
+
+	private boolean isLocalScript(String scriptPath) {
+		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
+		return scriptPathLoweredCase.startsWith("file:/");
+	}
+
+	private String convertJsScriptsToString() {
+		if (jsScripts.isEmpty()) {
+			return "";
+		}
+		String newLineSeparetedScripts = jsScripts.stream().map(string -> generateScriptSentence(string))
+				.collect(Collectors.joining("\n"));
+		return newLineSeparetedScripts;
+	}
+
+	private String generateScriptSentence(String scriptPath) {
+		try {
+			if (isLocalScript(scriptPath)) {
+				URL url = new URL(scriptPath);
+				File file = new File(FileLocator.resolve(url).toURI());
+				String absolutePath = file.getAbsolutePath();
+
+				String scriptSentence = LOCAL_SCRIPT_SENTENCE.replaceAll(PATH_TO_STRING_REG, absolutePath);
+				return scriptSentence;
+			} else {
+				URL url = new URL(scriptPath);
+				String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+				return scriptSentence;
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	public String getAddress() {
@@ -90,6 +184,10 @@ public class EquoHttpProxy {
 			e.printStackTrace();
 			System.exit(100);
 		}
+	}
+
+	public void addScripts(List<String> customScripts) {
+		jsScripts.addAll(customScripts);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.make.equo.application.parts;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -12,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.make.equo.application.server.EquoHttpProxy;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.application.util.ScriptHandler;
 import com.make.swtcef.Chromium;
 
 public class MainPagePart {
@@ -45,7 +48,12 @@ public class MainPagePart {
 	private String startEquoServer(String url) {
 		// TODO use proper logging...
 		System.out.println("Creating Equo server proxy...");
+		ScriptHandler scriptHandler = new ScriptHandler(thisPart);
+		List<String> customScripts = scriptHandler.getScripts();
 		equoHttpProxy = new EquoHttpProxy(url);
+		if (!customScripts.isEmpty()) {
+			equoHttpProxy.addScripts(customScripts);
+		}
 		try {
 			equoHttpProxy.startProxy();
 			while (!equoHttpProxy.isStarted()) {
