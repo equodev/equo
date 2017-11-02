@@ -233,6 +233,7 @@ public enum EquoBundleManager {
 				+ " org.eclipse.jetty.servlet,\n" + " org.eclipse.jetty.util,\n" + " javax.servlet,\n"
 				+ " org.eclipse.jetty.client,\n" + " org.eclipse.jetty.http,\n" + " org.eclipse.jetty.proxy,\n"
 				+ " org.eclipse.jetty.io,\n" + " org.eclipse.jetty.security,\n" + " org.eclipse.equinox.console,\n"
+				+ " org.eclipse.jetty.servlets,\n"
 				+ " org.apache.commons.io,\n" + " org.eclipse.ui.cocoa");
 		bundleInitProps.put("osgi.bundles.defaultStartLevel", "4");
 		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product6");

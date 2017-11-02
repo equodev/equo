@@ -1,5 +1,6 @@
 package com.make.equo.application.server;
 
+import java.net.CookieStore;
 import java.net.URI;
 
 import javax.servlet.ServletConfig;
@@ -22,16 +23,18 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 	private static final long serialVersionUID = 1094851237951702329L;
 	private String appUrl;
 	private String jsScripts;
+	private EquoApplicationCookieStore equoApplicationCookieStore;
+	private HttpClient httpClient;
 
 	@Override
 	protected HttpClient newHttpClient() {
 		SslContextFactory factory = new SslContextFactory();
 		factory.setTrustAll(true);
-		HttpClient httpClient = new HttpClient(factory) {
+		httpClient = new HttpClient(factory) {
+
 			@Override
-			protected void doStart() throws Exception {
-				super.doStart();
-				this.setCookieStore(new EquoApplicationCookieStore(appUrl));
+			public CookieStore getCookieStore() {
+				return equoApplicationCookieStore;
 			}
 		};
 		return httpClient;
@@ -41,6 +44,32 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 		proxyRequest.header(HttpHeader.X_FORWARDED_FOR, clientRequest.getRemoteAddr());
 		proxyRequest.header(HttpHeader.X_FORWARDED_PROTO, clientRequest.getScheme());
 		proxyRequest.header(HttpHeader.X_FORWARDED_SERVER, clientRequest.getLocalName());
+		// Cookie[] cookies = clientRequest.getCookies();
+		// if (cookies != null) {
+		// for (Cookie cookie : cookies) {
+		// HttpCookie httpCookie = new HttpCookie(cookie.getName(), cookie.getValue());
+		// System.out.println("cookie is " + httpCookie);
+		//// proxyRequest.getCookies().add(httpCookie);
+		// this.getHttpClient().getCookieStore().add(URI.create(appUrl), httpCookie);
+		// }
+		// }
+	}
+
+	@Override
+	protected String filterServerResponseHeader(HttpServletRequest clientRequest, Response serverResponse,
+			String headerName, String headerValue) {
+		if (headerName.equalsIgnoreCase("location")) {
+			URI targetUri = serverResponse.getRequest().getURI();
+			String toReplace = targetUri.getScheme() + "://" + targetUri.getAuthority();
+			if (headerValue.startsWith(toReplace)) {
+				headerValue = clientRequest.getScheme() + "://" + clientRequest.getHeader("host")
+						+ headerValue.substring(toReplace.length());
+//				log.info("Rewrote location header to " + headerValue);
+				System.out.println("Rewrote location header to " + headerValue);
+				return headerValue;
+			}
+		}
+		return super.filterServerResponseHeader(clientRequest, serverResponse, headerName, headerValue);
 	}
 
 	@Override
@@ -65,6 +94,7 @@ public class MainPageProxyHandler extends AsyncMiddleManServlet {
 			// TODO log exception
 			System.out.println("Error while trying to read appUrl System property" + e);
 		}
+		equoApplicationCookieStore = new EquoApplicationCookieStore(appUrl);
 		super.init();
 	}
 

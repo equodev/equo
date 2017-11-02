@@ -6,8 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.servlet.DispatcherType;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jetty.server.Connector;
@@ -17,8 +20,10 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 import com.make.equo.application.server.util.IConstants;
 
@@ -79,6 +84,12 @@ public class EquoHttpProxy {
 			//TODO log exception
 			e.printStackTrace();
 		}
+		
+		FilterHolder cors = contextHandler.addFilter(CrossOriginFilter.class,"/*",EnumSet.of(DispatcherType.REQUEST));
+		cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+		cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+		cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD");
+		cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
 		
 		ServletHolder proxyServlet = new ServletHolder(MainPageProxyHandler.class);
 		proxyServlet.setInitParameter(IConstants.APP_URL_PARAM, url);
