@@ -233,10 +233,12 @@ public enum EquoBundleManager {
 				+ " org.eclipse.jetty.servlet,\n" + " org.eclipse.jetty.util,\n" + " javax.servlet,\n"
 				+ " org.eclipse.jetty.client,\n" + " org.eclipse.jetty.http,\n" + " org.eclipse.jetty.proxy,\n"
 				+ " org.eclipse.jetty.io,\n" + " org.eclipse.jetty.security,\n" + " org.eclipse.equinox.console,\n"
-				+ " org.eclipse.jetty.servlets,\n"
-				+ " org.apache.commons.io,\n" + " org.eclipse.ui.cocoa");
+				+ " org.eclipse.jetty.servlets,\n" + " org.littleshoot.littleproxy,\n" + " org.apache.commons.io,\n"
+				+ " io.netty.all,\n" + " com.google.guava,\n" + " com.barchart.udt.barchart-udt-bundle,\n"
+				+ " org.apache.commons.lang3,\n" + " org.slf4j.api,\n" + " org.slf4j.impl.log4j12,\n"
+				+ " org.apache.log4j,\n" + " org.apache.httpcomponents.httpcore,\n" + " org.eclipse.ui.cocoa");
 		bundleInitProps.put("osgi.bundles.defaultStartLevel", "4");
-		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product6");
+		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product7");
 		bundleInitProps.put("osgi.dev",
 				"file:/Users/seba/eclipse-workspace/.metadata/.plugins/org.eclipse.pde.core/equo.product/dev.properties");
 		bundleInitProps.put("osgi.os", "macosx");
