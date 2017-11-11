@@ -209,10 +209,6 @@
       <requirement
           name="org.eclipse.equinox.executable.feature.group"/>
       <requirement
-          name="com.make.equo.application.client"/>
-      <requirement
-          name="com.make.equo.application.provider"/>
-      <requirement
           name="org.eclipse.jetty.client"/>
       <requirement
           name="org.eclipse.jetty.http"/>
@@ -226,6 +222,24 @@
           name="org.eclipse.jetty.server"/>
       <requirement
           name="org.eclipse.jetty.servlet"/>
+      <requirement
+          name="org.eclipse.jetty.servlets"/>
+      <requirement
+          name="org.littleshoot.littleproxy"/>
+      <requirement
+          name="io.netty.all"/>
+      <requirement
+          name="slf4j.api"/>
+      <requirement
+          name="com.google.guava"/>
+      <requirement
+          name="com.barchart.udt.barchart-udt-bundle"/>
+      <requirement
+          name="org.apache.commons.lang3"/>
+      <requirement
+          name="org.slf4j.impl.log4j12"/>
+      <requirement
+          name="org.apache.log4j"/>
       <requirement
           name="org.eclipse.jetty.util"/>
       <requirement

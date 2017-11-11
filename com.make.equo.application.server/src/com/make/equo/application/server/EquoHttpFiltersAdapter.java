@@ -81,7 +81,6 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject proxyToClientResponse(HttpObject httpObject) {
-		// TODO: implement your filtering here ????
 		return httpObject;
 	}
 
