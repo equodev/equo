@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.make.equo.application.server.EquoHttpProxyServer;
+import com.make.equo.application.util.FrameworkUtils;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.application.util.ScriptHandler;
 import com.make.swtcef.Chromium;
@@ -46,7 +47,7 @@ public class MainPagePart {
 		System.out.println("Creating Equo server proxy...");
 		ScriptHandler scriptHandler = new ScriptHandler(thisPart);
 		List<String> customScripts = scriptHandler.getScripts();
-		EquoHttpProxyServer equoHttpProxyServer = new EquoHttpProxyServer(url);
+		EquoHttpProxyServer equoHttpProxyServer = new EquoHttpProxyServer(url, FrameworkUtils.INSTANCE.getAppBundlePath(), FrameworkUtils.INSTANCE.getFrameworkName());
 		if (!customScripts.isEmpty()) {
 			equoHttpProxyServer.addScripts(customScripts);
 		}

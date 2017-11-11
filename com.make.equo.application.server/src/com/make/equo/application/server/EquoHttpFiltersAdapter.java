@@ -12,7 +12,6 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders.Names;
@@ -38,28 +37,6 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		if (httpObject instanceof FullHttpRequest) {
-			FullHttpRequest httpRequest = (FullHttpRequest) httpObject;
-			// httpRequest.headers().remove("Host");
-			// httpRequest.headers().add("Host", "www.netflix.com");
-			// httpRequest.setUri(url);
-			if (!httpRequest.getUri().contains("netflix")) {
-				// ByteBuf buffer;
-				// try {
-				//// buffer = Unpooled.wrappedBuffer("Hola mundo".getBytes("UTF-8"));
-				//// HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-				// HttpResponseStatus.OK, buffer);
-				//// HttpHeaders.setContentLength(response, buffer.readableBytes());
-				//// HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE,
-				// "text/html");
-				// return null;
-				// } catch (UnsupportedEncodingException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				return null;
-			}
-		}
 		return null;
 	}
 
@@ -120,11 +97,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 	private String generateScriptSentence(String scriptPath) {
 		try {
 			if (isLocalScript(scriptPath)) {
-				// URL url = new URL(scriptPath);
-				// File file = new File(FileLocator.resolve(url).toURI());
-				// String absolutePath = file.getAbsolutePath();
-
-				String scriptSentence = LOCAL_SCRIPT_SENTENCE.replaceAll(PATH_TO_STRING_REG, appUrl + "/" + scriptPath);
+				String scriptSentence = LOCAL_SCRIPT_SENTENCE.replaceAll(PATH_TO_STRING_REG, appUrl + scriptPath);
 				return scriptSentence;
 			} else {
 				URL url = new URL(scriptPath);

@@ -17,6 +17,7 @@ public class EquoApplicationBuilder {
 	private final MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
+	private String name;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
@@ -26,6 +27,7 @@ public class EquoApplicationBuilder {
 	}
 
 	public UrlMandatoryBuilder name(String name) {
+		this.name = name;
 		String appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
 		getmWindow().setLabel(name);
@@ -81,5 +83,9 @@ public class EquoApplicationBuilder {
 
 	MTrimmedWindow getmWindow() {
 		return mWindow;
+	}
+	
+	String getName() {
+		return name;
 	}
 }

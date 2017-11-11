@@ -16,6 +16,7 @@ public class LifeCycleManager {
 
 	private static final String EQUO_APP_MAIN_CLASS = "equoAppMainClass";
 	private static final String EQUO_APP_BUNDLE_ID = "equoAppBundleId";
+	private static final String EQUO_APP_BUNDLE_PATH = "equoAppBundlePath";
 
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication)
@@ -23,11 +24,13 @@ public class LifeCycleManager {
 		String[] appArgs = (String[]) applicationContext.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		Integer equoAppBundleId = Integer.valueOf(getArgValue(appArgs, EQUO_APP_BUNDLE_ID).get());
 		String equoAppClassName = getArgValue(appArgs, EQUO_APP_MAIN_CLASS).get();
+		String equoAppBundlePath = getArgValue(appArgs, EQUO_APP_BUNDLE_PATH).get();
 
 		BundleContext context = Activator.getContext();
 		
 		Bundle equoAppBundle = context.getBundle(equoAppBundleId);
 		FrameworkUtils.INSTANCE.setMainAppBundle(equoAppBundle);
+		FrameworkUtils.INSTANCE.setAppBundlePath(equoAppBundlePath);
 		
 		Class<?> equoApplicationClazz = equoAppBundle.loadClass(equoAppClassName);
 		IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();
