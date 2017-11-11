@@ -26,7 +26,8 @@ public class Equo {
 				"bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager",
 				"-XstartOnFirstThread",
 				"-equoAppBundleId", equoBundleManager.getEquoAppBundleId(),
-				"-equoAppMainClass", equoApplicationClazz.getName()};
+				"-equoAppMainClass", equoApplicationClazz.getName(),
+				"-equoAppBundlePath", appBundleFile.getAbsolutePath()};
 		try {
 			EclipseStarter.run(args, null);
 		} catch (Exception e) {
