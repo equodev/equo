@@ -3,6 +3,7 @@ package com.make.equo.application.parts;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -23,6 +24,8 @@ public class MainPagePart {
 	private MPart thisPart;
 
 	private Chromium browser;
+
+	private EquoHttpProxyServer equoHttpProxyServer;
 
 	@Inject
 	public MainPagePart(Composite parent) {
@@ -47,11 +50,17 @@ public class MainPagePart {
 		System.out.println("Creating Equo server proxy...");
 		ScriptHandler scriptHandler = new ScriptHandler(thisPart);
 		List<String> customScripts = scriptHandler.getScripts();
-		EquoHttpProxyServer equoHttpProxyServer = new EquoHttpProxyServer(url, FrameworkUtils.INSTANCE.getAppBundlePath(), FrameworkUtils.INSTANCE.getFrameworkName());
+		equoHttpProxyServer = new EquoHttpProxyServer(url, FrameworkUtils.INSTANCE.getAppBundlePath(), FrameworkUtils.INSTANCE.getFrameworkName());
 		if (!customScripts.isEmpty()) {
 			equoHttpProxyServer.addScripts(customScripts);
 		}
 		equoHttpProxyServer.startProxy();
 	}
-
+	
+	@PreDestroy
+	public void stopServer() {
+		if (equoHttpProxyServer != null) {
+			equoHttpProxyServer.stop();
+		}
+	}
 }

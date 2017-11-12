@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
+import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
@@ -20,6 +21,7 @@ public class EquoHttpProxyServer {
 	private String appUrl;
 	private String equoAppBundleLocation;
 	private String prefix;
+	private HttpProxyServer proxyServer;
 
 	public EquoHttpProxyServer(String appUrl) {
 		if (appUrl.endsWith("/")) {
@@ -41,7 +43,7 @@ public class EquoHttpProxyServer {
 	}
 
 	public void startProxy() {
-		DefaultHttpProxyServer
+		proxyServer = DefaultHttpProxyServer
 			.bootstrap()
 			.withPort(9896)
 			.withManInTheMiddle(new SelfSignedMitmManager())
@@ -72,6 +74,12 @@ public class EquoHttpProxyServer {
 
 	public void addScripts(List<String> customScripts) {
 		jsScripts.addAll(customScripts);
+	}
+	
+	public void stop() {
+		if (proxyServer != null) {
+			proxyServer.stop();
+		}
 	}
 
 }
