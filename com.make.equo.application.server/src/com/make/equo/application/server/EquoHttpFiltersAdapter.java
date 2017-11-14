@@ -26,7 +26,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
 	private List<String> jsScripts;
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
-	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\" defer></script>";
+	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
 	private String appUrl;
 
 	public EquoHttpFiltersAdapter(String appUrl, HttpRequest originalRequest, List<String> jsScripts) {
