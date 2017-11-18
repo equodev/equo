@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import org.apache.http.entity.ContentType;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
+import com.google.common.io.Resources;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -22,6 +24,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
+	private static final String EQUO_JS_API = "equo.js";
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
 	private List<String> jsScripts;
@@ -62,6 +65,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 				String responseToTransform = createStringFromData(data, charset);
 				StringBuilder customResponseWithScripts = new StringBuilder(responseToTransform);
+				customResponseWithScripts.append(getEquoWebSocketApi());
 				customResponseWithScripts.append(convertJsScriptsToString());
 
 				byte[] bytes = createDataFromString(customResponseWithScripts.toString(), charset);
@@ -77,6 +81,12 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 			}
 		}
 		return httpObject;
+	}
+
+	private Object getEquoWebSocketApi() {
+		URL url = Resources.getResource(EQUO_JS_API);
+		System.out.println("url is " + url);
+		return createLocalScriptSentence(url.toString());
 	}
 
 	@Override
@@ -96,8 +106,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 	private String generateScriptSentence(String scriptPath) {
 		try {
 			if (isLocalScript(scriptPath)) {
-				String scriptSentence = LOCAL_SCRIPT_SENTENCE.replaceAll(PATH_TO_STRING_REG, appUrl + scriptPath);
-				return scriptSentence;
+				return createLocalScriptSentence(scriptPath);
 			} else {
 				URL url = new URL(scriptPath);
 				String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
@@ -107,6 +116,11 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	private String createLocalScriptSentence(String scriptPath) {
+		String scriptSentence = LOCAL_SCRIPT_SENTENCE.replaceAll(PATH_TO_STRING_REG, appUrl + scriptPath);
+		return scriptSentence;
 	}
 
 	private boolean isLocalScript(String scriptPath) {
