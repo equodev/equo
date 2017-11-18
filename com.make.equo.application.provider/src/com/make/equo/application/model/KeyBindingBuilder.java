@@ -9,6 +9,7 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 
+import com.make.equo.application.impl.MParameterBuilder;
 import com.make.equo.application.util.IConstants;
 
 interface KeyBindingBuilder extends MParameterBuilder{

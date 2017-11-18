@@ -236,7 +236,8 @@ public enum EquoBundleManager {
 				+ " org.eclipse.jetty.servlets,\n" + " org.littleshoot.littleproxy,\n" + " org.apache.commons.io,\n"
 				+ " io.netty.all,\n" + " com.google.guava,\n" + " com.barchart.udt.barchart-udt-bundle,\n"
 				+ " org.apache.commons.lang3,\n" + " org.slf4j.api,\n" + " org.slf4j.impl.log4j12,\n"
-				+ " org.apache.log4j,\n" + " org.apache.httpcomponents.httpcore,\n" + " org.eclipse.ui.cocoa");
+				+ " org.apache.log4j,\n" + " org.apache.httpcomponents.httpcore,\n"
+				+ " org.java-websocket.Java-WebSocket,\n" + " org.eclipse.ui.cocoa");
 		bundleInitProps.put("osgi.bundles.defaultStartLevel", "4");
 		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product7");
 		bundleInitProps.put("osgi.dev",

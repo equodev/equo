@@ -1,9 +1,9 @@
-package com.make.equo.application.model;
+package com.make.equo.application.impl;
 
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 
-interface MParameterBuilder {
+public interface MParameterBuilder {
 	
 	default MParameter createMParameter(String id, String value) {
 		MParameter parameter = MCommandsFactory.INSTANCE.createParameter();

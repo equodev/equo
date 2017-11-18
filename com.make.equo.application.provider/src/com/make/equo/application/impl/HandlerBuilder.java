@@ -1,4 +1,4 @@
-package com.make.equo.application.model;
+package com.make.equo.application.impl;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -9,16 +9,19 @@ import org.eclipse.e4.ui.model.application.commands.impl.CommandsFactoryImpl;
 
 import com.make.equo.application.util.IConstants;
 
-abstract class HandlerBuilder implements MParameterBuilder {
+public abstract class HandlerBuilder implements MParameterBuilder {
 	
-	private static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler";
-	private EquoApplicationBuilder equoApplicationBuilder;
+	private String commandParameterId;
+	private String contributionUri;
+	private MApplication mApplication;
 
-	HandlerBuilder(EquoApplicationBuilder equoApplicationBuilder) {
-		this.equoApplicationBuilder = equoApplicationBuilder;
+	protected HandlerBuilder(MApplication mApplication, String commandParameterId, String contributionUri) {
+		this.mApplication = mApplication;
+		this.commandParameterId = commandParameterId;
+		this.contributionUri = contributionUri;
 	}
 
-	MCommandParameter createCommandParameter(String id) {
+	private MCommandParameter createCommandParameter(String id) {
 		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();
 		commandParameter.setElementId(id);
 		commandParameter.setName("Command Parameter Name");
@@ -26,29 +29,28 @@ abstract class HandlerBuilder implements MParameterBuilder {
 		return commandParameter;
 	}
 
-	MHandler createNewHandler(String id, String contributionUri) {
+	private MHandler createNewHandler(String id, String contributionUri) {
 		MHandler newHandler = CommandsFactoryImpl.eINSTANCE.createHandler();
 		newHandler.setElementId(id + IConstants.HANDLER_SUFFIX) ;
 		newHandler.setContributionURI(contributionUri);
 		return newHandler;
 	}
 
-	MCommand createNewCommand(String id) {
+	private MCommand createNewCommand(String id) {
 		MCommand newCommand = CommandsFactoryImpl.eINSTANCE.createCommand();
 		newCommand.setElementId(id + IConstants.COMMAND_SUFFIX) ;
 		newCommand.setCommandName(id + IConstants.COMMAND_SUFFIX);
 		return newCommand;
 	}
 	
-	MCommand createCommandAndHandler(String id) {
+	public MCommand createCommandAndHandler(String id) {
 		MCommand newCommand = createNewCommand(id);
-		MCommandParameter commandParameter = createCommandParameter(IConstants.COMMAND_ID_PARAMETER);
+		MCommandParameter commandParameter = createCommandParameter(commandParameterId);
 		newCommand.getParameters().add(commandParameter);
 		
-		MHandler newHandler = createNewHandler(id, PARAMETERIZED_COMMAND_CONTRIBUTION_URI);
+		MHandler newHandler = createNewHandler(id, contributionUri);
 		newHandler.setCommand(newCommand);
 		
-		MApplication mApplication = getEquoApplicationBuilder().getmApplication();
 		mApplication.getCommands().add(newCommand);
 		mApplication.getHandlers().add(newHandler);
 		
@@ -57,9 +59,6 @@ abstract class HandlerBuilder implements MParameterBuilder {
 		return newCommand;
 	}
 	
-	abstract Runnable getRunnable();
-
-	EquoApplicationBuilder getEquoApplicationBuilder() {
-		return equoApplicationBuilder;
-	}
+	protected abstract Runnable getRunnable();
+	
 }

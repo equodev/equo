@@ -4,6 +4,7 @@ import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 
+import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 
 public class MenuItemHandlerBuilder extends HandlerBuilder {
@@ -12,7 +13,7 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 	private Runnable runnable;
 
 	MenuItemHandlerBuilder(MenuItemBuilder menuItemBuilder) {
-		super(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder());
+		super(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder().getmApplication(), IConstants.COMMAND_ID_PARAMETER, IConstants.PARAMETERIZED_COMMAND_CONTRIBUTION_URI);
 		this.menuItemBuilder = menuItemBuilder;
 	}
 
@@ -34,12 +35,13 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 	
 	public MenuItemBuilder addShorcut(String keySequence) {
 		new MenuItemShortcutBuilder(this.menuItemBuilder).addShorcut(keySequence);
-		new GlobalShortcutBuilder(this.getEquoApplicationBuilder(), this.menuItemBuilder.getMenuItem().getElementId(), this.getRunnable()).addGlobalShortcut(keySequence);
+		EquoApplicationBuilder equoApplicationBuilder = this.menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder();
+		new GlobalShortcutBuilder(equoApplicationBuilder, this.menuItemBuilder.getMenuItem().getElementId(), this.getRunnable()).addGlobalShortcut(keySequence);
 		return this.menuItemBuilder;
 	}
 
 	@Override
-	Runnable getRunnable() {
+	protected Runnable getRunnable() {
 		return runnable;
 	}
 }

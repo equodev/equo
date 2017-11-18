@@ -247,6 +247,10 @@
       <requirement
           name="org.eclipse.jetty.xml"/>
       <requirement
+          name="org.java-websocket.Java-WebSocket"/>
+	  <requirement
+          name="com.google.gson"/>
+      <requirement
           name="org.eclipse.e4.ui.model.workbench"/>
       <requirement
           name="org.eclipse.e4.core.contexts"/>

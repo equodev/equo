@@ -12,8 +12,6 @@ public interface IConstants {
 
 	public static final String MAIN_URL_KEY = "mainUrl";
 
-	public static final String EQUO_COMMAND_PREFIX = "com.make.equo.command";
-
 	public static final String EQUO_HANDLER_PREFIX = "com.make.equo.handler";
 
 	public static final String DEFAULT_HANDLER_IMPL_ID = EQUO_HANDLER_PREFIX + ".default";
@@ -43,5 +41,15 @@ public interface IConstants {
 	public static final String FRAMEWORK_NAME = "Equo";
 
 	public static final String APPLICATION_NAME_PARAMETER = "applicationName";
+
+	public static final String EQUO_WEBSOCKET_SERVER_ADDON = "com.make.equo.application.addon.websocketserver";
+	
+	public static final String EQUO_WEBSOCKET_PREFIX = EQUO_APPLICATION_ID + ".websocket";
+	
+	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openBrowser";
+	
+	public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler";
+	
+	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserCommandHandler";
 
 }
