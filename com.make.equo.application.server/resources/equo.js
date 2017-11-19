@@ -35,11 +35,6 @@ window.equo = window.equo || {};
             console.log('event.data is...', event.data);
         };
     }();
-    
-    // Keep this variables private inside this closure scope
-    var privateFunction = function() {
-        console.log('Shhhh, this is private!');
-    };
 
     // Expose the below methods via the equo interface while
     // hiding the implementation of the method within the 
@@ -47,11 +42,33 @@ window.equo = window.equo || {};
 
     equo.openBrowser = function(url) {
         console.log('url is ' + url);
-        webSocket.send(JSON.stringify({
-            action: 'openBrowser',
-            url: url
-        }));
+        // Wait until the state of the socket is not ready and send the message when it is...
+        waitForSocketConnection(ws, function(){
+            webSocket.send(JSON.stringify({
+                action: 'openBrowser',
+                url: url
+            }));
+        });
     };
+
+    // Make the function wait until the connection is made...
+    var waitForSocketConnection = function(socket, callback){
+        setTimeout(
+            function () {
+                if (socket.readyState === 1) {
+                    console.log("Connection is made");
+                    if(callback != null){
+                        callback();
+                    }
+                    return;
+
+                } else {
+                    openSocket();
+                    console.log("wait for connection...")
+                    waitForSocketConnection(socket, callback);
+                }
+            }, 5); // wait 5 milisecond for the connection...
+    }
 
     // equo.openBrowser = function(name, url) {
     //     console.log('url is ' + url);
