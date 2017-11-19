@@ -40,13 +40,13 @@ window.equo = window.equo || {};
     // hiding the implementation of the method within the 
     // function() block
 
-    equo.openBrowser = function(url) {
-        console.log('url is ' + url);
+    equo.openBrowser = function(browserParams) {
+        console.log('browser params are ', browserParams);
         // Wait until the state of the socket is not ready and send the message when it is...
-        waitForSocketConnection(ws, function(){
+        waitForSocketConnection(webSocket, function(){
             webSocket.send(JSON.stringify({
                 action: 'openBrowser',
-                url: url
+                params: browserParams
             }));
         });
     };
@@ -68,61 +68,6 @@ window.equo = window.equo || {};
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
-    }
-
-    // equo.openBrowser = function(name, url) {
-    //     console.log('url is ' + url);
-    //     webSocket.send(JSON.stringify({
-    //         action: openBrowser,
-    //         name: name,
-    //         url: url
-    //     }));
-    // };
-
-    equo.each = function(collection, iterator) {
-        if (Array.isArray(collection)) {
-            for (var i = 0; i < collection.length; i++) {
-            iterator(collection[i], i, collection);
-            }
-        } else {
-            for (var key in collection) {
-            iterator(collection[key], key, collection);
-            }
-        }
-    };
-
-    equo.filter = function(collection, test) {
-        var filtered = [];
-        equo.each(collection, function(item) {
-            if (test(item)) {
-            filtered.push(item);
-            }
-        });
-        return filtered;
-    };
-
-    equo.map = function(collection, iterator) {
-        var mapped = [];
-        globalUtils.each(collection, function(value, key, collection) {
-            mapped.push(iterator(value));
-        });
-        return mapped;
-    };
-
-    equo.reduce = function(collection, iterator, accumulator) {
-        var startingValueMissing = accumulator === undefined;
-
-        equo.each(collection, function(item) {
-            if(startingValueMissing) {
-            accumulator = item;
-            startingValueMissing = false;
-            } else {
-            accumulator = iterator(accumulator, item);
-            }
-        });
-
-        return accumulator;
-
     };
 
 }(equo));
