@@ -46,7 +46,7 @@ public interface IConstants {
 	
 	public static final String EQUO_WEBSOCKET_PREFIX = EQUO_APPLICATION_ID + ".websocket";
 	
-	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openBrowser";
+	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openbrowser";
 	
 	public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler";
 	

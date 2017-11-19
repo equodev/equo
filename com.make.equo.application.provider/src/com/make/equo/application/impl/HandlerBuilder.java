@@ -1,5 +1,8 @@
 package com.make.equo.application.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
@@ -21,6 +24,16 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 		this.contributionUri = contributionUri;
 	}
 
+	/**
+	 * Allows subclasses to add multiple command parameters;
+	 *  
+	 * @param id
+	 * @return
+	 */
+	protected List<MCommandParameter> createCommandParameters() {
+		return Collections.emptyList();
+	}
+	
 	private MCommandParameter createCommandParameter(String id) {
 		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();
 		commandParameter.setElementId(id);
@@ -47,6 +60,7 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 		MCommand newCommand = createNewCommand(id);
 		MCommandParameter commandParameter = createCommandParameter(commandParameterId);
 		newCommand.getParameters().add(commandParameter);
+		newCommand.getParameters().addAll(createCommandParameters());
 		
 		MHandler newHandler = createNewHandler(id, contributionUri);
 		newHandler.setCommand(newCommand);

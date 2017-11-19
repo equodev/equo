@@ -17,17 +17,21 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.google.gson.Gson;
 import com.make.equo.application.util.IConstants;
 
 public class EquoWebSocketServer extends WebSocketServer {
 
+	private static final String EXECUTE_ACTION_ID = "execute";
 	private ECommandService commandService;
 	private EHandlerService handlerService;
+	private Gson gsonParser;
 
 	private EquoWebSocketServer(ECommandService commandService, EHandlerService handlerService) {
 		super(new InetSocketAddress(9895));
 		this.commandService = commandService;
 		this.handlerService = handlerService;
+		this.gsonParser = new Gson();
 	}
 
 	public static EquoWebSocketServer startServer(ECommandService commandService, EHandlerService handlerService) {
@@ -40,35 +44,37 @@ public class EquoWebSocketServer extends WebSocketServer {
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
 		broadcast("new connection: " + handshake.getResourceDescriptor());
-		System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!");
+		System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo Framework!");
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		broadcast(conn + " has left the room!");
-		System.out.println(conn + " has left the room!");
+		broadcast(conn + " has left the Equo Framework!");
+		System.out.println(conn + " has left the Equo Framework!");
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		broadcast(message);
 		System.out.println(conn + ": " + message);
-		
-		//TODO parse the JSON object with gson.
 		try {
-			executeCommand(message);
+			NamedActionMessage actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
+			if (actionMessage.getAction().equals(EXECUTE_ACTION_ID)) {
+				//TODO call user application code with the class passed as param
+			} else {
+				executeCommand(actionMessage.getAction().toLowerCase(), message);
+			}	
 		} catch (NotDefinedException | ExecutionException | NotEnabledException | NotHandledException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void executeCommand(String message) throws NotDefinedException, ExecutionException, NotEnabledException, NotHandledException {
-		//TODO get the command based on the received message
-		System.out.println("The message from the websocket client is " + message);
-		Command command = commandService.getCommand(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER + IConstants.COMMAND_SUFFIX);
+	private void executeCommand(String action, String message) throws NotDefinedException, ExecutionException, NotEnabledException, NotHandledException {
+		String commandParameterId = IConstants.EQUO_WEBSOCKET_PREFIX + "." + action.toLowerCase();
+		Command command = commandService.getCommand(commandParameterId + IConstants.COMMAND_SUFFIX);
 		Parameterization[] params = new Parameterization[] {
-				new Parameterization(command.getParameter(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER), "https://www.imdb.com") };
+				new Parameterization(command.getParameter(commandParameterId), message) };
 		ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, params);
 		handlerService.executeHandler(parametrizedCommand);
 	}
