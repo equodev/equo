@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.make.equo.application.util.IConstants;
 import com.make.swtcef.Chromium;
 
-public class MainPagePart {
+public class SinglePagePart {
 
 	@Inject
 	private MPart thisPart;
@@ -20,7 +20,7 @@ public class MainPagePart {
 	private Chromium browser;
 
 	@Inject
-	public MainPagePart(Composite parent) {
+	public SinglePagePart(Composite parent) {
 
 	}
 

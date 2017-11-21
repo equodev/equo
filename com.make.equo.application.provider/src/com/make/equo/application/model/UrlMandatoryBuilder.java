@@ -34,7 +34,7 @@ public class UrlMandatoryBuilder {
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
 		part.setContributionURI(
-				"bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.MainPagePart");
+				"bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.SinglePagePart");
 		part.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		// Get the Window binding context.
