@@ -10,6 +10,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
+import com.make.equo.application.addon.EquoProxyServerAddon;
 import com.make.equo.application.addon.EquoWebSocketServerAddon;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
@@ -22,6 +23,8 @@ public class EquoApplicationBuilder {
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	private String name;
+	private MAddon proxyServerAddon;
+	private MAddon webSocketServerAddon;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
@@ -50,10 +53,11 @@ public class EquoApplicationBuilder {
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 		
 		getmApplication().getAddons().add(createWebSocketServerAddon());
+		getmApplication().getAddons().add(createProxyServerAddon());
 		
 		return this.getUrlMandatoryFieldBuilder();
 	}
-	
+
 	private void addAppLevelCommands(MApplication mApplication) {
 		createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER, IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
 	}
@@ -69,10 +73,17 @@ public class EquoApplicationBuilder {
 	}
 
 	private MAddon createWebSocketServerAddon() {
-		MAddon webSocketServerAddon = MApplicationFactory.INSTANCE.createAddon();
+		webSocketServerAddon = MApplicationFactory.INSTANCE.createAddon();
 		webSocketServerAddon.setContributionURI((EquoWebSocketServerAddon.CONTRIBUTION_URI));
 		webSocketServerAddon.setElementId(IConstants.EQUO_WEBSOCKET_SERVER_ADDON);
 		return webSocketServerAddon;
+	}
+	
+	private MAddon createProxyServerAddon() {
+		proxyServerAddon = MApplicationFactory.INSTANCE.createAddon();
+		proxyServerAddon.setContributionURI((EquoProxyServerAddon.CONTRIBUTION_URI));
+		proxyServerAddon.setElementId(IConstants.EQUO_PROXY_SERVER_ADDON);
+		return proxyServerAddon;
 	}
 
 	private void createDefaultBindingContexts() {
@@ -117,4 +128,10 @@ public class EquoApplicationBuilder {
 	String getName() {
 		return name;
 	}
+
+	MAddon getEquoProxyServerAddon() {
+		return proxyServerAddon;
+	}
+	
+	
 }

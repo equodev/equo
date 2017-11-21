@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.FileLocator;
 
 import com.make.equo.application.util.FrameworkUtils;
-import com.make.equo.application.util.ScriptHandler;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
 
@@ -49,11 +51,12 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 * 
 	 */
 	public OptionalViewBuilder addCustomScript(String scriptPath) throws IOException, URISyntaxException {
-		return addCustomScript(null, scriptPath);
+		String url = urlMandatoryBuilder.getUrl();
+		return addCustomScript(url, scriptPath);
 	}
 
 	/**
-	 * Add a Javascript script that can modify the html content of the given url (TBD).
+	 * Add a Javascript script that can modify the html content of the given url.
 	 * 
 	 * Uses cases a custom Javascript script include the removal, addition, and
 	 * modification of existing HTML elements. An already existing application can
@@ -83,8 +86,19 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 			scriptUrl = new URL(scriptPath);
 		}
 		URL resolvedUrl = FileLocator.resolve(scriptUrl);
-		new ScriptHandler(urlMandatoryBuilder.getPart()).saveScript(resolvedUrl.toString());
+		addCustomScriptToProxyAddon(url, resolvedUrl);
 		return this;
+	}
+
+	private void addCustomScriptToProxyAddon(String url, URL resolvedUrl) {
+		Map<String, Object> transientData = getEquoApplicationBuilder().getEquoProxyServerAddon().getTransientData();
+		@SuppressWarnings("unchecked")
+		List<String> scripts = (List<String>) transientData.get(url);
+		if (scripts == null) {
+			scripts = new ArrayList<>();
+		}
+		scripts.add(resolvedUrl.toString());
+		transientData.put(url, scripts);
 	}
 
 }

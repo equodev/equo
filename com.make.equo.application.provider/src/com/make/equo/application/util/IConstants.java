@@ -52,4 +52,8 @@ public interface IConstants {
 	
 	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserCommandHandler";
 
+	public static final String EQUO_PROXY_SERVER_ADDON = "com.make.equo.application.addon.proxyserveraddon";
+
+	public static final String URLS_TO_PROXY = "urlsToProxy";
+
 }
