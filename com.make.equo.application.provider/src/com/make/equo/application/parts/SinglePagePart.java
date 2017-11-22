@@ -44,4 +44,8 @@ public class SinglePagePart {
 			browser.dispose();
 		}
 	}
+
+	public void loadUrl(String newUrl) {
+		browser.setUrl(newUrl);
+	}
 }
