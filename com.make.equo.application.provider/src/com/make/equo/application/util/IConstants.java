@@ -43,17 +43,33 @@ public interface IConstants {
 	public static final String APPLICATION_NAME_PARAMETER = "applicationName";
 
 	public static final String EQUO_WEBSOCKET_SERVER_ADDON = "com.make.equo.application.addon.websocketserver";
-	
+
 	public static final String EQUO_WEBSOCKET_PREFIX = EQUO_APPLICATION_ID + ".websocket";
-	
+
 	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openbrowser";
-	
+
 	public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ParameterizedCommandHandler";
-	
+
 	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserCommandHandler";
 
 	public static final String EQUO_PROXY_SERVER_ADDON = "com.make.equo.application.addon.proxyserveraddon";
 
 	public static final String URLS_TO_PROXY = "urlsToProxy";
+
+	public static final String SINGLE_PART_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.SinglePagePart";
+
+	public static final String EQUO_OPEN_BROWSER_AS_WINDOW = EQUO_APPLICATION_ID + ".openbrowseraswindow";
+
+	public static final String OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserAsWindowCommandHandler";
+
+	public static final String EQUO_OPEN_BROWSER_AS_SIDE_PART = EQUO_APPLICATION_ID + ".openbrowserassidepart";
+
+	public static final String OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserAsSidePartCommandHandler";
+
+	public static final String EQUO_BROWSER_WINDOW_NAME = EQUO_APPLICATION_ID + ".browser.window.name";
+
+	public static final String EQUO_BROWSER_PART_NAME = EQUO_APPLICATION_ID + ".browser.part.name";
+
+	public static final String EQUO_BROWSER_PART_POSITION = EQUO_APPLICATION_ID + ".browser.part.position";;
 
 }

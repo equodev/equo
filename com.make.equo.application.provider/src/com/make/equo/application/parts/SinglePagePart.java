@@ -1,6 +1,7 @@
 package com.make.equo.application.parts;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -36,5 +37,11 @@ public class SinglePagePart {
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}
 	}
-
+	
+	@PreDestroy
+	public void destroy() {
+		if (browser != null) {
+			browser.dispose();
+		}
+	}
 }

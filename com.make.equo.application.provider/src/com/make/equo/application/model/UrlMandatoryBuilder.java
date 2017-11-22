@@ -33,8 +33,7 @@ public class UrlMandatoryBuilder {
 		addUrlToProxyServer(url);
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
-		part.setContributionURI(
-				"bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.SinglePagePart");
+		part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
 		part.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		// Get the Window binding context.
