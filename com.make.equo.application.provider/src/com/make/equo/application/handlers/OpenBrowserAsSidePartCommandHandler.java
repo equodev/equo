@@ -1,13 +1,9 @@
 package com.make.equo.application.handlers;
 
-import java.util.Optional;
-
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
@@ -16,7 +12,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindowElement;
 
-import com.make.equo.application.parts.SinglePagePart;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.application.util.IPositionConstants;
 
@@ -28,43 +23,36 @@ public class OpenBrowserAsSidePartCommandHandler {
 			@Named(IConstants.EQUO_BROWSER_PART_POSITION) String position, MTrimmedWindow mTrimmedWindow,
 			MPart mainPart, UISynchronize sync) {
 		sync.syncExec(() -> {
-			String newPartStackId = IConstants.MAIN_PART_ID + "." + newPartName != null ? newPartName : "side.partstack." + position;
 			mTrimmedWindow.getChildren().remove(mainPart);
-			
-			Optional<MUIElement> optionalSidePartStack = getSidePartStack(mainPart, newPartStackId);
-			if (optionalSidePartStack.isPresent()) {
-				MPartStack mPartStack = (MPartStack) optionalSidePartStack.get();
-				if (!mPartStack.getChildren().isEmpty()) {
-					MPart sideMPart = (MPart) mPartStack.getChildren().get(0);
-					SinglePagePart singlePagePart = (SinglePagePart) sideMPart.getObject();
-					singlePagePart.loadUrl(url);
-				}
-			} else {
-				createNewSashContainer(url, newPartName, position, mTrimmedWindow, mainPart, newPartStackId);
-			}
+			createNewSashContainer(url, newPartName, position, mTrimmedWindow, mainPart);
 		});
 	}
 
 	private void createNewSashContainer(String url, String partName, String position, MTrimmedWindow mTrimmedWindow,
-			MPart mainPart, String newPartStackId) {
+			MPart mainPart) {
 		MPartSashContainer parentSashContainer = MBasicFactory.INSTANCE.createPartSashContainer();
 		mTrimmedWindow.getChildren().add((MWindowElement) parentSashContainer);
-		
+
 		MPartStack newPartStack = MBasicFactory.INSTANCE.createPartStack();
+		if (partName == null) {
+			newPartStack.getTags().add("NoTitle");
+		}
+		String newPartStackSuffix = partName != null ? partName.toLowerCase() : "side.partstack." + position;
+		String newPartStackId = IConstants.EQUO_PART_IN_PARTSTACK_ID + "." + newPartStackSuffix;
 		newPartStack.setElementId(newPartStackId);
+		
 		MPart newPart = MBasicFactory.INSTANCE.createPart();
 		newPartStack.getChildren().add(newPart);
 		// TODO generate a unique id...
-		newPart.setElementId(newPartStackId + ".part");
+		String partSuffix = partName != null ? partName.toLowerCase() : "side." + position;
+		String partId = IConstants.EQUO_BROWSER_IN_PARTSTACK_ID + "." + partSuffix;
+		newPart.setElementId(partId);
 		newPart.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
 		newPart.getProperties().put(IConstants.MAIN_URL_KEY, url);
 		newPart.setCloseable(true);
 		if (partName != null) {
 			newPart.setLabel(partName);
-		} else {
-			newPartStack.getTags().add("NoTitle");
 		}
-		
 		if (position != null) {
 			switch (position) {
 			case IPositionConstants.RIGHT:
@@ -91,16 +79,6 @@ public class OpenBrowserAsSidePartCommandHandler {
 		parentSashContainer.setSelectedElement(newPartStack);
 		parentSashContainer.setVisible(true);
 		parentSashContainer.setToBeRendered(true);
-	}
-
-	private Optional<MUIElement> getSidePartStack(MPart mainPart, String newPartStackId) {
-		MElementContainer<MUIElement> mainPartParent = mainPart.getParent();
-		if (mainPartParent != null) {
-			Optional<MUIElement> anySashElementChild = mainPartParent.getChildren().stream()
-					.filter(sashContainerChild -> sashContainerChild.getElementId().equals(newPartStackId)).findAny();
-			return anySashElementChild;
-		}
-		return Optional.empty();
 	}
 
 	private void addChildrenToSashContainer(MPartSashContainerElement firstElement,

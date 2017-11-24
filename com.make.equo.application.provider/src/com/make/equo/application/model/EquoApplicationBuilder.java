@@ -64,13 +64,34 @@ public class EquoApplicationBuilder {
 	private void addAppLevelCommands(MApplication mApplication) {
 		createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
 				IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
-		createOpenBrowserAsWindow(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_WINDOW,
+		createOpenBrowserAsWindowCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_WINDOW,
 				IConstants.OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI);
-		createOpenBrowserAsSidePart(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_SIDE_PART,
+		createOpenBrowserAsSidePartCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_SIDE_PART,
 				IConstants.OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI);
+		createUpdateBrowserCommand(mApplication, IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
+				IConstants.UPDATE_BROWSER_CONTRIBUTION_URI);
 	}
 
-	private void createOpenBrowserAsSidePart(MApplication mApplication, String commandId,
+	private void createUpdateBrowserCommand(MApplication mApplication, String commandId,
+			String commandContributionUri) {
+		HandlerBuilder handlerBuilder = new HandlerBuilder(mApplication, commandId, commandContributionUri) {
+			@Override
+			protected Runnable getRunnable() {
+				return null;
+			}
+
+			@Override
+			protected List<MCommandParameter> createCommandParameters() {
+				MCommandParameter partNameCommandParameter = createCommandParameter(IConstants.EQUO_BROWSER_PART_NAME,
+						"Part Name", true);
+				return Lists.newArrayList(partNameCommandParameter);
+			}
+
+		};
+		handlerBuilder.createCommandAndHandler(commandId);
+	}
+
+	private void createOpenBrowserAsSidePartCommand(MApplication mApplication, String commandId,
 			String commandContributionUri) {
 		HandlerBuilder handlerBuilder = new HandlerBuilder(mApplication, commandId, commandContributionUri) {
 			@Override
@@ -91,7 +112,7 @@ public class EquoApplicationBuilder {
 		handlerBuilder.createCommandAndHandler(commandId);
 	}
 
-	private void createOpenBrowserAsWindow(MApplication mApplication, String commandId, String commandContributionUri) {
+	private void createOpenBrowserAsWindowCommand(MApplication mApplication, String commandId, String commandContributionUri) {
 		HandlerBuilder handlerBuilder = new HandlerBuilder(mApplication, commandId, commandContributionUri) {
 			@Override
 			protected Runnable getRunnable() {

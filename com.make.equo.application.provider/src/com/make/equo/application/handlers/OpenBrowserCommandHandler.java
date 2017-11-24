@@ -1,5 +1,7 @@
 package com.make.equo.application.handlers;
 
+import java.util.Optional;
+
 import javax.inject.Named;
 
 import org.eclipse.core.commands.Command;
@@ -10,16 +12,18 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
 import com.google.gson.Gson;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.application.util.IPositionConstants;
 
-public class OpenBrowserCommandHandler {
+public class OpenBrowserCommandHandler implements BrowserCommandHandler {
 
 	@Execute
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER) String browserParams, MApplication mApplication,
-			ECommandService commandService, EHandlerService handlerService) {
+			ECommandService commandService, EHandlerService handlerService, EModelService modelService) {
 		Gson gsonParser = new Gson();
 		BrowserActionMessage broserParamsObject = gsonParser.fromJson(browserParams, BrowserActionMessage.class);
 		BrowserParams params = broserParamsObject.getParams();
@@ -27,10 +31,31 @@ public class OpenBrowserCommandHandler {
 			if (params.getPosition().equals(IPositionConstants.POPUP)) {
 				openBrowserAsWindow(commandService, handlerService, params);
 			} else {
-				OpenBrowserAsSidePart(commandService, handlerService, params);
+				Optional<MPart> existingBrowser = existingBrowserFor(mApplication, params, modelService);
+				if (existingBrowser.isPresent()) {
+					executeUpdateBrowserCommand(browserParams, commandService, handlerService);
+				} else {
+					OpenBrowserAsSidePart(commandService, handlerService, params);
+				}
 			}
 		} else {
 			openBrowserAsWindow(commandService, handlerService, params);
+		}
+	}
+
+	private void executeUpdateBrowserCommand(String browserParams, ECommandService commandService,
+			EHandlerService handlerService) {
+		String commandParameterId = IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER;
+		Command command = commandService.getCommand(commandParameterId + IConstants.COMMAND_SUFFIX);
+		Parameterization[] commandParams;
+		try {
+			commandParams = new Parameterization[] {
+					new Parameterization(command.getParameter(commandParameterId), browserParams) };
+			ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, commandParams);
+			handlerService.executeHandler(parametrizedCommand);
+		} catch (NotDefinedException e) {
+			// TODO log exception, must not reach this state.
+			e.printStackTrace();
 		}
 	}
 

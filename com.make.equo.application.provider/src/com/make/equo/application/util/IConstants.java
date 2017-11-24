@@ -70,6 +70,16 @@ public interface IConstants {
 
 	public static final String EQUO_BROWSER_PART_NAME = EQUO_APPLICATION_ID + ".browser.part.name";
 
-	public static final String EQUO_BROWSER_PART_POSITION = EQUO_APPLICATION_ID + ".browser.part.position";;
+	public static final String EQUO_BROWSER_PART_POSITION = EQUO_APPLICATION_ID + ".browser.part.position";
+
+	public static final String EQUO_WEBSOCKET_UPDATE_BROWSER = EQUO_WEBSOCKET_PREFIX + ".updatebrowser";
+	
+	public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.UpdateBrowserCommandHandler";
+	
+	public static final String EQUO_PARTSTACK_ID = EQUO_APPLICATION_ID + ".partstack";
+
+	public static final String EQUO_PART_IN_PARTSTACK_ID = EQUO_PARTSTACK_ID + ".part";
+	
+	public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
 }
