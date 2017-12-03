@@ -2,16 +2,17 @@ window.equo = window.equo || {};
 
 (function (equo) {
 
-    var webSocket;
+    let webSocket;
+    let userEventCallbacks = {};
 
     var openSocket = function() {
         // Ensures only one connection is open at a time
         if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
-            console.log("WebSocket is already opened.");
+            console.log('WebSocket is already opened.');
             return;
         }
         // Create a new instance of the websocket
-        webSocket = new WebSocket("ws://127.0.0.1:9895");
+        webSocket = new WebSocket('ws://127.0.0.1:9895');
          
         /**
          * Binds functions to the listeners for the websocket.
@@ -29,6 +30,12 @@ window.equo = window.equo || {};
         webSocket.onmessage = function(event){
             console.log('event.data is...', event.data);
             console.log('Receive Java messages here...');
+            if(event.data === undefined) {
+                return;
+            }
+            if (event.data in userEventCallbacks) {
+                userEventCallbacks[event.data]();
+            }
         };
 
         webSocket.onclose = function(event){
@@ -63,7 +70,7 @@ window.equo = window.equo || {};
         setTimeout(
             function () {
                 if (socket.readyState === 1) {
-                    console.log("Connection is made");
+                    console.log('Connection is made');
                     if(callback != null){
                         callback();
                     }
@@ -71,10 +78,14 @@ window.equo = window.equo || {};
 
                 } else {
                     openSocket();
-                    console.log("wait for connection...")
+                    console.log('wait for connection...')
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
+    };
+
+    equo.on = function(userEvent, callback) {
+        userEventCallbacks[userEvent] = callback;
     };
 
 }(equo));
