@@ -35,8 +35,7 @@ public class MenuItemBuilder {
 	}
 
 	public MenuItemBuilder onClick(Runnable runnable) {
-		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
-		return menuItemHandlerBuilder.onClick(runnable);
+		return onClick(runnable, null);
 	}
 
 	public MenuItemBuilder onClick(Runnable runnable, String userEvent) {
@@ -46,9 +45,7 @@ public class MenuItemBuilder {
 	}
 
 	public MenuItemBuilder onClick(String userEvent) {
-		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
-		MenuItemBuilder menuItemBuilder = menuItemHandlerBuilder.onClick(userEvent);
-		return menuItemBuilder;
+		return onClick(null, userEvent);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {

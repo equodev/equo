@@ -7,7 +7,6 @@ import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
-import org.eclipse.e4.ui.model.application.commands.MParameter;
 
 import com.make.equo.application.impl.MParameterBuilder;
 import com.make.equo.application.util.IConstants;
@@ -23,8 +22,6 @@ interface KeyBindingBuilder extends MParameterBuilder{
 		keyBinding.setElementId(commandId + KEYBINDING_SUFFIX);
 		keyBinding.getTags().add(IConstants.USER_KEY_BINDING_TAG);
 		keyBinding.setCommand(command);
-		MParameter parameter = createMParameter(IConstants.COMMAND_ID_PARAMETER, commandId);
-		keyBinding.getParameters().add(parameter);
 		return keyBinding;
 	}
 	
