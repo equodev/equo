@@ -34,11 +34,11 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 		return Collections.emptyList();
 	}
 	
-	private MCommandParameter createCommandParameter(String id) {
+	protected MCommandParameter createCommandParameter(String id, String name, boolean isOptional) {
 		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();
 		commandParameter.setElementId(id);
-		commandParameter.setName("Command Parameter Name");
-		commandParameter.setOptional(false);
+		commandParameter.setName(name);
+		commandParameter.setOptional(isOptional);
 		return commandParameter;
 	}
 
@@ -58,7 +58,7 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 	
 	public MCommand createCommandAndHandler(String id) {
 		MCommand newCommand = createNewCommand(id);
-		MCommandParameter commandParameter = createCommandParameter(commandParameterId);
+		MCommandParameter commandParameter = createCommandParameter(commandParameterId, "Command Parameter Name", false);
 		newCommand.getParameters().add(commandParameter);
 		newCommand.getParameters().addAll(createCommandParameters());
 		

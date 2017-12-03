@@ -8,6 +8,7 @@ public class MenuItemBuilder {
 
 	private MHandledMenuItem menuItem;
 	private MenuBuilder menuBuilder;
+	private MenuItemHandlerBuilder menuItemHandlerBuilder;
 
 	MenuItemBuilder(MenuBuilder menuBuilder) {
 		this.menuBuilder = menuBuilder;
@@ -32,11 +33,24 @@ public class MenuItemBuilder {
 		parentMenu.getChildren().add(newMenuItem);
 		return newMenuItem;
 	}
-	
-	public MenuItemHandlerBuilder onClick(Runnable runnable) {
-		return new MenuItemHandlerBuilder(this).onClick(runnable);
+
+	public MenuItemBuilder onClick(Runnable runnable) {
+		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
+		return menuItemHandlerBuilder.onClick(runnable);
 	}
-	
+
+	public MenuItemBuilder onClick(Runnable runnable, String userEvent) {
+		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
+		MenuItemBuilder menuItemBuilder = menuItemHandlerBuilder.onClick(runnable, userEvent);
+		return menuItemBuilder;
+	}
+
+	public MenuItemBuilder onClick(String userEvent) {
+		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
+		MenuItemBuilder menuItemBuilder = menuItemHandlerBuilder.onClick(userEvent);
+		return menuItemBuilder;
+	}
+
 	public MenuBuilder addMenu(String menuLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenu(menuLabel);
 	}
@@ -52,7 +66,7 @@ public class MenuItemBuilder {
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
-	
+
 	MHandledMenuItem getMenuItem() {
 		return menuItem;
 	}
@@ -60,5 +74,13 @@ public class MenuItemBuilder {
 	MenuBuilder getMenuBuilder() {
 		return menuBuilder;
 	}
-	
+
+	public MenuItemBuilder addShortcut(String keySequence) {
+		if (menuItemHandlerBuilder != null) {
+			return menuItemHandlerBuilder.addShortcut(keySequence);
+		}
+		// log that there is no menu item handler -> no onClick method was called.
+		return this;
+	}
+
 }

@@ -12,7 +12,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 public class EquoWebSocketServerAddon {
 
 	private EquoWebSocketServer webSocketServer;
-	
+
 	public static final String CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.addon.EquoWebSocketServerAddon";
 
 	@PostConstruct
@@ -36,4 +36,9 @@ public class EquoWebSocketServerAddon {
 			}
 		}
 	}
+
+	public EquoWebSocketServer getWebSocketServer() {
+		return webSocketServer;
+	}
+
 }

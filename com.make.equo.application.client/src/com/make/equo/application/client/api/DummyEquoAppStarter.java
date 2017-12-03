@@ -41,7 +41,7 @@ public class DummyEquoAppStarter implements IEquoFramework{
 					.addMenuItem("New Playlist").onClick(() -> {
 						System.out.println("New Playlist Window...");
 					})
-					.addShorcut("M1+N")
+					.addShortcut("M1+N")
 					.addMenuSeparator()
 					.addMenu("Import Playlist")
 						.addMenuItem("iTunes");

@@ -140,14 +140,6 @@ public class EquoApplicationBuilder {
 		handlerBuilder.createCommandAndHandler(commandId);
 	}
 
-	private MCommandParameter createCommandParameter(String id, String name, boolean isOptional) {
-		MCommandParameter commandParameter = MCommandsFactory.INSTANCE.createCommandParameter();
-		commandParameter.setElementId(id);
-		commandParameter.setName(name);
-		commandParameter.setOptional(isOptional);
-		return commandParameter;
-	}
-
 	private MAddon createWebSocketServerAddon() {
 		webSocketServerAddon = MApplicationFactory.INSTANCE.createAddon();
 		webSocketServerAddon.setContributionURI((EquoWebSocketServerAddon.CONTRIBUTION_URI));
