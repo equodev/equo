@@ -207,14 +207,6 @@
       <requirement
           name="org.eclipse.equinox.executable.feature.group"/>
       <requirement
-          name="com.make.equo.application.client"/>
-      <requirement
-          name="com.make.equo.application.provider"/>
-      <requirement
-          name="com.make.equo.application.server"/>
-      <requirement
-          name="com.make.equo.releng"/>
-      <requirement
           name="org.eclipse.jetty.client"/>
       <requirement
           name="org.eclipse.jetty.http"/>
