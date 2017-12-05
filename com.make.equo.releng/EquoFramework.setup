@@ -201,6 +201,12 @@
       <requirement
           name="org.eclipse.rcp.feature.group"/>
       <requirement
+          name="com.make.cef.feature.feature.group"/>
+      <requirement
+          name="com.make.equo.application.provider"/>
+      <requirement
+          name="com.make.equo.application.server"/>
+      <requirement
           name="*"/>
       <sourceLocator
           rootFolder="${git.clone.location}"
