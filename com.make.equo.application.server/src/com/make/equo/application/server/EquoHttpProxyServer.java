@@ -67,8 +67,17 @@ public class EquoHttpProxyServer {
 
 				private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
 					return proxiedUrls.stream()
-							.filter(url -> url.contains(originalRequest.headers().get(Names.HOST)))
+							.filter(url -> containsHeader(url, originalRequest))
 							.findFirst();
+				}
+
+				private boolean containsHeader(String url, HttpRequest originalRequest) {
+					String host = originalRequest.headers().get(Names.HOST);
+					if (host.indexOf(":") != -1) {
+						return url.contains(host.substring(0, host.indexOf(":"))); 
+					} else {
+						return url.contains(originalRequest.headers().get(Names.HOST));
+					}
 				}
 
 				@Override

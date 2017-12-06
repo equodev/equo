@@ -16,7 +16,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpHeaders.Names;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -50,8 +49,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject serverToProxyResponse(HttpObject httpObject) {
-		if (httpObject instanceof FullHttpResponse && appUrl.contains(originalRequest.headers().get(Names.HOST))
-				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
+		if (httpObject instanceof FullHttpResponse && ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
 			String contentTypeHeader = fullResponse.headers().get("Content-Type");
 			if (contentTypeHeader != null && contentTypeHeader.startsWith("text/")) {
