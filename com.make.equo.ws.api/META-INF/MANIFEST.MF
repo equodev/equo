@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Equo Web Server Api
+Bundle-SymbolicName: com.make.equo.ws.api
+Bundle-Version: 1.0.0
+Bundle-Vendor: Make Technology
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.make.equo.ws.api;version="1.0.0"
+Require-Bundle: org.eclipse.e4.core.commands,
+ org.java-websocket.Java-WebSocket,
+ com.google.gson,
+ org.eclipse.core.commands
+Import-Package: org.osgi.framework;version="1.8.0"
+Bundle-ActivationPolicy: lazy
