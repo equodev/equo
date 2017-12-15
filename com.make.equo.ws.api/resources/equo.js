@@ -65,6 +65,10 @@ window.equo = window.equo || {};
         sendToWebSocketServer(actionId);
     };
 
+    equo.send = function(actionId, payload) {
+        sendToWebSocketServer(actionId, payload);
+    };
+
     equo.updateBrowser = function(browserParams) {
         sendToWebSocketServer('updateBrowser', browserParams);
     };
