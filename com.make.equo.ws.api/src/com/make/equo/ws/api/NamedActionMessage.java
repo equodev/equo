@@ -4,7 +4,7 @@ public class NamedActionMessage extends ActionMessage {
 
 	private Object params;
 
-	Object getParams() {
+	public Object getParams() {
 		return params;
 	}
 }

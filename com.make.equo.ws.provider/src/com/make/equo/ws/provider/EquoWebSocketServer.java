@@ -45,7 +45,7 @@ class EquoWebSocketServer extends WebSocketServer {
 		String action = actionMessage.getAction().toLowerCase();
 		if (eventHandlers.containsKey(action)) {
 			IEquoRunnable runnable = eventHandlers.get(action);
-			runnable.run(message);
+			runnable.run(actionMessage.getParams().toString());
 		}
 	}
 
