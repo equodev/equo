@@ -6,7 +6,7 @@ public interface IEquoWebSocketService {
 
 	public void send(String payload);
 
-	public void addEventHandler(String actionId, IEquoRunnable runnable);
+	public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser);
 
 	public URL getEquoWebSocketJavascriptClient();
 

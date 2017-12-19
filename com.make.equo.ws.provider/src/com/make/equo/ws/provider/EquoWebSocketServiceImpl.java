@@ -10,7 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import com.google.common.io.Resources;
-import com.make.equo.ws.api.IEquoRunnable;
+import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 @Component
@@ -18,7 +18,7 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
 	private static final String EQUO_JS_API = "equo.js";
 
-	private Map<String, IEquoRunnable> eventHandlers = new HashMap<>();
+	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
 
 	@Activate
@@ -46,8 +46,8 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public void addEventHandler(String eventId, IEquoRunnable equoRunnable) {
-		eventHandlers.put(eventId.toLowerCase(), equoRunnable);
+	public void addEventHandler(String eventId, IEquoRunnableParser<?> equoRunnableParser) {
+		eventHandlers.put(eventId.toLowerCase(), equoRunnableParser);
 	}
 
 	@Override

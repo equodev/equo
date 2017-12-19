@@ -10,5 +10,7 @@ Require-Bundle: org.eclipse.e4.core.commands,
  org.java-websocket.Java-WebSocket,
  com.google.gson,
  org.eclipse.core.commands
-Import-Package: org.osgi.framework;version="1.8.0"
+Import-Package: com.google.common.reflect;version="15.0.0",
+ org.osgi.framework;version="1.8.0"
 Bundle-ActivationPolicy: lazy
+DynamicImport-Package: *

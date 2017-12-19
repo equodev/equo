@@ -1,7 +1,8 @@
 package com.make.equo.ws.api;
 
-public interface IEquoRunnable {
+import com.make.equo.ws.api.lambda.Newable;
 
-	public void run(String payload);
+public interface IEquoRunnable<T> extends Newable<T> {
 
+	public void run(T payload);
 }

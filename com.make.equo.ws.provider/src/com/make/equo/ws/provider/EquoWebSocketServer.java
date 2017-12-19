@@ -11,14 +11,15 @@ import org.java_websocket.server.WebSocketServer;
 
 import com.google.gson.Gson;
 import com.make.equo.ws.api.IEquoRunnable;
+import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.NamedActionMessage;
 
 class EquoWebSocketServer extends WebSocketServer {
 
 	private Gson gsonParser;
-	private Map<String, IEquoRunnable> eventHandlers;
+	private Map<String, IEquoRunnableParser<?>> eventHandlers;
 
-	public EquoWebSocketServer(Map<String, IEquoRunnable> eventHandlers) {
+	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers) {
 		super(new InetSocketAddress(9895));
 		this.eventHandlers = eventHandlers;
 		this.gsonParser = new Gson();
@@ -37,6 +38,7 @@ class EquoWebSocketServer extends WebSocketServer {
 		System.out.println(conn + " has left the Equo Framework!");
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		// broadcast(message);
@@ -44,8 +46,10 @@ class EquoWebSocketServer extends WebSocketServer {
 		NamedActionMessage actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
 		String action = actionMessage.getAction().toLowerCase();
 		if (eventHandlers.containsKey(action)) {
-			IEquoRunnable runnable = eventHandlers.get(action);
-			runnable.run(actionMessage.getParams().toString());
+			IEquoRunnableParser<?> equoRunnableParser = eventHandlers.get(action);
+			Object parsedPayload = equoRunnableParser.parsePayload(actionMessage.getParams());
+			IEquoRunnable equoRunnable = equoRunnableParser.getEquoRunnable();
+			equoRunnable.run(parsedPayload);
 		}
 	}
 

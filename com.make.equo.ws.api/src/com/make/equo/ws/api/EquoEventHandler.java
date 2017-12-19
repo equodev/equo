@@ -20,12 +20,20 @@ public class EquoEventHandler {
 		}
 	}
 
-	public void on(String eventId, IEquoRunnable equoRunnable) {
-		equoWebSocketService.addEventHandler(eventId, equoRunnable);
-	}
-
 	public void send(String userEvent) {
 		equoWebSocketService.send(userEvent);
+	}
+
+	public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
+		equoWebSocketService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
+	}
+
+	public void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable) {
+		equoWebSocketService.addEventHandler(eventId, new StringPayloadParser(stringPayloadEquoRunnable));
+	}
+
+	public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
+		equoWebSocketService.addEventHandler(eventId, new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
 	}
 
 }
