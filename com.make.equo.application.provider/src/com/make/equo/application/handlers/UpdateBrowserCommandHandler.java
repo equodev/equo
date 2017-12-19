@@ -19,8 +19,7 @@ public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER) String browserParams,
 			MApplication mApplication, EModelService modelService) {
 		Gson gsonParser = new Gson();
-		BrowserActionMessage broserParamsObject = gsonParser.fromJson(browserParams, BrowserActionMessage.class);
-		BrowserParams params = broserParamsObject.getParams();
+		BrowserParams params = gsonParser.fromJson(browserParams, BrowserParams.class);
 		Optional<MPart> existingBrowser = existingBrowserFor(mApplication, params, modelService);
 		if (existingBrowser.isPresent()) {
 			MPart mPart = existingBrowser.get();

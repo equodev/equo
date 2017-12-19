@@ -194,6 +194,7 @@ public enum EquoBundleManager {
 		bundleInitProps.put("osgi.configuration.area", "generated");
 
 		bundleInitProps.put("osgi.bundles", appBundleFile.getAbsolutePath() + ",\n"
+				+ " com.make.equo.ws.api,\n" + " com.make.equo.ws.provider,\n"
 				+ " com.make.equo.application.provider,\n" + " com.make.equo.application.server,\n"
 				+ "com.github.jnr.ffi,\n" + " com.github.jnr.jffi,\n" + " com.github.jnr.jffi.native,\n"
 				+ " com.github.jnr.x86asm,\n" + " com.ibm.icu,\n" + " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n"

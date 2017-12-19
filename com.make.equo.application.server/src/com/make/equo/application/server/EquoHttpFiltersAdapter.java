@@ -8,8 +8,11 @@ import java.util.stream.Collectors;
 
 import org.apache.http.entity.ContentType;
 import org.littleshoot.proxy.HttpFiltersAdapter;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
-import com.google.common.io.Resources;
+import com.make.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -23,7 +26,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
-	private static final String EQUO_JS_API = "equo.js";
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
 	private List<String> jsScripts;
@@ -49,7 +51,8 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject serverToProxyResponse(HttpObject httpObject) {
-		if (httpObject instanceof FullHttpResponse && ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
+		if (httpObject instanceof FullHttpResponse
+				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
 			String contentTypeHeader = fullResponse.headers().get("Content-Type");
 			if (contentTypeHeader != null && contentTypeHeader.startsWith("text/")) {
@@ -82,9 +85,19 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 	}
 
 	private Object getEquoWebSocketApi() {
-		URL url = Resources.getResource(EQUO_JS_API);
-		System.out.println("url is " + url);
-		return createLocalScriptSentence(url.toString());
+		BundleContext ctx = FrameworkUtil.getBundle(EquoHttpFiltersAdapter.class).getBundleContext();
+		if (ctx != null) {
+			@SuppressWarnings("unchecked")
+			ServiceReference<IEquoWebSocketService> serviceReference = (ServiceReference<IEquoWebSocketService>) ctx
+					.getServiceReference(IEquoWebSocketService.class.getName());
+			if (serviceReference != null) {
+				IEquoWebSocketService service = ctx.getService(serviceReference);
+				System.out.println("The OSGI service is ..." + service);
+				URL url = service.getEquoWebSocketJavascriptClient();
+				return createLocalScriptSentence(url.toString());
+			}
+		}
+		return "";
 	}
 
 	@Override

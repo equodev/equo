@@ -42,9 +42,7 @@ public interface IConstants {
 
 	public static final String APPLICATION_NAME_PARAMETER = "applicationName";
 
-	public static final String EQUO_WEBSOCKET_SERVER_ADDON = "com.make.equo.application.addon.websocketserver";
-
-	public static final String EQUO_WEBSOCKET_PREFIX = EQUO_APPLICATION_ID + ".websocket";
+	public static final String EQUO_WEBSOCKET_PREFIX = "com.make.equo.websocket";
 
 	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openbrowser";
 
