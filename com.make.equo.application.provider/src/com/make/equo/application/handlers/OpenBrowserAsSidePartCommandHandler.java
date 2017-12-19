@@ -50,6 +50,7 @@ public class OpenBrowserAsSidePartCommandHandler {
 		newPart.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
 		newPart.getProperties().put(IConstants.MAIN_URL_KEY, url);
 		newPart.setCloseable(true);
+		newPart.getTags().add("removeOnHide");
 		if (partName != null) {
 			newPart.setLabel(partName);
 		}
