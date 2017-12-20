@@ -10,13 +10,16 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import com.google.common.io.Resources;
+import com.google.gson.Gson;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
+import com.make.equo.ws.api.NamedActionMessage;
 
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
 	private static final String EQUO_JS_API = "equo.js";
+	private Gson gson = new Gson();
 
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
@@ -41,11 +44,6 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public void send(String payload) {
-		equoWebSocketServer.broadcast(payload);
-	}
-
-	@Override
 	public void addEventHandler(String eventId, IEquoRunnableParser<?> equoRunnableParser) {
 		eventHandlers.put(eventId.toLowerCase(), equoRunnableParser);
 	}
@@ -53,6 +51,13 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	@Override
 	public URL getEquoWebSocketJavascriptClient() {
 		return Resources.getResource(EQUO_JS_API);
+	}
+
+	@Override
+	public void send(String userEvent, Object payload) {
+		NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
+		String messageAsJson = gson.toJson(namedActionMessage);
+		equoWebSocketServer.broadcast(messageAsJson);
 	}
 
 }

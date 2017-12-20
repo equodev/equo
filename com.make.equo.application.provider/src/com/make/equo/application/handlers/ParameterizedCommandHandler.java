@@ -9,7 +9,6 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.EquoEventHandler;
 
-
 public class ParameterizedCommandHandler {
 
 	@Execute

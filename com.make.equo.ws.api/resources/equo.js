@@ -29,12 +29,22 @@ window.equo = window.equo || {};
 
         webSocket.onmessage = function(event){
             console.log('event.data is...', event.data);
-            console.log('Receive Java messages here...');
             if(event.data === undefined) {
                 return;
             }
-            if (event.data in userEventCallbacks) {
-                userEventCallbacks[event.data]();
+            try {
+                let parsedPayload = JSON.parse(event.data);
+                let actionId = parsedPayload.action;
+                if (actionId in userEventCallbacks) {
+                    let params = parsedPayload.params;
+                    if (parsedPayload.params) {
+                        userEventCallbacks[actionId](params);
+                    } else {
+                        userEventCallbacks[actionId]();
+                    }
+                }
+            } catch(err) {
+                console.log('Error while trying to parse ', event.data, '. The error is ', err);
             }
         };
 

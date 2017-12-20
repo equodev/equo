@@ -21,7 +21,11 @@ public class EquoEventHandler {
 	}
 
 	public void send(String userEvent) {
-		equoWebSocketService.send(userEvent);
+		equoWebSocketService.send(userEvent, null);
+	}
+
+	public void send(String userEvent, Object payload) {
+		equoWebSocketService.send(userEvent, payload);
 	}
 
 	public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
