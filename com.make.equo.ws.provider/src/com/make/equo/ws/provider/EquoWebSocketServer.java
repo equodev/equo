@@ -2,6 +2,8 @@ package com.make.equo.ws.provider;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.java_websocket.WebSocket;
@@ -18,6 +20,8 @@ class EquoWebSocketServer extends WebSocketServer {
 
 	private Gson gsonParser;
 	private Map<String, IEquoRunnableParser<?>> eventHandlers;
+	private boolean firstClientConnected = false;
+	List<String> messagesToSend = new ArrayList<>();
 
 	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers) {
 		super(new InetSocketAddress(9895));
@@ -30,6 +34,11 @@ class EquoWebSocketServer extends WebSocketServer {
 		broadcast("new connection: " + handshake.getResourceDescriptor());
 		System.out
 				.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo Framework!");
+		this.firstClientConnected = true;
+		for (String messageToSend : messagesToSend) {
+			broadcast(messageToSend);
+		}
+		messagesToSend.clear();
 	}
 
 	@Override
@@ -77,6 +86,15 @@ class EquoWebSocketServer extends WebSocketServer {
 	public void onStart() {
 		// TODO log web socket server started
 		System.out.println("Equo Server started!");
+	}
+
+	@Override
+	public void broadcast(String messageAsJson) {
+		if (firstClientConnected) {
+			super.broadcast(messageAsJson);
+		} else {
+			messagesToSend.add(messageAsJson);
+		}
 	}
 
 }
