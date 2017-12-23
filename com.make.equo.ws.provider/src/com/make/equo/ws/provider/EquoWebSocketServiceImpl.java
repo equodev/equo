@@ -10,7 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import com.google.common.io.Resources;
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
 import com.make.equo.ws.api.NamedActionMessage;
@@ -19,7 +19,6 @@ import com.make.equo.ws.api.NamedActionMessage;
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
 	private static final String EQUO_JS_API = "equo.js";
-	private Gson gson = new Gson();
 
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
@@ -54,9 +53,9 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public void send(String userEvent, Object payload) {
+	public void send(String userEvent, Object payload, GsonBuilder gsonBuilder) {
 		NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
-		String messageAsJson = gson.toJson(namedActionMessage);
+		String messageAsJson = gsonBuilder.create().toJson(namedActionMessage);
 		equoWebSocketServer.broadcast(messageAsJson);
 	}
 

@@ -4,9 +4,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import com.google.gson.GsonBuilder;
+
 public class EquoEventHandler {
 
 	private IEquoWebSocketService equoWebSocketService;
+	private GsonBuilder gsonBuilder;
 
 	public EquoEventHandler() {
 		BundleContext ctx = FrameworkUtil.getBundle(EquoEventHandler.class).getBundleContext();
@@ -18,14 +21,15 @@ public class EquoEventHandler {
 				equoWebSocketService = ctx.getService(serviceReference);
 			}
 		}
+		this.gsonBuilder = new GsonBuilder();
 	}
 
 	public void send(String userEvent) {
-		equoWebSocketService.send(userEvent, null);
+		this.send(userEvent, null);
 	}
 
 	public void send(String userEvent, Object payload) {
-		equoWebSocketService.send(userEvent, payload);
+		equoWebSocketService.send(userEvent, payload, this.gsonBuilder);
 	}
 
 	public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
@@ -38,6 +42,10 @@ public class EquoEventHandler {
 
 	public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
 		equoWebSocketService.addEventHandler(eventId, new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
+	}
+
+	public GsonBuilder getGsonBuilder() {
+		return this.gsonBuilder;
 	}
 
 }

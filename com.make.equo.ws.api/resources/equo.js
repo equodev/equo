@@ -44,7 +44,7 @@ window.equo = window.equo || {};
                     }
                 }
             } catch(err) {
-                console.log('Error while trying to parse ', event.data, '. The error is ', err);
+
             }
         };
 
