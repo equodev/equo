@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 
 import com.make.equo.application.api.IEquoFramework;
 import com.make.equo.application.model.EquoApplication;
-import com.make.equo.application.util.FrameworkUtils;
+import com.make.equo.application.util.FrameworkUtil;
 
 public class LifeCycleManager {
 
@@ -29,8 +29,8 @@ public class LifeCycleManager {
 		BundleContext context = Activator.getContext();
 		
 		Bundle equoAppBundle = context.getBundle(equoAppBundleId);
-		FrameworkUtils.INSTANCE.setMainAppBundle(equoAppBundle);
-		FrameworkUtils.INSTANCE.setAppBundlePath(equoAppBundlePath);
+		FrameworkUtil.INSTANCE.setMainAppBundle(equoAppBundle);
+		FrameworkUtil.INSTANCE.setAppBundlePath(equoAppBundlePath);
 		
 		Class<?> equoApplicationClazz = equoAppBundle.loadClass(equoAppClassName);
 		IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();

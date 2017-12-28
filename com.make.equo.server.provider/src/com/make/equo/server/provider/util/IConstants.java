@@ -1,4 +1,4 @@
-package com.make.equo.application.server.util;
+package com.make.equo.server.provider.util;
 
 public interface IConstants {
 	

@@ -2,9 +2,9 @@ package com.make.equo.application.model;
 
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.MAddon;
+import javax.inject.Inject;
+
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
@@ -14,10 +14,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.google.common.collect.Lists;
-import com.make.equo.application.addon.EquoProxyServerAddon;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
+import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 
 public class EquoApplicationBuilder {
@@ -28,12 +29,14 @@ public class EquoApplicationBuilder {
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	private String name;
-	private MAddon proxyServerAddon;
+	@Inject
+	private IEquoServer equoServer;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
 		this.mApplication = equoApplication.getEquoApplicationModel().getMainApplication();
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
+		FrameworkUtil.INSTANCE.inject(this.urlMandatoryFieldBuilder);
 		this.optionalBuilder = new OptionalFieldBuilder(this);
 	}
 
@@ -56,7 +59,7 @@ public class EquoApplicationBuilder {
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 
-		getmApplication().getAddons().add(createProxyServerAddon());
+		equoServer.startServer();
 
 		return this.getUrlMandatoryFieldBuilder();
 	}
@@ -153,13 +156,6 @@ public class EquoApplicationBuilder {
 		handlerBuilder.createCommandAndHandler(commandId);
 	}
 
-	private MAddon createProxyServerAddon() {
-		proxyServerAddon = MApplicationFactory.INSTANCE.createAddon();
-		proxyServerAddon.setContributionURI((EquoProxyServerAddon.CONTRIBUTION_URI));
-		proxyServerAddon.setElementId(IConstants.EQUO_PROXY_SERVER_ADDON);
-		return proxyServerAddon;
-	}
-
 	private void createDefaultBindingContexts() {
 		MBindingContext windowAndDialogBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
 		windowAndDialogBindingContext.setElementId(IConstants.DIALOGS_AND_WINDOWS_BINDING_CONTEXT);
@@ -201,10 +197,6 @@ public class EquoApplicationBuilder {
 
 	String getName() {
 		return name;
-	}
-
-	MAddon getEquoProxyServerAddon() {
-		return proxyServerAddon;
 	}
 
 }

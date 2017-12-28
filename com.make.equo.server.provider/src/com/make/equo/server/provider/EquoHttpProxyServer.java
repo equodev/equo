@@ -1,5 +1,7 @@
-package com.make.equo.application.server;
+package com.make.equo.server.provider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,34 +12,29 @@ import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+
+import com.make.equo.server.api.IEquoServer;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaders.Names;
 import io.netty.handler.codec.http.HttpRequest;
 
-public class EquoHttpProxyServer {
+@Component
+public class EquoHttpProxyServer implements IEquoServer {
 
 	static final String LOCAL_FILE_PROTOCOL = "file:/";
+	private static final String prefix = "equo";
 
-	private List<String> proxiedUrls;
-	private Map<String, Object> urlsToScripts;
+	private List<String> proxiedUrls = new ArrayList<>();
+	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	
 	private String equoAppBundleLocation;
-	private String prefix;
 	private HttpProxyServer proxyServer;
 
-	public EquoHttpProxyServer(List<String> proxiedUrls, Map<String, Object> urlsToScripts, String equoAppBundleLocation, String prefix) {
-		this.proxiedUrls = proxiedUrls;
-		this.urlsToScripts = urlsToScripts;
-		if (equoAppBundleLocation.endsWith("/")) {
-			this.equoAppBundleLocation = equoAppBundleLocation;
-		} else {
-			this.equoAppBundleLocation = equoAppBundleLocation + "/";
-		}
-		this.prefix = prefix.toLowerCase();
-	}
-
-	public void startProxy() {
+	@Override
+	public void startServer() {
 		proxyServer = DefaultHttpProxyServer
 			.bootstrap()
 			.withPort(9896)
@@ -45,7 +42,6 @@ public class EquoHttpProxyServer {
 			.withAllowRequestToOriginServer(true)
 			.withTransparent(false)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
-				@SuppressWarnings("unchecked")
 				public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
 					if (originalRequest.getUri().contains(LOCAL_FILE_PROTOCOL)) {
 						return new LocalScriptFileRequestFiltersAdapter(originalRequest);
@@ -57,7 +53,7 @@ public class EquoHttpProxyServer {
 										originalRequest);
 							} else {
 								String appUrl = url.get();
-								return new EquoHttpFiltersAdapter(appUrl, originalRequest, (List<String>) urlsToScripts.get(appUrl));
+								return new EquoHttpFiltersAdapter(appUrl, originalRequest, urlsToScripts.get(appUrl));
 							}
 						} else {
 							return new HttpFiltersAdapter(originalRequest);
@@ -92,9 +88,32 @@ public class EquoHttpProxyServer {
 			}).start();
 	}
 	
+	@Deactivate
 	public void stop() {
 		if (proxyServer != null) {
 			proxyServer.stop();
+		}
+	}
+
+	@Override
+	public void addCustomScript(String url, String scriptUrl) {
+		if (!urlsToScripts.containsKey(url)) {
+			urlsToScripts.put(url, new ArrayList<>());
+		}
+		urlsToScripts.get(url).add(scriptUrl);
+	}
+
+	@Override
+	public void addUrl(String url) {
+		proxiedUrls.add(url);
+	}
+
+	@Override
+	public void setAppBundlePath(String appBundlePath) {
+		if (appBundlePath.endsWith("/")) {
+			this.equoAppBundleLocation = appBundlePath;
+		} else {
+			this.equoAppBundleLocation = appBundlePath + "/";
 		}
 	}
 	

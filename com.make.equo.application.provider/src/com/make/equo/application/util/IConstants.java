@@ -50,10 +50,6 @@ public interface IConstants {
 
 	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.OpenBrowserCommandHandler";
 
-	public static final String EQUO_PROXY_SERVER_ADDON = "com.make.equo.application.addon.proxyserveraddon";
-
-	public static final String URLS_TO_PROXY = "urlsToProxy";
-
 	public static final String SINGLE_PART_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.parts.SinglePagePart";
 
 	public static final String EQUO_OPEN_BROWSER_AS_WINDOW = EQUO_APPLICATION_ID + ".openbrowseraswindow";
@@ -71,13 +67,13 @@ public interface IConstants {
 	public static final String EQUO_BROWSER_PART_POSITION = EQUO_APPLICATION_ID + ".browser.part.position";
 
 	public static final String EQUO_WEBSOCKET_UPDATE_BROWSER = EQUO_WEBSOCKET_PREFIX + ".updatebrowser";
-	
+
 	public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.UpdateBrowserCommandHandler";
-	
+
 	public static final String EQUO_PARTSTACK_ID = EQUO_APPLICATION_ID + ".partstack";
 
 	public static final String EQUO_PART_IN_PARTSTACK_ID = EQUO_PARTSTACK_ID + ".part";
-	
+
 	public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
 	public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT = EQUO_WEBSOCKET_PREFIX + ".useremittedevent";;

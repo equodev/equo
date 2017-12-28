@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.eclipse.core.runtime.FileLocator;
 
-import com.make.equo.application.util.FrameworkUtils;
+import com.make.equo.application.util.FrameworkUtil;
+import com.make.equo.server.api.IEquoServer;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
+
+	@Inject
+	private IEquoServer equoServer;
 
 	private UrlMandatoryBuilder urlMandatoryBuilder;
 
@@ -89,7 +92,7 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 		URI scriptUri = new URI(scriptPath);
 		URL scriptUrl;
 		if (!scriptUri.isAbsolute()) {
-			scriptUrl = FrameworkUtils.INSTANCE.getEntry(scriptPath);
+			scriptUrl = FrameworkUtil.INSTANCE.getEntry(scriptPath);
 		} else {
 			scriptUrl = new URL(scriptPath);
 		}
@@ -99,14 +102,7 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	}
 
 	private void addCustomScriptToProxyAddon(String url, URL resolvedUrl) {
-		Map<String, Object> transientData = getEquoApplicationBuilder().getEquoProxyServerAddon().getTransientData();
-		@SuppressWarnings("unchecked")
-		List<String> scripts = (List<String>) transientData.get(url);
-		if (scripts == null) {
-			scripts = new ArrayList<>();
-		}
-		scripts.add(resolvedUrl.toString());
-		transientData.put(url, scripts);
+		equoServer.addCustomScript(url, resolvedUrl.toString());
 	}
 
 }

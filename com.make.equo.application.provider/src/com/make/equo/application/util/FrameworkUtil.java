@@ -2,9 +2,13 @@ package com.make.equo.application.util;
 
 import java.net.URL;
 
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
-public enum FrameworkUtils {
+public enum FrameworkUtil {
 
 	INSTANCE;
 
@@ -19,7 +23,7 @@ public enum FrameworkUtils {
 		URL scriptUrl = mainEquoAppBundle.getEntry(scriptPath);
 		return scriptUrl;
 	}
-	
+
 	public String getFrameworkName() {
 		return IConstants.FRAMEWORK_NAME;
 	}
@@ -30,6 +34,13 @@ public enum FrameworkUtils {
 
 	public String getAppBundlePath() {
 		return appBundlePath;
+	}
+
+	public void inject(Object object) {
+		BundleContext bundleContext = org.osgi.framework.FrameworkUtil.getBundle(FrameworkUtil.class)
+				.getBundleContext();
+		IEclipseContext serviceContext = EclipseContextFactory.getServiceContext(bundleContext);
+		ContextInjectionFactory.inject(object, serviceContext);
 	}
 
 }

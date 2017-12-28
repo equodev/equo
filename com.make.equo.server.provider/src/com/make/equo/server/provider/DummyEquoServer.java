@@ -1,4 +1,4 @@
-package com.make.equo.application.server;
+package com.make.equo.server.provider;
 
 public class DummyEquoServer {
 	
