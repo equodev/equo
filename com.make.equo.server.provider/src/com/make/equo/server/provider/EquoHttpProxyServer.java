@@ -76,8 +76,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 						return new MainAppUrlResolver(LOCAL_FILE_PROTOCOL, mainEquoAppBundle);
 					}
 					if (uri.contains(BUNDLE_SCRIPT_PROTOCOL)) {
-						//TODO
-						return null;
+						return new BundleUrlResolver(BUNDLE_SCRIPT_PROTOCOL);
 					}
 					if (uri.contains(EQUO_FRAMEWORK_PATH)) {
 						return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
