@@ -57,7 +57,7 @@ window.equo = window.equo || {};
     // hiding the implementation of the method within the 
     // function() block
 
-    var sendToWebSocketServer = function(action, browserParams) {
+    equo.sendToWebSocketServer = function(action, browserParams) {
         // Wait until the state of the socket is not ready and send the message when it is...
         waitForSocketConnection(webSocket, function(){
             webSocket.send(JSON.stringify({
@@ -67,20 +67,12 @@ window.equo = window.equo || {};
         });
     };
 
-    equo.openBrowser = function(browserParams) {
-        sendToWebSocketServer('openBrowser', browserParams);
-    };
-
     equo.send = function(actionId) {
         sendToWebSocketServer(actionId);
     };
 
     equo.send = function(actionId, payload) {
         sendToWebSocketServer(actionId, payload);
-    };
-
-    equo.updateBrowser = function(browserParams) {
-        sendToWebSocketServer('updateBrowser', browserParams);
     };
 
     // Make the function wait until the connection is made...

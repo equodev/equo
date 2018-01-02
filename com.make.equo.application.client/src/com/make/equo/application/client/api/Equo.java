@@ -25,9 +25,8 @@ public class Equo {
 				"-" + IWorkbench.LIFE_CYCLE_URI_ARG,
 				"bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager",
 				"-XstartOnFirstThread",
-				"-equoAppBundleId", equoBundleManager.getEquoAppBundleId(),
-				"-equoAppMainClass", equoApplicationClazz.getName(),
-				"-equoAppBundlePath", appBundleFile.getAbsolutePath()};
+				"-equoAppBundleName", equoBundleManager.getMainAppBundleName(),
+				"-equoAppMainClass", equoApplicationClazz.getName()};
 		try {
 			EclipseStarter.run(args, null);
 		} catch (Exception e) {

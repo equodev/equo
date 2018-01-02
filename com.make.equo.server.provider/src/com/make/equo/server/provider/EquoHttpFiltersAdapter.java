@@ -8,9 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.http.entity.ContentType;
 import org.littleshoot.proxy.HttpFiltersAdapter;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
 
 import com.make.equo.ws.api.IEquoWebSocketService;
 
@@ -32,11 +29,15 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
 	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
 	private String appUrl;
+	private static final String equoFrameworkJsApi = "equoFramework.js";
+	private IEquoWebSocketService equoWebsocketServer;
 
-	public EquoHttpFiltersAdapter(String appUrl, HttpRequest originalRequest, List<String> jsScripts) {
+	public EquoHttpFiltersAdapter(String appUrl, HttpRequest originalRequest, List<String> jsScripts,
+			IEquoWebSocketService equoWebsocketServer) {
 		super(originalRequest);
 		this.appUrl = appUrl;
 		this.jsScripts = jsScripts;
+		this.equoWebsocketServer = equoWebsocketServer;
 	}
 
 	@Override
@@ -66,7 +67,8 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 				String responseToTransform = createStringFromData(data, charset);
 				StringBuilder customResponseWithScripts = new StringBuilder(responseToTransform);
-				customResponseWithScripts.append(getEquoWebSocketApi());
+				customResponseWithScripts.append(getEquoWebsocketsApi());
+				customResponseWithScripts.append(getEquoFrameworkJsApi());
 				customResponseWithScripts.append(convertJsScriptsToString());
 
 				byte[] bytes = createDataFromString(customResponseWithScripts.toString(), charset);
@@ -84,20 +86,13 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 		return httpObject;
 	}
 
-	private Object getEquoWebSocketApi() {
-		BundleContext ctx = FrameworkUtil.getBundle(EquoHttpFiltersAdapter.class).getBundleContext();
-		if (ctx != null) {
-			@SuppressWarnings("unchecked")
-			ServiceReference<IEquoWebSocketService> serviceReference = (ServiceReference<IEquoWebSocketService>) ctx
-					.getServiceReference(IEquoWebSocketService.class.getName());
-			if (serviceReference != null) {
-				IEquoWebSocketService service = ctx.getService(serviceReference);
-				System.out.println("The OSGI service is ..." + service);
-				URL url = service.getEquoWebSocketJavascriptClient();
-				return createLocalScriptSentence(url.toString());
-			}
-		}
-		return "";
+	private String getEquoWebsocketsApi() {
+		String equoWebsocketsJsResourceName = equoWebsocketServer.getEquoWebsocketsJsResourceName();
+		return createLocalScriptSentence(EquoHttpProxyServer.EQUO_WEBSOCKETS_JS_PATH + equoWebsocketsJsResourceName);
+	}
+
+	private String getEquoFrameworkJsApi() {
+		return createLocalScriptSentence(EquoHttpProxyServer.EQUO_FRAMEWORK_PATH + equoFrameworkJsApi);
 	}
 
 	@Override
@@ -136,7 +131,8 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	private boolean isLocalScript(String scriptPath) {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
-		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_FILE_PROTOCOL);
+		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_PROTOCOL)
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_PROTOCOL);
 	}
 
 	private String createStringFromData(byte[] data, Charset charset) {

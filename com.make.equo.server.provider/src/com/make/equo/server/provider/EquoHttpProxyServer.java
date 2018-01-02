@@ -1,10 +1,13 @@
 package com.make.equo.server.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersAdapter;
@@ -12,10 +15,12 @@ import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaders.Names;
@@ -24,14 +29,20 @@ import io.netty.handler.codec.http.HttpRequest;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	static final String LOCAL_FILE_PROTOCOL = "file:/";
-	private static final String prefix = "equo";
+	public static final String LOCAL_SCRIPT_PROTOCOL = "main_app_equo_script/";
+	public static final String BUNDLE_SCRIPT_PROTOCOL = "external_bundle_equo_script/";
+	public static final String LOCAL_FILE_PROTOCOL = "equo/";
+	public static final String EQUO_FRAMEWORK_PATH = "equoFramework/";
+	public static final String EQUO_WEBSOCKETS_JS_PATH = "equoWebsockets/";
 
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	
-	private String equoAppBundleLocation;
 	private HttpProxyServer proxyServer;
+	private Bundle mainEquoAppBundle;
+
+	@Inject
+	private IEquoWebSocketService equoWebsocketServer;
 
 	@Override
 	public void startServer() {
@@ -43,22 +54,43 @@ public class EquoHttpProxyServer implements IEquoServer {
 			.withTransparent(false)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 				public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
-					if (originalRequest.getUri().contains(LOCAL_FILE_PROTOCOL)) {
-						return new LocalScriptFileRequestFiltersAdapter(originalRequest);
+					if (isLocalFileRequest(originalRequest)) {
+						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 					} else {
 						Optional<String> url = getRequestedUrl(originalRequest);
 						if (url.isPresent()) {
-							if (originalRequest.getUri().contains(prefix)) {
-								return new LocalFileRequestFiltersAdapter(equoAppBundleLocation, prefix,
-										originalRequest);
-							} else {
-								String appUrl = url.get();
-								return new EquoHttpFiltersAdapter(appUrl, originalRequest, urlsToScripts.get(appUrl));
-							}
+							String appUrl = url.get();
+							return new EquoHttpFiltersAdapter(appUrl, originalRequest, getCustomScripts(appUrl), equoWebsocketServer);
 						} else {
 							return new HttpFiltersAdapter(originalRequest);
 						}
 					}
+				}
+
+				private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
+					String uri = originalRequest.getUri();
+					if (uri.contains(LOCAL_SCRIPT_PROTOCOL)) {
+						return new MainAppUrlResolver(LOCAL_SCRIPT_PROTOCOL, mainEquoAppBundle);
+					}
+					if (uri.contains(LOCAL_FILE_PROTOCOL)) {
+						return new MainAppUrlResolver(LOCAL_FILE_PROTOCOL, mainEquoAppBundle);
+					}
+					if (uri.contains(BUNDLE_SCRIPT_PROTOCOL)) {
+						//TODO
+						return null;
+					}
+					if (uri.contains(EQUO_FRAMEWORK_PATH)) {
+						return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
+					}
+					if (uri.contains(EQUO_WEBSOCKETS_JS_PATH)) {
+						return new EquoWebsocketsUrlResolver(EQUO_WEBSOCKETS_JS_PATH, equoWebsocketServer);
+					}
+					return null;
+				}
+
+				private boolean isLocalFileRequest(HttpRequest originalRequest) {
+					String uri = originalRequest.getUri();
+					return uri.contains(LOCAL_SCRIPT_PROTOCOL) || uri.contains(LOCAL_FILE_PROTOCOL) || uri.contains(BUNDLE_SCRIPT_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH)  || uri.contains(EQUO_WEBSOCKETS_JS_PATH);
 				}
 
 				private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
@@ -88,6 +120,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 			}).start();
 	}
 	
+	private List<String> getCustomScripts(String url) {
+		if (!urlsToScripts.containsKey(url)) {
+			return Collections.emptyList();
+		}
+		return urlsToScripts.get(url);
+	}
+
 	@Deactivate
 	public void stop() {
 		if (proxyServer != null) {
@@ -109,12 +148,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 	}
 
 	@Override
-	public void setAppBundlePath(String appBundlePath) {
-		if (appBundlePath.endsWith("/")) {
-			this.equoAppBundleLocation = appBundlePath;
-		} else {
-			this.equoAppBundleLocation = appBundlePath + "/";
-		}
+	public void setMainAppBundle(Bundle mainEquoAppBundle) {
+		this.mainEquoAppBundle = mainEquoAppBundle;
+	}
+
+	@Override
+	public String getLocalScriptProtocol() {
+		return LOCAL_SCRIPT_PROTOCOL;
+	}
+
+	@Override
+	public String getBundleScriptProtocol() {
+		return BUNDLE_SCRIPT_PROTOCOL;
 	}
 	
 }

@@ -38,8 +38,6 @@ public interface IConstants {
 
 	public static final String CUSTOM_SCRIPTS = "customScripts";
 
-	public static final String FRAMEWORK_NAME = "Equo";
-
 	public static final String APPLICATION_NAME_PARAMETER = "applicationName";
 
 	public static final String EQUO_WEBSOCKET_PREFIX = "com.make.equo.websocket";

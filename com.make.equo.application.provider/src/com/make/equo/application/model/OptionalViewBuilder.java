@@ -3,13 +3,9 @@ package com.make.equo.application.model;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.FileLocator;
-
-import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.server.api.IEquoServer;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
@@ -90,19 +86,20 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 */
 	private OptionalViewBuilder addCustomScript(String url, String scriptPath) throws IOException, URISyntaxException {
 		URI scriptUri = new URI(scriptPath);
-		URL scriptUrl;
+		String scriptReference;
 		if (!scriptUri.isAbsolute()) {
-			scriptUrl = FrameworkUtil.INSTANCE.getEntry(scriptPath);
+			scriptReference = equoServer.getLocalScriptProtocol() + scriptPath;
+		} else if (scriptUri.getScheme().startsWith("http")) {
+			scriptReference = scriptPath;
 		} else {
-			scriptUrl = new URL(scriptPath);
+			scriptReference = equoServer.getBundleScriptProtocol() + scriptPath;
 		}
-		URL resolvedUrl = FileLocator.resolve(scriptUrl);
-		addCustomScriptToProxyAddon(url, resolvedUrl);
+		addCustomScriptToProxyAddon(url, scriptReference);
 		return this;
 	}
 
-	private void addCustomScriptToProxyAddon(String url, URL resolvedUrl) {
-		equoServer.addCustomScript(url, resolvedUrl.toString());
+	private void addCustomScriptToProxyAddon(String url, String resolvedUrl) {
+		equoServer.addCustomScript(url, resolvedUrl);
 	}
 
 }

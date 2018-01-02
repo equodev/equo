@@ -18,7 +18,7 @@ import com.make.equo.ws.api.NamedActionMessage;
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
-	private static final String EQUO_JS_API = "equo.js";
+	private static final String equoWebsocketsJsApi = "equoWebsockets.js";
 
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
@@ -48,8 +48,8 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public URL getEquoWebSocketJavascriptClient() {
-		return Resources.getResource(EQUO_JS_API);
+	public URL getEquoWebsocketsJavascriptClient() {
+		return Resources.getResource(equoWebsocketsJsApi);
 	}
 
 	@Override
@@ -57,6 +57,11 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 		NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
 		String messageAsJson = gsonBuilder.create().toJson(namedActionMessage);
 		equoWebSocketServer.broadcast(messageAsJson);
+	}
+
+	@Override
+	public String getEquoWebsocketsJsResourceName() {
+		return equoWebsocketsJsApi;
 	}
 
 }

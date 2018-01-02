@@ -1,42 +1,78 @@
 package com.make.equo.server.provider;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.littleshoot.proxy.HttpFiltersAdapter;
+
+import com.google.common.io.ByteStreams;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 
-public class LocalFileRequestFiltersAdapter extends LocalRequestFiltersAdapter {
+public class LocalFileRequestFiltersAdapter extends HttpFiltersAdapter {
 
-	private String basePath;
-	private String prefix;
+	private HttpRequest originalRequest;
+	private ILocalUrlResolver urlResolver;
 
-	public LocalFileRequestFiltersAdapter(String basePath, String prefix, HttpRequest originalRequest) {
+	public LocalFileRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver) {
 		super(originalRequest);
-		if (basePath.endsWith("/")) {
-			this.basePath = basePath;
-		} else {
-			this.basePath = basePath + "/";
-		}
-		this.prefix = prefix;
+		this.originalRequest = originalRequest;
+		this.urlResolver = urlResolver;
 	}
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 		String uri = originalRequest.getUri();
-		String originalFileName = uri.substring(uri.lastIndexOf(prefix));
-		String absoluteFilePath = basePath + originalFileName.replace(prefix + "/", "");
-		String urlAsString = EquoHttpProxyServer.LOCAL_FILE_PROTOCOL + absoluteFilePath.substring(1);
-		return buildHttpResponse(urlAsString);
+		String protocol = urlResolver.getProtocol();
+		String originalFileName = uri.substring(uri.lastIndexOf(protocol));
+		String fileWithoutProtocol = originalFileName.replace(protocol, "");
+		URL resolvedUrl = urlResolver.resolve(fileWithoutProtocol);
+		return buildHttpResponse(resolvedUrl);
 	}
 
-	@Override
-	protected String getMimeType(File localFile) {
-		final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
-		String contentType = fileTypeMap.getContentType(localFile);
-		return contentType;
+	private HttpResponse buildHttpResponse(URL resolvedUrl) {
+		try {
+			final URLConnection connection = resolvedUrl.openConnection();
+			InputStream inputStream = connection.getInputStream();
+			byte[] bytes = ByteStreams.toByteArray(inputStream);
+			ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
+			final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+			String fileName = resolvedUrl.getFile().substring(1);
+			String contentType = fileTypeMap.getContentType(fileName);
+			return buildResponse(buffer, contentType);
+		} catch (IOException e) {
+			// TODO log exception
+			e.printStackTrace();
+			ByteBuf buffer;
+			try {
+				buffer = Unpooled.wrappedBuffer("".getBytes("UTF-8"));
+				return buildResponse(buffer, "text/html");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO log exception
+				e1.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	private HttpResponse buildResponse(ByteBuf buffer, String contentType) {
+		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
+		HttpHeaders.setContentLength(response, buffer.readableBytes());
+		HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
+		return response;
 	}
 
 }

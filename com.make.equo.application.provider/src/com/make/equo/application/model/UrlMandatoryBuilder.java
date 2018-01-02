@@ -7,6 +7,7 @@ import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.osgi.framework.Bundle;
 
 import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
@@ -54,7 +55,11 @@ public class UrlMandatoryBuilder {
 
 	private void addUrlToProxyServer(String url) {
 		equoServer.addUrl(url);
-		equoServer.setAppBundlePath(FrameworkUtil.INSTANCE.getAppBundlePath());
+		Bundle mainEquoAppBundle = FrameworkUtil.INSTANCE.getMainEquoAppBundle();
+		if (mainEquoAppBundle != null) {
+			equoServer.setMainAppBundle(mainEquoAppBundle);
+		}
+		FrameworkUtil.INSTANCE.inject(equoServer);
 	}
 
 	private String normalizeUrl(String url) {

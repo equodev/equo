@@ -8,7 +8,9 @@ public interface IEquoWebSocketService {
 
 	public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser);
 
-	public URL getEquoWebSocketJavascriptClient();
+	public URL getEquoWebsocketsJavascriptClient();
+
+	public String getEquoWebsocketsJsResourceName();
 
 	public void send(String userEvent, Object payload, GsonBuilder gsonBuilder);
 

@@ -2,11 +2,11 @@ package com.make.equo.application;
 
 import java.util.Optional;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 import com.make.equo.application.api.IEquoFramework;
 import com.make.equo.application.model.EquoApplication;
@@ -14,27 +14,23 @@ import com.make.equo.application.util.FrameworkUtil;
 
 public class LifeCycleManager {
 
-	private static final String EQUO_APP_MAIN_CLASS = "equoAppMainClass";
-	private static final String EQUO_APP_BUNDLE_ID = "equoAppBundleId";
-	private static final String EQUO_APP_BUNDLE_PATH = "equoAppBundlePath";
+	private static final String equoAppMainClass = "equoAppMainClass";
+	private static final String equoAppBundleName = "equoAppBundleName";
 
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		String[] appArgs = (String[]) applicationContext.getArguments().get(IApplicationContext.APPLICATION_ARGS);
-		Integer equoAppBundleId = Integer.valueOf(getArgValue(appArgs, EQUO_APP_BUNDLE_ID).get());
-		String equoAppClassName = getArgValue(appArgs, EQUO_APP_MAIN_CLASS).get();
-		String equoAppBundlePath = getArgValue(appArgs, EQUO_APP_BUNDLE_PATH).get();
+		String appBundleName = getArgValue(appArgs, equoAppBundleName).get();
+		String equoAppClassName = getArgValue(appArgs, equoAppMainClass).get();
 
-		BundleContext context = Activator.getContext();
-		
-		Bundle equoAppBundle = context.getBundle(equoAppBundleId);
-		FrameworkUtil.INSTANCE.setMainAppBundle(equoAppBundle);
-		FrameworkUtil.INSTANCE.setAppBundlePath(equoAppBundlePath);
-		
-		Class<?> equoApplicationClazz = equoAppBundle.loadClass(equoAppClassName);
+		Bundle equoMainAppBundle = Platform.getBundle(appBundleName);
+
+		FrameworkUtil.INSTANCE.setMainEquoAppBundle(equoMainAppBundle);
+
+		Class<?> equoApplicationClazz = equoMainAppBundle.loadClass(equoAppClassName);
 		IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();
-		
+
 		equoApp.buildApp(new EquoApplication(new EquoApplicationModel(mainApplication)));
 	}
 

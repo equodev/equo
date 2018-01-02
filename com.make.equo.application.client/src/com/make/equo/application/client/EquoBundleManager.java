@@ -47,6 +47,8 @@ public enum EquoBundleManager {
 
 	private static final String MANIFEST_PATH = "/META-INF/MANIFEST.MF";
 
+	private String mainAppBundleName;
+
 	private String getBundleName(File manifestFile) {
 		return getBuildDirectory(manifestFile).getParentFile().getName();
 	}
@@ -149,7 +151,9 @@ public enum EquoBundleManager {
 				atts.put(Attributes.Name.MANIFEST_VERSION, "1.0");
 				atts.putValue(BUNDLE_MANIFEST_VERSION, "2");
 				atts.putValue(BUNDLE_NAME, "Bundled Equo Application");
-				atts.putValue(BUNDLE_SYMBOLIC_NAME, getBundleName(manifestFile));
+				String bundleName = getBundleName(manifestFile);
+				atts.putValue(BUNDLE_SYMBOLIC_NAME, bundleName);
+				setMainAppBundleName(bundleName);
 				atts.putValue(BUNDLE_VERSION, "1.0");
 				String jarFilesList = buildJarFilesList(new File(parentPath));
 				if (!jarFilesList.isEmpty()) {
@@ -261,13 +265,12 @@ public enum EquoBundleManager {
 		return bundleInitProps;
 	}
 
-	/**
-	 * Since the User application is always added as the first bundle, the id is "1"
-	 * 
-	 * @return the id of the user app bundle, 1
-	 */
-	public String getEquoAppBundleId() {
-		return "1";
+	public String getMainAppBundleName() {
+		return mainAppBundleName;
+	}
+
+	public void setMainAppBundleName(String mainAppBundleName) {
+		this.mainAppBundleName = mainAppBundleName;
 	}
 
 }
