@@ -24,7 +24,7 @@ class EquoWebSocketServer extends WebSocketServer {
 	List<String> messagesToSend = new ArrayList<>();
 
 	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers) {
-		super(new InetSocketAddress(9895));
+		super(new InetSocketAddress(0));
 		this.eventHandlers = eventHandlers;
 		this.gsonParser = new Gson();
 	}

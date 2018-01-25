@@ -14,4 +14,6 @@ public interface IEquoWebSocketService {
 
 	public void send(String userEvent, Object payload, GsonBuilder gsonBuilder);
 
+	public int getPort();
+
 }

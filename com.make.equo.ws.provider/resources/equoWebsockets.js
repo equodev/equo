@@ -2,17 +2,41 @@ window.equo = window.equo || {};
 
 (function (equo) {
 
+    const equoWsPortQueryParam = 'equoWsPort';
     let webSocket;
     let userEventCallbacks = {};
 
-    var openSocket = function() {
+    let getParameterByName = function(name, url) {
+        if (!url){
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+        let results = regex.exec(url);
+        if (!results) {
+            return null;
+        }
+        if (!results[2]) {
+            return '';
+        }
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+
+    let openSocket = function() {
         // Ensures only one connection is open at a time
         if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
             console.log('WebSocket is already opened.');
             return;
         }
+        let wsPort = getParameterByName(equoWsPortQueryParam);
         // Create a new instance of the websocket
-        webSocket = new WebSocket('ws://127.0.0.1:9895');
+        if (wsPort) {
+            webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
+            localStorage.setItem(equoWsPortQueryParam, wsPort);
+        } else {
+            wsPort = localStorage.getItem(equoWsPortQueryParam);
+            webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
+        }
          
         /**
          * Binds functions to the listeners for the websocket.
@@ -75,8 +99,12 @@ window.equo = window.equo || {};
         sendToWebSocketServer(actionId, payload);
     };
 
+    equo.on = function(userEvent, callback) {
+        userEventCallbacks[userEvent] = callback;
+    };
+
     // Make the function wait until the connection is made...
-    var waitForSocketConnection = function(socket, callback){
+    let waitForSocketConnection = function(socket, callback){
         setTimeout(
             function () {
                 if (socket.readyState === 1) {
@@ -92,10 +120,6 @@ window.equo = window.equo || {};
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
-    };
-
-    equo.on = function(userEvent, callback) {
-        userEventCallbacks[userEvent] = callback;
     };
 
 }(equo));

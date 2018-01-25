@@ -64,4 +64,9 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 		return equoWebsocketsJsApi;
 	}
 
+	@Override
+	public int getPort() {
+		return equoWebSocketServer.getPort();
+	}
+
 }

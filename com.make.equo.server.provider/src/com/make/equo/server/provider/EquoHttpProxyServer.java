@@ -29,6 +29,7 @@ import io.netty.handler.codec.http.HttpRequest;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
+	private static final String EQUO_WS_PORT_QUERY_PARAM = "equoWsPort";
 	public static final String LOCAL_SCRIPT_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_PROTOCOL = "equo/";
@@ -159,6 +160,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public String getBundleScriptProtocol() {
 		return BUNDLE_SCRIPT_PROTOCOL;
+	}
+
+	@Override
+	public String generateEquoAppUrl(String originalUrl) {
+		String equoAppUrl = originalUrl + "?" + EQUO_WS_PORT_QUERY_PARAM + "=" + equoWebsocketServer.getPort();
+		return equoAppUrl;
 	}
 	
 }

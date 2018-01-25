@@ -16,4 +16,6 @@ public interface IEquoServer {
 
 	public String getBundleScriptProtocol();
 
+	public String generateEquoAppUrl(String originalUrl);
+
 }
