@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Equo Framework
-Bundle-SymbolicName: com.make.equo.application.provider;singleton:=true
+Bundle-SymbolicName: com.make.equo.application.provider
 Bundle-Version: 1.0.0
 Bundle-Vendor: Make Technology
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -25,7 +25,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.commands;bundle-version="0.11.100",
  com.google.gson;bundle-version="2.7.0"
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: com.make.equo.application.Activator
 Export-Package: com.make.equo.application.api,
  com.make.equo.application.model
 Import-Package: com.google.common.collect,
