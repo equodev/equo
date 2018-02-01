@@ -1,6 +1,7 @@
 package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
@@ -84,15 +85,20 @@ public class MenuItemBuilder {
 	}
 
 	/**
-	 * Add Exit menu item only if needed (Not needed in OSx)
+	 * Add Exit menu item only if needed (Not needed in OSx) and executes the runnable
+	 * before exiting the application
 	 * 
-	 * @param label
+	 * @param menuLabel
 	 *            the label of the exit menu item
 	 * @return
 	 */
-	public ExitMenuItemHandlerBuilder addExitMenuItem(String label) {
-		menuItem = createMenuItem(label);
-		return new ExitMenuItemHandlerBuilder(this);
+	public MenuItemBuilder onExit(String menuLabel, Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
+				.getEquoApplicationBuilder().getmApplication();
+		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
+		menuItem = createMenuItem(menuLabel);
+		menuItem.setCommand(command);
+		return onExit(runnable);
 	}
 
 	/**
