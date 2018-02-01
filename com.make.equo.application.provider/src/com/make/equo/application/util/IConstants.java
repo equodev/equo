@@ -74,6 +74,8 @@ public interface IConstants {
 
 	public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
-	public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT = EQUO_WEBSOCKET_PREFIX + ".useremittedevent";;
+	public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT = EQUO_WEBSOCKET_PREFIX + ".useremittedevent";
+
+	public static final String MAC_OSX = "mac";
 
 }

@@ -6,6 +6,9 @@ import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.MApplication;
+
+import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
@@ -100,6 +103,20 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 
 	private void addCustomScriptToProxyAddon(String url, String resolvedUrl) {
 		equoServer.addCustomScript(url, resolvedUrl);
+	}
+
+	/**
+	 * Executes the {@code run} method of this runnable before exiting the
+	 * application
+	 * 
+	 * @param runnable
+	 *            a runnable object
+	 * @return this
+	 */
+	public OptionalFieldBuilder onExit(Runnable runnable) {
+		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
+		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		return this;
 	}
 
 }
