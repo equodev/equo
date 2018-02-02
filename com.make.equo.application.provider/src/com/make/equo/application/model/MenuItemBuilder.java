@@ -92,13 +92,13 @@ public class MenuItemBuilder {
 	 *            the label of the exit menu item
 	 * @return
 	 */
-	public MenuItemBuilder onExit(String menuLabel, Runnable runnable) {
+	public MenuItemBuilder onBeforeExit(String menuLabel, Runnable runnable) {
 		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
 				.getEquoApplicationBuilder().getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
 		menuItem = createMenuItem(menuLabel);
 		menuItem.setCommand(command);
-		return onExit(runnable);
+		return onBeforeExit(runnable);
 	}
 
 	/**
@@ -109,10 +109,29 @@ public class MenuItemBuilder {
 	 *            a runnable object
 	 * @return this
 	 */
-	public MenuItemBuilder onExit(Runnable runnable) {
+	public MenuItemBuilder onBeforeExit(Runnable runnable) {
 		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
 	}
+	
+	/**
+	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the runnable
+	 * before exiting the application
+	 * 
+	 * @param menuLabel
+	 *            the label of the exit menu item
+	 * @return
+	 */
+	public MenuItemBuilder onPreferences(String menuLabel, Runnable runnable) {
+////		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
+////				.getEquoApplicationBuilder().getmApplication();
+////		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
+////		menuItem = createMenuItem(menuLabel);
+//		menuItem.setCommand(command);
+		return onBeforeExit(runnable);
+	}
+	
+	//onpreferences should also manage websocket events to js
 }

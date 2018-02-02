@@ -113,7 +113,7 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 *            a runnable object
 	 * @return this
 	 */
-	public OptionalFieldBuilder onExit(Runnable runnable) {
+	public OptionalFieldBuilder onBeforeExit(Runnable runnable) {
 		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
