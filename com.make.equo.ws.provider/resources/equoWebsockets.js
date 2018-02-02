@@ -2,25 +2,8 @@ window.equo = window.equo || {};
 
 (function (equo) {
 
-    const equoWsPortQueryParam = 'equoWsPort';
     let webSocket;
     let userEventCallbacks = {};
-
-    let getParameterByName = function(name, url) {
-        if (!url){
-            url = window.location.href;
-        }
-        name = name.replace(/[\[\]]/g, "\\$&");
-        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-        let results = regex.exec(url);
-        if (!results) {
-            return null;
-        }
-        if (!results[2]) {
-            return '';
-        }
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    };
 
     let openSocket = function() {
         // Ensures only one connection is open at a time
@@ -28,16 +11,9 @@ window.equo = window.equo || {};
             console.log('WebSocket is already opened.');
             return;
         }
-        let wsPort = getParameterByName(equoWsPortQueryParam);
+        let wsPort = '%d';
         // Create a new instance of the websocket
-        if (wsPort) {
-            webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
-            localStorage.setItem(equoWsPortQueryParam, wsPort);
-        } else {
-            wsPort = localStorage.getItem(equoWsPortQueryParam);
-            webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
-        }
-         
+        webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
         /**
          * Binds functions to the listeners for the websocket.
          */

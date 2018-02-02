@@ -68,7 +68,7 @@ public class LocalFileRequestFiltersAdapter extends HttpFiltersAdapter {
 		}
 	}
 
-	private HttpResponse buildResponse(ByteBuf buffer, String contentType) {
+	protected HttpResponse buildResponse(ByteBuf buffer, String contentType) {
 		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
 		HttpHeaders.setContentLength(response, buffer.readableBytes());
 		HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);

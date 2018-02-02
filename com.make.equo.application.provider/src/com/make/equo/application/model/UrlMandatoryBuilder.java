@@ -39,7 +39,7 @@ public class UrlMandatoryBuilder {
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
 		part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
-		part.getProperties().put(IConstants.MAIN_URL_KEY, equoServer.generateEquoAppUrl(url));
+		part.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		// Get the Window binding context.
 		MBindingContext mBindingContext = equoAppBuilder.getmApplication().getBindingContexts().get(1);

@@ -29,7 +29,6 @@ import io.netty.handler.codec.http.HttpRequest;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	private static final String EQUO_WS_PORT_QUERY_PARAM = "equoWsPort";
 	public static final String LOCAL_SCRIPT_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_PROTOCOL = "equo/";
@@ -55,6 +54,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 			.withTransparent(false)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 				public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
+					if (isEquoWebsocketJsApi(originalRequest)) {
+						return new EquoWebsocketJsApiRequestFiltersAdapter(originalRequest, new EquoWebsocketsUrlResolver(EQUO_WEBSOCKETS_JS_PATH, equoWebsocketServer), equoWebsocketServer.getPort());
+					}
 					if (isLocalFileRequest(originalRequest)) {
 						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 					} else {
@@ -66,6 +68,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 							return new HttpFiltersAdapter(originalRequest);
 						}
 					}
+				}
+
+				private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {
+					String uri = originalRequest.getUri();
+					return uri.contains(EQUO_WEBSOCKETS_JS_PATH);
 				}
 
 				private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
@@ -82,15 +89,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 					if (uri.contains(EQUO_FRAMEWORK_PATH)) {
 						return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
 					}
-					if (uri.contains(EQUO_WEBSOCKETS_JS_PATH)) {
-						return new EquoWebsocketsUrlResolver(EQUO_WEBSOCKETS_JS_PATH, equoWebsocketServer);
-					}
 					return null;
 				}
 
 				private boolean isLocalFileRequest(HttpRequest originalRequest) {
 					String uri = originalRequest.getUri();
-					return uri.contains(LOCAL_SCRIPT_PROTOCOL) || uri.contains(LOCAL_FILE_PROTOCOL) || uri.contains(BUNDLE_SCRIPT_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH)  || uri.contains(EQUO_WEBSOCKETS_JS_PATH);
+					return uri.contains(LOCAL_SCRIPT_PROTOCOL) || uri.contains(LOCAL_FILE_PROTOCOL) || uri.contains(BUNDLE_SCRIPT_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH);
 				}
 
 				private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
@@ -162,10 +166,4 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return BUNDLE_SCRIPT_PROTOCOL;
 	}
 
-	@Override
-	public String generateEquoAppUrl(String originalUrl) {
-		String equoAppUrl = originalUrl + "?" + EQUO_WS_PORT_QUERY_PARAM + "=" + equoWebsocketServer.getPort();
-		return equoAppUrl;
-	}
-	
 }
