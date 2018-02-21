@@ -26,7 +26,7 @@ import org.apache.http.entity.ContentType;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-
+import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 
@@ -116,7 +116,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		if (httpObject instanceof FullHttpResponse) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
 			int code = fullResponse.getStatus().code();
-			if (code >= 200 && code < 300) {
+//			if (code >= 200 && code < 300) {
 				// String host = originalRequest.headers().get(Names.HOST);
 				String referer = originalRequest.headers().get(Names.REFERER);
 				HttpResponse duplicatedResponse = (HttpResponse) fullResponse.duplicate().retain();
@@ -136,7 +136,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 				}
 				cacheOffline.put(uri, duplicatedResponse);
 			}
-		}
+//		}
 	}
 
 	@Deactivate
@@ -170,7 +170,9 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 				FileOutputStream fos = new FileOutputStream(outputFile);
 				fos.write(data);
 				fos.close();
-				fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+				if (contentTypeHeader != null) {
+					fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+				}
 				fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
 			} catch (IOException | NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
@@ -339,7 +341,9 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 	protected HttpResponse buildResponse(ByteBuf buffer, String contentType, Integer statusCode) {
 		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, new HttpResponseStatus(statusCode, ""), buffer);
 		HttpHeaders.setContentLength(response, buffer.readableBytes());
-		HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
+		if (!Strings.isNullOrEmpty(contentType)) {
+			HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
+		}
 		return response;
 	}
 
