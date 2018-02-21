@@ -52,6 +52,7 @@ public class LocalFileRequestFiltersAdapter extends HttpFiltersAdapter {
 			final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
 			String fileName = resolvedUrl.getFile().substring(1);
 			String contentType = fileTypeMap.getContentType(fileName);
+			inputStream.close();
 			return buildResponse(buffer, contentType);
 		} catch (IOException e) {
 			// TODO log exception

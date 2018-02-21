@@ -199,20 +199,21 @@ public enum EquoBundleManager {
 
 		bundleInitProps.put("osgi.bundles", appBundleFile.getAbsolutePath() + ",\n" + " com.make.equo.ws.api,\n"
 				+ " com.make.equo.ws.provider,\n" + " com.make.equo.application.provider,\n"
-				+ " com.make.equo.server.api,\n" + " com.make.equo.server.provider,\n" + "com.github.jnr.ffi,\n"
-				+ " com.github.jnr.jffi,\n" + " com.github.jnr.jffi.native,\n" + " com.github.jnr.x86asm,\n"
-				+ " com.ibm.icu,\n" + " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n" + " javax.annotation,\n"
-				+ " javax.inject,\n" + " javax.xml,\n" + " org.apache.batik.css,\n" + " org.apache.batik.util,\n"
-				+ " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n" + " org.apache.commons.logging,\n"
-				+ " org.apache.felix.gogo.command,\n" + " org.apache.felix.gogo.shell,\n"
-				+ " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n" + " org.eclipse.core.commands,\n"
-				+ " org.eclipse.core.contenttype,\n" + " org.eclipse.core.databinding,\n"
-				+ " org.eclipse.core.databinding.beans,\n" + " org.eclipse.core.databinding.observable,\n"
-				+ " org.eclipse.core.databinding.property,\n" + " org.eclipse.core.expressions,\n"
-				+ " org.eclipse.core.filesystem,\n" + " org.eclipse.core.filesystem.macosx,\n"
-				+ " org.eclipse.core.jobs,\n" + " org.eclipse.core.resources,\n"
-				+ " org.eclipse.core.runtime@1:start,\n" + " org.eclipse.e4.core.commands,\n"
-				+ " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
+				+ " com.make.equo.server.api,\n" + " com.make.equo.server.provider,\n"
+				+ " com.make.equo.server.offline.api,\n" + " com.make.equo.server.offline.provider,\n"
+				+ "com.github.jnr.ffi,\n" + " com.github.jnr.jffi,\n" + " com.github.jnr.jffi.native,\n"
+				+ " com.github.jnr.x86asm,\n" + " com.ibm.icu,\n" + " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n"
+				+ " javax.annotation,\n" + " javax.inject,\n" + " javax.xml,\n" + " org.apache.batik.css,\n"
+				+ " org.apache.batik.util,\n" + " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n"
+				+ " org.apache.commons.logging,\n" + " org.apache.felix.gogo.command,\n"
+				+ " org.apache.felix.gogo.shell,\n" + " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n"
+				+ " org.eclipse.core.commands,\n" + " org.eclipse.core.contenttype,\n"
+				+ " org.eclipse.core.databinding,\n" + " org.eclipse.core.databinding.beans,\n"
+				+ " org.eclipse.core.databinding.observable,\n" + " org.eclipse.core.databinding.property,\n"
+				+ " org.eclipse.core.expressions,\n" + " org.eclipse.core.filesystem,\n"
+				+ " org.eclipse.core.filesystem.macosx,\n" + " org.eclipse.core.jobs,\n"
+				+ " org.eclipse.core.resources,\n" + " org.eclipse.core.runtime@1:start,\n"
+				+ " org.eclipse.e4.core.commands,\n" + " org.eclipse.e4.core.contexts,\n" + " org.eclipse.e4.core.di,\n"
 				+ " org.eclipse.e4.core.di.annotations,\n" + " org.eclipse.e4.core.di.extensions,\n"
 				+ " org.eclipse.e4.core.di.extensions.supplier,\n" + " org.eclipse.e4.core.services,\n"
 				+ " org.eclipse.e4.emf.xpath,\n" + " org.eclipse.e4.ui.bindings,\n" + " org.eclipse.e4.ui.css.core,\n"
@@ -260,7 +261,7 @@ public enum EquoBundleManager {
 		// initProps.put("eclipse.ignoreApp", "true");
 
 		bundleInitProps.put("eclipse.application.launchDefault", "true");
-		bundleInitProps.put("eclipse.allowAppRelaunch", "true");
+		bundleInitProps.put("eclipse.allowAppRelaunch", "false");
 		EclipseStarter.setInitialProperties(bundleInitProps);
 		return bundleInitProps;
 	}

@@ -4,16 +4,22 @@ import org.osgi.framework.Bundle;
 
 public interface IEquoServer {
 
-	public void startServer();
+	void startServer();
 
-	public void addCustomScript(String url, String scriptUrl);
+	void addCustomScript(String url, String scriptUrl);
 
-	public void addUrl(String url);
+	void addUrl(String url);
 
-	public void setMainAppBundle(Bundle mainEquoAppBundle);
+	void setMainAppBundle(Bundle mainEquoAppBundle);
 
-	public String getLocalScriptProtocol();
+	String getLocalScriptProtocol();
 
-	public String getBundleScriptProtocol();
+	String getBundleScriptProtocol();
+
+	void enableOfflineCache();
+
+	void setConnectionLimited();
+
+	void setConnectionUnlimited();
 
 }

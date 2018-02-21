@@ -1,5 +1,7 @@
 package com.make.equo.server.provider;
 
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,21 +11,27 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.littleshoot.proxy.DefaultHostResolver;
+import org.littleshoot.proxy.HostResolver;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.littleshoot.proxy.impl.ProxyUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders.Names;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 
 @Component
@@ -37,12 +45,28 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
+	private boolean enableOfflineCache = true;
+	private boolean connectionLimited = false;
 	
 	private HttpProxyServer proxyServer;
 	private Bundle mainEquoAppBundle;
 
 	@Inject
 	private IEquoWebSocketService equoWebsocketServer;
+
+	@Inject
+	private IEquoOfflineServer equoOfflineServer;
+
+	private HostResolver serverResolver = new DefaultHostResolver() {
+		/** This proxy uses unresolved adresses while offline */
+		@Override
+		public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
+			if (isConnectionLimited()) {
+				return new InetSocketAddress(host, port);
+			}
+			return super.resolve(host, port);
+		}
+	};
 
 	@Override
 	public void startServer() {
@@ -52,23 +76,61 @@ public class EquoHttpProxyServer implements IEquoServer {
 			.withManInTheMiddle(new SelfSignedMitmManager())
 			.withAllowRequestToOriginServer(true)
 			.withTransparent(false)
+			.withServerResolver(serverResolver)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
-				public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
-					if (isEquoWebsocketJsApi(originalRequest)) {
-						return new EquoWebsocketJsApiRequestFiltersAdapter(originalRequest, new EquoWebsocketsUrlResolver(EQUO_WEBSOCKETS_JS_PATH, equoWebsocketServer), equoWebsocketServer.getPort());
-					}
-					if (isLocalFileRequest(originalRequest)) {
-						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
-					} else {
-						Optional<String> url = getRequestedUrl(originalRequest);
-						if (url.isPresent()) {
-							String appUrl = url.get();
-							return new EquoHttpFiltersAdapter(appUrl, originalRequest, getCustomScripts(appUrl), equoWebsocketServer);
+					public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
+						// The connect request must bypass the filter! Otherwise the
+						// handshake will fail.
+						//
+						if (ProxyUtils.isCONNECT(originalRequest)) {
+//							System.out.println("connect request is " + originalRequest);
+//							if (isConnectionLimited()) {
+//								// rewrite connect requests into get ones, for http-only traffic.
+//								String newUri = originalRequest.getUri().replaceFirst(":443$", "");
+////								originalRequest.setUri(newUri);
+//								originalRequest.setMethod(HttpMethod.GET);
+//								System.out.println("the new uri is " + newUri);
+////								FullHttpRequest newHttpRequest = new DefaultFullHttpRequest(
+////										originalRequest.getProtocolVersion(), HttpMethod.GET, newUri,
+////										((DefaultFullHttpRequest) originalRequest).content());
+//								HttpHeaders headers = originalRequest.headers();
+////								headers.add(originalRequest.headers());
+//								String host = headers.get(Names.HOST).replaceFirst(":443$", "");
+//								headers.set(Names.HOST, host);
+//								String proxyConnection = headers.get("Proxy-Connection");
+//								headers.remove("Proxy-Connection");
+//								headers.add(Names.CONNECTION, proxyConnection);
+////								return new HttpFiltersAdapter(originalRequest, clientCtx);
+////								return this.filterRequest(newHttpRequest);
+//							} else {
+								return new HttpFiltersAdapter(originalRequest, clientCtx);
+//							}
+						}
+						if (isEquoWebsocketJsApi(originalRequest)) {
+							return new EquoWebsocketJsApiRequestFiltersAdapter(originalRequest,
+									new EquoWebsocketsUrlResolver(EQUO_WEBSOCKETS_JS_PATH, equoWebsocketServer),
+									equoWebsocketServer.getPort());
+						}
+						if (isLocalFileRequest(originalRequest)) {
+							return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
+						}
+						if (isConnectionLimited()) {
+							//TODO move this adapter to the offline server osgi bundle
+							return new OfflineEquoHttpFiltersAdapter(originalRequest, isOfflineServerSupported(),
+									equoOfflineServer);
 						} else {
-							return new HttpFiltersAdapter(originalRequest);
+							Optional<String> url = getRequestedUrl(originalRequest);
+							if (url.isPresent()) {
+								String appUrl = url.get();
+								return new EquoHttpModifierFiltersAdapter(appUrl, originalRequest,
+										getCustomScripts(appUrl), equoWebsocketServer, isOfflineServerSupported(),
+										equoOfflineServer);
+							} else {
+								return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer,
+										isOfflineServerSupported());
+							}
 						}
 					}
-				}
 
 				private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {
 					String uri = originalRequest.getUri();
@@ -123,7 +185,21 @@ public class EquoHttpProxyServer implements IEquoServer {
 				}
 			}).start();
 	}
-	
+
+	@Override
+	public void setConnectionLimited() {
+		connectionLimited = true;
+	}
+
+	@Override
+	public void setConnectionUnlimited() {
+		connectionLimited = false;
+	}
+
+	private boolean isConnectionLimited() {
+		return connectionLimited;
+	}
+
 	private List<String> getCustomScripts(String url) {
 		if (!urlsToScripts.containsKey(url)) {
 			return Collections.emptyList();
@@ -133,6 +209,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Deactivate
 	public void stop() {
+		System.out.println("Stopping proxy...");
 		if (proxyServer != null) {
 			proxyServer.stop();
 		}
@@ -164,6 +241,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public String getBundleScriptProtocol() {
 		return BUNDLE_SCRIPT_PROTOCOL;
+	}
+
+	private boolean isOfflineServerSupported() {
+		return equoOfflineServer != null && enableOfflineCache;
+	}
+
+	@Override
+	public void enableOfflineCache() {
+		this.enableOfflineCache = true;
 	}
 
 }

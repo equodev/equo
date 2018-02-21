@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Offline Server Provider
+Bundle-SymbolicName: com.make.equo.server.offline.provider
+Bundle-Version: 1.0.0
+Bundle-Vendor: Make Technology
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: com.google.common.io;version="20.0.0",
+ com.make.equo.server.offline.api;version="[1.0.0,2.0.0)",
+ io.netty.buffer,
+ io.netty.handler.codec.http,
+ io.netty.util,
+ org.apache.http.entity;version="4.4.6",
+ org.osgi.service.component.annotations;version="[1.2.0,2.0.0)";resolution:=optional
+Service-Component: OSGI-INF/com.make.equo.server.offline.provider.EquoOfflineServerImpl.xml
