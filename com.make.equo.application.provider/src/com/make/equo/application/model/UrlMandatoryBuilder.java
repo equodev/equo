@@ -54,12 +54,12 @@ public class UrlMandatoryBuilder {
 	}
 
 	private void addUrlToProxyServer(String url) {
-		equoServer.addUrl(url);
 		Bundle mainEquoAppBundle = FrameworkUtil.INSTANCE.getMainEquoAppBundle();
 		if (mainEquoAppBundle != null) {
 			equoServer.setMainAppBundle(mainEquoAppBundle);
 		}
 		FrameworkUtil.INSTANCE.inject(equoServer);
+		equoServer.addUrl(url);
 	}
 
 	private String normalizeUrl(String url) {
