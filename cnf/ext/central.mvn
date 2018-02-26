@@ -1,0 +1,3 @@
+org.osgi:osgi.annotation:6.0.1
+
+org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1

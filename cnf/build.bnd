@@ -1,0 +1,11 @@
+-plugin.6.P2Repo: \
+    com.make.bnd.p2release.P2RepoContentProvider; \
+        name = Release; \
+        includeAllDependencies = true; \
+        mirror = "http://download.eclipse.org/releases/oxygen/201709271000"
+
+-plugin.4.ChromiumSWT: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = ChromiumSWT; \
+        url = "http://maketechpub.gitlab.io/cefswt/repository/"; \
+        location = ~/.bnd/cache/cefswt

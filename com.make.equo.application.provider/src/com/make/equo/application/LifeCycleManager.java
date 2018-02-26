@@ -2,6 +2,7 @@ package com.make.equo.application;
 
 import java.util.Optional;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -22,13 +23,12 @@ public class LifeCycleManager {
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		String[] appArgs = (String[]) applicationContext.getArguments().get(IApplicationContext.APPLICATION_ARGS);
-		Integer equoAppBundleId = Integer.valueOf(getArgValue(appArgs, EQUO_APP_BUNDLE_ID).get());
+		String equoAppBundleId = getArgValue(appArgs, EQUO_APP_BUNDLE_ID).get();
 		String equoAppClassName = getArgValue(appArgs, EQUO_APP_MAIN_CLASS).get();
 		String equoAppBundlePath = getArgValue(appArgs, EQUO_APP_BUNDLE_PATH).get();
 
-		BundleContext context = Activator.getContext();
+		Bundle equoAppBundle = Platform.getBundle(equoAppBundleId);
 		
-		Bundle equoAppBundle = context.getBundle(equoAppBundleId);
 		FrameworkUtils.INSTANCE.setMainAppBundle(equoAppBundle);
 		FrameworkUtils.INSTANCE.setAppBundlePath(equoAppBundlePath);
 		

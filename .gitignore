@@ -1,4 +1,13 @@
 *.class
-**/bin/
-**/.settings/
+bin/
+bin_test/
+target/
+generated/
 .DS_Store
+/.metadata/
+/.recommenders/
+/.gradle/
+/_rt/
+cnf/cache
+cnf/*/
+!cnf/ext

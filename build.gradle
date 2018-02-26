@@ -1,0 +1,11 @@
+
+task wrapper(type: Wrapper) {
+  jarFile = rootProject.file('.gradle-wrapper/gradle-wrapper.jar')
+}
+
+/* Additional configuration for the Bnd projects */
+subprojects {
+  if (plugins.hasPlugin('biz.aQute.bnd')) {
+    // additional configuration for Bnd projects
+  }
+}

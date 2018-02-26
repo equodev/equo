@@ -1,0 +1,2 @@
+Export-Package: com.make.equo.application.api
+-buildpath: org.eclipse.core.commands
