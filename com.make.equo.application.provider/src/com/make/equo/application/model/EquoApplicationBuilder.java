@@ -2,9 +2,9 @@ package com.make.equo.application.model;
 
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.MAddon;
+import javax.inject.Inject;
+
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
@@ -12,11 +12,14 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+
 import com.google.common.collect.Lists;
-import com.make.equo.application.addon.EquoProxyServerAddon;
-import com.make.equo.application.addon.EquoWebSocketServerAddon;
+import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
+import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.server.api.IEquoServer;
+import com.make.equo.ws.api.EquoEventHandler;
 
 public class EquoApplicationBuilder {
 
@@ -26,13 +29,14 @@ public class EquoApplicationBuilder {
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	private String name;
-	private MAddon proxyServerAddon;
-	private MAddon webSocketServerAddon;
+	@Inject
+	private IEquoServer equoServer;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
 		this.mApplication = equoApplication.getEquoApplicationModel().getMainApplication();
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
+		FrameworkUtil.INSTANCE.inject(this.urlMandatoryFieldBuilder);
 		this.optionalBuilder = new OptionalFieldBuilder(this);
 	}
 
@@ -55,21 +59,32 @@ public class EquoApplicationBuilder {
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 
-		getmApplication().getAddons().add(createWebSocketServerAddon());
-		getmApplication().getAddons().add(createProxyServerAddon());
+		equoServer.startServer();
 
 		return this.getUrlMandatoryFieldBuilder();
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
+		EquoEventHandler equoEventHandler = new EquoEventHandler();
+
 		createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
 				IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
+
+		equoEventHandler.on("openBrowser", new ParameterizedCommandRunnable(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
+				getmApplication().getContext()));
+
+		// if (action.equals(EXECUTE_ACTION_ID)) {
+		// TODO call user application code with the class passed as param
+
 		createOpenBrowserAsWindowCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_WINDOW,
 				IConstants.OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI);
 		createOpenBrowserAsSidePartCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_SIDE_PART,
 				IConstants.OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI);
 		createUpdateBrowserCommand(mApplication, IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
 				IConstants.UPDATE_BROWSER_CONTRIBUTION_URI);
+
+		equoEventHandler.on("updateBrowser", new ParameterizedCommandRunnable(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
+				getmApplication().getContext()));
 	}
 
 	private void createUpdateBrowserCommand(MApplication mApplication, String commandId,
@@ -112,7 +127,8 @@ public class EquoApplicationBuilder {
 		handlerBuilder.createCommandAndHandler(commandId);
 	}
 
-	private void createOpenBrowserAsWindowCommand(MApplication mApplication, String commandId, String commandContributionUri) {
+	private void createOpenBrowserAsWindowCommand(MApplication mApplication, String commandId,
+			String commandContributionUri) {
 		HandlerBuilder handlerBuilder = new HandlerBuilder(mApplication, commandId, commandContributionUri) {
 			@Override
 			protected Runnable getRunnable() {
@@ -138,20 +154,6 @@ public class EquoApplicationBuilder {
 			}
 		};
 		handlerBuilder.createCommandAndHandler(commandId);
-	}
-
-	private MAddon createWebSocketServerAddon() {
-		webSocketServerAddon = MApplicationFactory.INSTANCE.createAddon();
-		webSocketServerAddon.setContributionURI((EquoWebSocketServerAddon.CONTRIBUTION_URI));
-		webSocketServerAddon.setElementId(IConstants.EQUO_WEBSOCKET_SERVER_ADDON);
-		return webSocketServerAddon;
-	}
-
-	private MAddon createProxyServerAddon() {
-		proxyServerAddon = MApplicationFactory.INSTANCE.createAddon();
-		proxyServerAddon.setContributionURI((EquoProxyServerAddon.CONTRIBUTION_URI));
-		proxyServerAddon.setElementId(IConstants.EQUO_PROXY_SERVER_ADDON);
-		return proxyServerAddon;
 	}
 
 	private void createDefaultBindingContexts() {
@@ -195,10 +197,6 @@ public class EquoApplicationBuilder {
 
 	String getName() {
 		return name;
-	}
-
-	MAddon getEquoProxyServerAddon() {
-		return proxyServerAddon;
 	}
 
 }

@@ -27,13 +27,13 @@ public class SinglePagePart {
 
 	@PostConstruct
 	public void createControls(Composite parent) {
-		String url = thisPart.getProperties().get(IConstants.MAIN_URL_KEY);
-		if (url != null) {
+		String equoAppUrl = thisPart.getProperties().get(IConstants.MAIN_URL_KEY);
+		if (equoAppUrl != null) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(GridLayoutFactory.fillDefaults().create());
 			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 			browser = new Chromium(composite, SWT.NONE);
-			browser.setUrl(url);
+			browser.setUrl(equoAppUrl);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}
 	}

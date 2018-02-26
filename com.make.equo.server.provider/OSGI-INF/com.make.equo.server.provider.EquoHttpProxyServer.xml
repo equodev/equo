@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" deactivate="stop" name="com.make.equo.server.provider.EquoHttpProxyServer">
+   <service>
+      <provide interface="com.make.equo.server.api.IEquoServer"/>
+   </service>
+   <implementation class="com.make.equo.server.provider.EquoHttpProxyServer"/>
+</scr:component>

@@ -1,16 +1,17 @@
 package com.make.equo.application.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.osgi.framework.Bundle;
 
+import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.server.api.IEquoServer;
 
 public class UrlMandatoryBuilder {
 
@@ -18,6 +19,8 @@ public class UrlMandatoryBuilder {
 	private MBindingTable mainPartBindingTable;
 	private MPart part;
 	private String url;
+	@Inject
+	private IEquoServer equoServer;
 
 	UrlMandatoryBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoAppBuilder = equoApplicationBuilder;
@@ -25,7 +28,9 @@ public class UrlMandatoryBuilder {
 
 	public OptionalViewBuilder withSingleView(String url) {
 		setMainWindowUrl(url);
-		return new OptionalViewBuilder(this);
+		OptionalViewBuilder optionalViewBuilder = new OptionalViewBuilder(this);
+		FrameworkUtil.INSTANCE.inject(optionalViewBuilder);
+		return optionalViewBuilder;
 	}
 
 	private void setMainWindowUrl(String windowUrl) {
@@ -48,15 +53,13 @@ public class UrlMandatoryBuilder {
 		equoAppBuilder.getmWindow().getChildren().add(part);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void addUrlToProxyServer(String url) {
-		Map<String, Object> transientData = equoAppBuilder.getEquoProxyServerAddon().getTransientData();
-		List<String> urlsToProxy = (List<String>) transientData.get(IConstants.URLS_TO_PROXY);
-		if (urlsToProxy == null) {
-			urlsToProxy = new ArrayList<>();
+		equoServer.addUrl(url);
+		Bundle mainEquoAppBundle = FrameworkUtil.INSTANCE.getMainEquoAppBundle();
+		if (mainEquoAppBundle != null) {
+			equoServer.setMainAppBundle(mainEquoAppBundle);
 		}
-		urlsToProxy.add(url);
-		transientData.put(IConstants.URLS_TO_PROXY, urlsToProxy);
+		FrameworkUtil.INSTANCE.inject(equoServer);
 	}
 
 	private String normalizeUrl(String url) {

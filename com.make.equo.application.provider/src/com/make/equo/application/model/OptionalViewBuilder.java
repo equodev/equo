@@ -3,16 +3,18 @@ package com.make.equo.application.model;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import org.eclipse.core.runtime.FileLocator;
+import javax.inject.Inject;
 
-import com.make.equo.application.util.FrameworkUtils;
+import org.eclipse.e4.ui.model.application.MApplication;
+
+import com.make.equo.application.util.ICommandConstants;
+import com.make.equo.server.api.IEquoServer;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
+
+	@Inject
+	private IEquoServer equoServer;
 
 	private UrlMandatoryBuilder urlMandatoryBuilder;
 
@@ -87,26 +89,34 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 */
 	private OptionalViewBuilder addCustomScript(String url, String scriptPath) throws IOException, URISyntaxException {
 		URI scriptUri = new URI(scriptPath);
-		URL scriptUrl;
+		String scriptReference;
 		if (!scriptUri.isAbsolute()) {
-			scriptUrl = FrameworkUtils.INSTANCE.getEntry(scriptPath);
+			scriptReference = equoServer.getLocalScriptProtocol() + scriptPath;
+		} else if (scriptUri.getScheme().startsWith("http")) {
+			scriptReference = scriptPath;
 		} else {
-			scriptUrl = new URL(scriptPath);
+			scriptReference = equoServer.getBundleScriptProtocol() + scriptPath;
 		}
-		URL resolvedUrl = FileLocator.resolve(scriptUrl);
-		addCustomScriptToProxyAddon(url, resolvedUrl);
+		addCustomScriptToProxyAddon(url, scriptReference);
 		return this;
 	}
 
-	private void addCustomScriptToProxyAddon(String url, URL resolvedUrl) {
-		Map<String, Object> transientData = getEquoApplicationBuilder().getEquoProxyServerAddon().getTransientData();
-		@SuppressWarnings("unchecked")
-		List<String> scripts = (List<String>) transientData.get(url);
-		if (scripts == null) {
-			scripts = new ArrayList<>();
-		}
-		scripts.add(resolvedUrl.toString());
-		transientData.put(url, scripts);
+	private void addCustomScriptToProxyAddon(String url, String resolvedUrl) {
+		equoServer.addCustomScript(url, resolvedUrl);
+	}
+
+	/**
+	 * Executes the {@code run} method of this runnable before exiting the
+	 * application
+	 * 
+	 * @param runnable
+	 *            a runnable object
+	 * @return this
+	 */
+	public OptionalFieldBuilder onExit(Runnable runnable) {
+		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
+		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		return this;
 	}
 
 }

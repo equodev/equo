@@ -1,16 +1,13 @@
 package com.make.equo.application.handlers;
 
-import java.util.List;
-
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.e4.ui.model.application.MAddon;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
-import com.make.equo.application.addon.EquoWebSocketServerAddon;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.ws.api.EquoEventHandler;
 
 public class ParameterizedCommandHandler {
 
@@ -25,14 +22,8 @@ public class ParameterizedCommandHandler {
 		}
 
 		if (userEvent != null) {
-			List<MAddon> webSocketServerAddons = modelService.findElements(mApplication,
-					IConstants.EQUO_WEBSOCKET_SERVER_ADDON, MAddon.class, null);
-			if (!webSocketServerAddons.isEmpty()) {
-				MAddon webSocketServerAddon = webSocketServerAddons.get(0);
-				EquoWebSocketServerAddon equoWebSocketServerAddon = (EquoWebSocketServerAddon) webSocketServerAddon
-						.getObject();
-				equoWebSocketServerAddon.getWebSocketServer().broadcast(userEvent);
-			}
+			EquoEventHandler equoEventHandler = new EquoEventHandler();
+			equoEventHandler.send(userEvent);
 		}
 	}
 

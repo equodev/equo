@@ -14,20 +14,21 @@ public class Equo {
 		if (!IEquoFramework.class.isAssignableFrom(equoApplicationClazz)) {
 			throw new IllegalArgumentException("The " + equoApplicationClazz.getName() + " is not an Equo Application");
 		}
-		
+
 		EquoBundleManager equoBundleManager = EquoBundleManager.INSTANCE;
 		File appBundleFile = equoBundleManager.convertAppToBundle(equoApplicationClazz);
 		equoBundleManager.initializeBundleProperties(appBundleFile);
-		
+
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", equoApplicationClazz.getName());
+
 		String[] args = { "-appName", "com.make.equo.application", "-application",
 				"org.eclipse.e4.ui.workbench.swt.E4Application", "-" + IWorkbench.XMI_URI_ARG,
 				"com.make.equo.application.provider/Application.e4xmi", "-clearPersistedState",
 				"-" + IWorkbench.LIFE_CYCLE_URI_ARG,
 				"bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager",
 				"-XstartOnFirstThread",
-				"-equoAppBundleId", equoBundleManager.getEquoAppBundleId(),
-				"-equoAppMainClass", equoApplicationClazz.getName(),
-				"-equoAppBundlePath", appBundleFile.getAbsolutePath()};
+				"-equoAppBundleName", equoBundleManager.getMainAppBundleName(),
+				"-equoAppMainClass", equoApplicationClazz.getName() };
 		try {
 			EclipseStarter.run(args, null);
 		} catch (Exception e) {

@@ -1,8 +1,12 @@
 package com.make.equo.application.model;
 
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+
+import com.make.equo.application.util.ICommandConstants;
 
 public class MenuItemBuilder {
 
@@ -80,4 +84,35 @@ public class MenuItemBuilder {
 		return this;
 	}
 
+	/**
+	 * Add Exit menu item only if needed (Not needed in OSx) and executes the runnable
+	 * before exiting the application
+	 * 
+	 * @param menuLabel
+	 *            the label of the exit menu item
+	 * @return
+	 */
+	public MenuItemBuilder onExit(String menuLabel, Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
+				.getEquoApplicationBuilder().getmApplication();
+		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
+		menuItem = createMenuItem(menuLabel);
+		menuItem.setCommand(command);
+		return onExit(runnable);
+	}
+
+	/**
+	 * Executes the {@code run} method of this runnable before exiting the
+	 * application
+	 * 
+	 * @param runnable
+	 *            a runnable object
+	 * @return this
+	 */
+	public MenuItemBuilder onExit(Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+				.getmApplication();
+		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		return this;
+	}
 }

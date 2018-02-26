@@ -25,8 +25,7 @@ public class OpenBrowserCommandHandler implements BrowserCommandHandler {
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER) String browserParams, MApplication mApplication,
 			ECommandService commandService, EHandlerService handlerService, EModelService modelService) {
 		Gson gsonParser = new Gson();
-		BrowserActionMessage broserParamsObject = gsonParser.fromJson(browserParams, BrowserActionMessage.class);
-		BrowserParams params = broserParamsObject.getParams();
+		BrowserParams params = gsonParser.fromJson(browserParams, BrowserParams.class);
 		if (params.getPosition() != null) {
 			if (params.getPosition().equals(IPositionConstants.POPUP)) {
 				openBrowserAsWindow(commandService, handlerService, params);
