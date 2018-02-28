@@ -35,7 +35,7 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	public void saveRequestResponseIfPossible(HttpRequest originalRequest, HttpObject httpObject) {
 		if (isOfflineTrafficSupported()) {
-			getEquoOfflineServer().save(originalRequest, httpObject);
+			getEquoOfflineServer().saveRequestResponse(originalRequest, httpObject);
 		}
 	}
 }

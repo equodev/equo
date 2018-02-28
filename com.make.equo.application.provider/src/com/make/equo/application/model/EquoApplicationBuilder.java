@@ -1,9 +1,5 @@
 package com.make.equo.application.model;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,41 +59,9 @@ public class EquoApplicationBuilder {
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 
-		configureAndStartProxyServer();
+		equoServer.startServer();
 
 		return this.getUrlMandatoryFieldBuilder();
-	}
-
-	private void configureAndStartProxyServer() {
-		// TODO improve this with a thread that continuously check for connectiviy
-		// TODO maybe this should move to urlmandartorybuilder since there we should
-		// modify the url protocol
-		// from https to http when is offline.
-		if (!isInternetReachable()) {
-			equoServer.setConnectionLimited();
-		}
-		equoServer.startServer();
-	}
-
-	private boolean isInternetReachable() {
-		try {
-			// make a URL to a known source
-			URL url = new URL("http://www.google.com");
-			// open a connection to that source
-			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
-			// trying to retrieve data from the source. If there
-			// is no connection, this line will fail
-			urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {

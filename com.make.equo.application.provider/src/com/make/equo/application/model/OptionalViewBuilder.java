@@ -10,6 +10,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.offline.api.IHttpRequestFilter;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
 
@@ -116,6 +117,16 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	public OptionalFieldBuilder onBeforeExit(Runnable runnable) {
 		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		return this;
+	}
+
+	public OptionalViewBuilder enableOfflineSupport() {
+		equoServer.enableOfflineCache();
+		return this;
+	}
+
+	public OptionalViewBuilder addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
+		equoServer.addOfflineSupportFilter(httpRequestFilter);
 		return this;
 	}
 

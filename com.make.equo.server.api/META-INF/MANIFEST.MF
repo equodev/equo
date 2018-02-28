@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.make.equo.server.api
 Import-Package: com.make.equo.server.offline.api,
+ io.netty.handler.codec.http,
  org.osgi.framework

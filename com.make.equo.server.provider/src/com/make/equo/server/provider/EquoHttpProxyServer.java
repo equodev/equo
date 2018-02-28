@@ -1,6 +1,9 @@
 package com.make.equo.server.provider;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,12 +29,11 @@ import org.osgi.service.component.annotations.Deactivate;
 
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
+import com.make.equo.server.offline.api.IHttpRequestFilter;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders.Names;
-import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 
 @Component
@@ -45,7 +47,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
-	private boolean enableOfflineCache = true;
+	private boolean enableOfflineCache = false;
 	private boolean connectionLimited = false;
 	
 	private HttpProxyServer proxyServer;
@@ -54,6 +56,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Inject
 	private IEquoWebSocketService equoWebsocketServer;
 
+	//TODO check if it works when it's null. Add cardinality to this service in case it fails
 	@Inject
 	private IEquoOfflineServer equoOfflineServer;
 
@@ -70,6 +73,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void startServer() {
+		// TODO improve this with a thread that continuously check for connectiviy
+		// TODO maybe this should move to urlmandartorybuilder since there we should
+		// modify the url protocol
+		// from https to http when is offline.
+		if (!isInternetReachable()) {
+			setConnectionLimited();
+		}
 		proxyServer = DefaultHttpProxyServer
 			.bootstrap()
 			.withPort(9896)
@@ -170,7 +180,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 					if (host.indexOf(":") != -1) {
 						return url.contains(host.substring(0, host.indexOf(":"))); 
 					} else {
-						return url.contains(originalRequest.headers().get(Names.HOST));
+						return url.contains(host);
 					}
 				}
 
@@ -250,6 +260,37 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void enableOfflineCache() {
 		this.enableOfflineCache = true;
+		if (isOfflineServerSupported()) {
+			equoOfflineServer.setProxiedUrls(proxiedUrls);
+		}
+	}
+
+	@Override
+	public void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
+		if (isOfflineServerSupported()) {
+			equoOfflineServer.addHttpRequestFilter(httpRequestFilter);
+		}
+	}
+
+	private boolean isInternetReachable() {
+		try {
+			// make a URL to a known source
+			URL url = new URL("http://www.google.com");
+			// open a connection to that source
+			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+			// trying to retrieve data from the source. If there
+			// is no connection, this line will fail
+			urlConnect.getContent();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }
