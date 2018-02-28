@@ -25,11 +25,17 @@ public enum EquoBundleManager {
 
 	INSTANCE;
 
+	private static final String NETTY_HTTP_REQUEST_PACKAGE = "io.netty.handler.codec.http;resolution:=optional";
+
+	private static final String NETTY_BUFFER_PACKAGE = "io.netty.buffer;resolution:=optional";
+
 	private static final String EQUO_APPLICATION_ID = "com.make.equo.application";
 
 	private static final String EQUO_API_PACKAGE = EQUO_APPLICATION_ID + ".api";
 
 	private static final String EQUO_MODEL_PACKAGE = EQUO_APPLICATION_ID + ".model";
+
+	private static final String EQUO_OFFLINE_PACKAGE = "com.make.equo.server.offline.api";
 
 	private static final String EXPORT_PACKAGE = "Export-Package";
 
@@ -183,6 +189,12 @@ public enum EquoBundleManager {
 		builder.append(EQUO_API_PACKAGE);
 		builder.append(SEPARATOR);
 		builder.append(EQUO_MODEL_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(EQUO_OFFLINE_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(NETTY_HTTP_REQUEST_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(NETTY_BUFFER_PACKAGE);
 		return builder.toString();
 	}
 
