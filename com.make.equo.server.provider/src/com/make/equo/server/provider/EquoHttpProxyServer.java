@@ -39,9 +39,10 @@ import io.netty.handler.codec.http.HttpRequest;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	public static final String LOCAL_SCRIPT_PROTOCOL = "main_app_equo_script/";
-	public static final String BUNDLE_SCRIPT_PROTOCOL = "external_bundle_equo_script/";
-	public static final String LOCAL_FILE_PROTOCOL = "equo/";
+	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
+	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
+	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
+	
 	public static final String EQUO_FRAMEWORK_PATH = "equoFramework/";
 	public static final String EQUO_WEBSOCKETS_JS_PATH = "equoWebsockets/";
 
@@ -89,32 +90,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 			.withServerResolver(serverResolver)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 					public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
-						// The connect request must bypass the filter! Otherwise the
-						// handshake will fail.
-						//
 						if (ProxyUtils.isCONNECT(originalRequest)) {
-//							System.out.println("connect request is " + originalRequest);
-//							if (isConnectionLimited()) {
-//								// rewrite connect requests into get ones, for http-only traffic.
-//								String newUri = originalRequest.getUri().replaceFirst(":443$", "");
-////								originalRequest.setUri(newUri);
-//								originalRequest.setMethod(HttpMethod.GET);
-//								System.out.println("the new uri is " + newUri);
-////								FullHttpRequest newHttpRequest = new DefaultFullHttpRequest(
-////										originalRequest.getProtocolVersion(), HttpMethod.GET, newUri,
-////										((DefaultFullHttpRequest) originalRequest).content());
-//								HttpHeaders headers = originalRequest.headers();
-////								headers.add(originalRequest.headers());
-//								String host = headers.get(Names.HOST).replaceFirst(":443$", "");
-//								headers.set(Names.HOST, host);
-//								String proxyConnection = headers.get("Proxy-Connection");
-//								headers.remove("Proxy-Connection");
-//								headers.add(Names.CONNECTION, proxyConnection);
-////								return new HttpFiltersAdapter(originalRequest, clientCtx);
-////								return this.filterRequest(newHttpRequest);
-//							} else {
-								return new HttpFiltersAdapter(originalRequest, clientCtx);
-//							}
+							return new HttpFiltersAdapter(originalRequest, clientCtx);
 						}
 						if (isEquoWebsocketJsApi(originalRequest)) {
 							return new EquoWebsocketJsApiRequestFiltersAdapter(originalRequest,
@@ -125,7 +102,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 							return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 						}
 						if (isConnectionLimited()) {
-							//TODO move this adapter to the offline server osgi bundle
+							// TODO move this adapter to the offline server osgi bundle
 							return new OfflineEquoHttpFiltersAdapter(originalRequest, isOfflineServerSupported(),
 									equoOfflineServer);
 						} else {
@@ -142,57 +119,56 @@ public class EquoHttpProxyServer implements IEquoServer {
 						}
 					}
 
-				private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {
-					String uri = originalRequest.getUri();
-					return uri.contains(EQUO_WEBSOCKETS_JS_PATH);
-				}
-
-				private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
-					String uri = originalRequest.getUri();
-					if (uri.contains(LOCAL_SCRIPT_PROTOCOL)) {
-						return new MainAppUrlResolver(LOCAL_SCRIPT_PROTOCOL, mainEquoAppBundle);
+					private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {
+						String uri = originalRequest.getUri();
+						return uri.contains(EQUO_WEBSOCKETS_JS_PATH);
 					}
-					if (uri.contains(LOCAL_FILE_PROTOCOL)) {
-						return new MainAppUrlResolver(LOCAL_FILE_PROTOCOL, mainEquoAppBundle);
+
+					private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
+						String uri = originalRequest.getUri();
+						if (uri.contains(LOCAL_SCRIPT_APP_PROTOCOL)) {
+							return new MainAppUrlResolver(LOCAL_SCRIPT_APP_PROTOCOL, mainEquoAppBundle);
+						}
+						if (uri.contains(LOCAL_FILE_APP_PROTOCOL)) {
+							return new MainAppUrlResolver(LOCAL_FILE_APP_PROTOCOL, mainEquoAppBundle);
+						}
+						if (uri.contains(BUNDLE_SCRIPT_APP_PROTOCOL)) {
+							return new BundleUrlResolver(BUNDLE_SCRIPT_APP_PROTOCOL);
+						}
+						if (uri.contains(EQUO_FRAMEWORK_PATH)) {
+							return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
+						}
+						return null;
 					}
-					if (uri.contains(BUNDLE_SCRIPT_PROTOCOL)) {
-						return new BundleUrlResolver(BUNDLE_SCRIPT_PROTOCOL);
+
+					private boolean isLocalFileRequest(HttpRequest originalRequest) {
+						String uri = originalRequest.getUri();
+						return uri.contains(LOCAL_SCRIPT_APP_PROTOCOL) || uri.contains(LOCAL_FILE_APP_PROTOCOL)
+								|| uri.contains(BUNDLE_SCRIPT_APP_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH);
 					}
-					if (uri.contains(EQUO_FRAMEWORK_PATH)) {
-						return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
+
+					private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
+						return proxiedUrls.stream().filter(url -> containsHeader(url, originalRequest)).findFirst();
 					}
-					return null;
-				}
 
-				private boolean isLocalFileRequest(HttpRequest originalRequest) {
-					String uri = originalRequest.getUri();
-					return uri.contains(LOCAL_SCRIPT_PROTOCOL) || uri.contains(LOCAL_FILE_PROTOCOL) || uri.contains(BUNDLE_SCRIPT_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH);
-				}
-
-				private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
-					return proxiedUrls.stream()
-							.filter(url -> containsHeader(url, originalRequest))
-							.findFirst();
-				}
-
-				private boolean containsHeader(String url, HttpRequest originalRequest) {
-					String host = originalRequest.headers().get(Names.HOST);
-					if (host.indexOf(":") != -1) {
-						return url.contains(host.substring(0, host.indexOf(":"))); 
-					} else {
-						return url.contains(host);
+					private boolean containsHeader(String url, HttpRequest originalRequest) {
+						String host = originalRequest.headers().get(Names.HOST);
+						if (host.indexOf(":") != -1) {
+							return url.contains(host.substring(0, host.indexOf(":")));
+						} else {
+							return url.contains(host);
+						}
 					}
-				}
 
-				@Override
-				public int getMaximumResponseBufferSizeInBytes() {
-					return 10 * 1024 * 1024;
-				}
+					@Override
+					public int getMaximumResponseBufferSizeInBytes() {
+						return 10 * 1024 * 1024;
+					}
 
-				@Override
-				public int getMaximumRequestBufferSizeInBytes() {
-					return 10 * 1024 * 1024;
-				}
+					@Override
+					public int getMaximumRequestBufferSizeInBytes() {
+						return 10 * 1024 * 1024;
+					}
 			}).start();
 	}
 
@@ -245,12 +221,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public String getLocalScriptProtocol() {
-		return LOCAL_SCRIPT_PROTOCOL;
+		return LOCAL_SCRIPT_APP_PROTOCOL;
 	}
 
 	@Override
 	public String getBundleScriptProtocol() {
-		return BUNDLE_SCRIPT_PROTOCOL;
+		return BUNDLE_SCRIPT_APP_PROTOCOL;
 	}
 
 	private boolean isOfflineServerSupported() {
@@ -274,20 +250,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private boolean isInternetReachable() {
 		try {
-			// make a URL to a known source
 			URL url = new URL("http://www.google.com");
-			// open a connection to that source
 			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
 			// trying to retrieve data from the source. If there
 			// is no connection, this line will fail
 			urlConnect.getContent();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return false;
 		}
 		return true;

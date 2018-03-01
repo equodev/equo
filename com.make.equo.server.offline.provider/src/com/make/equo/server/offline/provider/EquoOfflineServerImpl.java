@@ -77,24 +77,12 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			fileNamesToContentTypes = loadPropertyFile(getFileNamesToContentTypesFilePath());
 			fileNamesToStatusCodes = loadPropertyFile(getFileNamesToStatusCodesFilePath());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Nothing to log
 		} finally {
 			if (lines != null) {
 				lines.close();
 			}
 		}
-		// try {
-		// FileInputStream in = new FileInputStream(getCachePath());
-		// ObjectInputStream objIn = new ObjectInputStream(in);
-		// cacheOffline = (HashMap) objIn.readObject();
-		// in.close();
-		// objIn.close();
-		// } catch (IOException | ClassNotFoundException e) {
-		// System.out.println("Initializing cache offline...");
-		// e.printStackTrace();
-		// cacheOffline = new HashMap<>();
-		// }
 	}
 
 	private Properties loadPropertyFile(String propertyFilePath) throws IOException {
@@ -121,32 +109,12 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 	public void saveRequestResponse(HttpRequest originalRequest, HttpObject httpObject) {
 		if (httpObject instanceof FullHttpResponse) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
-			int code = fullResponse.getStatus().code();
-			// if (code >= 200 && code < 300) {
-			// String host = originalRequest.headers().get(Names.HOST);
-			// String referer = originalRequest.headers().get(Names.REFERER);
 			HttpResponse duplicatedResponse = (HttpResponse) fullResponse.duplicate().retain();
-			// String uri = originalRequest.getUri();
-			// if (code == 202) {
-			// System.out.println("code is " + code + " with response " +
-			// duplicatedResponse);
-			// }
-			// System.out.println("save uri is " + uri);
-			// System.out.println("request is " + originalRequest);
-			// System.out.println("request is " + originalRequest.toString());
-			// String suffix = host + uri;
 			FullHttpRequest fullHttpRequest = (FullHttpRequest) originalRequest;
 			String requestUniqueId = getRequestUniqueId(fullHttpRequest);
 			saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
-			// if (referer != null) {
-			// URI refererUri = URI.create(referer);
-			// String refererUriPath = refererUri.getPath();
-			// // System.out.println("referer path is " + refererUriPath);
-			// lastVisitedPage = refererUriPath;
-			// }
 			cacheOffline.put(requestUniqueId, duplicatedResponse);
 		}
-		// }
 	}
 
 	private String getRequestUniqueId(FullHttpRequest fullHttpRequest) {
@@ -161,9 +129,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			content.readBytes(data);
 			String requestPayload = new String(data);
 			httpRequest.release();
-//			if (httpRequest.getUri().contains("pathEvaluator")) {
-//				System.out.println("request payload is " + requestPayload + " and uri is " + fullHttpRequest.getUri());
-//			}
 			return requestId + "_" + requestPayload;
 		}
 	}
@@ -175,11 +140,9 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		return httpRequest;
 	}
 
-	private void saveStartPageIfPossible(FullHttpRequest originalRequest, HttpResponse httpResponse, String requestUniqueId) {
+	private void saveStartPageIfPossible(FullHttpRequest originalRequest, HttpResponse httpResponse,
+			String requestUniqueId) {
 		Optional<String> proxiedUrl = getProxiedUrl(originalRequest);
-		if (originalRequest.getUri().contains("/browse")) {
-			System.out.println("es browse...");
-		}
 		if (proxiedUrl.isPresent() && isApage(httpResponse)) {
 			startPageRequest = requestUniqueId;
 		}
@@ -195,11 +158,8 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 	// things are already saved. No need to save them.
 	@Deactivate
 	public void stop() {
-		System.out.println("Stopping Equo Offline Server... ");
-		// try {
 		saveStartPageToFile();
 		for (String originalRequestUniqueId : cacheOffline.keySet()) {
-			// check if response is an offlineresponse
 			FullHttpResponse httpResponse = (FullHttpResponse) cacheOffline.get(originalRequestUniqueId);
 			String contentTypeHeader = httpResponse.headers().get(Names.CONTENT_TYPE);
 			int code = httpResponse.getStatus().code();
@@ -209,29 +169,9 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			byte[] data = new byte[content.readableBytes()];
 			content.readBytes(data);
 
-			// File newResponsePath = new File(getCachePath() + File.separator +
-			// requestPath);
-			// if (!newResponsePath.exists()) {
 			try {
-//				String originalRequestUniqueId = getRequestUniqueId(originalRequestUniqueId);
-				// File parentFile = newResponsePath.getParentFile();
-				// if (!parentFile.exists()) {
-				// parentFile.mkdirs();
-				// }
-				// String fileName = newResponsePath.getName();
 				String fileNameHash = getFileNameHash(originalRequestUniqueId);
-				if (originalRequestUniqueId.contains("preflight")) {
-					System.out.println("when saving preflight!");
-					System.out.println("request is is " + originalRequestUniqueId);
-					System.out.println("preflight output file is " + fileNameHash);
-				}
-				if (originalRequestUniqueId.contains("switch")) {
-					System.out.println("when saving switch!");
-					System.out.println("when saving request is " + originalRequestUniqueId);
-					System.out.println("when saving switch output file is " + fileNameHash);
-				}
 				File outputFile = new File(getCachePath() + File.separator + fileNameHash);
-				// file.createNewFile();
 				FileOutputStream fos = new FileOutputStream(outputFile);
 				fos.write(data);
 				fos.close();
@@ -240,22 +180,12 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 				}
 				fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
 			} catch (IOException | NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
+				// TODO Log the exception, or maybe better log the file that wasn't found
 			}
-			// }
-			// httpResponse.retain();
 		}
 		savePropertyFile(fileNamesToContentTypes, "File Names to Content Types", getFileNamesToContentTypesFilePath());
 		savePropertyFile(fileNamesToStatusCodes, "File Names to Status Codes", getFileNamesToStatusCodesFilePath());
 		cacheOffline.clear();
-		// FileOutputStream fout = new FileOutputStream("/Users/seba/cache_off.seb");
-		// ObjectOutputStream oos = new ObjectOutputStream(fout);
-		// oos.writeObject(cacheOffline);
-		// oos.close();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	// TODO parse of response and the saving of it could be done in another thread.
@@ -345,67 +275,30 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 
 	@Override
 	public HttpResponse getOfflineResponse(HttpRequest originalRequest) throws IOException {
-//		System.out.println("viene por aca");
 		String requestUniqueId = null;
 		if (startPageRequest != null) {
 			requestUniqueId = startPageRequest;
-//			System.out.println("no es null lastvisited es " + startPageRequest);
 			startPageRequest = null;
 		} else {
-			// System.out.println("es null lastvisited");
 			requestUniqueId = getRequestUniqueId((FullHttpRequest) originalRequest);
 		}
 		// if (cacheOffline.containsKey(uri)) {
 		// return cacheOffline.get(uri);
 		// }
-		// int lastDirectoryIndex = uri.lastIndexOf("/");
-		// String outputFileName = uri.substring(lastDirectoryIndex);
-		// System.out.println("outputFileName is " + outputFileName);
-		// String directoryParentPath = uri.substring(0, lastDirectoryIndex);
-		// System.out.println("directoryParentPath is " + directoryParentPath);
 		try {
-			// System.out.println("original request is " + originalRequest);
 			String fileNameHash = getFileNameHash(requestUniqueId);
-			// System.out.println("request is is " + request);
 			String outputFilePath = getCachePath() + File.separator + fileNameHash;
-			if (requestUniqueId.contains("preflight")) {
-				System.out.println("when loading request is " + requestUniqueId);
-				System.out.println("preflight output file is " + outputFilePath);
-				ByteBuf content = ((FullHttpRequest) originalRequest).content();
-				byte[] data = new byte[content.readableBytes()];
-				content.readBytes(data);
-				String payload = new String(data);
-				System.out.println("when loading the payload is " + payload);
-			}
-			if (requestUniqueId.contains("switch")) {
-				System.out.println("when loading request is " + requestUniqueId);
-				System.out.println("switch output file is " + outputFilePath);
-				ByteBuf content = ((FullHttpRequest) originalRequest).content();
-				byte[] data = new byte[content.readableBytes()];
-				content.readBytes(data);
-				String payload = new String(data);
-				System.out.println("when loading the payload is " + payload);
-			}
-			// System.out.println("outputFilePath is " + outputFilePath);
 			FileInputStream inputStream = new FileInputStream(outputFilePath);
 			byte[] bytes = ByteStreams.toByteArray(inputStream);
 			ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
-			// final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
 			String contentType = fileNamesToContentTypes.getProperty(fileNameHash);
 			String statusCode = fileNamesToStatusCodes.getProperty(fileNameHash);
-//			System.out.println("Content type is " + contentType);
-//			System.out.println("Status code is " + statusCode);
 			inputStream.close();
 			HttpResponse buildResponse = buildResponse(buffer, contentType, Integer.valueOf(statusCode));
 			cacheOffline.put(requestUniqueId, buildResponse);
 			return buildResponse;
-			// cacheOffline = (HashMap) objIn.readObject();
-			// in.close();
-			// objIn.close();
-			// return cacheOffline.get(uri);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			 e.printStackTrace();
+
 		}
 		return null;
 	}
@@ -428,16 +321,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		}
 		return response;
 	}
-
-	// protected HttpResponse buildResponse(ByteBuf buffer1, String contentType) {
-	// ByteBuf buffer = Unpooled.wrappedBuffer("Offline response".getBytes());
-	// HttpResponse response = new DefaultFullHttpResponse(
-	// HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
-	// HttpHeaders.setContentLength(response, buffer.readableBytes());
-	// HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE,
-	// "text/html");
-	// return response;
-	// }
 
 	private String getCachePath() {
 		File equoCacheDir = new File(System.getProperty("user.home"), equoCachePathName);

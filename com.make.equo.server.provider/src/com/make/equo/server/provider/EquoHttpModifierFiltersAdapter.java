@@ -118,8 +118,8 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 
 	private boolean isLocalScript(String scriptPath) {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
-		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_PROTOCOL);
+		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 	}
 
 	private String createStringFromData(byte[] data, Charset charset) {

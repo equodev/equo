@@ -28,19 +28,14 @@ public class OfflineEquoHttpFiltersAdapter extends HttpFiltersAdapter {
 			String newUri = originalRequest.getUri().replaceFirst(":443$", "");
 			newUri = newUri.replace("https://", "http");
 			originalRequest.setUri(newUri);
-//			System.out.println("connection to server failed, maybe you are offline? check your internet connection...");
 			try {
 				HttpResponse offlineResponse = equoOfflineServer.getOfflineResponse(originalRequest);
-//				System.out.println("offlineResponse is " + offlineResponse);
 				return offlineResponse;
 			} catch (IOException e) {
 				// TODO log the exception, the not found offline request/file
-//				System.out.println("log the exception, the not found offline request/file");
-//				e.printStackTrace();
 			}
 		} else {
-			System.out.println("no es soportado el offline traffic");
-			// return offline page (equo or app based offline page)
+			// TODO return offline page (equo or app based offline page)
 		}
 		return (HttpResponse) httpObject;
 	}
