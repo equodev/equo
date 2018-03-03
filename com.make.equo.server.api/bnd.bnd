@@ -1,0 +1,5 @@
+Bundle-Version: ${equo_version}.${tstamp}
+Export-Package: com.make.equo.server.api
+-buildpath: \
+	org.eclipse.osgi,\
+	org.eclipse.osgi.source

@@ -6,12 +6,11 @@
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
+    xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
-    xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
-    name="equo-framework"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    name="equo.framework"
     label="Equo Framework">
   <setupTask
       xsi:type="jdt:JRETask"
@@ -19,11 +18,6 @@
       location="${jre.location-1.8}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
-  <setupTask
-      xsi:type="setup:VariableTask"
-      name="eclipse.target.platform"
-      defaultValue="Neon"
-      storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Xmx"
@@ -38,6 +32,30 @@
       targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml"
       encoding="UTF-8">
     <description>Initialize JDT's package explorer to show working sets as its root objects</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      name="installation.id"
+      defaultValue="equo.framework"
+      label="Installation folder name">
+    <annotation
+        source="RuleVariable">
+      <reference
+          href="performer:/com.github.equo.framework.master/index:/org.eclipse.setup#//@productCatalogs[name='self']/@setupTasks.3"/>
+    </annotation>
+    <description>The name of the folder within the root install folder where the product is installed</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      name="workspace.id"
+      defaultValue="equo.framework"
+      label="Workspace folder name">
+    <annotation
+        source="RuleVariable">
+      <reference
+          href="performer:/com.github.equo.framework.master/index:/org.eclipse.setup#//@projectCatalogs[name='com.github']/@setupTasks.6"/>
+    </annotation>
+    <description>The name of the workspace folder within the root workspace-container folder where the workspaces are located</description>
   </setupTask>
   <setupTask
       xsi:type="setup:VariableTask"
@@ -57,100 +75,16 @@
       name="gitlab.remoteURIs"
       label="Gitlab repository">
     <choice
-        value="git@@{remoteURI}:maketechnology/equo-framework.git"
+        value="git@@{remoteURI}:maketechnology/equo/framework.git"
         label="GIT SSH (requires pre ssh-keys)"/>
     <choice
-        value="https://@{remoteURI}/maketechnology/equo-framework.git"
+        value="https://@{remoteURI}/maketechnology/equo/framework.git"
         label="HTTPS (with user/pass)"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task">
-    <requirement
-        name="epp.package.rcp"/>
-    <requirement
-        name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="2.7.3"/>
-    <requirement
-        name="org.eclipse.recommenders.rcp.feature.feature.group"/>
-    <requirement
-        name="org.eclipse.recommenders.mylyn.rcp.feature.feature.group"/>
-    <requirement
-        name="org.eclipse.recommenders.snipmatch.rcp.feature.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/releases/neon"/>
-    <repository
-        url="http://download.eclipse.org/eclipse/updates/4.6"/>
-    <repository
-        url="http://download.eclipse.org/tools/orbit/downloads/drops/R20150821153341/repository/"/>
-    <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
-    <repository
-        url="http://download.eclipse.org/recommenders/updates/stable/"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      id="tools"
-      label="Tools">
-    <requirement
-        name="com.github.eclipsecolortheme.feature.feature.group"/>
-    <requirement
-        name="net.jeeeyul.eclipse.themes.feature.feature.group"/>
-    <requirement
-        name="fr.obeo.releng.targetplatform-feature.feature.group"/>
-    <requirement
-        name="org.eclipse.ajdt.feature.group"/>
-    <requirement
-        name="org.eclipse.contribution.weaving.feature.group"/>
-    <repository
-        url="http://eclipse.jeeeyul.net/update/"/>
-    <repository
-        url="http://eclipse-color-theme.github.io/update/"/>
-    <repository
-        url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest"/>
-    <repository
-        url="http://download.eclipse.org/tools/ajdt/46/dev/update"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      id="tycho"
-      label="Tycho">
-    <requirement
-        name="org.eclipse.m2e.feature.feature.group"/>
-    <requirement
-        name="org.sonatype.tycho.m2e.feature.feature.group"/>
-    <requirement
-        name="org.sonatype.m2e.buildhelper.feature.feature.group"/>
-    <repository
-        url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
-    <repository
-        url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-buildhelper/0.15.0/N/0.15.0.201405280027/"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="Test Plugins">
-    <requirement
-        name="org.eclipse.rcptt.platform.feature.group"/>
-    <requirement
-        name="org.eclipse.jdt.junit.runners.feature.feature.group"/>
-    <requirement
-        name="org.eclipse.pde.junit.runtime"/>
-    <requirement
-        name="org.jnario.m2e.feature.group"
-        versionRange="[1.1.0,2.0.0)"/>
-    <requirement
-        name="org.jnario.sdk.feature.group"
-        versionRange="[1.1.0,2.0.0)"/>
-    <repository
-        url="http://download.eclipse.org/rcptt/release/2.1.0/repository"/>
-    <repository
-        url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
-    <repository
-        url="http://www.jnario.org/updates/snapshot"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone"
-      location="${workspace.location/git}"
+      location="${workspace.location}"
       remoteURI="gitlab.com"
       pushURI="">
     <annotation
@@ -171,168 +105,79 @@
     <description>${scope.project.label}</description>
   </setupTask>
   <setupTask
-      xsi:type="setup.targlets:TargletTask">
-    <targlet
-        name="${scope.project.label}"
-        activeRepositoryList="${eclipse.target.platform}">
-      <annotation
-          source="http:/www.eclipse.org/oomph/targlets/TargetDefinitionGenerator">
-        <detail
-            key="location">
-          <value>${git.clone.location/com.make.equo.releng/com.make.equo.target.target}</value>
-        </detail>
-        <detail
-            key="includeAllPlatforms">
-          <value>false</value>
-        </detail>
-        <detail
-            key="includeSource">
-          <value>false</value>
-        </detail>
-        <detail
-            key="generateImplicitUnits">
-          <value>true</value>
-        </detail>
-        <detail
-            key="generateVersions">
-          <value>false</value>
-        </detail>
-      </annotation>
-      <requirement
-          name="org.eclipse.rcp.feature.group"/>
-      <requirement
-          name="com.make.cef.feature.feature.group"/>
-      <requirement
-          name="com.make.equo.application.provider"/>
-      <requirement
-          name="com.make.equo.application.server"/>
-      <requirement
-          name="*"/>
-      <sourceLocator
-          rootFolder="${git.clone.location}"
-          locateNestedProjects="true"/>
-      <repositoryList
-          name="Neon">
-        <repository
-            url="http://download.eclipse.org/releases/neon/"/>
-        <repository
-            url="http://download.eclipse.org/eclipse/updates/4.6"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
-        <repository
-            url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
-        <repository
-            url="http://download.eclipse.org/nebula/snapshot/"/>
-        <repository
-            url="https://repository.jboss.org/nexus/content/unzip/unzip/org/jboss/tools/locus/update.site/1.5.0-SNAPSHOT/update.site-1.5.0-SNAPSHOT.zip-unzip/"/>
-        <repository
-            url="http://maketechnology.github.io/p2plugins/"/>
-        <repository
-            url="http://fappel.github.io/xiliary"/>
-        <repository
-            url="http://fappel.github.io/test-libraries/"/>
-        <repository
-            url="http://download.eclipse.org/egit/updates"/>
-        <repository
-            url="http://maketechpub.gitlab.io/cefswt/repository"/>
-      </repositoryList>
-      <repositoryList
-          name="Oxygen">
-        <repository
-            url="http://download.eclipse.org/releases/oxygen"/>
-        <repository
-            url="http://download.eclipse.org/eclipse/updates/4.7"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
-        <repository
-            url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
-        <repository
-            url="http://download.eclipse.org/nebula/snapshot/"/>
-        <repository
-            url="https://repository.jboss.org/nexus/content/unzip/unzip/org/jboss/tools/locus/update.site/1.5.0-SNAPSHOT/update.site-1.5.0-SNAPSHOT.zip-unzip/"/>
-        <repository
-            url="http://maketechnology.github.io/p2plugins/"/>
-        <repository
-            url="http://fappel.github.io/xiliary"/>
-        <repository
-            url="http://fappel.github.io/test-libraries/"/>
-        <repository
-            url="http://download.eclipse.org/egit/updates"/>
-        <repository
-            url="http://maketechpub.gitlab.io/cefswt/repository"/>
-      </repositoryList>
-      <repositoryList
-          name="Neon">
-        <repository
-            url="http://download.eclipse.org/releases/neon"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-      </repositoryList>
-      <repositoryList
-          name="Mars">
-        <repository
-            url="http://download.eclipse.org/releases/mars"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-      </repositoryList>
-      <repositoryList
-          name="Luna">
-        <repository
-            url="http://download.eclipse.org/releases/luna"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-      </repositoryList>
-      <repositoryList
-          name="Kepler">
-        <repository
-            url="http://download.eclipse.org/releases/kepler"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-      </repositoryList>
-      <repositoryList
-          name="Juno">
-        <repository
-            url="http://download.eclipse.org/releases/juno"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-      </repositoryList>
-    </targlet>
+      xsi:type="projects:ProjectsImportTask">
+    <sourceLocator
+        rootFolder="${git.clone.location}">
+      <predicate
+          xsi:type="predicates:NamePredicate"
+          pattern="*"/>
+    </sourceLocator>
   </setupTask>
   <setupTask
       xsi:type="setup.workingsets:WorkingSetTask">
     <workingSet
         name="${scope.project.name}">
       <predicate
-          xsi:type="predicates:NamePredicate"
-          pattern="com.make.equo.*"/>
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:RepositoryPredicate"
+            project="cnf"/>
+      </predicate>
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
   <setupTask
-      xsi:type="setup:RedirectionTask"
-      id="setup.redirect"
-      disabled="true"
-      sourceURL="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup"
-      targetURL="${workspace.location|uri}/git/com.make.equo.releng/EquoFramework.setup">
-    <description>
-      Redirects setup from public https://github.com/maketechnology
-      to checkouted GIT repo.
-      Origin setup needs to be on public repo (Oomph fails with private)
-    </description>
+      xsi:type="setup:CompoundTask"
+      name="Preferences">
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.ui.editors">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.ui.editors/showWhitespaceCharacters"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.ui.editors/spacesForTabs"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.ui.editors/lineNumberRuler"
+          value="true"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.core.resources">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.core.resources/refresh.enabled"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.core.resources/encoding"
+          value="UTF-8"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.jdt.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.typefilter.enabled"
+          value="java.awt.*;"/>
+    </setupTask>
   </setupTask>
-  <setupTask
-      xsi:type="setup:EclipseIniTask"
-      option="-Doomph.redirection.equo-framework"
-      value="=https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup->${workspace.location|uri}/git/com.make.equo.releng/EquoFramework.setup"
-      vm="true"/>
   <stream name="master"
-      label="Master"/>
+      label="Master">
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        option="-Doomph.redirection.equo.framework.git"
+        value="=https://raw.githubusercontent.com/maketechnology/setups/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
+        vm="true">
+      <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
+    </setupTask>
+  </stream>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
-      href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']"/>
+      href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>Equo Framework provides cool stuff.</description>
 </setup:Project>

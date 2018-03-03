@@ -5,9 +5,11 @@ target/
 generated/
 .DS_Store
 /.metadata/
+workspace/
 /.recommenders/
 /.gradle/
-/_rt/
+_rt/
+.rt/
 cnf/cache
 cnf/*/
 !cnf/ext

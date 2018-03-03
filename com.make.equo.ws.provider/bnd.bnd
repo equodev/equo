@@ -1,0 +1,13 @@
+Bundle-Version: ${equo_version}.${tstamp}
+Private-Package: com.make.equo.ws.provider
+-includeresource: resources/
+-buildpath: \
+    com.google.guava;version=20.0,\
+    com.google.guava.source;version=20.0,\
+    com.google.gson,\
+    com.google.gson.source,\
+    org.java-websocket.Java-WebSocket,\
+    org.java-websocket.Java-WebSocket.source,\
+    com.make.equo.ws.api;version=latest,\
+    osgi.annotation,\
+    osgi.cmpn

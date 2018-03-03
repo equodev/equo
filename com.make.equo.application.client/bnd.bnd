@@ -1,4 +1,14 @@
-javac.source: 1.8
-javac.target: 1.8
-
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: ${equo_version}.${tstamp}
+Private-Package: com.make.equo.application.client
+Export-Package: com.make.equo.application.client.api
+-buildpath: \
+	com.make.equo.application.provider;version=latest,\
+	org.eclipse.core.runtime,\
+	org.eclipse.core.runtime.source,\
+	org.eclipse.e4.ui.workbench,\
+	org.eclipse.e4.ui.workbench.source,\
+	org.eclipse.osgi,\
+	org.eclipse.osgi.source,\
+	org.eclipse.equinox.common,\
+	org.eclipse.equinox.common.source,\
+	org.apache.commons.io

@@ -22,8 +22,7 @@
 		<link>
 			<name>gradle.properties</name>
 			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/gradle.properties
-			</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/gradle.properties</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

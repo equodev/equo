@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>com.make.equo.ws.provider</name>
+	<name>com.make.equo.testapp</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,7 +17,6 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>bndtools.core.bndnature</nature>
 	</natures>
