@@ -27,8 +27,9 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 	private List<String> jsScripts;
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
 	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
-	private String appUrl;
 	private static final String equoFrameworkJsApi = "equoFramework.js";
+
+	private String appUrl;
 	private IEquoWebSocketService equoWebsocketServer;
 
 	public EquoHttpModifierFiltersAdapter(String appUrl, HttpRequest originalRequest, List<String> jsScripts,
@@ -84,7 +85,7 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 	}
 
 	private String getEquoFrameworkJsApi() {
-		return createLocalScriptSentence(EquoHttpProxyServer.EQUO_FRAMEWORK_PATH + equoFrameworkJsApi);
+		return createLocalScriptSentence(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH + equoFrameworkJsApi);
 	}
 
 	private String convertJsScriptsToString() {

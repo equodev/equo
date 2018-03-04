@@ -31,7 +31,7 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.IHttpRequestFilter;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
-import com.make.equo.server.provider.resolvers.EquoFrameworkUrlResolver;
+import com.make.equo.server.provider.resolvers.EquoProxyServerUrlResolver;
 import com.make.equo.server.provider.resolvers.EquoWebsocketsUrlResolver;
 import com.make.equo.server.provider.resolvers.ILocalUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
@@ -48,13 +48,16 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
 	
-	public static final String EQUO_FRAMEWORK_PATH = "equoFramework/";
+	public static final String EQUO_PROXY_SERVER_PATH = "equoFramework/";
 	public static final String EQUO_WEBSOCKETS_JS_PATH = "equoWebsockets/";
+
+	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH + "limitedConnectionPage.html";
 
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	private boolean enableOfflineCache = false;
 	private boolean connectionLimited = false;
+	private String limitedConnectionAppBasedPagePath;
 	
 	private HttpProxyServer proxyServer;
 	private Bundle mainEquoAppBundle;
@@ -62,7 +65,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Inject
 	private IEquoWebSocketService equoWebsocketServer;
 
-	//TODO check if it works when it's null. Add cardinality to this service in case it fails
+	//TODO check if it works when it's null. Add cardinality to this service in case it fails. Use @Reference.
 	@Inject
 	private IEquoOfflineServer equoOfflineServer;
 
@@ -107,19 +110,23 @@ public class EquoHttpProxyServer implements IEquoServer {
 							return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 						}
 						if (isConnectionLimited()) {
-							// TODO move this adapter to the offline server osgi bundle
-							return new OfflineEquoHttpFiltersAdapter(originalRequest, isOfflineServerSupported(),
-									equoOfflineServer);
+							if (isOfflineCacheSupported()) {
+								return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
+							} else if (limitedConnectionAppBasedPagePath != null) {
+								return new OfflineRequestFiltersAdapter(originalRequest, getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
+							} else {
+								return new OfflineRequestFiltersAdapter(originalRequest, new EquoProxyServerUrlResolver(EQUO_PROXY_SERVER_PATH), limitedConnectionGenericPageFilePath);
+							}
 						} else {
 							Optional<String> url = getRequestedUrl(originalRequest);
 							if (url.isPresent()) {
 								String appUrl = url.get();
 								return new EquoHttpModifierFiltersAdapter(appUrl, originalRequest,
-										getCustomScripts(appUrl), equoWebsocketServer, isOfflineServerSupported(),
+										getCustomScripts(appUrl), equoWebsocketServer, isOfflineCacheSupported(),
 										equoOfflineServer);
 							} else {
 								return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer,
-										isOfflineServerSupported());
+										isOfflineCacheSupported());
 							}
 						}
 					}
@@ -131,6 +138,10 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 					private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
 						String uri = originalRequest.getUri();
+						return getUrlResolver(uri);
+					}
+
+					private ILocalUrlResolver getUrlResolver(String uri) {
 						if (uri.contains(LOCAL_SCRIPT_APP_PROTOCOL)) {
 							return new MainAppUrlResolver(LOCAL_SCRIPT_APP_PROTOCOL, mainEquoAppBundle);
 						}
@@ -140,8 +151,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 						if (uri.contains(BUNDLE_SCRIPT_APP_PROTOCOL)) {
 							return new BundleUrlResolver(BUNDLE_SCRIPT_APP_PROTOCOL);
 						}
-						if (uri.contains(EQUO_FRAMEWORK_PATH)) {
-							return new EquoFrameworkUrlResolver(EQUO_FRAMEWORK_PATH);
+						if (uri.contains(EQUO_PROXY_SERVER_PATH)) {
+							return new EquoProxyServerUrlResolver(EQUO_PROXY_SERVER_PATH);
 						}
 						return null;
 					}
@@ -149,7 +160,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 					private boolean isLocalFileRequest(HttpRequest originalRequest) {
 						String uri = originalRequest.getUri();
 						return uri.contains(LOCAL_SCRIPT_APP_PROTOCOL) || uri.contains(LOCAL_FILE_APP_PROTOCOL)
-								|| uri.contains(BUNDLE_SCRIPT_APP_PROTOCOL) || uri.contains(EQUO_FRAMEWORK_PATH);
+								|| uri.contains(BUNDLE_SCRIPT_APP_PROTOCOL) || uri.contains(EQUO_PROXY_SERVER_PATH);
 					}
 
 					private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
@@ -234,21 +245,30 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return BUNDLE_SCRIPT_APP_PROTOCOL;
 	}
 
+	@Override
+	public String getLocalFileProtocol() {
+		return LOCAL_FILE_APP_PROTOCOL;
+	}
+
+	private boolean isOfflineCacheSupported() {
+		return isOfflineServerSupported() && enableOfflineCache;
+	}
+
 	private boolean isOfflineServerSupported() {
-		return equoOfflineServer != null && enableOfflineCache;
+		return equoOfflineServer != null;
 	}
 
 	@Override
 	public void enableOfflineCache() {
 		this.enableOfflineCache = true;
-		if (isOfflineServerSupported()) {
+		if (isOfflineCacheSupported()) {
 			equoOfflineServer.setProxiedUrls(proxiedUrls);
 		}
 	}
 
 	@Override
 	public void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
-		if (isOfflineServerSupported()) {
+		if (isOfflineCacheSupported()) {
 			equoOfflineServer.addHttpRequestFilter(httpRequestFilter);
 		}
 	}
@@ -266,6 +286,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void addLimitedConnectionPage(String limitedConnectionPagePath) {
+		this.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
 	}
 
 }

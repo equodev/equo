@@ -26,4 +26,8 @@ public interface IEquoServer {
 
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
 
+	void addLimitedConnectionPage(String limitedConnectionPagePath);
+
+	String getLocalFileProtocol();
+
 }

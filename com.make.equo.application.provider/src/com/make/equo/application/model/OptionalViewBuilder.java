@@ -88,7 +88,7 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 *             TODO add support to save scripts per url (To be defined)
 	 * 
 	 */
-	private OptionalViewBuilder addCustomScript(String url, String scriptPath) throws IOException, URISyntaxException {
+	private OptionalViewBuilder addCustomScript(String url, String scriptPath) throws URISyntaxException {
 		URI scriptUri = new URI(scriptPath);
 		String scriptReference;
 		if (!scriptUri.isAbsolute()) {
@@ -98,11 +98,11 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 		} else {
 			scriptReference = equoServer.getBundleScriptProtocol() + scriptPath;
 		}
-		addCustomScriptToProxyAddon(url, scriptReference);
+		addCustomScriptToProxyServer(url, scriptReference);
 		return this;
 	}
 
-	private void addCustomScriptToProxyAddon(String url, String resolvedUrl) {
+	private void addCustomScriptToProxyServer(String url, String resolvedUrl) {
 		equoServer.addCustomScript(url, resolvedUrl);
 	}
 
@@ -120,6 +120,13 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 		return this;
 	}
 
+	/**
+	 * Enable an offline cache which will be used when there is no internet
+	 * connection or a limited one. This functionality will only work if and only if
+	 * the application was run at least once with a working internet connection
+	 * 
+	 * @return this optional builder
+	 */
 	public OptionalViewBuilder enableOfflineSupport() {
 		equoServer.enableOfflineCache();
 		return this;
@@ -127,6 +134,27 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 
 	public OptionalViewBuilder addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
 		equoServer.addOfflineSupportFilter(httpRequestFilter);
+		return this;
+	}
+
+	/**
+	 * Add a limited or no connection custom page for the case that there is no
+	 * internet connection or a limited one. If an offline cache is enabled, see
+	 * {@link #enableOfflineSupport()}, then this method has no effect.
+	 * 
+	 * @param limitedConnectionPagePath
+	 * @return this optional builder
+	 * @throws URISyntaxException
+	 */
+	public OptionalViewBuilder addLimitedConnectionPage(String limitedConnectionPagePath) throws URISyntaxException {
+		URI scriptUri = new URI(limitedConnectionPagePath);
+		String limitedConnectionPagePathWithPrefix;
+		if (!scriptUri.isAbsolute()) {
+			limitedConnectionPagePathWithPrefix = equoServer.getLocalFileProtocol() + limitedConnectionPagePath;
+		} else {
+			limitedConnectionPagePathWithPrefix = equoServer.getBundleScriptProtocol() + limitedConnectionPagePath;
+		}
+		equoServer.addLimitedConnectionPage(limitedConnectionPagePathWithPrefix);
 		return this;
 	}
 

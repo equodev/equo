@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.http.entity.ContentType;
+import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -363,6 +364,11 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 	@Override
 	public void addHttpRequestFilter(IHttpRequestFilter httpRequestFilter) {
 		httpRequestFilters.add(httpRequestFilter);
+	}
+
+	@Override
+	public HttpFiltersAdapter getOfflineHttpFiltersAdapter(HttpRequest originalRequest) {
+		return new OfflineEquoHttpFiltersAdapter(originalRequest, this);
 	}
 
 }

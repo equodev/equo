@@ -2,17 +2,17 @@ package com.make.equo.server.provider.resolvers;
 
 import java.net.URL;
 
-public class EquoFrameworkUrlResolver implements ILocalUrlResolver {
+public class EquoProxyServerUrlResolver implements ILocalUrlResolver {
 
-	private String equoFrameworkPath;
+	private String equoProxyServerFilePath;
 
-	public EquoFrameworkUrlResolver(String equoFrameworkPath) {
-		this.equoFrameworkPath = equoFrameworkPath;
+	public EquoProxyServerUrlResolver(String equoProxyServerFilePath) {
+		this.equoProxyServerFilePath = equoProxyServerFilePath;
 	}
 
 	@Override
 	public String getProtocol() {
-		return equoFrameworkPath;
+		return equoProxyServerFilePath;
 	}
 
 	@Override
