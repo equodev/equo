@@ -66,7 +66,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 
 	@Activate
 	public void start() {
-		System.out.println("Initializing Equo Offline Server...");
 		cacheOffline = new HashMap<>();
 		proxiedUrls = new ArrayList<>();
 		httpRequestFilters = new ArrayList<>();
@@ -155,8 +154,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 				|| contentTypeHeader.startsWith("application/xhtml+xml")));
 	}
 
-	// TODO only save these contents if there is internet connection, if not, the
-	// things are already saved. No need to save them.
 	@Deactivate
 	public void stop() {
 		saveStartPageToFile();
@@ -283,9 +280,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		} else {
 			requestUniqueId = getRequestUniqueId((FullHttpRequest) originalRequest);
 		}
-		// if (cacheOffline.containsKey(uri)) {
-		// return cacheOffline.get(uri);
-		// }
 		try {
 			String fileNameHash = getFileNameHash(requestUniqueId);
 			String outputFilePath = getCachePath() + File.separator + fileNameHash;

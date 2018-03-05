@@ -20,10 +20,6 @@ public interface IEquoServer {
 
 	void enableOfflineCache();
 
-	void setConnectionLimited();
-
-	void setConnectionUnlimited();
-
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
 
 	void addLimitedConnectionPage(String limitedConnectionPagePath);

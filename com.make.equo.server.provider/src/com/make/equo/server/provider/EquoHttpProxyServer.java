@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -79,16 +82,24 @@ public class EquoHttpProxyServer implements IEquoServer {
 			return super.resolve(host, port);
 		}
 	};
+	private ScheduledExecutorService internetConnectionChecker;
 
 	@Override
 	public void startServer() {
-		// TODO improve this with a thread that continuously check for connectiviy
-		// TODO maybe this should move to urlmandartorybuilder since there we should
-		// modify the url protocol
-		// from https to http when is offline.
-		if (!isInternetReachable()) {
-			setConnectionLimited();
-		}
+		Runnable internetConnectionRunnable = new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Checking internet connection...");
+				if (!isInternetReachable()) {
+					setConnectionLimited();
+				} else {
+					setConnectionUnlimited();
+				}
+			}
+		};
+		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
+		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
+
 		proxyServer = DefaultHttpProxyServer
 			.bootstrap()
 			.withPort(9896)
@@ -188,13 +199,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 			}).start();
 	}
 
-	@Override
-	public void setConnectionLimited() {
+	private void setConnectionLimited() {
 		connectionLimited = true;
 	}
 
-	@Override
-	public void setConnectionUnlimited() {
+	private void setConnectionUnlimited() {
 		connectionLimited = false;
 	}
 
@@ -212,6 +221,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Deactivate
 	public void stop() {
 		System.out.println("Stopping proxy...");
+		if (internetConnectionChecker != null) {
+			internetConnectionChecker.shutdownNow();
+		}
 		if (proxyServer != null) {
 			proxyServer.stop();
 		}
