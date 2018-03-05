@@ -1,9 +1,10 @@
 package com.make.equo.server.provider;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.URL;
+import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +90,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("Checking internet connection...");
 				if (!isInternetReachable()) {
 					setConnectionLimited();
 				} else {
@@ -286,18 +286,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 	}
 
 	private boolean isInternetReachable() {
-		try {
-			URL url = new URL("http://www.google.com");
-			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
-			// trying to retrieve data from the source. If there
-			// is no connection, this line will fail
-			urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			return false;
-		} catch (IOException e) {
+		if (proxiedUrls.isEmpty()) {
 			return false;
 		}
-		return true;
+		try (Socket socket = new Socket()) {
+			String urlToProxy = proxiedUrls.get(0);
+			URI uri = new URI(urlToProxy);
+			String host = uri.getHost();
+			socket.connect(new InetSocketAddress(host, 80));
+			return true;
+		} catch (IOException | URISyntaxException e) {
+			return false; // Either timeout or unreachable or failed DNS lookup.
+		}
 	}
 
 	@Override
