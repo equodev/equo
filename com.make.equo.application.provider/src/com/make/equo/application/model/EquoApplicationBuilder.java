@@ -2,8 +2,6 @@ package com.make.equo.application.model;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
@@ -18,7 +16,6 @@ import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 
 public class EquoApplicationBuilder {
@@ -29,8 +26,6 @@ public class EquoApplicationBuilder {
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	private String name;
-	@Inject
-	private IEquoServer equoServer;
 
 	EquoApplicationBuilder(EquoApplication equoApplication) {
 		this.equoApplication = equoApplication;
@@ -58,8 +53,6 @@ public class EquoApplicationBuilder {
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
-
-		equoServer.startServer();
 
 		return this.getUrlMandatoryFieldBuilder();
 	}
