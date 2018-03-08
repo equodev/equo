@@ -63,6 +63,10 @@ public class UrlMandatoryBuilder {
 	}
 
 	private String normalizeUrl(String url) {
+		//if there is no connection, convert the url from https to http
+		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
+			url = url.replace("https", "http");
+		}
 		if (url.endsWith("/")) {
 			return url;
 		} else {

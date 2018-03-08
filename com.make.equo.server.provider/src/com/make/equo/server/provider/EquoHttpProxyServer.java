@@ -38,7 +38,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
-	
+
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
@@ -49,14 +49,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	private boolean enableOfflineCache = false;
 	private String limitedConnectionAppBasedPagePath;
-	
+
 	private HttpProxyServer proxyServer;
 	private Bundle mainEquoAppBundle;
 
 	@Inject
 	private IEquoWebSocketService equoWebsocketServer;
 
-	//TODO check if it works when it's null. Add cardinality to this service in case it fails. Use @Reference.
+	// TODO check if it works when it's null. Add cardinality to this service in
+	// case it fails. Use @Reference.
 	@Inject
 	private IEquoOfflineServer equoOfflineServer;
 
@@ -162,9 +163,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 		if (proxiedUrls.isEmpty()) {
 			return false;
 		}
+		return isAddressReachable(proxiedUrls.get(0));
+	}
+
+	@Override
+	public boolean isAddressReachable(String appUrl) {
 		try (Socket socket = new Socket()) {
-			String urlToProxy = proxiedUrls.get(0);
-			URI uri = new URI(urlToProxy);
+			URI uri = new URI(appUrl);
 			String host = uri.getHost();
 			socket.connect(new InetSocketAddress(host, 80));
 			return true;

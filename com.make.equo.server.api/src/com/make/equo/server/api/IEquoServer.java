@@ -27,4 +27,6 @@ public interface IEquoServer {
 
 	String getLocalFileProtocol();
 
+	boolean isAddressReachable(String appUrl);
+
 }
