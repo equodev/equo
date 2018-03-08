@@ -33,6 +33,7 @@ public class EquoApplicationBuilder {
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
 		FrameworkUtil.INSTANCE.inject(this.urlMandatoryFieldBuilder);
 		this.optionalBuilder = new OptionalFieldBuilder(this);
+		FrameworkUtil.INSTANCE.inject(this.optionalBuilder);
 	}
 
 	public UrlMandatoryBuilder name(String name) {

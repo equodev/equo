@@ -30,7 +30,6 @@ public class UrlMandatoryBuilder {
 		setMainWindowUrl(url);
 		OptionalViewBuilder optionalViewBuilder = new OptionalViewBuilder(this);
 		FrameworkUtil.INSTANCE.inject(optionalViewBuilder);
-		equoServer.startServer();
 		return optionalViewBuilder;
 	}
 
