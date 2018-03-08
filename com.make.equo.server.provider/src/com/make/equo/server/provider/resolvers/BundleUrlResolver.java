@@ -3,6 +3,8 @@ package com.make.equo.server.provider.resolvers;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+
 public class BundleUrlResolver implements ILocalUrlResolver {
 
 	private String bundleScriptProtocol;

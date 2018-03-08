@@ -2,6 +2,8 @@ package com.make.equo.server.provider.resolvers;
 
 import java.net.URL;
 
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+
 public class EquoProxyServerUrlResolver implements ILocalUrlResolver {
 
 	private String equoProxyServerFilePath;

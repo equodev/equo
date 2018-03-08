@@ -10,7 +10,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.server.offline.api.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public class OptionalViewBuilder extends OptionalFieldBuilder {
 

@@ -9,6 +9,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="20.0.0",
  com.google.common.io;version="20.0.0",
  com.make.equo.server.offline.api;version="[1.0.0,2.0.0)",
+ com.make.equo.server.offline.api.filters,
  io.netty.buffer,
  io.netty.handler.codec.http,
  io.netty.util,

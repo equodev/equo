@@ -2,7 +2,7 @@ package com.make.equo.server.provider;
 
 import java.nio.charset.Charset;
 
-import com.make.equo.server.provider.resolvers.ILocalUrlResolver;
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

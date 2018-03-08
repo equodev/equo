@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -23,7 +22,6 @@ import java.util.stream.Stream;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.http.entity.ContentType;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -32,7 +30,10 @@ import org.osgi.service.component.annotations.Deactivate;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
-import com.make.equo.server.offline.api.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.IModifiableResponse;
+import com.make.equo.server.offline.api.filters.OfflineEquoHttpFiltersAdapter;
+import com.make.equo.server.offline.provider.utils.IConstants;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -51,8 +52,6 @@ import io.netty.handler.codec.http.HttpVersion;
 @Component
 public class EquoOfflineServerImpl implements IEquoOfflineServer {
 
-	private static final String HTTPS_PROTOCOL = "https";
-	private static final String HTTP_PROTOCOL = "http";
 	private static final String FILE_NAMES_TO_CONTENT_TYPES_FILE_NAME = "fileNamesToContentTypes.properties";
 	private static final String equoCachePathName = "cache_equo";
 	private static final String startPageFileName = "lastVisitedPage";
@@ -92,13 +91,13 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			input = new FileInputStream(propertyFilePath);
 			result.load(input);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			// TODO log the exception
 		} finally {
 			if (input != null) {
 				try {
 					input.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					// TODO log the exception
 				}
 			}
 		}
@@ -186,33 +185,10 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		cacheOffline.clear();
 	}
 
-	// TODO parse of response and the saving of it could be done in another thread.
 	private FullHttpResponse parseResponseIfNecessary(FullHttpResponse fullResponse, String contentTypeHeader) {
-		if (contentTypeHeader != null
-				&& (contentTypeHeader.startsWith("text/") || contentTypeHeader.startsWith("application/xhtml+xml")
-						|| contentTypeHeader.startsWith("application/json")
-						|| contentTypeHeader.startsWith("application/javascript"))) {
-			ContentType contentType = ContentType.parse(contentTypeHeader);
-			Charset charset = contentType.getCharset();
-
-			ByteBuf content = fullResponse.content();
-
-			byte[] data = new byte[content.readableBytes()];
-			content.readBytes(data);
-
-			String responseToTransform = createStringFromData(data, charset);
-			responseToTransform = responseToTransform.replaceAll(HTTPS_PROTOCOL, HTTP_PROTOCOL);
-
-			byte[] bytes = createDataFromString(responseToTransform, charset);
-			ByteBuf transformedContent = Unpooled.buffer(bytes.length);
-			transformedContent.writeBytes(bytes);
-
-			DefaultFullHttpResponse transformedResponse = new DefaultFullHttpResponse(fullResponse.getProtocolVersion(),
-					fullResponse.getStatus(), transformedContent);
-			transformedResponse.headers().set(fullResponse.headers());
-			HttpHeaders.setContentLength(transformedResponse, bytes.length);
-
-			return transformedResponse;
+		IModifiableResponse fromHttpsToHttpResponse = new FromHttpsToHttpResponse(fullResponse);
+		if (fromHttpsToHttpResponse.isModifiable()) {
+			return fromHttpsToHttpResponse.generateModifiedResponse();
 		}
 		return fullResponse;
 	}
@@ -223,13 +199,13 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			output = new FileOutputStream(propertyFilePath);
 			propertyFile.store(output, title);
 		} catch (IOException io) {
-			io.printStackTrace();
+			// TODO log the exception
 		} finally {
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					// TODO log the exception
 				}
 			}
 
@@ -254,7 +230,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			try (PrintWriter out = new PrintWriter(startPagePath)) {
 				out.print(startPageRequest);
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				// TODO log the exception
 			}
 		}
 	}
@@ -300,14 +276,14 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 
 	private String parseUriIfNecessary(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
-		if (uri.startsWith(HTTP_PROTOCOL)) {
+		if (uri.startsWith(IConstants.HTTP_PROTOCOL)) {
 			String host = originalRequest.headers().get(Names.HOST);
-			return uri.replace(HTTP_PROTOCOL + "://" + host, "");
+			return uri.replace(IConstants.HTTP_PROTOCOL + "://" + host, "");
 		}
 		return uri;
 	}
 
-	protected HttpResponse buildResponse(ByteBuf buffer, String contentType, Integer statusCode) {
+	private HttpResponse buildResponse(ByteBuf buffer, String contentType, Integer statusCode) {
 		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
 				new HttpResponseStatus(statusCode, ""), buffer);
 		HttpHeaders.setContentLength(response, buffer.readableBytes());
@@ -323,16 +299,6 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			equoCacheDir.mkdirs();
 		}
 		return equoCacheDir.getAbsolutePath();
-	}
-
-	// TODO this method is repeated in EquoHttpModifierFilte...refactor it
-	private String createStringFromData(byte[] data, Charset charset) {
-		return (charset == null) ? new String(data) : new String(data, charset);
-	}
-
-	// TODO this method is repeated in EquoHttpModifierFilte...refactor it
-	private byte[] createDataFromString(String string, Charset charset) {
-		return (charset == null) ? string.getBytes() : string.getBytes(charset);
 	}
 
 	@Override

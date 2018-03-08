@@ -1,4 +1,4 @@
-package com.make.equo.server.offline.api;
+package com.make.equo.server.offline.api.filters;
 
 import io.netty.handler.codec.http.HttpRequest;
 

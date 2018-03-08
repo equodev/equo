@@ -1,6 +1,7 @@
 package com.make.equo.server.provider;
 
-import com.make.equo.server.provider.resolvers.ILocalUrlResolver;
+import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;

@@ -33,11 +33,12 @@ import org.osgi.service.component.annotations.Deactivate;
 
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
-import com.make.equo.server.offline.api.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
 import com.make.equo.server.provider.resolvers.EquoProxyServerUrlResolver;
 import com.make.equo.server.provider.resolvers.EquoWebsocketsUrlResolver;
-import com.make.equo.server.provider.resolvers.ILocalUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
 import com.make.equo.ws.api.IEquoWebSocketService;
 

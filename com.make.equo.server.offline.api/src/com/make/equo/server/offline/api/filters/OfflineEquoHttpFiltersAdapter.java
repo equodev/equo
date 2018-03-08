@@ -1,4 +1,4 @@
-package com.make.equo.server.offline.provider;
+package com.make.equo.server.offline.api.filters;
 
 import java.io.IOException;
 

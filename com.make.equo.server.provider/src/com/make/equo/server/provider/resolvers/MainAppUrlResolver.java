@@ -4,6 +4,8 @@ import java.net.URL;
 
 import org.osgi.framework.Bundle;
 
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+
 public class MainAppUrlResolver implements ILocalUrlResolver {
 
 	private String localScriptProtocol;

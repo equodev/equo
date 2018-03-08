@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.offline.api.filters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import javax.activation.MimetypesFileTypeMap;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.google.common.io.ByteStreams;
-import com.make.equo.server.provider.resolvers.ILocalUrlResolver;
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -61,14 +61,12 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 			return buildResponse(buffer, contentType);
 		} catch (IOException e) {
 			// TODO log exception
-			e.printStackTrace();
 			ByteBuf buffer;
 			try {
 				buffer = Unpooled.wrappedBuffer("".getBytes("UTF-8"));
 				return buildResponse(buffer, "text/html");
 			} catch (UnsupportedEncodingException e1) {
 				// TODO log exception
-				e1.printStackTrace();
 				return null;
 			}
 		}

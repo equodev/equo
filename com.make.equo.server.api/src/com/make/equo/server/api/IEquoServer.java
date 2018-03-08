@@ -2,7 +2,8 @@ package com.make.equo.server.api;
 
 import org.osgi.framework.Bundle;
 
-import com.make.equo.server.offline.api.IHttpRequestFilter;
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+
 
 public interface IEquoServer {
 

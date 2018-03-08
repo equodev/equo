@@ -35,7 +35,7 @@ public enum EquoBundleManager {
 
 	private static final String EQUO_MODEL_PACKAGE = EQUO_APPLICATION_ID + ".model";
 
-	private static final String EQUO_OFFLINE_PACKAGE = "com.make.equo.server.offline.api";
+	private static final String EQUO_OFFLINE_PACKAGE = "com.make.equo.server.offline.api.filters";
 
 	private static final String EXPORT_PACKAGE = "Export-Package";
 

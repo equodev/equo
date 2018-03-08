@@ -3,6 +3,9 @@ package com.make.equo.server.offline.api;
 import java.io.IOException;
 import java.util.List;
 import org.littleshoot.proxy.HttpFiltersAdapter;
+
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
