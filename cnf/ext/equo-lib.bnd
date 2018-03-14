@@ -21,8 +21,8 @@ plugindir: ${workspace}/cnf/plugins
 #    ${plugindir}/biz.aQute.repository-3.5.0.jar; \
 #        url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 -pluginpath:\
-    ${plugindir}/publisher-0.1.2.jar; \
-        url="http://www.equo.wemaketechnology.com/bnd.p2/rls/publisher-0.1.2.jar", \
+    ${plugindir}/publisher-0.1.4.jar; \
+        url="http://www.equo.wemaketechnology.com/bnd.p2/rls/publisher-0.1.4.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
         url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 
@@ -30,7 +30,7 @@ plugindir: ${workspace}/cnf/plugins
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
         name = Release; \
         local = ${build}/release; \
-        type = R5|P2
+        type = P2|R5
         
 -plugin.6.P2Repo: \
     com.make.bnd.p2release.P2RepoContentProvider; \

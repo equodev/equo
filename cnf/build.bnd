@@ -2,8 +2,7 @@
     com.make.bnd.p2release.P2RepoContentProvider; \
         name = Release; \
         includeAllDependencies = true; \
-        runbundles = ${build}/equoapp.all.bnd; \
-        mirrors = "Applaunch,P2Plugins,http://download.eclipse.org/releases/oxygen/201709271000"
+        runbundles = ${build}/equoapp.all.bnd
 
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \

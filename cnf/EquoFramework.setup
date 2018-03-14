@@ -35,30 +35,6 @@
   </setupTask>
   <setupTask
       xsi:type="setup:VariableTask"
-      name="installation.id"
-      defaultValue="equo.framework"
-      label="Installation folder name">
-    <annotation
-        source="RuleVariable">
-      <reference
-          href="performer:/com.github.equo.framework.master/index:/org.eclipse.setup#//@productCatalogs[name='self']/@setupTasks.3"/>
-    </annotation>
-    <description>The name of the folder within the root install folder where the product is installed</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:VariableTask"
-      name="workspace.id"
-      defaultValue="equo.framework"
-      label="Workspace folder name">
-    <annotation
-        source="RuleVariable">
-      <reference
-          href="performer:/com.github.equo.framework.master/index:/org.eclipse.setup#//@projectCatalogs[name='com.github']/@setupTasks.6"/>
-    </annotation>
-    <description>The name of the workspace folder within the root workspace-container folder where the workspaces are located</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:VariableTask"
       name="gitlab.user.id"
       label="Gitlab user ID">
     <annotation
@@ -110,7 +86,7 @@
         rootFolder="${git.clone.location}">
       <predicate
           xsi:type="predicates:NamePredicate"
-          pattern="*"/>
+          pattern=".*"/>
     </sourceLocator>
   </setupTask>
   <setupTask
@@ -170,7 +146,7 @@
       label="Master">
     <setupTask
         xsi:type="setup:EclipseIniTask"
-        option="-Doomph.redirection.equo.framework.git"
+        option="-Doomph.redirection.equo.framework"
         value="=https://raw.githubusercontent.com/maketechnology/setups/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
         vm="true">
       <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>

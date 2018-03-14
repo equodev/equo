@@ -1,6 +1,6 @@
 // Available to customize the build
 plugins {
-    id 'org.ajoberstar.git-publish' version '0.3.2'
+    id 'org.ajoberstar.git-publish' version '0.3.3'
 }
 
 gitPublish {
@@ -13,8 +13,8 @@ gitPublish {
             into "${project.name}/$channel/repo"
         }
         from('cnf') {
-            def rep = "\$1-${equo_version}.bnd"
-            include "equoapp.bnd"
+            def rep = "\$1-${version}.bnd"
+            include "equoapp.bnd", "equobuild.bnd"
             rename '(.*)\\.bnd', rep
             into "${project.name}/$channel"
         }
@@ -23,7 +23,7 @@ gitPublish {
         include '**/*'
         exclude "${project.name}/$channel"
     }
-    commitMessage = "Publishing ${project.name} ${equo_version}"
+    commitMessage = "Publishing ${project.name} ${version}"
 }
 
 task wrapper(type: Wrapper) {

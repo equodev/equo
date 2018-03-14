@@ -1,5 +1,5 @@
 -include: ${build}/equoapp.bnd
 #-runrepos: Release
 
-Bundle-Version: ${equo_version}.${tstamp}
+Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.testapp

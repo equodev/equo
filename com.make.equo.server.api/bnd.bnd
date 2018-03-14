@@ -1,4 +1,4 @@
-Bundle-Version: ${equo_version}.${tstamp}
+Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.server.api
 -buildpath: \
 	org.eclipse.osgi,\

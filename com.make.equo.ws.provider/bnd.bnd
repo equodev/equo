@@ -1,4 +1,4 @@
-Bundle-Version: ${equo_version}.${tstamp}
+Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.ws.provider
 -includeresource: resources/
 -buildpath: \
