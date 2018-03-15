@@ -13,9 +13,9 @@ gitPublish {
             into "${project.name}/$channel/repo"
         }
         from('cnf') {
-            def rep = "\$1-${version}.bnd"
-            include "equoapp.bnd", "equobuild.bnd"
-            rename '(.*)\\.bnd', rep
+            def rep = "\$1-${version}.\$2"
+            include "equoapp.bnd", "equobuild.bnd", "equoci.yml"
+            rename '(.*)\\.(...)$', rep
             into "${project.name}/$channel"
         }
     }

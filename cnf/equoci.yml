@@ -1,0 +1,17 @@
+image: registry.gitlab.com/maketechnology/equo/docker/gradle:jdk8-alpine
+
+stages:
+  - build
+
+export:
+  stage: build
+  script:
+    - gradle check
+    - gradle release
+    - gradle equo
+    - gradle gitPublishPush
+  artifacts:
+    paths:
+      - cnf/release
+    expire_in: 20w
+

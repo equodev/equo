@@ -1,6 +1,7 @@
 -buildpath: \
 	com.make.equo.application.provider;version=latest
 -includeresource: -resources/
+-outputmask: ${@bsn}-${@version}.jar
 osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 -runfw: ${osgi}
 -runee: JavaSE-1.8
