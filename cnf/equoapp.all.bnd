@@ -1,7 +1,9 @@
 -include: ./equoapp.bnd
 
 -runbundles.osgi: \
-    ${osgi}
+    ${osgi}, \
+    biz.aQute.launcher;version='[3.5.0,3.6.0)', \
+    biz.aQute.bndlib;version='[3.5.0,3.6.0)'
 
 -runbundles.cef: \
     com.make.cef.linux.x86_64, \

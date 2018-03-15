@@ -17,7 +17,6 @@ cache:
 export:
   stage: build
   script:
-    - echo $HOME
     - HOME=$CI_PROJECT_DIR gradle check
     - HOME=$CI_PROJECT_DIR gradle release
     - HOME=$CI_PROJECT_DIR gradle gitPublishPush
