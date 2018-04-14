@@ -32,7 +32,6 @@ import com.google.common.io.ByteStreams;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
-import com.make.equo.server.offline.api.filters.OfflineEquoHttpFiltersAdapter;
 import com.make.equo.server.offline.provider.utils.IConstants;
 
 import io.netty.buffer.ByteBuf;
