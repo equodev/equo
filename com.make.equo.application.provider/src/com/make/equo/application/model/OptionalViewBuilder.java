@@ -164,8 +164,7 @@ public class OptionalViewBuilder {
 	}
 
 	public EquoApplication start() {
-		equoServer.startServer();
-		return equoApplicationBuilder.getEquoApplication();
+		return this.urlMandatoryBuilder.start();
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {

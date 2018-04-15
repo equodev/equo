@@ -89,4 +89,12 @@ public class UrlMandatoryBuilder {
 	String getUrl() {
 		return url;
 	}
+
+	public EquoApplication start() {
+		//first check if an url of an app was set
+		if (url != null) {
+			equoServer.startServer();
+		}
+		return this.equoAppBuilder.getEquoApplication();
+	}
 }
