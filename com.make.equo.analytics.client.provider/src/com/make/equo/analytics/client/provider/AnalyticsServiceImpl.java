@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.analytics.client.api.internal.AnalyticsService;
+import com.make.equo.analytics.client.provider.util.IAnalyticsConstants;
 
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
@@ -34,25 +35,25 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	}
 
 	@Override
-	public void registerEvent(String eventKey, float value) {
+	public void registerEvent(String eventKey, double value) {
 		influxDB.write(addFields(eventKey, value).build());
 	}
 
 	@Override
-	public void registerEvent(String eventKey, float value, JsonObject segmentation) {
+	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
 		String segmentationAsString = gson.toJson(segmentation);
 		registerEvent(eventKey, value, segmentationAsString);
 	}
 
 	@Override
-	public void registerEvent(String eventKey, float value, String segmentationAsString) {
+	public void registerEvent(String eventKey, double value, String segmentationAsString) {
 		Point build = addFields(eventKey, value)
 						.tag(getSegmentation(segmentationAsString))
 						.build();
 		influxDB.write(build);
 	}
 
-	private Builder addFields(String eventKey, float value) {
+	private Builder addFields(String eventKey, double value) {
 		return Point.measurement(eventKey)
 						.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
 						.addField(VALUE_FIELD, value);
@@ -69,6 +70,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		if (influxDB != null) {
 			influxDB.close();
 		}
+	}
+
+	@Override
+	public void registerLaunchApp() {
+		registerEvent("netflix." + IAnalyticsConstants.LAUNCH_EVENT, 1);
 	}
 
 }

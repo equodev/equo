@@ -29,5 +29,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.make.equo.application.api,
  com.make.equo.application.model
 Import-Package: com.google.common.collect,
+ com.make.equo.analytics.client.api.internal,
  com.make.equo.server.api,
  com.make.equo.ws.api;version="1.0.0"

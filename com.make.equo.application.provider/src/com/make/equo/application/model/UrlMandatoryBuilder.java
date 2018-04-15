@@ -8,7 +8,10 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.osgi.framework.Bundle;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
+import com.make.equo.analytics.client.api.internal.AnalyticsService;
 import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.server.api.IEquoServer;
@@ -19,8 +22,12 @@ public class UrlMandatoryBuilder {
 	private MBindingTable mainPartBindingTable;
 	private MPart part;
 	private String url;
+
 	@Inject
 	private IEquoServer equoServer;
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	volatile private AnalyticsService analyticsService;
 
 	UrlMandatoryBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoAppBuilder = equoApplicationBuilder;
@@ -63,7 +70,7 @@ public class UrlMandatoryBuilder {
 	}
 
 	private String normalizeUrl(String url) {
-		//if there is no connection, convert the url from https to http
+		// if there is no connection, convert the url from https to http
 		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
 			url = url.replace("https", "http");
 		}
@@ -91,10 +98,11 @@ public class UrlMandatoryBuilder {
 	}
 
 	public EquoApplication start() {
-		//first check if an url of an app was set
+		// first check if an url of an app was set
 		if (url != null) {
 			equoServer.startServer();
 		}
+		analyticsService.registerLaunchApp();
 		return this.equoAppBuilder.getEquoApplication();
 	}
 }
