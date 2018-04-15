@@ -21,6 +21,8 @@ import com.make.equo.analytics.client.api.internal.AnalyticsService;
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
 
+	private static final String VALUE_FIELD = "value";
+
 	private InfluxDB influxDB;
 	private Gson gson;
 
@@ -53,7 +55,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	private Builder addFields(String eventKey, float value) {
 		return Point.measurement(eventKey)
 						.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-						.addField("value", value);
+						.addField(VALUE_FIELD, value);
 	}
 
 	private Map<String, String> getSegmentation(String segmentation) {
