@@ -20,7 +20,6 @@ import com.make.equo.ws.api.EquoEventHandler;
 
 public class EquoApplicationBuilder {
 
-	private OptionalFieldBuilder optionalBuilder;
 	private EquoApplication equoApplication;
 	private final MApplication mApplication;
 	private MTrimmedWindow mWindow;
@@ -32,8 +31,6 @@ public class EquoApplicationBuilder {
 		this.mApplication = equoApplication.getEquoApplicationModel().getMainApplication();
 		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
 		FrameworkUtil.INSTANCE.inject(this.urlMandatoryFieldBuilder);
-		this.optionalBuilder = new OptionalFieldBuilder(this);
-		FrameworkUtil.INSTANCE.inject(this.optionalBuilder);
 	}
 
 	public UrlMandatoryBuilder name(String name) {
@@ -167,10 +164,6 @@ public class EquoApplicationBuilder {
 		getmApplication().getBindingContexts().add(windowAndDialogBindingContext);
 		getmApplication().getBindingContexts().add(windowBindingContext);
 		getmApplication().getBindingContexts().add(dialogBindingContext);
-	}
-
-	OptionalFieldBuilder getOptionalBuilder() {
-		return optionalBuilder;
 	}
 
 	UrlMandatoryBuilder getUrlMandatoryFieldBuilder() {

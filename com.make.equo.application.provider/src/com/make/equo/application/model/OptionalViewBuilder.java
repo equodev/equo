@@ -7,21 +7,26 @@ import java.net.URISyntaxException;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
-public class OptionalViewBuilder extends OptionalFieldBuilder {
+public class OptionalViewBuilder {
 
 	@Inject
 	private IEquoServer equoServer;
 
 	private UrlMandatoryBuilder urlMandatoryBuilder;
 
+	private EquoApplicationBuilder equoApplicationBuilder;
+
+	private MMenu mainMenu;
+
 	OptionalViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
-		super(urlMandatoryBuilder.getEquoApplicationBuilder());
 		this.urlMandatoryBuilder = urlMandatoryBuilder;
+		this.equoApplicationBuilder = urlMandatoryBuilder.getEquoApplicationBuilder();
 	}
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable) {
@@ -114,7 +119,7 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 	 *            a runnable object
 	 * @return this
 	 */
-	public OptionalFieldBuilder onBeforeExit(Runnable runnable) {
+	public OptionalViewBuilder onBeforeExit(Runnable runnable) {
 		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
@@ -158,4 +163,21 @@ public class OptionalViewBuilder extends OptionalFieldBuilder {
 		return this;
 	}
 
+	public EquoApplication start() {
+		equoServer.startServer();
+		return equoApplicationBuilder.getEquoApplication();
+	}
+
+	public MenuBuilder withMainMenu(String menuLabel) {
+		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
+		return new MenuBuilder(this).addMenu(menuLabel);
+	}
+
+	EquoApplicationBuilder getEquoApplicationBuilder() {
+		return equoApplicationBuilder;
+	}
+
+	MMenu getMainMenu() {
+		return mainMenu;
+	}
 }
