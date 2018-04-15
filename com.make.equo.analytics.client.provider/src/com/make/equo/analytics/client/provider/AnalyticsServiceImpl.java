@@ -11,6 +11,7 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -59,6 +60,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		Map<String, String> segmentationMap = gson.fromJson(segmentation, type);
 		return segmentationMap;
+	}
+	
+	@Deactivate
+	public void stop() {
+		if (influxDB != null) {
+			influxDB.close();
+		}
 	}
 
 }
