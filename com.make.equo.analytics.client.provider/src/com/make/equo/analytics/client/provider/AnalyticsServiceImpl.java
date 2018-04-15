@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.analytics.client.api.internal.AnalyticsService;
-import com.make.equo.analytics.client.provider.util.IAnalyticsConstants;
+import com.make.equo.analytics.client.provider.util.IAnalyticsEventsNames;
 
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
@@ -26,6 +26,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private InfluxDB influxDB;
 	private Gson gson;
+	private long appStartTime;
 
 	@Activate
 	public void start() {
@@ -67,14 +68,23 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	
 	@Deactivate
 	public void stop() {
+		registerSessionTime();
 		if (influxDB != null) {
 			influxDB.close();
 		}
 	}
 
+	private void registerSessionTime() {
+		long endTime = System.currentTimeMillis();
+		long sessionTime = endTime - appStartTime;
+		System.out.println("Total execution time: " + sessionTime );
+		registerEvent("netflix" + "." + IAnalyticsEventsNames.SESSION_TIME, sessionTime);
+	}
+
 	@Override
 	public void registerLaunchApp() {
-		registerEvent("netflix." + IAnalyticsConstants.LAUNCH_EVENT, 1);
+		appStartTime = System.currentTimeMillis();
+		registerEvent("netflix" + "." + IAnalyticsEventsNames.LAUNCH_EVENT, 1);
 	}
 
 }
