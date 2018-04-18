@@ -83,7 +83,8 @@
   <setupTask
       xsi:type="projects:ProjectsImportTask">
     <sourceLocator
-        rootFolder="${git.clone.location}">
+        rootFolder="${git.clone.location}"
+        locateNestedProjects="true">
       <predicate
           xsi:type="predicates:NamePredicate"
           pattern=".*"/>
@@ -142,12 +143,24 @@
           value="java.awt.*;"/>
     </setupTask>
   </setupTask>
+  <setupTask
+      xsi:type="setup:RedirectionTask"
+      id="setup.redirect"
+      disabled="true"
+      sourceURL="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup"
+      targetURL="${workspace.location|uri}/cnf/EquoFramework.setup">
+    <description>
+      Redirects setup from public https://github.com/maketechnology
+      to checkouted GIT repo.
+      Origin setup needs to be on public repo (Oomph fails with private)
+    </description>
+  </setupTask>
   <stream name="master"
       label="Master">
     <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.equo.framework"
-        value="=https://raw.githubusercontent.com/maketechnology/setups/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
+        value="=https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
         vm="true">
       <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
     </setupTask>
