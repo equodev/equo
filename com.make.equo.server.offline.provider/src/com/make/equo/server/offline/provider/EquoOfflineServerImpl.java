@@ -52,7 +52,7 @@ import io.netty.handler.codec.http.HttpVersion;
 public class EquoOfflineServerImpl implements IEquoOfflineServer {
 
 	private static final String FILE_NAMES_TO_CONTENT_TYPES_FILE_NAME = "fileNamesToContentTypes.properties";
-	private static final String equoCachePathName = "cache_equo";
+	private static final String equoCachePathName = ".cache_equo";
 	private static final String startPageFileName = "lastVisitedPage";
 	private static final String FILE_NAMES_TO_STATUS_CODES_FILE_NAME = "fileNamesToStatusCodes.properties";
 	private Map<String, HttpResponse> cacheOffline;
