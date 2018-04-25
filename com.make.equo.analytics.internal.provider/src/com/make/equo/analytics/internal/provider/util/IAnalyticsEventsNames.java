@@ -1,4 +1,4 @@
-package com.make.equo.analytics.client.provider.util;
+package com.make.equo.analytics.internal.provider.util;
 
 public interface IAnalyticsEventsNames {
 	

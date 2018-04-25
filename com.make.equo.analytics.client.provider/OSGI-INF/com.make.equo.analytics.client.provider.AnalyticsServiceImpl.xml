@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="start" deactivate="stop" name="com.make.equo.analytics.client.provider.AnalyticsServiceImpl">
-   <service>
-      <provide interface="com.make.equo.analytics.client.api.internal.AnalyticsService"/>
-   </service>
-   <implementation class="com.make.equo.analytics.client.provider.AnalyticsServiceImpl"/>
-</scr:component>

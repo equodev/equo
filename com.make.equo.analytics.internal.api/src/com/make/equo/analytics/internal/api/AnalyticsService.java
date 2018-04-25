@@ -1,4 +1,4 @@
-package com.make.equo.analytics.client.api.internal;
+package com.make.equo.analytics.internal.api;
 
 import com.google.gson.JsonObject;
 

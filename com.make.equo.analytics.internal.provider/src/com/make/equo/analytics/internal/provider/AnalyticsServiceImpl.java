@@ -1,4 +1,4 @@
-package com.make.equo.analytics.client.provider;
+package com.make.equo.analytics.internal.provider;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -16,8 +16,9 @@ import org.osgi.service.component.annotations.Deactivate;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.make.equo.analytics.client.api.internal.AnalyticsService;
-import com.make.equo.analytics.client.provider.util.IAnalyticsEventsNames;
+import com.make.equo.analytics.internal.api.AnalyticsService;
+import com.make.equo.analytics.internal.provider.util.IAnalyticsConstants;
+import com.make.equo.analytics.internal.provider.util.IAnalyticsEventsNames;
 
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
@@ -30,7 +31,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Activate
 	public void start() {
-		this.influxDB = InfluxDBFactory.connect("http://172.17.0.2:8086", "root", "root");
+		this.influxDB = InfluxDBFactory.connect("http://localhost:8086");
+		influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
 		this.gson = new Gson();
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 	}

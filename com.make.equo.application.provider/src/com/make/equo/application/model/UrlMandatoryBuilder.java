@@ -8,10 +8,8 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.osgi.framework.Bundle;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 
-import com.make.equo.analytics.client.api.internal.AnalyticsService;
+import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.server.api.IEquoServer;
@@ -26,8 +24,8 @@ public class UrlMandatoryBuilder {
 	@Inject
 	private IEquoServer equoServer;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	volatile private AnalyticsService analyticsService;
+	@Inject
+	private AnalyticsService analyticsService;
 
 	UrlMandatoryBuilder(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoAppBuilder = equoApplicationBuilder;

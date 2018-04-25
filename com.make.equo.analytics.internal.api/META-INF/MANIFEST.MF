@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Analytics Internal Api
+Bundle-SymbolicName: com.make.equo.analytics.internal.api
+Bundle-Version: 1.0.0
+Bundle-Vendor: Make Technology
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: com.google.gson
+Export-Package: com.make.equo.analytics.internal.api
