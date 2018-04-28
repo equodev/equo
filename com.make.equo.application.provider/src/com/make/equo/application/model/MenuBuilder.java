@@ -49,4 +49,8 @@ public class MenuBuilder {
 		return menu;
 	}
 
+	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
+		return new MenuItemBuilder(this).addFullScreenModeMenuItem(menuItemLabel);
+	}
+
 }

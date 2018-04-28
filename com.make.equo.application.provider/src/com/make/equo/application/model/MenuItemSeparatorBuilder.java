@@ -26,4 +26,8 @@ public class MenuItemSeparatorBuilder {
 	public MenuItemBuilder addMenuItem(String menuItemLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenuItem(menuItemLabel);
 	}
+
+	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
+		return new MenuBuilder(this.menuBuilder).addFullScreenModeMenuItem(menuItemLabel);
+	}
 }

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
+import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
@@ -178,5 +179,9 @@ public class OptionalViewBuilder {
 
 	MMenu getMainMenu() {
 		return mainMenu;
+	}
+
+	public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
+		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
 }

@@ -6,6 +6,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
+import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
 
 public class MenuItemBuilder {
@@ -85,16 +86,16 @@ public class MenuItemBuilder {
 	}
 
 	/**
-	 * Add Exit menu item only if needed (Not needed in OSx) and executes the runnable
-	 * before exiting the application
+	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application
 	 * 
 	 * @param menuLabel
 	 *            the label of the exit menu item
 	 * @return
 	 */
 	public MenuItemBuilder onBeforeExit(String menuLabel, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
-				.getEquoApplicationBuilder().getmApplication();
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
 		menuItem = createMenuItem(menuLabel);
 		menuItem.setCommand(command);
@@ -115,23 +116,29 @@ public class MenuItemBuilder {
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
 	}
-	
+
+	// onpreferences should also manage websocket events to js
 	/**
-	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the runnable
-	 * before exiting the application
+	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application
 	 * 
 	 * @param menuLabel
 	 *            the label of the exit menu item
 	 * @return
 	 */
 	public MenuItemBuilder onPreferences(String menuLabel, Runnable runnable) {
-////		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
-////				.getEquoApplicationBuilder().getmApplication();
-////		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
-////		menuItem = createMenuItem(menuLabel);
-//		menuItem.setCommand(command);
+		//// MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
+		//// .getEquoApplicationBuilder().getmApplication();
+		//// MCommand command =
+		//// mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
+		//// menuItem = createMenuItem(menuLabel);
+		// menuItem.setCommand(command);
 		return onBeforeExit(runnable);
 	}
-	
-	//onpreferences should also manage websocket events to js
+
+	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
+		MenuItemBuilder newMenuItemBuilder = this.addMenuItem(menuItemLabel);
+		return newMenuItemBuilder.onClick(EnterFullScreenModeRunnable.instance);
+	}
+
 }
