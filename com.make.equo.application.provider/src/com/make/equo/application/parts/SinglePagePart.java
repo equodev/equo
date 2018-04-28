@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -48,13 +47,6 @@ public class SinglePagePart {
 
 	public void loadUrl(String newUrl) {
 		browser.setUrl(newUrl);
-	}
-
-	@Focus
-	public void onFocus() {
-		if (browser != null) {
-			browser.forceFocus();
-		}
 	}
 
 }
