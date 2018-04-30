@@ -12,7 +12,7 @@ public class TestApp implements IEquoFramework {
     public EquoApplication buildApp(EquoApplication application) {
         return application
                 .name("TestApp")
-                .withSingleView("http://www.equo.wemaketechnology.com")
+                .withSingleView("http://equo.maketechnology.io")
                 .start();
     }
 

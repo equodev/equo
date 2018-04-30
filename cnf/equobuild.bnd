@@ -6,7 +6,7 @@ javac.debug:            on
 -plugin.1.Equo: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = Equo; \
-        locations = "http://www.equo.wemaketechnology.com/framework/rls/repo/index.xml.gz"; \
+        locations = "http://equo.maketechnology.io/framework/rls/repo/index.xml.gz"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
 #-plugin.1.Equo: \
@@ -20,7 +20,7 @@ plugindir: ${workspace}/cnf/cache/plugins
 
 -pluginpath:\
     ${plugindir}/publisher-0.1.4.jar; \
-        url="http://www.equo.wemaketechnology.com/bnd.p2/rls/publisher-0.1.4.jar", \
+        url="http://equo.maketechnology.io/bnd.p2/rls/publisher-0.1.4.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
         url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 

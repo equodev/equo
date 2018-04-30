@@ -45,9 +45,9 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
     fgcolor=${def;fgcolor},\
     logo=resources/logo.png
 
-os:${if;${matches;${tolower;${os.name}};win};win32;${if;${matches;${tolower;${os.name}};mac};macosx;linux}}
-ws:${if;${matches;${tolower;${os.name}};win};win32;${if;${matches;${tolower;${os.name}};mac};cocoa;gtk}}
-cefos:${if;${matches;${tolower;${os.name}};win};windows;${if;${matches;${tolower;${os.name}};mac};osx;linux}}
+os:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};macosx;linux}}
+ws:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};cocoa;gtk}}
+cefos:${if;${matches;${tolower;${os.name}};.*win.*};windows;${if;${matches;${tolower;${os.name}};.*mac.*};osx;linux}}
 swt.fragment: org.eclipse.swt.${ws}.${os}.x86_64
 cef.fragment: com.make.cef.${cefos}.x86_64
 
