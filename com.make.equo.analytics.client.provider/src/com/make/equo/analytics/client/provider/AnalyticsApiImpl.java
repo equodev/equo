@@ -15,6 +15,7 @@ import com.make.equo.analytics.internal.api.AnalyticsService;
  * Street. The application may register a call to the Analytics API service
  * whenever a movie is played, somethings like this:
  * 
+ * {@code equoAnalytics.registerEvent("movies_summary", jsonObject)} or
  * {@code equoAnalytics.registerEvent("movies_summary", 1, jsonObject)} or
  * {@code equoAnalytics.registerEvent("movies_summary", 1, "{"title": "The Wolf
  * of Wall Street", "Country": "Germany"}")}
