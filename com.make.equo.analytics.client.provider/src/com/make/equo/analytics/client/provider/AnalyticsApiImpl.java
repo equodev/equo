@@ -1,12 +1,16 @@
 package com.make.equo.analytics.client.provider;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.analytics.client.api.AnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
+import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 /**
  * Equo applications will call methods of this service to register custom events
@@ -25,8 +29,16 @@ import com.make.equo.analytics.internal.api.AnalyticsService;
 @Component
 public class AnalyticsApiImpl implements AnalyticsApi {
 
-	private static final int DEFAULT_COUNT = 1;
+	private static final String CUSTOM_EVENT_KEY = "customEvent";
+	static final int DEFAULT_COUNT = 1;
 	private AnalyticsService analyticsService;
+
+	@Activate
+	public void start() {
+		System.out.println("Initializing Analytics Client provider...");
+		EquoEventHandler equoEventHandler = new EquoEventHandler();
+		equoEventHandler.on(CUSTOM_EVENT_KEY, new CustomEventPayloadRunnable());
+	}
 
 	public void registerEvent(String eventKey, int count) {
 		analyticsService.registerEvent(eventKey, count);
@@ -58,5 +70,30 @@ public class AnalyticsApiImpl implements AnalyticsApi {
 	@Override
 	public void registerEvent(String eventKey, String segmentationAsString) {
 		this.registerEvent(eventKey, DEFAULT_COUNT, segmentationAsString);
+	}
+
+	private class CustomEventPayloadRunnable implements JsonPayloadEquoRunnable {
+
+		private static final long serialVersionUID = 1L;
+		private static final String SEGMENTATION_KEY = "segmentation";
+		private static final String EVENT_KEY = "key";
+
+		@Override
+		public void run(JsonObject payload) {
+			System.out.println("custom event json payload is " + payload);
+			JsonElement keyJsonElement = payload.get(EVENT_KEY);
+			if (keyJsonElement == null) {
+				throw new RuntimeException(
+						"A \"key\" member which identified the event name must be defined in the custom Analytics event object.");
+			}
+			String eventKey = keyJsonElement.getAsString();
+			JsonObject segmentationJsonObject = payload.getAsJsonObject(SEGMENTATION_KEY);
+			if (segmentationJsonObject == null) {
+				registerEvent(eventKey);
+			} else {
+				registerEvent(eventKey, segmentationJsonObject);
+			}
+		}
+
 	}
 }
