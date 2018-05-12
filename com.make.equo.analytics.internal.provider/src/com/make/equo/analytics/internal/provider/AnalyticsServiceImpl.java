@@ -39,7 +39,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value) {
-		influxDB.write(addFields(eventKey, value).build());
+		influxDB.write(addFields(eventKey, value).tag(IAnalyticsConstants.APP_NAME_TAG, "Netflix").build());
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
 		Point build = addFields(eventKey, value)
+						.tag(IAnalyticsConstants.APP_NAME_TAG, "Netflix")
 						.tag(getSegmentation(segmentationAsString))
 						.build();
 		influxDB.write(build);
@@ -80,13 +81,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		long endTime = System.currentTimeMillis();
 		long sessionTime = endTime - appStartTime;
 		System.out.println("Total execution time: " + sessionTime );
-		registerEvent("netflix" + "." + IAnalyticsEventsNames.SESSION_TIME, sessionTime);
+		registerEvent(IAnalyticsEventsNames.SESSION_TIME, sessionTime);
 	}
 
 	@Override
 	public void registerLaunchApp() {
 		appStartTime = System.currentTimeMillis();
-		registerEvent("netflix" + "." + IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
 	}
 
 }
