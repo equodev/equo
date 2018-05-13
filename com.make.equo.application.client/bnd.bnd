@@ -11,4 +11,5 @@ Export-Package: com.make.equo.application.client.api
 	org.eclipse.osgi.source,\
 	org.eclipse.equinox.common,\
 	org.eclipse.equinox.common.source,\
-	org.apache.commons.io
+	org.apache.commons.io,\
+	org.apache.commons.io.source
