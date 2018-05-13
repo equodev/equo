@@ -5,7 +5,7 @@ window.equo = window.equo || {};
     let webSocket;
     let userEventCallbacks = {};
 
-    let openSocket = function() {
+    const openSocket = function() {
         // Ensures only one connection is open at a time
         if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
             console.log('WebSocket is already opened.');

@@ -5,11 +5,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 public class MenuBuilder {
 
-	private OptionalFieldBuilder optionalFieldBuilder;
+	private OptionalViewBuilder optionalFieldBuilder;
 	private MMenu parentMenu;
 	private MMenu menu;
 
-	MenuBuilder(OptionalFieldBuilder optionalFieldBuilder) {
+	MenuBuilder(OptionalViewBuilder optionalFieldBuilder) {
 		this.parentMenu = optionalFieldBuilder.getMainMenu();
 		this.optionalFieldBuilder = optionalFieldBuilder;
 	}
@@ -36,8 +36,8 @@ public class MenuBuilder {
 	public MenuItemBuilder addMenuItem(String label) {
 		return new MenuItemBuilder(this).addMenuItem(label);
 	}
-	
-	OptionalFieldBuilder getOptionalFieldBuilder() {
+
+	OptionalViewBuilder getOptionalFieldBuilder() {
 		return optionalFieldBuilder;
 	}
 
@@ -47,6 +47,10 @@ public class MenuBuilder {
 
 	MMenu getMenu() {
 		return menu;
+	}
+
+	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
+		return new MenuItemBuilder(this).addFullScreenModeMenuItem(menuItemLabel);
 	}
 
 }

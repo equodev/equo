@@ -37,7 +37,7 @@ public class SinglePagePart {
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}
 	}
-	
+
 	@PreDestroy
 	public void destroy() {
 		if (browser != null) {
@@ -48,4 +48,5 @@ public class SinglePagePart {
 	public void loadUrl(String newUrl) {
 		browser.setUrl(newUrl);
 	}
+
 }

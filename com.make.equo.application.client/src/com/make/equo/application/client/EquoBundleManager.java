@@ -25,11 +25,17 @@ public enum EquoBundleManager {
 
 	INSTANCE;
 
+	private static final String NETTY_HTTP_REQUEST_PACKAGE = "io.netty.handler.codec.http;resolution:=optional";
+
+	private static final String NETTY_BUFFER_PACKAGE = "io.netty.buffer;resolution:=optional";
+
 	private static final String EQUO_APPLICATION_ID = "com.make.equo.application";
 
 	private static final String EQUO_API_PACKAGE = EQUO_APPLICATION_ID + ".api";
 
 	private static final String EQUO_MODEL_PACKAGE = EQUO_APPLICATION_ID + ".model";
+
+	private static final String EQUO_OFFLINE_PACKAGE = "com.make.equo.server.offline.api.filters";
 
 	private static final String EXPORT_PACKAGE = "Export-Package";
 
@@ -183,6 +189,12 @@ public enum EquoBundleManager {
 		builder.append(EQUO_API_PACKAGE);
 		builder.append(SEPARATOR);
 		builder.append(EQUO_MODEL_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(EQUO_OFFLINE_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(NETTY_HTTP_REQUEST_PACKAGE);
+		builder.append(SEPARATOR);
+		builder.append(NETTY_BUFFER_PACKAGE);
 		return builder.toString();
 	}
 
@@ -199,10 +211,16 @@ public enum EquoBundleManager {
 
 		bundleInitProps.put("osgi.bundles", appBundleFile.getAbsolutePath() + ",\n" + " com.make.equo.ws.api,\n"
 				+ " com.make.equo.ws.provider,\n" + " com.make.equo.application.provider,\n"
-				+ " com.make.equo.server.api,\n" + " com.make.equo.server.provider,\n" + "com.github.jnr.ffi,\n"
-				+ " com.github.jnr.jffi,\n" + " com.github.jnr.jffi.native,\n" + " com.github.jnr.x86asm,\n"
-				+ " com.ibm.icu,\n" + " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n" + " javax.annotation,\n"
-				+ " javax.inject,\n" + " javax.xml,\n" + " org.apache.batik.css,\n" + " org.apache.batik.util,\n"
+				+ " com.make.equo.server.api,\n" + " com.make.equo.server.provider,\n"
+				+ " com.make.equo.server.offline.api,\n" + " com.make.equo.server.offline.provider,\n"
+				+ " com.make.equo.analytics.client.api,\n" + " com.make.equo.analytics.client.provider,\n"
+				+ " com.make.equo.analytics.internal.api,\n" + " com.make.equo.analytics.internal.provider,\n"
+				+ " com.squareup.okhttp3.okhttp,\n" + " com.squareup.okhttp3.logging-interceptor,\n"
+				+ " com.squareup.okio,\n" + " com.squareup.retrofit2.retrofit,\n" + "com.squareup.moshi,\n"
+				+ " com.squareup.retrofit2.converter-moshi,\n" + " com.github.jnr.ffi,\n" + " com.github.jnr.jffi,\n"
+				+ " com.github.jnr.jffi.native,\n" + " com.github.jnr.x86asm,\n" + " com.ibm.icu,\n"
+				+ " com.make.cef,\n" + " com.make.cef.osx.x86_64,\n" + " javax.annotation,\n" + " javax.inject,\n"
+				+ " javax.xml,\n" + " org.apache.batik.css,\n" + " org.apache.batik.util,\n"
 				+ " org.apache.batik.util.gui,\n" + " org.apache.commons.jxpath,\n" + " org.apache.commons.logging,\n"
 				+ " org.apache.felix.gogo.command,\n" + " org.apache.felix.gogo.shell,\n"
 				+ " org.apache.felix.gogo.runtime,\n" + " org.apache.felix.scr,\n" + " org.eclipse.core.commands,\n"
@@ -230,11 +248,12 @@ public enum EquoBundleManager {
 				+ " org.eclipse.jface.databinding,\n" + " org.eclipse.osgi,\n"
 				+ " org.eclipse.osgi.compatibility.state,\n" + " org.eclipse.osgi.services,\n"
 				+ " org.eclipse.osgi.util,\n" + " org.eclipse.swt,\n" + " org.eclipse.swt.cocoa.macosx.x86_64,\n"
-				+ " org.objectweb.asm,\n" + " org.objectweb.asm.analysis,\n" + " org.objectweb.asm.commons,\n"
-				+ " org.objectweb.asm.tree,\n" + " org.objectweb.asm.util,\n" + " org.w3c.css.sac,\n"
-				+ " org.w3c.dom.events,\n" + " org.w3c.dom.smil,\n" + " org.w3c.dom.svg,\n"
-				+ " org.eclipse.update.configurator@3:start,\n" + " org.eclipse.ui.workbench,\n" + " org.eclipse.ui,\n"
-				+ " org.eclipse.help,\n" + " org.eclipse.e4.ui.workbench.addons.swt,\n" + " org.eclipse.jetty.server,\n"
+				+ " org.objectweb.asm_5.1.0.v20160914-0701.jar,\n" + " org.objectweb.asm.analysis_5.0.3.jar,\n"
+				+ " org.objectweb.asm.commons_5.0.3.jar,\n" + " org.objectweb.asm.tree_5.0.3.jar,\n"
+				+ " org.objectweb.asm.util_5.0.3.jar,\n" + " org.w3c.css.sac,\n" + " org.w3c.dom.events,\n"
+				+ " org.w3c.dom.smil,\n" + " org.w3c.dom.svg,\n" + " org.eclipse.update.configurator@3:start,\n"
+				+ " org.eclipse.ui.workbench,\n" + " org.eclipse.ui,\n" + " org.eclipse.help,\n"
+				+ " org.eclipse.e4.ui.workbench.addons.swt,\n" + " org.eclipse.jetty.server,\n"
 				+ " org.eclipse.jetty.servlet,\n" + " org.eclipse.jetty.util,\n" + " javax.servlet,\n"
 				+ " org.eclipse.jetty.client,\n" + " org.eclipse.jetty.http,\n" + " org.eclipse.jetty.proxy,\n"
 				+ " org.eclipse.jetty.io,\n" + " org.eclipse.jetty.security,\n" + " org.eclipse.equinox.console,\n"
@@ -242,7 +261,8 @@ public enum EquoBundleManager {
 				+ " io.netty.all,\n" + " com.google.guava_20.0.0.jar,\n" + " com.barchart.udt.barchart-udt-bundle,\n"
 				+ " org.apache.commons.lang3,\n" + " org.slf4j.api,\n" + " org.slf4j.impl.log4j12,\n"
 				+ " org.apache.log4j,\n" + " org.apache.httpcomponents.httpcore,\n"
-				+ " org.java-websocket.Java-WebSocket,\n" + " com.google.gson,\n" + " org.eclipse.ui.cocoa");
+				+ " org.java-websocket.Java-WebSocket,\n" + " com.google.gson,\n" + " org.eclipse.ui.cocoa,\n"
+				+ "org.influxdb.java");
 		bundleInitProps.put("osgi.bundles.defaultStartLevel", "4");
 		bundleInitProps.put("osgi.instance.area", "/Users/seba/eclipse-workspace/../runtime-equo.product7");
 		bundleInitProps.put("osgi.dev",
@@ -260,7 +280,7 @@ public enum EquoBundleManager {
 		// initProps.put("eclipse.ignoreApp", "true");
 
 		bundleInitProps.put("eclipse.application.launchDefault", "true");
-		bundleInitProps.put("eclipse.allowAppRelaunch", "true");
+		bundleInitProps.put("eclipse.allowAppRelaunch", "false");
 		EclipseStarter.setInitialProperties(bundleInitProps);
 		return bundleInitProps;
 	}

@@ -10,4 +10,8 @@ window.equo = window.equo || {};
         equo.sendToWebSocketServer('updateBrowser', browserParams);
     };
 
+    equo.registerEvent = function(payload) {
+        equo.sendToWebSocketServer('customEvent', payload);
+    };
+
 }(equo));

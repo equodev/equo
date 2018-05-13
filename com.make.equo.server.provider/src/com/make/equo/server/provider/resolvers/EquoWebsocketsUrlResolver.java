@@ -1,7 +1,8 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.resolvers;
 
 import java.net.URL;
 
+import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 public class EquoWebsocketsUrlResolver implements ILocalUrlResolver {
