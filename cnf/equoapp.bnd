@@ -17,6 +17,12 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 	osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.ws.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.ws.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.server.offline.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.server.offline.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.client.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.client.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.provider)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.ds)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.swt)',\
@@ -81,6 +87,12 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	com.make.equo.server.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.ws.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.ws.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.server.offline.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.server.offline.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.analytics.client.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.analytics.client.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.analytics.internal.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.analytics.internal.provider;version='[0.1.0,0.2.0)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
 	jnr.x86asm;version='[1.0.2,1.0.3)',\
@@ -142,7 +154,14 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	org.objectweb.asm.tree;version='[5.2.0,5.2.1)',\
 	org.objectweb.asm.util;version='[5.0.3,5.0.4)',\
 	org.slf4j.api;version='[1.7.2,1.7.3)',\
-	org.w3c.css.sac;version='[1.3.1,1.3.2)'
+	org.w3c.css.sac;version='[1.3.1,1.3.2)',\
+	com.squareup.okhttp3.okhttp;version='[3.9.1,3.9.2)',\
+	com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
+	com.squareup.okio;version='[1.13.0,1.13.1)',\
+	com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
+	com.squareup.moshi;version='[1.4.0,1.4.1)',\
+	com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
+	org.influxdb.java;version='[2.9.0,2.9.1)'
 
 app.bundle: ${basename;${dir;${p_sourcepath}}}
 -runrequires: \
