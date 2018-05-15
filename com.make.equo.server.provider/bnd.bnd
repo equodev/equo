@@ -1,6 +1,7 @@
 Bundle-Version: ${version}.${tstamp}
 Private-Package: \
-	com.make.equo.server.provider
+	com.make.equo.server.provider,\
+	com.make.equo.server.provider.resolvers
 -includeresource: resources/
 -buildpath: \
 	org.littleshoot.littleproxy,\
