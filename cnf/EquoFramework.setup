@@ -60,7 +60,7 @@
   <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone"
-      location="${workspace.location}"
+      location="${workspace.location/git}"
       remoteURI="gitlab.com"
       pushURI="">
     <annotation
@@ -82,7 +82,7 @@
   </setupTask>
   <setupTask
       xsi:type="projects:ProjectsImportTask">
-    <sourceLocator
+      <sourceLocator
         rootFolder="${git.clone.location}"
         locateNestedProjects="true">
       <predicate
@@ -112,7 +112,7 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.ui.editors/showWhitespaceCharacters"
-          value="true"/>
+          value="false"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.ui.editors/spacesForTabs"
@@ -148,7 +148,7 @@
       id="setup.redirect"
       disabled="true"
       sourceURL="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup"
-      targetURL="${workspace.location|uri}/cnf/EquoFramework.setup">
+      targetURL="${workspace.location|uri}/git/cnf/EquoFramework.setup">
     <description>
       Redirects setup from public https://github.com/maketechnology
       to checkouted GIT repo.
