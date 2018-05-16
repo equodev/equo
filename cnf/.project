@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>cnf</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>.gitlab-ci.yml</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/.gitlab-ci.yml</locationURI>
+		</link>
+		<link>
+			<name>build.gradle</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/build.gradle</locationURI>
+		</link>
+		<link>
+			<name>gradle.properties</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/gradle.properties</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

@@ -1,0 +1,5 @@
+org.osgi:osgi.annotation:6.0.1
+org.osgi:osgi.cmpn:6.0.0
+
+org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1
+org.assertj:assertj-core:3.9.1

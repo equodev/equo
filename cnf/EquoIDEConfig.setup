@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Configuration
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0">
+  <installation
+      name="equo.ide.installation"
+      label="Equo IDE Installation">
+    <setupTask
+        xsi:type="setup.p2:P2Task"
+        label="BND">
+      <requirement
+          name="bndtools.main.feature.feature.group"/>
+      <requirement
+          name="org.sf.feeling.decompiler.feature.group"/>
+      <requirement
+          name="org.freejava.javasourceattacher.feature.feature.group"/>
+      <requirement
+          name="org.dadacoalition.yedit.feature.feature.group"/>
+      <repository
+          url="https://dl.bintray.com/bndtools/bndtools/latest/"/>
+      <repository
+          url="https://ecd-plugin.github.io/update"/>
+      <repository
+          url="https://dl.bintray.com/tha/eclipserepo/"/>
+      <repository
+          url="http://dadacoalition.org/yedit"/>
+    </setupTask>
+    <productVersion
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
+    <description>Equo IDE installation</description>
+  </installation>
+  <workspace
+      name="equo.ide.workspace"
+      label="Equo IDE Workspace">
+    <stream
+        href="EquoFramework.setup#//@streams[name='master']"/>
+    <description>Equo IDE workspace provides cool stuff.</description>
+  </workspace>
+</setup:Configuration>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="start" deactivate="stop" name="com.make.equo.ws.provider.EquoWebSocketServiceImpl">
-   <service>
-      <provide interface="com.make.equo.ws.api.IEquoWebSocketService"/>
-   </service>
-   <implementation class="com.make.equo.ws.provider.EquoWebSocketServiceImpl"/>
-</scr:component>

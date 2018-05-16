@@ -1,0 +1,23 @@
+javac.source:           1.8
+javac.target:           1.8
+javac.compliance:       1.8
+javac.debug:            on
+
+-plugin.2.Oxygen: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Oxygen.3"; \
+        expand-bcp = true; \
+        locations = "https://maketechnology.gitlab.io/p2repo.osgi.index/index.xml.gz"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/oxygen
+
+-plugin.4.Mvn: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        releaseUrl = "https://repo1.maven.org/maven2"; \
+        index = ${.}/central.mvn; \
+        name = "Maven Central"; \
+        readOnly = true; \
+        cache = ~/.bnd/cache/mvncentral
+
+# JUnit
+junit: org.apache.servicemix.bundles.junit; version=4.12

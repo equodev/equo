@@ -20,8 +20,8 @@ public class EquoApplication {
 			return equoApplicationBuilder.name(name);
 		} catch (Exception e) {
 			System.out.println("Should never reach this state");
+			throw e;
 		}
-		return null;
 	}
 
 	EquoApplicationModel getEquoApplicationModel() {

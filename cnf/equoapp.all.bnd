@@ -1,0 +1,17 @@
+-include: ./equoapp.bnd
+
+-runbundles.osgi: \
+    ${osgi}, \
+    biz.aQute.launcher;version='[3.5.0,3.6.0)', \
+    biz.aQute.bndlib;version='[3.5.0,3.6.0)'
+
+-runbundles.cef: \
+    com.make.cef.linux.x86_64, \
+    com.make.cef.osx.x86_64, \
+    com.make.cef.windows.x86_64
+
+-runbundles.swt: \
+    org.eclipse.swt.gtk.linux.x86_64, \
+    org.eclipse.swt.cocoa.macosx.x86_64, \
+    org.eclipse.swt.win32.win32.x86_64
+

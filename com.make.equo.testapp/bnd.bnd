@@ -1,0 +1,7 @@
+-include: ${build}/equoapp.bnd
+#-runrepos: Release
+
+Bundle-Version: ${version}.${tstamp}
+Private-Package: com.make.equo.testapp
+
+#-runvm: -XstartOnFirstThread

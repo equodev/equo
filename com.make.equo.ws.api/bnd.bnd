@@ -1,0 +1,11 @@
+Bundle-Version: ${version}.${tstamp}
+-buildpath: \
+	com.google.gson,\
+	com.google.gson.source,\
+	com.google.guava;version=20.0,\
+	com.google.guava.source;version=20.0,\
+	org.eclipse.osgi,\
+	org.eclipse.osgi.source
+Export-Package: \
+	com.make.equo.ws.api,\
+	com.make.equo.ws.api.lambda

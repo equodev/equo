@@ -1,0 +1,38 @@
+// Available to customize the build
+plugins {
+    id 'org.ajoberstar.git-publish' version '0.3.3'
+}
+
+gitPublish {
+    def channel = 'rls'
+    repoUri = 'git@github.com:maketechnology/equo.git'
+    branch = 'gh-pages'
+    repoDir = file("$buildDir/gitPublish")
+    contents {
+        from('cnf/release') {
+            into "${project.name}/$channel/repo"
+        }
+        from('cnf') {
+            def rep = "\$1-${version}.\$2"
+            include "equoapp.bnd", "equobuild.bnd", "equoci.yml"
+            rename '(.*)\\.(...)$', rep
+            into "${project.name}/$channel"
+        }
+    }
+    preserve {
+        include '**/*'
+        exclude "${project.name}/$channel"
+    }
+    commitMessage = "Publishing ${project.name} ${version}"
+}
+
+task wrapper(type: Wrapper) {
+  jarFile = rootProject.file('.gradle-wrapper/gradle-wrapper.jar')
+}
+
+/* Additional configuration for the Bnd projects */
+subprojects {
+  if (plugins.hasPlugin('biz.aQute.bnd')) {
+    // additional configuration for Bnd projects
+  }
+}
