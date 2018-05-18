@@ -36,7 +36,7 @@
       name="equo.ide.workspace"
       label="Equo IDE Workspace">
     <stream
-        href="EquoFramework.setup#//@streams[name='master']"/>
+        href="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup#//@streams[name='master']"/>
     <description>Equo IDE workspace provides cool stuff.</description>
   </workspace>
 </setup:Configuration>
