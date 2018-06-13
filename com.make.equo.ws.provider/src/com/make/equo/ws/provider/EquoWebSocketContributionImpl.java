@@ -44,4 +44,9 @@ public class EquoWebSocketContributionImpl implements IEquoContribution {
 	public Map<String, Object> getProperties() {
 		return properties;
 	}
+
+	@Override
+	public boolean containsJavascriptApi() {
+		return true;
+	}
 }

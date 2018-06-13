@@ -17,8 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
@@ -60,14 +58,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private HttpProxyServer proxyServer;
 	private Bundle mainEquoAppBundle;
 
-	// @Inject
-	// private IEquoWebSocketService equoWebsocketServer;
-
-	// TODO check if it works when it's null. Add cardinality to this service in
-	// case it fails. Use @Reference.
-	@Inject
 	private IEquoOfflineServer equoOfflineServer;
-
 	final Map<String, IEquoContribution> equoContributions = new ConcurrentHashMap<>();
 
 	private ScheduledExecutorService internetConnectionChecker;
@@ -77,7 +68,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, mainEquoAppBundle,
-				proxiedUrls, getEquoFrameworkJsApi(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(), websocketPort);
+				proxiedUrls, getEquoFrameworkJsApi(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
+				websocketPort);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -129,6 +121,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	void removeEquoContribution(Map<String, Object> props) {
 		equoContributions.remove(props.get("type"));
+	}
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+	void setEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
+		this.equoOfflineServer = equoOfflineServer;
+	}
+
+	void unsetEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
+		this.equoOfflineServer = null;
 	}
 
 	@Override
@@ -213,11 +214,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private List<String> getEquoContributionsJsApis() {
 		List<String> javascriptApis = new ArrayList<>();
-		// First add the websocket contribution, since the other Javascripts APIs depend on
-		// that to work.
+		// First add the websocket contribution, since the other Javascripts APIs depend
+		// on that to work.
 		javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + WEBSOCKET_CONTRIBUTION_TYPE));
 		for (String contributionType : equoContributions.keySet()) {
-			javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType));
+			IEquoContribution equoContribution = equoContributions.get(contributionType);
+			if (equoContribution.containsJavascriptApi()) {
+				javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType));
+			}
 		}
 		return javascriptApis;
 	}

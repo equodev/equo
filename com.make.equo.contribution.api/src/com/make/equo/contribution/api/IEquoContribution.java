@@ -20,4 +20,13 @@ public interface IEquoContribution {
 	 */
 	Map<String, Object> getProperties();
 
+	/**
+	 * Checks if the Equo contribution contributes a Javascript library to the Equo
+	 * framework.
+	 * 
+	 * @return true if the Equo contribution adds a Javascript library to the
+	 *         framework, false otherwise.
+	 */
+	boolean containsJavascriptApi();
+
 }
