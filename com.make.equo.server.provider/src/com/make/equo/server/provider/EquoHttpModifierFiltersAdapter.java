@@ -1,5 +1,7 @@
 package com.make.equo.server.provider;
 
+import java.util.List;
+
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
 
@@ -11,15 +13,15 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 
 	private String equoFrameworkJsApi;
-	private String equoWebsocketsApi;
+	private List<String> equoContributionsJsApis;
 	private String customJsScripts;
 
 	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, String equoFrameworkJsApi,
-			String equoWebsocketsApi, String customJsScripts, boolean isOfflineCacheSupported,
+			List<String> equoContributionsJsApis, String customJsScripts, boolean isOfflineCacheSupported,
 			IEquoOfflineServer equoOfflineServer) {
 		super(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 		this.equoFrameworkJsApi = equoFrameworkJsApi;
-		this.equoWebsocketsApi = equoWebsocketsApi;
+		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 
 	}
@@ -30,7 +32,7 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
 			IModifiableResponse fullHttpResponseWithTransformersScripts = new FullHttpResponseWithTransformersScripts(
-					fullResponse, equoFrameworkJsApi, equoWebsocketsApi, customJsScripts);
+					fullResponse, equoFrameworkJsApi, equoContributionsJsApis, customJsScripts);
 			if (fullHttpResponseWithTransformersScripts.isModifiable()) {
 				FullHttpResponse generatedModifiedResponse = fullHttpResponseWithTransformersScripts
 						.generateModifiedResponse();

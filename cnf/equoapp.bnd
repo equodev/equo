@@ -23,6 +23,7 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 	osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.server.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.ws.api)',\
@@ -93,6 +94,7 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	com.make.cef;version='[1.0.0,1.0.1)',\
 	com.make.equo.application.client;version='[0.1.0,0.2.0)',\
 	com.make.equo.application.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.contribution.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.server.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.server.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.ws.api;version='[0.1.0,0.2.0)',\

@@ -1,5 +1,7 @@
 package com.make.equo.server.provider;
 
+import java.util.List;
+
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
 
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -8,14 +10,14 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 
 	private FullHttpResponse originalFullHttpResponse;
 	private String equoFrameworkJsApi;
-	private String equoWebsocketsApi;
+	private List<String> equoContributionsJsApis;
 	private String customJsScripts;
 
 	public FullHttpResponseWithTransformersScripts(FullHttpResponse originalFullHttpResponse, String equoFrameworkJsApi,
-			String equoWebsocketsApi, String customJsScripts) {
+			List<String> equoContributionsJsApis, String customJsScripts) {
 		this.originalFullHttpResponse = originalFullHttpResponse;
 		this.equoFrameworkJsApi = equoFrameworkJsApi;
-		this.equoWebsocketsApi = equoWebsocketsApi;
+		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 	}
 
@@ -33,10 +35,11 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 	@Override
 	public String modifyOriginalResponse(String responseToTransform) {
 		StringBuilder customResponseWithScripts = new StringBuilder(responseToTransform);
-		customResponseWithScripts.append(equoWebsocketsApi);
+		for (String jsApi : equoContributionsJsApis) {
+			customResponseWithScripts.append(jsApi);
+		}
 		customResponseWithScripts.append(equoFrameworkJsApi);
 		customResponseWithScripts.append(customJsScripts);
 		return customResponseWithScripts.toString();
 	}
-
 }

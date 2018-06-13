@@ -13,6 +13,4 @@ _rt/
 cnf/cache
 cnf/*/
 !cnf/ext
-**.project
-**.classpath
 *.prefs

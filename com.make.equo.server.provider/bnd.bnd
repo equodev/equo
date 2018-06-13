@@ -16,7 +16,8 @@ Private-Package: \
 	org.eclipse.osgi.source,\
 	javax.inject,\
 	javax.inject.source,\
-    com.google.guava;version=20.0,\
-    com.google.guava.source;version=20.0,\
+	com.google.guava;version=20.0,\
+	com.google.guava.source;version=20.0,\
 	org.apache.httpcomponents.httpcore,\
-	org.apache.httpcomponents.httpcore.source
+	org.apache.httpcomponents.httpcore.source,\
+	com.make.equo.contribution.api;version=latest
