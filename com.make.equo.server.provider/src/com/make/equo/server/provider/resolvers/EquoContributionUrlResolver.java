@@ -11,8 +11,8 @@ public class EquoContributionUrlResolver implements ILocalUrlResolver {
 	private String equoContributionPaht;
 	private Map<String, IEquoContribution> equoContributions;
 
-	public EquoContributionUrlResolver(String equoContributionPaht, Map<String, IEquoContribution> equoContributions) {
-		this.equoContributionPaht = equoContributionPaht;
+	public EquoContributionUrlResolver(String equoContributionPath, Map<String, IEquoContribution> equoContributions) {
+		this.equoContributionPaht = equoContributionPath;
 		this.equoContributions = equoContributions;
 	}
 
@@ -23,7 +23,6 @@ public class EquoContributionUrlResolver implements ILocalUrlResolver {
 
 	@Override
 	public URL resolve(String contributionType) {
-		System.out.println("Contribution type is " + contributionType);
 		IEquoContribution equoContribution = equoContributions.get(contributionType);
 		return equoContribution.getJavascriptAPIResource();
 	}

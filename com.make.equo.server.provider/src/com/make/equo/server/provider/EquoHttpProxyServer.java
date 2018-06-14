@@ -108,6 +108,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	void addEquoContribution(IEquoContribution equoContribution, Map<String, String> props) {
 		String contributionKey = props.get("type");
+		System.out.println("Equo Contribution added: " + contributionKey);
 		equoContributions.put(contributionKey, equoContribution);
 		if (contributionKey.equals(WEBSOCKET_CONTRIBUTION_TYPE)) {
 			Map<String, Object> properties = equoContribution.getProperties();
@@ -219,7 +220,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + WEBSOCKET_CONTRIBUTION_TYPE));
 		for (String contributionType : equoContributions.keySet()) {
 			IEquoContribution equoContribution = equoContributions.get(contributionType);
-			if (equoContribution.containsJavascriptApi()) {
+			if (!contributionType.equals(WEBSOCKET_CONTRIBUTION_TYPE) && equoContribution.containsJavascriptApi()) {
 				javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType));
 			}
 		}

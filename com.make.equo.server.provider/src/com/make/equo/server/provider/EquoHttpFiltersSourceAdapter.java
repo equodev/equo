@@ -130,7 +130,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private boolean isLocalFileRequest(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
-		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
+		return uri.contains(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH)
+				|| uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH);

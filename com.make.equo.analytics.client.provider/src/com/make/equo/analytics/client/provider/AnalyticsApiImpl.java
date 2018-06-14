@@ -7,7 +7,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.make.equo.analytics.client.api.AnalyticsApi;
+import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.ws.api.EquoEventHandler;
 import com.make.equo.ws.api.JsonPayloadEquoRunnable;
@@ -27,7 +27,7 @@ import com.make.equo.ws.api.JsonPayloadEquoRunnable;
  */
 
 @Component
-public class AnalyticsApiImpl implements AnalyticsApi {
+public class AnalyticsApiImpl implements IAnalyticsApi {
 
 	private static final String CUSTOM_EVENT_KEY = "customEvent";
 	static final int DEFAULT_COUNT = 1;

@@ -12,7 +12,7 @@ import org.osgi.service.component.annotations.Reference;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
-@Component(name = "equoWebSocketContribution", property = { "type=websocketContribution" })
+@Component(name = "equoWebsocketContribution", property = { "type=websocketContribution" })
 public class EquoWebSocketContributionImpl implements IEquoContribution {
 
 	private static final String equoWebsocketsJsApi = "equoWebsockets.js";
