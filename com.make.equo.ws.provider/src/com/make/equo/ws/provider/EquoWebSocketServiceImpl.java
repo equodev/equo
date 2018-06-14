@@ -1,7 +1,6 @@
 package com.make.equo.ws.provider;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
-import com.google.common.io.Resources;
 import com.google.gson.GsonBuilder;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
@@ -17,8 +15,6 @@ import com.make.equo.ws.api.NamedActionMessage;
 
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
-
-	private static final String equoWebsocketsJsApi = "equoWebsockets.js";
 
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
@@ -48,11 +44,6 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public URL getEquoWebsocketsJavascriptClient() {
-		return Resources.getResource(equoWebsocketsJsApi);
-	}
-
-	@Override
 	public void send(String userEvent, Object payload, GsonBuilder gsonBuilder) {
 		NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
 		String messageAsJson = gsonBuilder.create().toJson(namedActionMessage);
@@ -60,13 +51,10 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public String getEquoWebsocketsJsResourceName() {
-		return equoWebsocketsJsApi;
-	}
-
-	@Override
 	public int getPort() {
+		// TODO implement a timeout.
+		while (!equoWebSocketServer.isStarted())
+			;
 		return equoWebSocketServer.getPort();
 	}
-
 }

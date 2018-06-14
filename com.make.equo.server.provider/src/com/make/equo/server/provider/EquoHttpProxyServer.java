@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
@@ -24,50 +23,53 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
+import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
-import com.make.equo.ws.api.IEquoWebSocketService;
 
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	public static final String EQUO_WEBSOCKETS_JS_PATH = "equoWebsockets/";
+	public static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
 	public static final String EQUO_PROXY_SERVER_PATH = "equoFramework/";
+
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
+
+	protected static final String WEBSOCKET_CONTRIBUTION_TYPE = "websocketContribution";
 
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
 	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
-	private static final String equoFrameworkJsApi = "equoFramework.js";
 
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	private boolean enableOfflineCache = false;
+	private static final String equoFrameworkJsApi = "equoFramework.js";
 	private String limitedConnectionAppBasedPagePath;
 
 	private HttpProxyServer proxyServer;
 	private Bundle mainEquoAppBundle;
 
-	@Inject
-	private IEquoWebSocketService equoWebsocketServer;
-
-	// TODO check if it works when it's null. Add cardinality to this service in
-	// case it fails. Use @Reference.
-	@Inject
 	private IEquoOfflineServer equoOfflineServer;
+	final Map<String, IEquoContribution> equoContributions = new ConcurrentHashMap<>();
 
 	private ScheduledExecutorService internetConnectionChecker;
+	private int websocketPort;
 
 	@Override
 	public void startServer() {
-		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoWebsocketServer,
+		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, mainEquoAppBundle,
-				proxiedUrls, getEquoFrameworkJsApi(), getEquoWebsocketsApi(), getUrlsToScriptsAsStrings());
+				proxiedUrls, getEquoFrameworkJsApi(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
+				websocketPort);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -101,6 +103,34 @@ public class EquoHttpProxyServer implements IEquoServer {
 		if (proxyServer != null) {
 			proxyServer.stop();
 		}
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	void addEquoContribution(IEquoContribution equoContribution, Map<String, String> props) {
+		String contributionKey = props.get("type");
+		System.out.println("Equo Contribution added: " + contributionKey);
+		equoContributions.put(contributionKey, equoContribution);
+		if (contributionKey.equals(WEBSOCKET_CONTRIBUTION_TYPE)) {
+			Map<String, Object> properties = equoContribution.getProperties();
+			if (!properties.containsKey("websocketPort")) {
+				throw new RuntimeException(
+						"The websocketPort property must be defined in the Equo websocket contribution.");
+			}
+			this.websocketPort = (Integer) properties.get("websocketPort");
+		}
+	}
+
+	void removeEquoContribution(Map<String, Object> props) {
+		equoContributions.remove(props.get("type"));
+	}
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+	void setEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
+		this.equoOfflineServer = equoOfflineServer;
+	}
+
+	void unsetEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
+		this.equoOfflineServer = null;
 	}
 
 	@Override
@@ -183,9 +213,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 		this.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
 	}
 
-	private String getEquoWebsocketsApi() {
-		String equoWebsocketsJsResourceName = equoWebsocketServer.getEquoWebsocketsJsResourceName();
-		return createLocalScriptSentence(EQUO_WEBSOCKETS_JS_PATH + equoWebsocketsJsResourceName);
+	private List<String> getEquoContributionsJsApis() {
+		List<String> javascriptApis = new ArrayList<>();
+		// First add the websocket contribution, since the other Javascripts APIs depend
+		// on that to work.
+		javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + WEBSOCKET_CONTRIBUTION_TYPE));
+		for (String contributionType : equoContributions.keySet()) {
+			IEquoContribution equoContribution = equoContributions.get(contributionType);
+			if (!contributionType.equals(WEBSOCKET_CONTRIBUTION_TYPE) && equoContribution.containsJavascriptApi()) {
+				javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType));
+			}
+		}
+		return javascriptApis;
 	}
 
 	private String getEquoFrameworkJsApi() {

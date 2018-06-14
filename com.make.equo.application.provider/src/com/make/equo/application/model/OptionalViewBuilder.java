@@ -129,7 +129,7 @@ public class OptionalViewBuilder {
 	/**
 	 * Enable an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if
-	 * the application was run at least once with a working internet connection
+	 * the application was run at least once with a working internet connection.
 	 * 
 	 * @return this optional builder
 	 */

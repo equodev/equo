@@ -23,10 +23,13 @@ class EquoWebSocketServer extends WebSocketServer {
 	private boolean firstClientConnected = false;
 	List<String> messagesToSend = new ArrayList<>();
 
+	private volatile boolean started;
+
 	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers) {
 		super(new InetSocketAddress(0));
 		this.eventHandlers = eventHandlers;
 		this.gsonParser = new Gson();
+		this.started = false;
 	}
 
 	@Override
@@ -85,7 +88,8 @@ class EquoWebSocketServer extends WebSocketServer {
 	@Override
 	public void onStart() {
 		// TODO log web socket server started
-		System.out.println("Equo Server started!");
+		this.started = true;
+		System.out.println("Equo Websocket Server started!");
 	}
 
 	@Override
@@ -95,6 +99,10 @@ class EquoWebSocketServer extends WebSocketServer {
 		} else {
 			messagesToSend.add(messageAsJson);
 		}
+	}
+
+	public boolean isStarted() {
+		return started;
 	}
 
 }

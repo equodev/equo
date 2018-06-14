@@ -4,10 +4,10 @@ import com.google.gson.JsonObject;
 
 /**
  * Equo applications will call methods of this service to register custom events
- * data. For example, in our Netflix application example, let's suppose we want
+ * data. For example, in our Netflix application example, let's assume we want
  * to know which countries were top watchers of the movie The Wolf Of Wall
  * Street. The application may register a call to the Analytics API service
- * whenever a movie is played, somethings like this:
+ * whenever a movie is played, something like this:
  * 
  * {@code equoAnalytics.registerEvent("movies_summary", jsonObject)} or
  * {@code equoAnalytics.registerEvent("movies_summary", 1, jsonObject)} or
@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
  * of Wall Street", "Country": "Germany"}")}
  * 
  */
-public interface AnalyticsApi {
+public interface IAnalyticsApi {
 
 	/**
 	 * Register an event in which the default value of mandatory field
