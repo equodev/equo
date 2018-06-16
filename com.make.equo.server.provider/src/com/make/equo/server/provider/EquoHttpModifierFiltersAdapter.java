@@ -12,15 +12,15 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 
-	private String equoFrameworkJsApi;
+	private List<String> equoFrameworkJsApis;
 	private List<String> equoContributionsJsApis;
 	private String customJsScripts;
 
-	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, String equoFrameworkJsApi,
+	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, List<String> equoFrameworkJsApis,
 			List<String> equoContributionsJsApis, String customJsScripts, boolean isOfflineCacheSupported,
 			IEquoOfflineServer equoOfflineServer) {
 		super(originalRequest, equoOfflineServer, isOfflineCacheSupported);
-		this.equoFrameworkJsApi = equoFrameworkJsApi;
+		this.equoFrameworkJsApis = equoFrameworkJsApis;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 
@@ -32,7 +32,7 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
 			IModifiableResponse fullHttpResponseWithTransformersScripts = new FullHttpResponseWithTransformersScripts(
-					fullResponse, equoFrameworkJsApi, equoContributionsJsApis, customJsScripts);
+					fullResponse, equoFrameworkJsApis, equoContributionsJsApis, customJsScripts);
 			if (fullHttpResponseWithTransformersScripts.isModifiable()) {
 				FullHttpResponse generatedModifiedResponse = fullHttpResponseWithTransformersScripts
 						.generateModifiedResponse();

@@ -9,14 +9,14 @@ import io.netty.handler.codec.http.FullHttpResponse;
 public class FullHttpResponseWithTransformersScripts implements IModifiableResponse {
 
 	private FullHttpResponse originalFullHttpResponse;
-	private String equoFrameworkJsApi;
+	private List<String> equoFrameworkJsApis;
 	private List<String> equoContributionsJsApis;
 	private String customJsScripts;
 
-	public FullHttpResponseWithTransformersScripts(FullHttpResponse originalFullHttpResponse, String equoFrameworkJsApi,
-			List<String> equoContributionsJsApis, String customJsScripts) {
+	public FullHttpResponseWithTransformersScripts(FullHttpResponse originalFullHttpResponse,
+			List<String> equoFrameworkJsApis, List<String> equoContributionsJsApis, String customJsScripts) {
 		this.originalFullHttpResponse = originalFullHttpResponse;
-		this.equoFrameworkJsApi = equoFrameworkJsApi;
+		this.equoFrameworkJsApis = equoFrameworkJsApis;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 	}
@@ -38,7 +38,9 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 		for (String jsApi : equoContributionsJsApis) {
 			customResponseWithScripts.append(jsApi);
 		}
-		customResponseWithScripts.append(equoFrameworkJsApi);
+		for (String jsApi : equoFrameworkJsApis) {
+			customResponseWithScripts.append(jsApi);
+		}
 		customResponseWithScripts.append(customJsScripts);
 		return customResponseWithScripts.toString();
 	}

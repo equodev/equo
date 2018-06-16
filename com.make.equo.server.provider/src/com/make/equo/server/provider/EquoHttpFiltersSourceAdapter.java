@@ -38,7 +38,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private Bundle mainEquoAppBundle;
 	private List<String> proxiedUrls;
 
-	private String equoFrameworkJsApi;
+	private List<String> equoFrameworkJsApis;
 	private List<String> equoContributionsJsApis;
 	private Map<String, String> urlsToScriptsAsStrings;
 
@@ -47,15 +47,15 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	public EquoHttpFiltersSourceAdapter(Map<String, IEquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, Bundle mainEquoAppBundle, List<String> proxiedUrls,
-			String equoFrameworkJsApi, List<String> equoContributionsJsApis, Map<String, String> urlsToScriptsAsStrings,
-			int websocketPort) {
+			List<String> equoFrameworkJsApis, List<String> equoContributionsJsApis,
+			Map<String, String> urlsToScriptsAsStrings, int websocketPort) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
 		this.mainEquoAppBundle = mainEquoAppBundle;
 		this.proxiedUrls = proxiedUrls;
-		this.equoFrameworkJsApi = equoFrameworkJsApi;
+		this.equoFrameworkJsApis = equoFrameworkJsApis;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
 		this.websocketPort = websocketPort;
@@ -91,7 +91,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent()) {
 				String appUrl = url.get();
-				return new EquoHttpModifierFiltersAdapter(originalRequest, equoFrameworkJsApi, equoContributionsJsApis,
+				return new EquoHttpModifierFiltersAdapter(originalRequest, equoFrameworkJsApis, equoContributionsJsApis,
 						getCustomScripts(appUrl), isOfflineCacheSupported, equoOfflineServer);
 			} else {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);

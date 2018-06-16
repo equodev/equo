@@ -53,6 +53,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	private boolean enableOfflineCache = false;
 	private static final String equoFrameworkJsApi = "equoFramework.js";
+	private static final String domModifierJsApi = "domModifier.js";
+	private static final String jqueryJsApi = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js";
 	private String limitedConnectionAppBasedPagePath;
 
 	private HttpProxyServer proxyServer;
@@ -68,7 +70,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, mainEquoAppBundle,
-				proxiedUrls, getEquoFrameworkJsApi(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
+				proxiedUrls, getEquoFrameworkJsApis(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
 				websocketPort);
 
 		Runnable internetConnectionRunnable = new Runnable() {
@@ -227,8 +229,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return javascriptApis;
 	}
 
-	private String getEquoFrameworkJsApi() {
-		return createLocalScriptSentence(EQUO_PROXY_SERVER_PATH + equoFrameworkJsApi);
+	private List<String> getEquoFrameworkJsApis() {
+		List<String> jsLibs = new ArrayList<>();
+		jsLibs.add(createLocalScriptSentence(EQUO_PROXY_SERVER_PATH + equoFrameworkJsApi));
+		if (changeHtmlAppContent()) {
+			jsLibs.add(createLocalScriptSentence(jqueryJsApi));
+			jsLibs.add(createLocalScriptSentence(EQUO_PROXY_SERVER_PATH + domModifierJsApi));
+		}
+		return jsLibs;
 	}
 
 	private Map<String, String> getUrlsToScriptsAsStrings() {
@@ -274,6 +282,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
 		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
+	}
+
+	// TODO check for the properties of the equo app to see if it change the html
+	// content or not.
+	private boolean changeHtmlAppContent() {
+		return true;
 	}
 
 }
