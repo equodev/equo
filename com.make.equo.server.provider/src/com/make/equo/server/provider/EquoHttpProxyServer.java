@@ -39,7 +39,6 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 public class EquoHttpProxyServer implements IEquoServer {
 
 	public static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
-	public static final String EQUO_PROXY_SERVER_PATH = "equoFramework/";
 
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
@@ -55,9 +54,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private List<String> proxiedUrls = new ArrayList<>();
 	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
 	private boolean enableOfflineCache = false;
-	private static final String equoFrameworkJsApi = "equoFramework.js";
-	private static final String domModifierJsApi = "domModifier.js";
-	private static final String jqueryJsApi = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js";
 	private String limitedConnectionAppBasedPagePath;
 
 	private HttpProxyServer proxyServer;
@@ -73,7 +69,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, mainEquoAppBundle,
-				proxiedUrls, getEquoFrameworkJsApis(), getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
+				proxiedUrls, getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
 				websocketPort);
 
 		Runnable internetConnectionRunnable = new Runnable() {
@@ -227,7 +223,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 				Function<String, String> function = new Function<String, String>() {
 					@Override
 					public String apply(String input) {
-						return createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType + "/" + input);
+						try {
+							URL url = new URL(input);
+							String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+							return scriptSentence;
+						} catch (MalformedURLException e) {
+							return createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType + "/" + input);
+						}
+
 					}
 				};
 				Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
@@ -235,16 +238,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 			}
 		}
 		return javascriptApis;
-	}
-
-	private List<String> getEquoFrameworkJsApis() {
-		List<String> jsLibs = new ArrayList<>();
-		jsLibs.add(createLocalScriptSentence(EQUO_PROXY_SERVER_PATH + equoFrameworkJsApi));
-		if (changeHtmlAppContent()) {
-			jsLibs.add(createLocalScriptSentence(jqueryJsApi));
-			jsLibs.add(createLocalScriptSentence(EQUO_PROXY_SERVER_PATH + domModifierJsApi));
-		}
-		return jsLibs;
 	}
 
 	private Map<String, String> getUrlsToScriptsAsStrings() {
@@ -289,13 +282,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private boolean isLocalScript(String scriptPath) {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
 		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
-	}
-
-	// TODO check for the properties of the equo app to see if it change the html
-	// content or not.
-	private boolean changeHtmlAppContent() {
-		return true;
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH);
 	}
 
 }

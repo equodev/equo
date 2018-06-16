@@ -15,7 +15,6 @@ import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
-import com.make.equo.server.provider.resolvers.EquoProxyServerUrlResolver;
 import com.make.equo.server.provider.resolvers.EquoContributionUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
 
@@ -25,7 +24,7 @@ import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
-	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH
+	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
 			+ "limitedConnectionPage.html";
 
 	private Map<String, IEquoContribution> equoContributions;
@@ -38,7 +37,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private Bundle mainEquoAppBundle;
 	private List<String> proxiedUrls;
 
-	private List<String> equoFrameworkJsApis;
 	private List<String> equoContributionsJsApis;
 	private Map<String, String> urlsToScriptsAsStrings;
 
@@ -47,15 +45,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	public EquoHttpFiltersSourceAdapter(Map<String, IEquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, Bundle mainEquoAppBundle, List<String> proxiedUrls,
-			List<String> equoFrameworkJsApis, List<String> equoContributionsJsApis,
-			Map<String, String> urlsToScriptsAsStrings, int websocketPort) {
+			List<String> equoContributionsJsApis, Map<String, String> urlsToScriptsAsStrings, int websocketPort) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
 		this.mainEquoAppBundle = mainEquoAppBundle;
 		this.proxiedUrls = proxiedUrls;
-		this.equoFrameworkJsApis = equoFrameworkJsApis;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
 		this.websocketPort = websocketPort;
@@ -84,14 +80,14 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
 				return new OfflineRequestFiltersAdapter(originalRequest,
-						new EquoProxyServerUrlResolver(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH),
+						new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
 						limitedConnectionGenericPageFilePath);
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent()) {
 				String appUrl = url.get();
-				return new EquoHttpModifierFiltersAdapter(originalRequest, equoFrameworkJsApis, equoContributionsJsApis,
+				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis,
 						getCustomScripts(appUrl), isOfflineCacheSupported, equoOfflineServer);
 			} else {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
@@ -122,9 +118,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
-		if (uri.contains(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH)) {
-			return new EquoProxyServerUrlResolver(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH);
-		}
 		return null;
 	}
 
@@ -133,8 +126,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		return uri.contains(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.EQUO_PROXY_SERVER_PATH);
+				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 	}
 
 	private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
