@@ -3,4 +3,6 @@ Private-Package: com.make.equo.contribution.media.provider
 -includeresource: resources/
 -buildpath: \
     osgi.cmpn,\
-    com.make.equo.contribution.api;version=latest
+    com.make.equo.contribution.api;version=latest,\
+    com.google.guava;version=20.0,\
+    com.google.guava.source;version=20.0

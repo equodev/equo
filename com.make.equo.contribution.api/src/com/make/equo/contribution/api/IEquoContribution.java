@@ -1,6 +1,7 @@
 package com.make.equo.contribution.api;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public interface IEquoContribution {
@@ -10,7 +11,7 @@ public interface IEquoContribution {
 	 * 
 	 * @return the URL to the Javascript API resource
 	 */
-	URL getJavascriptAPIResource();
+	URL getJavascriptAPIResource(String name);
 
 	/**
 	 * Return the properties of this Equo contribution that might be needed by a
@@ -21,12 +22,13 @@ public interface IEquoContribution {
 	Map<String, Object> getProperties();
 
 	/**
-	 * Checks if the Equo contribution contributes a Javascript library to the Equo
-	 * framework.
+	 * Returns an ordered list of Javascript APIs files names. An ordered list means
+	 * that if a Javascript file depends on another Javascript file, it should be
+	 * added to the list after the file it depends on.
 	 * 
-	 * @return true if the Equo contribution adds a Javascript library to the
-	 *         framework, false otherwise.
+	 * @return a list of Javascript files names. An empty list if this contribution
+	 *         does not contribute any Javascript API.
 	 */
-	boolean containsJavascriptApi();
+	List<String> getJavascriptFileNames();
 
 }

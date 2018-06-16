@@ -9,9 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +27,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
@@ -61,7 +64,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private Bundle mainEquoAppBundle;
 
 	private IEquoOfflineServer equoOfflineServer;
-	final Map<String, IEquoContribution> equoContributions = new ConcurrentHashMap<>();
+	final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
 	private ScheduledExecutorService internetConnectionChecker;
 	private int websocketPort;
@@ -217,13 +220,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private List<String> getEquoContributionsJsApis() {
 		List<String> javascriptApis = new ArrayList<>();
-		// First add the websocket contribution, since the other Javascripts APIs depend
-		// on that to work.
-		javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + WEBSOCKET_CONTRIBUTION_TYPE));
 		for (String contributionType : equoContributions.keySet()) {
 			IEquoContribution equoContribution = equoContributions.get(contributionType);
-			if (!contributionType.equals(WEBSOCKET_CONTRIBUTION_TYPE) && equoContribution.containsJavascriptApi()) {
-				javascriptApis.add(createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType));
+			List<String> javascriptFilesNames = equoContribution.getJavascriptFileNames();
+			if (!javascriptFilesNames.isEmpty()) {
+				Function<String, String> function = new Function<String, String>() {
+					@Override
+					public String apply(String input) {
+						return createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType + "/" + input);
+					}
+				};
+				Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
+				javascriptApis.addAll(Lists.newArrayList(result));
 			}
 		}
 		return javascriptApis;

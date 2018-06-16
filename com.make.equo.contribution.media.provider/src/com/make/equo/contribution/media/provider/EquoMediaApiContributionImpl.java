@@ -1,6 +1,8 @@
 package com.make.equo.contribution.media.provider;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -13,18 +15,18 @@ public class EquoMediaApiContributionImpl implements IEquoContribution {
 	private static final String mediaJsApi = "media.js";
 
 	@Override
-	public URL getJavascriptAPIResource() {
-		return this.getClass().getClassLoader().getResource(mediaJsApi);
-	}
-
-	@Override
 	public Map<String, Object> getProperties() {
 		return null;
 	}
 
 	@Override
-	public boolean containsJavascriptApi() {
-		return true;
+	public URL getJavascriptAPIResource(String name) {
+		return this.getClass().getClassLoader().getResource(name);
+	}
+
+	@Override
+	public List<String> getJavascriptFileNames() {
+		return Arrays.asList(mediaJsApi);
 	}
 
 }
