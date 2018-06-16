@@ -1,6 +1,8 @@
 package com.make.equo.analytics.client.provider;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -17,18 +19,13 @@ public class AnalyticsApiContributionImpl implements IEquoContribution {
 	private IAnalyticsApi analyticsApi;
 
 	@Override
-	public URL getJavascriptAPIResource() {
-		return this.getClass().getClassLoader().getResource(analyticsJsApi);
+	public URL getJavascriptAPIResource(String name) {
+		return this.getClass().getClassLoader().getResource(name);
 	}
 
 	@Override
 	public Map<String, Object> getProperties() {
 		return null;
-	}
-
-	@Override
-	public boolean containsJavascriptApi() {
-		return true;
 	}
 
 	@Reference
@@ -38,6 +35,11 @@ public class AnalyticsApiContributionImpl implements IEquoContribution {
 
 	void unsetAnalyticsApi(IAnalyticsApi analyticsApi) {
 		this.analyticsApi = null;
+	}
+
+	@Override
+	public List<String> getJavascriptFileNames() {
+		return Arrays.asList(analyticsJsApi);
 	}
 
 }

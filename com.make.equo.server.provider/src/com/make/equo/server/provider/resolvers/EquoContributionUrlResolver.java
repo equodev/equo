@@ -8,23 +8,28 @@ import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 public class EquoContributionUrlResolver implements ILocalUrlResolver {
 
-	private String equoContributionPaht;
+	private String equoContributionPath;
 	private Map<String, IEquoContribution> equoContributions;
 
 	public EquoContributionUrlResolver(String equoContributionPath, Map<String, IEquoContribution> equoContributions) {
-		this.equoContributionPaht = equoContributionPath;
+		this.equoContributionPath = equoContributionPath;
 		this.equoContributions = equoContributions;
 	}
 
 	@Override
 	public String getProtocol() {
-		return equoContributionPaht;
+		return equoContributionPath;
 	}
 
 	@Override
-	public URL resolve(String contributionType) {
-		IEquoContribution equoContribution = equoContributions.get(contributionType);
-		return equoContribution.getJavascriptAPIResource();
+	public URL resolve(String filePath) {
+		String[] equoContributionParts = filePath.split("/");
+		if (equoContributionParts.length != 2) {
+			throw new RuntimeException(
+					"The equo contribution must define a \"type\" property and contribute javascript files.");
+		}
+		IEquoContribution equoContribution = equoContributions.get(equoContributionParts[0]);
+		return equoContribution.getJavascriptAPIResource(equoContributionParts[1]);
 	}
 
 }
