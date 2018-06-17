@@ -16,13 +16,13 @@ public class OptionalViewBuilder {
 
 	private IEquoServer equoServer;
 
-	private UrlMandatoryBuilder urlMandatoryBuilder;
+	private ViewBuilder urlMandatoryBuilder;
 
 	private EquoApplicationBuilder equoApplicationBuilder;
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder, IEquoServer equoServer) {
+	OptionalViewBuilder(ViewBuilder urlMandatoryBuilder, IEquoServer equoServer) {
 		this.urlMandatoryBuilder = urlMandatoryBuilder;
 		this.equoServer = equoServer;
 		this.equoApplicationBuilder = urlMandatoryBuilder.getEquoApplicationBuilder();

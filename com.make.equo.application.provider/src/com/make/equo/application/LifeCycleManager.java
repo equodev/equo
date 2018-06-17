@@ -7,6 +7,7 @@ import org.osgi.framework.Bundle;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
+import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
 import com.make.equo.application.util.FrameworkUtil;
 
 public class LifeCycleManager {
@@ -31,6 +32,9 @@ public class LifeCycleManager {
 		// equoMainAppBundle.loadClass(equoAppClassName);
 		// IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();
 		equoApplicationModel.setMainApplication(mainApplication);
+		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
+				equoApplicationModel, equoApplicationBuilder);
+		equoApplicationBuilderConfigurator.configure();
 		equoApp.buildApp(equoApplicationBuilder);
 	}
 }

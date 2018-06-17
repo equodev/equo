@@ -40,7 +40,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 		MParameter userEventParameter = createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, this.userEvent);
 		globalKeyBinding.getParameters().add(userEventParameter);
 
-		MBindingTable parentPartBindingTable = equoApplicationBuilder.getUrlMandatoryFieldBuilder().getBindingTable();
+		MBindingTable parentPartBindingTable = equoApplicationBuilder.getViewBuilder().getBindingTable();
 		parentPartBindingTable.getBindings().add(globalKeyBinding);
 	}
 

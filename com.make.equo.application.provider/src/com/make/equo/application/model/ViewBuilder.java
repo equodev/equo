@@ -16,8 +16,8 @@ import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.server.api.IEquoServer;
 
-@Component(service = UrlMandatoryBuilder.class)
-public class UrlMandatoryBuilder {
+@Component(service = ViewBuilder.class)
+public class ViewBuilder {
 
 	private EquoApplicationBuilder equoAppBuilder;
 	private MBindingTable mainPartBindingTable;
@@ -25,22 +25,22 @@ public class UrlMandatoryBuilder {
 	private String url;
 
 	private IEquoServer equoServer;
-
 	private AnalyticsService analyticsService;
 
+	private OptionalViewBuilder optionalViewBuilder;
+
 	OptionalViewBuilder withSingleView(String url) {
-		setMainWindowUrl(url);
-		OptionalViewBuilder optionalViewBuilder = new OptionalViewBuilder(this, equoServer);
+		this.url = normalizeUrl(url);
+		addUrlToProxyServer(this.url);
+		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder;
 	}
 
-	private void setMainWindowUrl(String windowUrl) {
-		this.url = normalizeUrl(windowUrl);
-		addUrlToProxyServer(url);
+	void configureViewPart(EquoApplicationBuilder equoApplicationBuilder) {
+		this.equoAppBuilder = equoApplicationBuilder;
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
 		part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
-		part.getProperties().put(IConstants.MAIN_URL_KEY, url);
 
 		// Get the Window binding context.
 		MBindingContext mBindingContext = equoAppBuilder.getmApplication().getBindingContexts().get(1);
@@ -52,6 +52,8 @@ public class UrlMandatoryBuilder {
 		equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
 
 		equoAppBuilder.getmWindow().getChildren().add(part);
+
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer);
 	}
 
 	private void addUrlToProxyServer(String url) {
@@ -59,7 +61,6 @@ public class UrlMandatoryBuilder {
 		if (mainEquoAppBundle != null) {
 			equoServer.setMainAppBundle(mainEquoAppBundle);
 		}
-		FrameworkUtil.INSTANCE.inject(equoServer);
 		equoServer.addUrl(url);
 	}
 
@@ -98,10 +99,6 @@ public class UrlMandatoryBuilder {
 		}
 		analyticsService.registerLaunchApp();
 		return this.equoAppBuilder;
-	}
-
-	public void setEquoApplicationBuilder(EquoApplicationBuilder equoApplicationBuilder) {
-		this.equoAppBuilder = equoApplicationBuilder;
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)

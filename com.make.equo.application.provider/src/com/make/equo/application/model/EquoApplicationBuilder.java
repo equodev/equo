@@ -27,17 +27,22 @@ public class EquoApplicationBuilder {
 
 	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
-	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
+	private ViewBuilder viewBuilder;
 	private String name;
 	private EquoApplicationModel equoApplicationModel;
 
 	public OptionalViewBuilder withSingleView(String url) {
-		this.urlMandatoryFieldBuilder.setEquoApplicationBuilder(this);
-		configureBasicAppElements(url);
-		return this.getUrlMandatoryFieldBuilder().withSingleView(url);
+		return this.getViewBuilder().withSingleView(url);
 	}
 
-	private void configureBasicAppElements(String url) {
+	/**
+	 * Configure the Equo application builder. This method is intended to be called
+	 * by the Equo Framework, it should not be called by clients/users applications.
+	 * 
+	 * @param equoApplicationModel
+	 */
+	void configure(EquoApplicationModel equoApplicationModel) {
+		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
 		String appId;
@@ -60,6 +65,8 @@ public class EquoApplicationBuilder {
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
+
+		this.viewBuilder.configureViewPart(this);
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
@@ -173,8 +180,8 @@ public class EquoApplicationBuilder {
 		getmApplication().getBindingContexts().add(dialogBindingContext);
 	}
 
-	UrlMandatoryBuilder getUrlMandatoryFieldBuilder() {
-		return urlMandatoryFieldBuilder;
+	protected ViewBuilder getViewBuilder() {
+		return viewBuilder;
 	}
 
 	MApplication getmApplication() {
@@ -186,20 +193,12 @@ public class EquoApplicationBuilder {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
-		this.urlMandatoryFieldBuilder = urlMandatoryBuilder;
+	void setViewBuilder(ViewBuilder viewBuilder) {
+		this.viewBuilder = viewBuilder;
 	}
 
-	void unsetViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
-		this.urlMandatoryFieldBuilder = null;
+	void unsetViewBuilder(ViewBuilder viewBuilder) {
+		this.viewBuilder = null;
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setEquoApplicationModel(EquoApplicationModel equoApplicationModel) {
-		this.equoApplicationModel = equoApplicationModel;
-	}
-
-	void unsetEquoApplicationModel(EquoApplicationModel urlMandatoryBuilder) {
-		this.equoApplicationModel = null;
-	}
 }
