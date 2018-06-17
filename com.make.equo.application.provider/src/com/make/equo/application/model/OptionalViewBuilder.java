@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
@@ -16,7 +14,6 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public class OptionalViewBuilder {
 
-	@Inject
 	private IEquoServer equoServer;
 
 	private UrlMandatoryBuilder urlMandatoryBuilder;
@@ -25,8 +22,9 @@ public class OptionalViewBuilder {
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
+	OptionalViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder, IEquoServer equoServer) {
 		this.urlMandatoryBuilder = urlMandatoryBuilder;
+		this.equoServer = equoServer;
 		this.equoApplicationBuilder = urlMandatoryBuilder.getEquoApplicationBuilder();
 	}
 
@@ -164,7 +162,7 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
-	public EquoApplication start() {
+	public EquoApplicationBuilder start() {
 		return this.urlMandatoryBuilder.start();
 	}
 

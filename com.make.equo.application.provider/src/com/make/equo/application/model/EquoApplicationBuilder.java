@@ -10,34 +10,43 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
+import com.make.equo.application.EquoApplicationModel;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
-import com.make.equo.application.util.FrameworkUtil;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.EquoEventHandler;
 
+@Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder {
 
-	private EquoApplication equoApplication;
-	private final MApplication mApplication;
+	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	private UrlMandatoryBuilder urlMandatoryFieldBuilder;
 	private String name;
+	private EquoApplicationModel equoApplicationModel;
 
-	EquoApplicationBuilder(EquoApplication equoApplication) {
-		this.equoApplication = equoApplication;
-		this.mApplication = equoApplication.getEquoApplicationModel().getMainApplication();
-		this.urlMandatoryFieldBuilder = new UrlMandatoryBuilder(this);
-		FrameworkUtil.INSTANCE.inject(this.urlMandatoryFieldBuilder);
+	public OptionalViewBuilder withSingleView(String url) {
+		this.urlMandatoryFieldBuilder.setEquoApplicationBuilder(this);
+		configureBasicAppElements(url);
+		return this.getUrlMandatoryFieldBuilder().withSingleView(url);
 	}
 
-	public UrlMandatoryBuilder name(String name) {
-		this.name = name;
-		String appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
+	private void configureBasicAppElements(String url) {
+		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
-		getmWindow().setLabel(name);
+		String appId;
+		if (name != null) {
+			appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
+			getmWindow().setLabel(name);
+		} else {
+			appId = IConstants.EQUO_APP_PREFIX;
+		}
 		MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
 		mainMenu.setElementId(appId + "." + "mainmenu");
 		getmWindow().setMainMenu(mainMenu);
@@ -51,8 +60,6 @@ public class EquoApplicationBuilder {
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
-
-		return this.getUrlMandatoryFieldBuilder();
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
@@ -174,16 +181,25 @@ public class EquoApplicationBuilder {
 		return mApplication;
 	}
 
-	EquoApplication getEquoApplication() {
-		return equoApplication;
-	}
-
 	MTrimmedWindow getmWindow() {
 		return mWindow;
 	}
 
-	String getName() {
-		return name;
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	void setViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
+		this.urlMandatoryFieldBuilder = urlMandatoryBuilder;
 	}
 
+	void unsetViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
+		this.urlMandatoryFieldBuilder = null;
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	void setEquoApplicationModel(EquoApplicationModel equoApplicationModel) {
+		this.equoApplicationModel = equoApplicationModel;
+	}
+
+	void unsetEquoApplicationModel(EquoApplicationModel urlMandatoryBuilder) {
+		this.equoApplicationModel = null;
+	}
 }
