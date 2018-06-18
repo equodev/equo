@@ -61,7 +61,7 @@ public class MenuItemBuilder {
 		return new MenuBuilder(menuBuilder.getOptionalFieldBuilder()).addMenu(menuLabel);
 	}
 
-	public EquoApplication start() {
+	public EquoApplicationBuilder start() {
 		return menuBuilder.getOptionalFieldBuilder().start();
 	}
 

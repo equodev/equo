@@ -6,10 +6,6 @@ public class EquoApplicationModel {
 
 	private MApplication mainApplication;
 
-	public EquoApplicationModel(MApplication mainApplication) {
-		this.setMainApplication(mainApplication);
-	}
-
 	public MApplication getMainApplication() {
 		return mainApplication;
 	}

@@ -5,13 +5,13 @@ import java.io.File;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 
-import com.make.equo.application.api.IEquoFramework;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.client.EquoBundleManager;
 
 public class Equo {
 
 	public static void start(Class<?> equoApplicationClazz) {
-		if (!IEquoFramework.class.isAssignableFrom(equoApplicationClazz)) {
+		if (!IEquoApplication.class.isAssignableFrom(equoApplicationClazz)) {
 			throw new IllegalArgumentException("The " + equoApplicationClazz.getName() + " is not an Equo Application");
 		}
 

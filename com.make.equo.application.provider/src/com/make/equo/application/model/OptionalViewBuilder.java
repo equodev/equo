@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
@@ -16,18 +14,18 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public class OptionalViewBuilder {
 
-	@Inject
 	private IEquoServer equoServer;
 
-	private UrlMandatoryBuilder urlMandatoryBuilder;
+	private ViewBuilder viewBuilder;
 
 	private EquoApplicationBuilder equoApplicationBuilder;
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(UrlMandatoryBuilder urlMandatoryBuilder) {
-		this.urlMandatoryBuilder = urlMandatoryBuilder;
-		this.equoApplicationBuilder = urlMandatoryBuilder.getEquoApplicationBuilder();
+	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer) {
+		this.viewBuilder = viewBuilder;
+		this.equoServer = equoServer;
+		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable) {
@@ -35,8 +33,8 @@ public class OptionalViewBuilder {
 	}
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
-		EquoApplicationBuilder equoAppBuilder = this.urlMandatoryBuilder.getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoAppBuilder, this.urlMandatoryBuilder.getPart().getElementId(), runnable,
+		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
+		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable,
 				userEvent).addGlobalShortcut(keySequence);
 		return this;
 	}
@@ -68,7 +66,7 @@ public class OptionalViewBuilder {
 	 * 
 	 */
 	public OptionalViewBuilder addCustomScript(String scriptPath) throws IOException, URISyntaxException {
-		String url = urlMandatoryBuilder.getUrl();
+		String url = viewBuilder.getUrl();
 		return addCustomScript(url, scriptPath);
 	}
 
@@ -121,7 +119,7 @@ public class OptionalViewBuilder {
 	 * @return this
 	 */
 	public OptionalViewBuilder onBeforeExit(Runnable runnable) {
-		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
+		MApplication mApplication = viewBuilder.getEquoApplicationBuilder().getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
 	}
@@ -164,8 +162,8 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
-	public EquoApplication start() {
-		return this.urlMandatoryBuilder.start();
+	public EquoApplicationBuilder start() {
+		return this.viewBuilder.start();
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
