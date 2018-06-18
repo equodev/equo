@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
-import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -30,6 +29,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
@@ -57,20 +57,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private String limitedConnectionAppBasedPagePath;
 
 	private HttpProxyServer proxyServer;
-	private Bundle mainEquoAppBundle;
-
-	private IEquoOfflineServer equoOfflineServer;
-	final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
-
 	private ScheduledExecutorService internetConnectionChecker;
 	private int websocketPort;
+
+	private IEquoApplication equoApplication;
+	private IEquoOfflineServer equoOfflineServer;
+	private final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
 	@Override
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
-				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, mainEquoAppBundle,
-				proxiedUrls, getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(),
-				websocketPort);
+				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
+				getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(), websocketPort, equoApplication);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -134,6 +132,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 		this.equoOfflineServer = null;
 	}
 
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	void setEquoApplication(IEquoApplication equoApplication) {
+		this.equoApplication = equoApplication;
+	}
+
+	void unsetEquoApplication(IEquoApplication equoApplication) {
+		this.equoApplication = null;
+	}
+
 	@Override
 	public void addCustomScript(String url, String scriptUrl) {
 		if (!urlsToScripts.containsKey(url)) {
@@ -145,11 +152,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void addUrl(String url) {
 		proxiedUrls.add(url);
-	}
-
-	@Override
-	public void setMainAppBundle(Bundle mainEquoAppBundle) {
-		this.mainEquoAppBundle = mainEquoAppBundle;
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package com.make.equo.server.api;
 
-import org.osgi.framework.Bundle;
-
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
-
 
 public interface IEquoServer {
 
@@ -12,8 +9,6 @@ public interface IEquoServer {
 	void addCustomScript(String url, String scriptUrl);
 
 	void addUrl(String url);
-
-	void setMainAppBundle(Bundle mainEquoAppBundle);
 
 	String getLocalScriptProtocol();
 

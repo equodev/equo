@@ -1,6 +1,7 @@
 package com.make.equo.application.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -17,6 +18,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
 import com.make.equo.application.EquoApplicationModel;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
@@ -28,8 +30,8 @@ public class EquoApplicationBuilder {
 	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	private ViewBuilder viewBuilder;
-	private String name;
 	private EquoApplicationModel equoApplicationModel;
+	private String applicationName;
 
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);
@@ -47,9 +49,9 @@ public class EquoApplicationBuilder {
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
 		String appId;
-		if (name != null) {
-			appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
-			getmWindow().setLabel(name);
+		if (applicationName != null) {
+			appId = IConstants.EQUO_APP_PREFIX + "." + applicationName.trim().toLowerCase();
+			getmWindow().setLabel(applicationName);
 		} else {
 			appId = IConstants.EQUO_APP_PREFIX;
 		}
@@ -200,6 +202,11 @@ public class EquoApplicationBuilder {
 
 	void unsetViewBuilder(ViewBuilder viewBuilder) {
 		this.viewBuilder = null;
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	void setEquoApplication(IEquoApplication equoApplication, Map<String, String> props) {
+		this.applicationName = props.get("name");
 	}
 
 }
