@@ -16,16 +16,16 @@ public class OptionalViewBuilder {
 
 	private IEquoServer equoServer;
 
-	private ViewBuilder urlMandatoryBuilder;
+	private ViewBuilder viewBuilder;
 
 	private EquoApplicationBuilder equoApplicationBuilder;
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(ViewBuilder urlMandatoryBuilder, IEquoServer equoServer) {
-		this.urlMandatoryBuilder = urlMandatoryBuilder;
+	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer) {
+		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
-		this.equoApplicationBuilder = urlMandatoryBuilder.getEquoApplicationBuilder();
+		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable) {
@@ -33,8 +33,8 @@ public class OptionalViewBuilder {
 	}
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
-		EquoApplicationBuilder equoAppBuilder = this.urlMandatoryBuilder.getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoAppBuilder, this.urlMandatoryBuilder.getPart().getElementId(), runnable,
+		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
+		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable,
 				userEvent).addGlobalShortcut(keySequence);
 		return this;
 	}
@@ -66,7 +66,7 @@ public class OptionalViewBuilder {
 	 * 
 	 */
 	public OptionalViewBuilder addCustomScript(String scriptPath) throws IOException, URISyntaxException {
-		String url = urlMandatoryBuilder.getUrl();
+		String url = viewBuilder.getUrl();
 		return addCustomScript(url, scriptPath);
 	}
 
@@ -119,7 +119,7 @@ public class OptionalViewBuilder {
 	 * @return this
 	 */
 	public OptionalViewBuilder onBeforeExit(Runnable runnable) {
-		MApplication mApplication = urlMandatoryBuilder.getEquoApplicationBuilder().getmApplication();
+		MApplication mApplication = viewBuilder.getEquoApplicationBuilder().getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
 	}
@@ -163,7 +163,7 @@ public class OptionalViewBuilder {
 	}
 
 	public EquoApplicationBuilder start() {
-		return this.urlMandatoryBuilder.start();
+		return this.viewBuilder.start();
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {

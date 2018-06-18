@@ -36,7 +36,7 @@ public class ViewBuilder {
 		return optionalViewBuilder;
 	}
 
-	void configureViewPart(EquoApplicationBuilder equoApplicationBuilder) {
+	OptionalViewBuilder configureViewPart(EquoApplicationBuilder equoApplicationBuilder) {
 		this.equoAppBuilder = equoApplicationBuilder;
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
@@ -54,6 +54,8 @@ public class ViewBuilder {
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
 		optionalViewBuilder = new OptionalViewBuilder(this, equoServer);
+
+		return optionalViewBuilder;
 	}
 
 	private void addUrlToProxyServer(String url) {

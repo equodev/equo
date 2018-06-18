@@ -8,14 +8,14 @@ import org.osgi.framework.Bundle;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
+import com.make.equo.application.model.OptionalViewBuilder;
 import com.make.equo.application.util.FrameworkUtil;
 
 public class LifeCycleManager {
 
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
-			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
-			EquoApplicationModel equoApplicationModel)
+			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		// String[] appArgs = (String[])
 		// applicationContext.getArguments().get(IApplicationContext.APPLICATION_ARGS);
@@ -28,13 +28,14 @@ public class LifeCycleManager {
 
 		FrameworkUtil.INSTANCE.setMainEquoAppBundle(equoMainAppBundle);
 
+		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
 		// Class<?> equoApplicationClazz =
 		// equoMainAppBundle.loadClass(equoAppClassName);
 		// IEquoFramework equoApp = (IEquoFramework) equoApplicationClazz.newInstance();
 		equoApplicationModel.setMainApplication(mainApplication);
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
 				equoApplicationModel, equoApplicationBuilder);
-		equoApplicationBuilderConfigurator.configure();
+		OptionalViewBuilder optionalViewBuilder = equoApplicationBuilderConfigurator.configure();
 		equoApp.buildApp(equoApplicationBuilder);
 	}
 }

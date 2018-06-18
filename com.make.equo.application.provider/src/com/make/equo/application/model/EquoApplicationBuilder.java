@@ -40,8 +40,9 @@ public class EquoApplicationBuilder {
 	 * by the Equo Framework, it should not be called by clients/users applications.
 	 * 
 	 * @param equoApplicationModel
+	 * @return
 	 */
-	void configure(EquoApplicationModel equoApplicationModel) {
+	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel) {
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
@@ -66,7 +67,7 @@ public class EquoApplicationBuilder {
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 
-		this.viewBuilder.configureViewPart(this);
+		return this.viewBuilder.configureViewPart(this);
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {

@@ -13,7 +13,7 @@ public class EquoApplicationBuilderConfigurator {
 		this.equoApplicationBuilder = equoApplicationBuilder;
 	}
 
-	public void configure() {
-		this.equoApplicationBuilder.configure(equoApplicationModel);
+	public OptionalViewBuilder configure() {
+		return this.equoApplicationBuilder.configure(equoApplicationModel);
 	}
 }
