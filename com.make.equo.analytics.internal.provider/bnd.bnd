@@ -9,4 +9,7 @@ Private-Package: \
     com.squareup.moshi,\
     com.squareup.moshi.source,\
     org.influxdb.java,\
+    com.make.equo.application.provider;version=latest,\
+    org.eclipse.osgi,\
+    org.eclipse.osgi.source,\
     osgi.cmpn

@@ -11,6 +11,7 @@ public class EquoEventHandler {
 	private IEquoWebSocketService equoWebSocketService;
 	private GsonBuilder gsonBuilder;
 
+	// TODO improve how the injection is made here, use proper OSGI injection
 	public EquoEventHandler() {
 		BundleContext ctx = FrameworkUtil.getBundle(EquoEventHandler.class).getBundleContext();
 		if (ctx != null) {

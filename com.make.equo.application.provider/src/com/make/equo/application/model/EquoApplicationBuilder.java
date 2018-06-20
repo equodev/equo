@@ -1,7 +1,6 @@
 package com.make.equo.application.model;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -18,7 +17,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
 import com.make.equo.application.EquoApplicationModel;
-import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
@@ -48,6 +46,7 @@ public class EquoApplicationBuilder {
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
+		this.applicationName = System.getProperty("appName");
 		String appId;
 		if (applicationName != null) {
 			appId = IConstants.EQUO_APP_PREFIX + "." + applicationName.trim().toLowerCase();
@@ -202,11 +201,6 @@ public class EquoApplicationBuilder {
 
 	void unsetViewBuilder(ViewBuilder viewBuilder) {
 		this.viewBuilder = null;
-	}
-
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setEquoApplication(IEquoApplication equoApplication, Map<String, String> props) {
-		this.applicationName = props.get("name");
 	}
 
 }
