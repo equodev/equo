@@ -32,11 +32,11 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 	private static final String CUSTOM_EVENT_KEY = "customEvent";
 	static final int DEFAULT_COUNT = 1;
 	private AnalyticsService analyticsService;
+	private EquoEventHandler equoEventHandler;
 
 	@Activate
 	public void start() {
 		System.out.println("Initializing Analytics Client provider...");
-		EquoEventHandler equoEventHandler = new EquoEventHandler();
 		equoEventHandler.on(CUSTOM_EVENT_KEY, new CustomEventPayloadRunnable());
 	}
 
@@ -55,6 +55,11 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
 	void setAnalyticsService(AnalyticsService analyticsService) {
 		this.analyticsService = analyticsService;
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
+		this.equoEventHandler = equoEventHandler;
 	}
 
 	@Override

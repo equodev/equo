@@ -5,7 +5,9 @@ Bundle-Version: ${version}.${tstamp}
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
 	org.eclipse.osgi,\
-	org.eclipse.osgi.source
+	org.eclipse.osgi.source,\
+	osgi.annotation,\
+    osgi.cmpn
 Export-Package: \
 	com.make.equo.ws.api,\
 	com.make.equo.ws.api.lambda

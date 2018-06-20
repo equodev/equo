@@ -14,7 +14,7 @@ public class ParameterizedCommandHandler {
 	@Execute
 	public void execute(@Named("commandId") String commandId,
 			@Named(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT) String userEvent, MApplication mApplication,
-			EModelService modelService) {
+			EModelService modelService, EquoEventHandler equoEventHandler) {
 		Runnable runnable = (Runnable) mApplication.getTransientData().get(commandId);
 
 		if (runnable != null) {
@@ -22,7 +22,6 @@ public class ParameterizedCommandHandler {
 		}
 
 		if (userEvent != null) {
-			EquoEventHandler equoEventHandler = new EquoEventHandler();
 			equoEventHandler.send(userEvent);
 		}
 	}

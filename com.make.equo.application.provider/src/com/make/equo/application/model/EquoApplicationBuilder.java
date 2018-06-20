@@ -30,6 +30,7 @@ public class EquoApplicationBuilder {
 	private ViewBuilder viewBuilder;
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
+	private EquoEventHandler equoEventHandler;
 
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);
@@ -72,8 +73,6 @@ public class EquoApplicationBuilder {
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
-		EquoEventHandler equoEventHandler = new EquoEventHandler();
-
 		createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
 				IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
 
@@ -201,6 +200,11 @@ public class EquoApplicationBuilder {
 
 	void unsetViewBuilder(ViewBuilder viewBuilder) {
 		this.viewBuilder = null;
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
+		this.equoEventHandler = equoEventHandler;
 	}
 
 }
