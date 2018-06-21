@@ -1,7 +1,7 @@
 package com.make.equo.server.provider;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +22,6 @@ public class EquoHttpProxyContributionImpl implements IEquoContribution {
 		return this.getClass().getClassLoader().getResource(name);
 	}
 
-	// TODO check for the properties of the equo app to see if it change the html
-	// content or not. Inject the Equo app in this component to check it. See #140
-	// and #142.
 	@Override
 	public Map<String, Object> getProperties() {
 		return null;
@@ -32,7 +29,12 @@ public class EquoHttpProxyContributionImpl implements IEquoContribution {
 
 	@Override
 	public List<String> getJavascriptFileNames() {
-		return Arrays.asList(jqueryJsApi, equoFrameworkJsApi, domModifierJsApi);
+		List<String> javascriptNames = new ArrayList<>();
+		javascriptNames.add(jqueryJsApi);
+		javascriptNames.add(equoFrameworkJsApi);
+		if (Boolean.getBoolean("change_original_html")) {
+			javascriptNames.add(domModifierJsApi);
+		}
+		return javascriptNames;
 	}
-
 }

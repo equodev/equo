@@ -8,8 +8,8 @@ import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
-import org.osgi.framework.Bundle;
 
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
@@ -29,12 +29,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private Map<String, IEquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
+	private IEquoApplication equoApplication;
 
 	private boolean connectionLimited = false;
 	private boolean isOfflineCacheSupported;
 
 	private String limitedConnectionAppBasedPagePath;
-	private Bundle mainEquoAppBundle;
 	private List<String> proxiedUrls;
 
 	private List<String> equoContributionsJsApis;
@@ -44,17 +44,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	public EquoHttpFiltersSourceAdapter(Map<String, IEquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
-			String limitedConnectionAppBasedPagePath, Bundle mainEquoAppBundle, List<String> proxiedUrls,
-			List<String> equoContributionsJsApis, Map<String, String> urlsToScriptsAsStrings, int websocketPort) {
+			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
+			Map<String, String> urlsToScriptsAsStrings, int websocketPort, IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
-		this.mainEquoAppBundle = mainEquoAppBundle;
 		this.proxiedUrls = proxiedUrls;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
 		this.websocketPort = websocketPort;
+		this.equoApplication = equoApplication;
 	}
 
 	@Override
@@ -110,10 +110,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			return new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions);
 		}
 		if (uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)) {
-			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL, mainEquoAppBundle);
+			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL, equoApplication);
 		}
 		if (uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)) {
-			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL, mainEquoAppBundle);
+			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL, equoApplication);
 		}
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);

@@ -28,8 +28,9 @@ public class EquoApplicationBuilder {
 	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	private ViewBuilder viewBuilder;
-	private String name;
 	private EquoApplicationModel equoApplicationModel;
+	private String applicationName;
+	private EquoEventHandler equoEventHandler;
 
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);
@@ -46,10 +47,11 @@ public class EquoApplicationBuilder {
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
+		this.applicationName = System.getProperty("appName");
 		String appId;
-		if (name != null) {
-			appId = IConstants.EQUO_APP_PREFIX + "." + name.trim().toLowerCase();
-			getmWindow().setLabel(name);
+		if (applicationName != null) {
+			appId = IConstants.EQUO_APP_PREFIX + "." + applicationName.trim().toLowerCase();
+			getmWindow().setLabel(applicationName);
 		} else {
 			appId = IConstants.EQUO_APP_PREFIX;
 		}
@@ -71,8 +73,6 @@ public class EquoApplicationBuilder {
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
-		EquoEventHandler equoEventHandler = new EquoEventHandler();
-
 		createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
 				IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
 
@@ -200,6 +200,11 @@ public class EquoApplicationBuilder {
 
 	void unsetViewBuilder(ViewBuilder viewBuilder) {
 		this.viewBuilder = null;
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
+		this.equoEventHandler = equoEventHandler;
 	}
 
 }

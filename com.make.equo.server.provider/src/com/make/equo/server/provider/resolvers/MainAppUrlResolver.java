@@ -2,18 +2,17 @@ package com.make.equo.server.provider.resolvers;
 
 import java.net.URL;
 
-import org.osgi.framework.Bundle;
-
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 public class MainAppUrlResolver implements ILocalUrlResolver {
 
 	private String localScriptProtocol;
-	private Bundle mainEquoAppBundle;
+	private IEquoApplication equoApplication;
 
-	public MainAppUrlResolver(String localScriptProtocol, Bundle mainEquoAppBundle) {
+	public MainAppUrlResolver(String localScriptProtocol, IEquoApplication equoApplication) {
 		this.localScriptProtocol = localScriptProtocol;
-		this.mainEquoAppBundle = mainEquoAppBundle;
+		this.equoApplication = equoApplication;
 	}
 
 	@Override
@@ -23,7 +22,7 @@ public class MainAppUrlResolver implements ILocalUrlResolver {
 
 	@Override
 	public URL resolve(String urlToResolve) {
-		URL resource = mainEquoAppBundle.getResource(urlToResolve);
+		URL resource = equoApplication.getClass().getClassLoader().getResource(urlToResolve);
 		return resource;
 	}
 

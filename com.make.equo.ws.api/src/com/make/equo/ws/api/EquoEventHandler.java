@@ -1,35 +1,21 @@
 package com.make.equo.ws.api;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-import com.google.gson.GsonBuilder;
-
+@Component(service = EquoEventHandler.class)
 public class EquoEventHandler {
 
 	private IEquoWebSocketService equoWebSocketService;
-	private GsonBuilder gsonBuilder;
-
-	public EquoEventHandler() {
-		BundleContext ctx = FrameworkUtil.getBundle(EquoEventHandler.class).getBundleContext();
-		if (ctx != null) {
-			@SuppressWarnings("unchecked")
-			ServiceReference<IEquoWebSocketService> serviceReference = (ServiceReference<IEquoWebSocketService>) ctx
-					.getServiceReference(IEquoWebSocketService.class.getName());
-			if (serviceReference != null) {
-				equoWebSocketService = ctx.getService(serviceReference);
-			}
-		}
-		this.gsonBuilder = new GsonBuilder();
-	}
 
 	public void send(String userEvent) {
 		this.send(userEvent, null);
 	}
 
 	public void send(String userEvent, Object payload) {
-		equoWebSocketService.send(userEvent, payload, this.gsonBuilder);
+		equoWebSocketService.send(userEvent, payload);
 	}
 
 	public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
@@ -44,8 +30,12 @@ public class EquoEventHandler {
 		equoWebSocketService.addEventHandler(eventId, new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
 	}
 
-	public GsonBuilder getGsonBuilder() {
-		return this.gsonBuilder;
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	void setViewBuilder(IEquoWebSocketService equoWebSocketService) {
+		this.equoWebSocketService = equoWebSocketService;
 	}
 
+	void unsetViewBuilder(IEquoWebSocketService equoWebSocketService) {
+		this.equoWebSocketService = null;
+	}
 }

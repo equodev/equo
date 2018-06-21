@@ -44,7 +44,8 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	}
 
 	@Override
-	public void send(String userEvent, Object payload, GsonBuilder gsonBuilder) {
+	public void send(String userEvent, Object payload) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
 		NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
 		String messageAsJson = gsonBuilder.create().toJson(namedActionMessage);
 		equoWebSocketServer.broadcast(messageAsJson);

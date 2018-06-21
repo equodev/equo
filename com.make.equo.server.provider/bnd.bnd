@@ -20,4 +20,5 @@ Private-Package: \
 	com.google.guava.source;version=20.0,\
 	org.apache.httpcomponents.httpcore,\
 	org.apache.httpcomponents.httpcore.source,\
-	com.make.equo.contribution.api;version=latest
+	com.make.equo.contribution.api;version=latest,\
+    com.make.equo.application.provider;version=latest
