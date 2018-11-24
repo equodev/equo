@@ -10,14 +10,9 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 #-runrepos: Release
 -resolve.effective: resolve
 #-runsystemcapabilities: ${native_capability}
--runprogramargs: -runvm: -XstartOnFirstThread\n\
-    --proxy-server=localhost:9896\n\
-    --ignore-certificate-errors\n\
-    --allow-file-access-from-files\n\
-    --disable-web-security\n\
-    --enable-widevine-cdm\n\
-    --proxy-bypass-list=127.0.0.1
--runvm: -XstartOnFirstThread
+#-runprogramargs: 
+vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
+-runvm: ${vmargs}
 -runrequires.equo: \
 	osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
 	osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
