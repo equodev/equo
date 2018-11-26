@@ -21,8 +21,8 @@ plugindir: ${workspace}/cnf/plugins
 #    ${plugindir}/biz.aQute.repository-3.5.0.jar; \
 #        url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 -pluginpath:\
-    ${plugindir}/publisher-0.1.4.jar; \
-        url="http://www.equo.maketechnology.io/bnd.p2/rls/publisher-0.1.4.jar", \
+    ${plugindir}/publisher-0.1.5.jar; \
+        url="http://www.equo.maketechnology.io/bnd.p2/rls/publisher-0.1.5.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
         url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 
