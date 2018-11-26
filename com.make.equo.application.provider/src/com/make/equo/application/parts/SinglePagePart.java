@@ -22,7 +22,14 @@ public class SinglePagePart {
 
 	@Inject
 	public SinglePagePart(Composite parent) {
-
+	    Chromium.setCommandLine(new String[][] {
+	            new String[] {"proxy-server", "localhost:9896"},
+	            new String[] {"ignore-certificate-errors", null},
+	            new String[] {"allow-file-access-from-files", null},
+	            new String[] {"disable-web-security", null},
+	            new String[] {"enable-widevine-cdm", null},
+	            new String[] {"proxy-bypass-list", "127.0.0.1"}
+	    });
 	}
 
 	@PostConstruct
