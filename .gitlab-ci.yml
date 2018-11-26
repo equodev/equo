@@ -14,6 +14,20 @@ cache:
     - .m2/
     - .bnd/
 
+build:
+  stage: build
+  script:
+    - HOME=$CI_PROJECT_DIR gradle check
+    - HOME=$CI_PROJECT_DIR gradle release
+  artifacts:
+    paths:
+      - cnf/equoapp.bnd
+      - cnf/equobuild.bnd
+      - cnf/release
+    expire_in: 12w
+  except:
+    - master
+
 export:
   stage: build
   script:
@@ -26,4 +40,6 @@ export:
       - cnf/equobuild.bnd
       - cnf/release
     expire_in: 12w
+  only:
+    - master
 
