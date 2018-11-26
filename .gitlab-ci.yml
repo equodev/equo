@@ -18,7 +18,6 @@ build:
   stage: build
   script:
     - HOME=$CI_PROJECT_DIR gradle check
-    - HOME=$CI_PROJECT_DIR gradle release
   artifacts:
     paths:
       - cnf/equoapp.bnd
