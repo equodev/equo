@@ -7,5 +7,5 @@
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "http://maketechpub.gitlab.io/cefswt/repository/"; \
+        url = "http://dl.maketechnology.io/cefswt/rls/repository/"; \
         location = ~/.bnd/cache/cefswt
