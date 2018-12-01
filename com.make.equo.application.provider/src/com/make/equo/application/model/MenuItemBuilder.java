@@ -89,16 +89,11 @@ public class MenuItemBuilder {
 	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
 	 * runnable before exiting the application
 	 * 
-	 * @param menuLabel
-	 *            the label of the exit menu item
+	 * @param menuItemLabel the label of the exit menu item
 	 * @return
 	 */
-	public MenuItemBuilder onBeforeExit(String menuLabel, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
-				.getmApplication();
-		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
-		menuItem = createMenuItem(menuLabel);
-		menuItem.setCommand(command);
+	public MenuItemBuilder onBeforeExit(String menuItemLabel, Runnable runnable) {
+		menuItem = createMenuItem(menuItemLabel);
 		return onBeforeExit(runnable);
 	}
 
@@ -106,39 +101,75 @@ public class MenuItemBuilder {
 	 * Executes the {@code run} method of this runnable before exiting the
 	 * application
 	 * 
-	 * @param runnable
-	 *            a runnable object
+	 * @param runnable a runnable object
 	 * @return this
 	 */
 	public MenuItemBuilder onBeforeExit(Runnable runnable) {
 		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
+		menuItem.setCommand(command);
 		return this;
 	}
 
-	// onpreferences should also manage websocket events to js
 	/**
 	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the
-	 * runnable before exiting the application
+	 * runnable when the item is accessed
 	 * 
-	 * @param menuLabel
-	 *            the label of the exit menu item
+	 * @param menuItemLabel the label of the preferences menu item
 	 * @return
 	 */
-	public MenuItemBuilder onPreferences(String menuLabel, Runnable runnable) {
-		//// MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
-		//// .getEquoApplicationBuilder().getmApplication();
-		//// MCommand command =
-		//// mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
-		//// menuItem = createMenuItem(menuLabel);
-		// menuItem.setCommand(command);
-		return onBeforeExit(runnable);
+	public MenuItemBuilder onPreferences(String menuItemLabel, Runnable runnable) {
+		menuItem = createMenuItem(menuItemLabel);
+		return onPreferences(runnable);
 	}
 
+	/**
+	 * Executes the {@code run} method of this runnable when the item is accessed
+	 * 
+	 * @param runnable a runnable object
+	 * @return this
+	 */
+	public MenuItemBuilder onPreferences(Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+				.getmApplication();
+		mApplication.getTransientData().put(ICommandConstants.PREFERENCES_COMMAND, runnable);
+		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
+		menuItem.setCommand(command);
+		return this;
+	}
+
+	/**
+	 * Add About menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application
+	 * 
+	 * @param menuItemLabel the label of the exit menu item
+	 * @return
+	 */
+	public MenuItemBuilder onAbout(String menuItemLabel, Runnable runnable) {
+		menuItem = createMenuItem(menuItemLabel);
+		return onAbout(runnable);
+	}
+	
+	/**
+	 * Executes the {@code run} method of this runnable when the item is accessed
+	 * 
+	 * @param runnable a runnable object
+	 * @return this
+	 */
+	public MenuItemBuilder onAbout(Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+				.getmApplication();
+		mApplication.getTransientData().put(ICommandConstants.ABOUT_COMMAND, runnable);
+		MCommand command = mApplication.getCommand(ICommandConstants.ABOUT_COMMAND);
+		menuItem.setCommand(command);
+		return this;
+	}
+	
 	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
-		MenuItemBuilder newMenuItemBuilder = this.addMenuItem(menuItemLabel);
-		return newMenuItemBuilder.onClick(EnterFullScreenModeRunnable.instance);
+		menuItem = createMenuItem(menuItemLabel);
+		return onClick(EnterFullScreenModeRunnable.instance);
 	}
 
 }
