@@ -36,6 +36,34 @@ public class MenuBuilder {
 	public MenuItemBuilder addMenuItem(String label) {
 		return new MenuItemBuilder(this).addMenuItem(label);
 	}
+	
+	public MenuItemBuilder onBeforeExit(String label, Runnable runnable) {
+		return new MenuItemBuilder(this).onBeforeExit(label, runnable);
+	}
+	
+	public MenuItemBuilder onBeforeExit(Runnable runnable) {
+		return new MenuItemBuilder(this).onBeforeExit(runnable);
+	}
+	
+	public MenuItemBuilder onPreferences(String label, Runnable runnable) {
+		return new MenuItemBuilder(this).onPreferences(label, runnable);
+	}
+	
+	public MenuItemBuilder onPreferences(Runnable runnable) {
+		return new MenuItemBuilder(this).onPreferences(runnable);
+	}
+	
+	public MenuItemBuilder onAbout(String label, Runnable runnable) {
+		return new MenuItemBuilder(this).onAbout(label, runnable);
+	}
+	
+	public MenuItemBuilder onAbout(Runnable runnable) {
+		return new MenuItemBuilder(this).onAbout(runnable);
+	}
+	
+	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
+		return new MenuItemBuilder(this).addFullScreenModeMenuItem(menuItemLabel);
+	}
 
 	OptionalViewBuilder getOptionalFieldBuilder() {
 		return optionalFieldBuilder;
@@ -48,9 +76,4 @@ public class MenuBuilder {
 	MMenu getMenu() {
 		return menu;
 	}
-
-	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
-		return new MenuItemBuilder(this).addFullScreenModeMenuItem(menuItemLabel);
-	}
-
 }
