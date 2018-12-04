@@ -1,6 +1,6 @@
 -buildpath: \
 	com.make.equo.application.provider;version=latest,\
-	io.netty.all,\
+	io.netty.all;version='[4.0.44,4.0.45)',\
 	com.make.equo.server.offline.api;version=latest
 -includeresource: -resources/
 -outputmask: ${@bsn}-${@version}.jar
