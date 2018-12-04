@@ -1,8 +1,6 @@
 package com.make.equo.application.model;
 
 import static com.make.equo.application.util.OSUtils.isMac;
-import static com.make.equo.application.util.OSUtils.isWindows;
-import static com.make.equo.application.util.OSUtils.isUnix;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
