@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
-import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
@@ -109,21 +107,7 @@ public class OptionalViewBuilder {
 	private void addCustomScriptToProxyServer(String url, String resolvedUrl) {
 		equoServer.addCustomScript(url, resolvedUrl);
 	}
-
-	/**
-	 * Executes the {@code run} method of this runnable before exiting the
-	 * application
-	 * 
-	 * @param runnable
-	 *            a runnable object
-	 * @return this
-	 */
-	public OptionalViewBuilder onBeforeExit(Runnable runnable) {
-		MApplication mApplication = viewBuilder.getEquoApplicationBuilder().getmApplication();
-		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
-		return this;
-	}
-
+	
 	/**
 	 * Enable an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if

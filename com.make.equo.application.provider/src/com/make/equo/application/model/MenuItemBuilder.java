@@ -1,5 +1,7 @@
 package com.make.equo.application.model;
 
+import static com.make.equo.application.util.OSUtils.isMac;
+
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
@@ -8,6 +10,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
+import com.make.equo.application.util.IConstants;
 
 public class MenuItemBuilder {
 
@@ -24,17 +27,17 @@ public class MenuItemBuilder {
 		this.menuBuilder = menuItemBuilder.menuBuilder;
 	}
 
-	public MenuItemBuilder addMenuItem(String menuItemLabel) {
-		menuItem = createMenuItem(menuItemLabel);
+	public MenuItemBuilder addMenuItem(String label) {
+		menuItem = createMenuItem(label);
 		return new MenuItemBuilder(this);
 	}
 
-	private MHandledMenuItem createMenuItem(String menuItemlabel) {
+	private MHandledMenuItem createMenuItem(String label) {
 		MHandledMenuItem newMenuItem = MenuFactoryImpl.eINSTANCE.createHandledMenuItem();
 		MMenu parentMenu = menuBuilder.getMenu();
-		String menuItemId = parentMenu.getElementId() + "." + menuItemlabel.replaceAll("\\s+", "").toLowerCase();
+		String menuItemId = parentMenu.getElementId() + "." + label.replaceAll("\\s+", "").toLowerCase();
 		newMenuItem.setElementId(menuItemId);
-		newMenuItem.setLabel(menuItemlabel);
+		newMenuItem.setLabel(label);
 		parentMenu.getChildren().add(newMenuItem);
 		return newMenuItem;
 	}
@@ -89,56 +92,94 @@ public class MenuItemBuilder {
 	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
 	 * runnable before exiting the application
 	 * 
-	 * @param menuLabel
-	 *            the label of the exit menu item
+	 * @param label the label of the exit menu item
 	 * @return
 	 */
-	public MenuItemBuilder onBeforeExit(String menuLabel, Runnable runnable) {
+	public MenuItemBuilder onBeforeExit(String label, Runnable runnable) {
 		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
-		menuItem = createMenuItem(menuLabel);
-		menuItem.setCommand(command);
-		return onBeforeExit(runnable);
+		if (!isMac()) {
+			menuItem = createMenuItem(label);
+			menuItem.setCommand(command);
+		}
+		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		return this;
+
 	}
 
 	/**
 	 * Executes the {@code run} method of this runnable before exiting the
 	 * application
 	 * 
-	 * @param runnable
-	 *            a runnable object
+	 * @param runnable a runnable object
 	 * @return this
 	 */
 	public MenuItemBuilder onBeforeExit(Runnable runnable) {
+		return onBeforeExit(IConstants.DEFAULT_EXIT_LABEL, runnable);
+	}
+
+	/**
+	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the
+	 * runnable when the item is accessed
+	 * 
+	 * @param label the label of the preferences menu item
+	 * @return
+	 */
+	public MenuItemBuilder onPreferences(String label, Runnable runnable) {
 		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
-		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
+		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
+		if (!isMac()) {
+			menuItem = createMenuItem(label);
+			menuItem.setCommand(command);
+		}
+		mApplication.getTransientData().put(ICommandConstants.PREFERENCES_COMMAND, runnable);
 		return this;
 	}
 
-	// onpreferences should also manage websocket events to js
 	/**
-	 * Add Preferences menu item only if needed (Not needed in OSx) and executes the
-	 * runnable before exiting the application
+	 * Executes the {@code run} method of this runnable when the item is accessed
 	 * 
-	 * @param menuLabel
-	 *            the label of the exit menu item
-	 * @return
+	 * @param runnable a runnable object
+	 * @return this
 	 */
-	public MenuItemBuilder onPreferences(String menuLabel, Runnable runnable) {
-		//// MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder()
-		//// .getEquoApplicationBuilder().getmApplication();
-		//// MCommand command =
-		//// mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
-		//// menuItem = createMenuItem(menuLabel);
-		// menuItem.setCommand(command);
-		return onBeforeExit(runnable);
+	public MenuItemBuilder onPreferences(Runnable runnable) {
+		return onPreferences(IConstants.DEFAULT_PREFERENCES_LABEL, runnable);
 	}
 
-	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
-		MenuItemBuilder newMenuItemBuilder = this.addMenuItem(menuItemLabel);
-		return newMenuItemBuilder.onClick(EnterFullScreenModeRunnable.instance);
+	/**
+	 * Add About menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application
+	 * 
+	 * @param label the label of the exit menu item
+	 * @return
+	 */
+	public MenuItemBuilder onAbout(String label, Runnable runnable) {
+		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+				.getmApplication();
+		MCommand command = mApplication.getCommand(ICommandConstants.ABOUT_COMMAND);
+		if (!isMac()) {
+			menuItem = createMenuItem(label);
+			menuItem.setCommand(command);
+		}
+		mApplication.getTransientData().put(ICommandConstants.ABOUT_COMMAND, runnable);
+		return this;
+	}
+	
+	/**
+	 * Executes the {@code run} method of this runnable when the item is accessed
+	 * 
+	 * @param runnable a runnable object
+	 * @return this
+	 */
+	public MenuItemBuilder onAbout(Runnable runnable) {
+		return onAbout(IConstants.DEFAULT_ABOUT_LABEL, runnable);
+	}
+	
+	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
+		menuItem = createMenuItem(label);
+		return onClick(EnterFullScreenModeRunnable.instance);
 	}
 
 }
