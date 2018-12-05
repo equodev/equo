@@ -46,10 +46,22 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
-		String equoUsername = decodeInfluxdbProperty(getInfluxdbProperty("equo_username"));
-		String equoPassword = decodeInfluxdbProperty(getInfluxdbProperty("equo_password"));
+		
+		
+		String equoUsername = getInfluxdbProperty("equo_username");
+		String equoPassword = getInfluxdbProperty("equo_password");
 
-		this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
+		if(equoInfluxdbUrl!=null) {
+			if(equoPassword!=null && equoUsername!=null) {
+				equoUsername = decodeInfluxdbProperty(equoUsername);
+				equoPassword = decodeInfluxdbProperty(equoPassword);
+				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
+			}
+			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl);
+		}else {
+			throw new RuntimeException(
+					"The equo_influxdb_url Influxdb property " + " of the Equo Platform must be defined.");
+		}
 		influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
 		this.gson = new Gson();
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
@@ -57,10 +69,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
-		if (influxdbProperty == null) {
-			throw new RuntimeException(
-					"The " + propertyName + " Influxdb property " + " of the Equo Platform must be defined.");
-		}
 		return influxdbProperty;
 	}
 
