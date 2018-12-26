@@ -15,7 +15,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
 import com.make.equo.aer.api.IEquoErrorReporter;
-import com.make.equo.analytics.internal.api.AnalyticsService;
 
 @Component
 public class EquoStatusReporter extends WorkbenchStatusReporter{
@@ -37,7 +36,9 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 		}
 		if (style != IGNORE) {
 			if ((action & (SHOW | BLOCK)) != 0) {
-				registerEvent(status);
+				if (equoErrorReporter != null) {
+					registerEvent(status);
+				}
 			} else {
 				log(status);
 			}
@@ -63,11 +64,11 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-	void setAnalyticsService(IEquoErrorReporter errorReporter) {
+	void setErrorReporter(IEquoErrorReporter errorReporter) {
 		equoErrorReporter = errorReporter;
 	}
 
-	void unsetAnalyticsService(IEquoErrorReporter errorReporter) {
+	void unsetErrorReporter(IEquoErrorReporter errorReporter) {
 		equoErrorReporter = null;
 	}
 

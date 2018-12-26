@@ -1,16 +1,15 @@
 package com.make.equo.aer.provider;
 
-import java.util.Arrays;
-
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.make.equo.aer.api.IEquoErrorReporter;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 
+@Component
 public class EquoErrorReporterImpl implements IEquoErrorReporter{
 
 	private static final String INFO = "info";
