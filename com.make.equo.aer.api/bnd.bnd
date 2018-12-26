@@ -2,4 +2,5 @@ Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.aer.api
 Bundle-SymbolicName: com.make.equo.aer.api
 -buildpath: \
+    com.google.gson,\
     org.eclipse.e4.core.contexts

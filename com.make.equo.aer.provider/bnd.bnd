@@ -1,17 +1,8 @@
 Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.aer.provider
-Bundle-SymbolicName: com.make.equo.aer.provider;singleton:=true
+Bundle-SymbolicName: com.make.equo.aer.provider
 -buildpath: \
     com.google.gson,\
-    com.make.equo.aer.api,\
-    com.make.equo.analytics.internal.api,\
-	org.eclipse.ui,\
-	org.eclipse.core.runtime,\
-	org.eclipse.e4.core.contexts,\
-	org.eclipse.e4.core.di,\
-	org.eclipse.e4.core.services,\
-	org.eclipse.e4.ui.workbench.swt,\
-	org.eclipse.equinox.common,\
-	org.eclipse.osgi,\
-	javax.inject,\
-	osgi.cmpn
+    com.make.equo.aer.api;version=latest,\
+    com.make.equo.analytics.internal.api;version=latest,\
+    osgi.cmpn

@@ -5,6 +5,7 @@ Export-Package: \
 	org.osgi.service.component.annotations
 -includeresource: resources/
 -buildpath: \
+    com.make.equo.aer.api;version=latest,\
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
@@ -41,10 +42,12 @@ Export-Package: \
 	org.eclipse.e4.core.services.source,\
 	org.eclipse.e4.core.commands,\
 	org.eclipse.e4.core.commands.source,\
+	org.eclipse.equinox.common,\
 	org.eclipse.equinox.event,\
 	org.eclipse.equinox.event.source,\
 	org.eclipse.ui,\
 	org.eclipse.ui.source,\
+	org.eclipse.ui.workbench,\
 	org.java-websocket.Java-WebSocket,\
 	org.java-websocket.Java-WebSocket.source,\
 	com.google.gson,\
