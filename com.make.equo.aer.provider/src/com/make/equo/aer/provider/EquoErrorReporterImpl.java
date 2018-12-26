@@ -13,53 +13,77 @@ import com.make.equo.analytics.internal.api.AnalyticsService;
 
 public class EquoErrorReporterImpl implements IEquoErrorReporter{
 
+	private static final String INFO = "info";
+	private static final String WARNING = "warning";
+	private static final String ERROR = "error";
+	private static final String CRASH = "crash";
+	
 	private static AnalyticsService analyticsService;
-
-	private String getSeverity(int severity) {
-		switch (severity)
-		{
-			case 0:
-				return "OK";
-			case 1:
-				return "INFO";
-			case 2:
-				return "WARNING";
-			case 4:
-				return "ERROR";
-			case 8:
-				return "CANCEL";
-			default:
-				return "";
+		
+	private JsonObject getJson(String message, JsonObject segmentation) {
+		if (segmentation != null) {
+			segmentation.addProperty("Message", message);
+		} else {
+			segmentation = new JsonObject();
+			segmentation.addProperty("Message", message);
 		}
+		return segmentation;
 	}
 	
-	
 	@Override
-	public void reportError(String errorType, String message) {
-		this.reportError(errorType, 4);
+	public void logError(String message) {
+		this.logError(message, null);
 	}
 
 	@Override
-	public void reportError(String errorType, String message, int severity) {
-		this.reportError(errorType, severity, null);
+	public void logInfo(String message) {
+		this.logInfo(message, null);
+	}
+
+
+	@Override
+	public void logWarning(String message) {
+		this.logWarning(message, null);
+	}
+
+
+	@Override
+	public void logCrash(String message) {
+		this.logCrash(message, null);
 	}
 
 	@Override
-	public void reportError(String errorType, String message, int severity, JsonObject segmentation) {
-		JsonPrimitive severityAsString = new JsonPrimitive(this.getSeverity(severity));
-		JsonObject json = new JsonObject();
-		json.add("Severity", severityAsString);
-		analyticsService.registerEvent(errorType, 1, segmentation);
+	public void logError(String message, JsonObject segmentation) {
+		segmentation = getJson(message, segmentation);
+		analyticsService.registerEvent(ERROR, 1, segmentation);
 	}
-	
+
+	@Override
+	public void logInfo(String message, JsonObject segmentation) {
+		segmentation = getJson(message, segmentation);
+		analyticsService.registerEvent(INFO, 1, segmentation);		
+	}
+
+
+	@Override
+	public void logWarning(String message, JsonObject segmentation) {
+		segmentation = getJson(message, segmentation);
+		analyticsService.registerEvent(WARNING, 1, segmentation);		
+	}
+
+	@Override
+	public void logCrash(String message, JsonObject segmentation) {
+		segmentation = getJson(message, segmentation);
+		analyticsService.registerEvent(CRASH, 1, segmentation);		
+	}
+
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-	void setAnalyticsService(AnalyticsService analyticsService) {
-		this.analyticsService = analyticsService;
+	void setAnalyticsService(AnalyticsService service) {
+		analyticsService = service;
 	}
 
-	void unsetAnalyticsService(AnalyticsService analyticsService) {
-		this.analyticsService = null;
+	void unsetAnalyticsService(AnalyticsService service) {
+		analyticsService = null;
 	}
 
-	
 }

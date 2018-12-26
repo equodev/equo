@@ -4,10 +4,20 @@ import com.google.gson.JsonObject;
 
 public interface IEquoErrorReporter {
 
-	public void reportError(String errorType, String message);
+	public void logError(String message);
 	
-	public void reportError(String errorType, String message, int severity);
+	public void logInfo(String message);
 	
-	public void reportError(String errorType, String message, int severity, JsonObject segmentation);
+	public void logWarning(String message);
+
+	public void logError(String message, JsonObject segmentation);
+	
+	public void logInfo(String message, JsonObject segmentation);
+	
+	public void logWarning(String message, JsonObject segmentation);
+	
+	public void logCrash(String message);
+	
+	public void logCrash(String message, JsonObject segmentation);
 	
 }
