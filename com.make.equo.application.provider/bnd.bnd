@@ -9,6 +9,7 @@ Export-Package: \
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
+	com.make.equo.analytics.client.api;version=latest,\
 	com.make.cef,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
@@ -73,3 +74,6 @@ Private-Package: \
 	com.make.equo.application.parts,\
 	com.make.equo.application.util,\
 	com.make.equo.application
+Import-Package: \
+	,\
+	*

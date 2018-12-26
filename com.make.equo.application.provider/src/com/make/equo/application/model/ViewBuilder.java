@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.server.api.IEquoServer;
@@ -24,6 +25,7 @@ public class ViewBuilder {
 
 	private IEquoServer equoServer;
 	private AnalyticsService analyticsService;
+	private IAnalyticsApi clientAnalyticsApi;
 
 	private OptionalViewBuilder optionalViewBuilder;
 
@@ -51,7 +53,7 @@ public class ViewBuilder {
 
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer);
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, clientAnalyticsApi);
 
 		return optionalViewBuilder;
 	}
@@ -114,4 +116,14 @@ public class ViewBuilder {
 	void unsetAnalyticsService(AnalyticsService analyticsService) {
 		this.analyticsService = null;
 	}
+	
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	void setClientAnalyticsApi(IAnalyticsApi analyticsApi) {
+		this.clientAnalyticsApi = analyticsApi;
+	}
+	
+	void unsetClientAnalyticsApi(IAnalyticsApi analyticsApi) {
+		this.clientAnalyticsApi = null;
+	}
+	
 }

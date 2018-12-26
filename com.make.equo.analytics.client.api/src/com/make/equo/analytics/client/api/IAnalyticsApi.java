@@ -48,5 +48,10 @@ public interface IAnalyticsApi {
 	public void registerEvent(String eventKey, int count, JsonObject segmentation);
 
 	public void registerEvent(String eventKey, int count, String segmentationAsString);
+	
+	/**
+	 * Enable analytics on Equo application
+	 */
+	public void enableAnalytics();
 
 }

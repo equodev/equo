@@ -41,6 +41,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private IEquoApplication equoApplication;
 
+	private boolean enabled = false;
+
 	@Activate
 	public void start() {
 		this.appName = getEquoAppName();
@@ -58,15 +60,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
 			}
 			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl);
+			influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
+			this.gson = new Gson();
+			influxDB.enableBatch(BatchOptions.DEFAULTS);
+			enabled =true;
 		}else {
-			throw new RuntimeException(
-					"The equo_influxdb_url Influxdb property " + " of the Equo Platform must be defined.");
+			enabled = false;
+			System.out.println("Initialization of Analytics Internal provider fails: The equo_influxdb_url Influxdb property " + " of the Equo Platform must be defined.");
 		}
-		influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
-		this.gson = new Gson();
-		influxDB.enableBatch(BatchOptions.DEFAULTS);
+		
 	}
 
+	
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
 		return influxdbProperty;
@@ -102,27 +107,30 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value) {
-		influxDB.write(buildBasicLog(eventKey, value).build());
+		if (enabled) {
+			influxDB.write(buildBasicLog(eventKey, value).build());
+		}
 	}
 
 	private Builder buildBasicLog(String eventKey, double value) {
-		return addFields(eventKey, value)
-				.tag(IAnalyticsConstants.APP_NAME_TAG, appName)
+		return addFields(eventKey, value).tag(IAnalyticsConstants.APP_NAME_TAG, appName)
 				.tag(IAnalyticsConstants.APP_VERSION_TAG, appVersion);
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
-		String segmentationAsString = gson.toJson(segmentation);
-		registerEvent(eventKey, value, segmentationAsString);
+		if (enabled) {
+			String segmentationAsString = gson.toJson(segmentation);
+			registerEvent(eventKey, value, segmentationAsString);
+		}
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
-		Point build = buildBasicLog(eventKey, value)
-						.tag(getSegmentation(segmentationAsString))
-						.build();
-		influxDB.write(build);
+		if (enabled) {
+			Point build = buildBasicLog(eventKey, value).tag(getSegmentation(segmentationAsString)).build();
+			influxDB.write(build);
+		}
 	}
 
 	private Builder addFields(String eventKey, double value) {
@@ -139,9 +147,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Deactivate
 	public void stop() {
-		registerSessionTime();
-		if (influxDB != null) {
-			influxDB.close();
+		if (enabled) {
+			registerSessionTime();
+			if (influxDB != null) {
+				influxDB.close();
+			}
 		}
 	}
 
@@ -154,8 +164,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerLaunchApp() {
-		appStartTime = System.currentTimeMillis();
-		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+		if (enabled) {
+			appStartTime = System.currentTimeMillis();
+			registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+		}
 	}
 
 }
