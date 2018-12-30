@@ -7,10 +7,11 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
 import com.make.equo.aer.api.IEquoErrorReporter;
+import com.make.equo.aer.internal.api.IEquoCrashReporter;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 
 @Component
-public class EquoErrorReporterImpl implements IEquoErrorReporter{
+public class EquoErrorReporterImpl implements IEquoErrorReporter, IEquoCrashReporter{
 
 	private static final String INFO = "info";
 	private static final String WARNING = "warning";

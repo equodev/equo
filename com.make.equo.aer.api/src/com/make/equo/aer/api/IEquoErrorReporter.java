@@ -4,20 +4,50 @@ import com.google.gson.JsonObject;
 
 public interface IEquoErrorReporter {
 
+	
+	/**
+	 * Logs an error with an associated message
+	 * 
+	 * @param message Log message
+	 */
 	public void logError(String message);
 	
+	/**
+	 * Logs info with an associated message
+	 * 
+	 * @param message Log message
+	 */
 	public void logInfo(String message);
 	
+	/**
+	 * Logs a warning with an associated message
+	 * 
+	 * @param message Log message
+	 */
 	public void logWarning(String message);
-
-	public void logError(String message, JsonObject segmentation);
 	
-	public void logInfo(String message, JsonObject segmentation);
+	/**
+	 * Logs an error with an associated message and detailed info tags
+	 * 
+	 * @param message Log message
+	 * @param tags JsonObject tags
+	 */
+	public void logError(String message, JsonObject tags);
 	
-	public void logWarning(String message, JsonObject segmentation);
+	/**
+	 * Logs info with an associated message and detailed info tags
+	 * 
+	 * @param message Log message
+	 * @param tags JsonObject tags
+	 */
+	public void logInfo(String message, JsonObject tags);
 	
-	public void logCrash(String message);
-	
-	public void logCrash(String message, JsonObject segmentation);
+	/**
+	 * Logs a warning with an associated message and detailed info tags
+	 * 
+	 * @param message Log message
+	 * @param tags JsonObject tags
+	 */
+	public void logWarning(String message, JsonObject tags);
 	
 }

@@ -14,12 +14,12 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
-import com.make.equo.aer.api.IEquoErrorReporter;
+import com.make.equo.aer.internal.api.IEquoCrashReporter;
 
 @Component
 public class EquoStatusReporter extends WorkbenchStatusReporter{
 	
-	private static IEquoErrorReporter equoErrorReporter;
+	private static IEquoCrashReporter equoCrashReporter;
 	
 	@Inject
 	Logger logger;
@@ -36,7 +36,7 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 		}
 		if (style != IGNORE) {
 			if ((action & (SHOW | BLOCK)) != 0) {
-				if (equoErrorReporter != null) {
+				if (equoCrashReporter != null) {
 					registerEvent(status);
 				}
 			} else {
@@ -57,19 +57,18 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 	
 	private void registerEvent(IStatus status) {		
 		JsonObject json = new JsonObject();
-		json.addProperty("Plugin", status.getPlugin());
 		json.addProperty("Stack Trace", Arrays.asList(status.getException().getStackTrace()).toString());
 		json.addProperty("Crash cause", status.getException().getCause().toString());
-		equoErrorReporter.logCrash(status.getMessage(), json);		
+		equoCrashReporter.logCrash(status.getMessage(), json);		
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-	void setErrorReporter(IEquoErrorReporter errorReporter) {
-		equoErrorReporter = errorReporter;
+	void setErrorReporter(IEquoCrashReporter errorReporter) {
+		equoCrashReporter = errorReporter;
 	}
 
-	void unsetErrorReporter(IEquoErrorReporter errorReporter) {
-		equoErrorReporter = null;
+	void unsetErrorReporter(IEquoCrashReporter errorReporter) {
+		equoCrashReporter = null;
 	}
 
 }

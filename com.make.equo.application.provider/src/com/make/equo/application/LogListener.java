@@ -26,7 +26,6 @@ public class LogListener implements ILogListener {
 		JsonObject json = new JsonObject();
 		json.addProperty("Stack Trace", Arrays.asList(status.getException().getStackTrace()).toString());
 		json.addProperty("Crash cause", status.getException().getCause().toString());
-		json.addProperty("Plugin", status.getPlugin());
 		
 		if (status.matches(StatusReporter.ERROR)) {
 			equoErrorReporter.logError(status.getMessage(), json);
