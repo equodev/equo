@@ -32,9 +32,11 @@ public class EquoHttpProxyContributionImpl implements IEquoContribution {
 		List<String> javascriptNames = new ArrayList<>();
 		javascriptNames.add(jqueryJsApi);
 		javascriptNames.add(equoFrameworkJsApi);
-		if (Boolean.getBoolean("change_original_html")) {
+		String value = System.getProperty("change_original_html");
+		if (value == null || (value != null && Boolean.parseBoolean(value))) {
 			javascriptNames.add(domModifierJsApi);
 		}
 		return javascriptNames;
 	}
+	
 }

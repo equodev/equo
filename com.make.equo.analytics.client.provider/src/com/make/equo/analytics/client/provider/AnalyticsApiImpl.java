@@ -33,50 +33,23 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 	static final int DEFAULT_COUNT = 1;
 	private AnalyticsService analyticsService;
 	private EquoEventHandler equoEventHandler;
-	private boolean enabled = false;
 
 	@Activate
 	public void start() {
 		System.out.println("Initializing Analytics Client provider...");
 		equoEventHandler.on(CUSTOM_EVENT_KEY, new CustomEventPayloadRunnable());
 	}
-	
-	@Override
-	public void enableAnalytics() {
-		this.enabled = true;
-		
-	}
-	
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
 
 	public void registerEvent(String eventKey, int count) {
-		if (enabled) {
-			analyticsService.registerEvent(eventKey, count);
-		} else {
-			System.out.println("Analytics are not enabled");
-		}
+		analyticsService.registerEvent(eventKey, count);
 	}
 
 	public void registerEvent(String eventKey, int count, JsonObject segmentation) {
-		if (enabled) {
-			analyticsService.registerEvent(eventKey, count, segmentation);
-		} else {
-			System.out.println("Analytics are not enabled");
-		}
+		analyticsService.registerEvent(eventKey, count, segmentation);
 	}
 
 	public void registerEvent(String eventKey, int count, String segmentationAsString) {
-		if (enabled) {
-			analyticsService.registerEvent(eventKey, count, segmentationAsString);
-		} else {
-			System.out.println("Analytics are not enabled");
-		}		
+		analyticsService.registerEvent(eventKey, count, segmentationAsString);
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)

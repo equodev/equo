@@ -4,4 +4,17 @@
 Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.testapp
 
+-includeresource: -resources/
+
 #-runvm: -XstartOnFirstThread
+    
+-runproperties: \
+# The name of the Equo application,\
+    appName=TestApp,\
+    change_original_html=true,\
+# The url of the Influxdb database on Equo Platform. It may contain a token to connect to it. Then it should be generated on the launcher probably,\
+    equo_influxdb_url=http://localhost:8086,\
+# Username and password to connect to the Equo Platform. For example for analytics.,\
+    equo_username='YWRtaW4=',\
+    equo_password=bHVzaXRhbm8yMDE4,\
+bgcolor=#FF0000

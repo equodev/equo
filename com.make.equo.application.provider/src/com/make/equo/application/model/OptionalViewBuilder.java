@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
-import com.make.equo.analytics.client.api.IAnalyticsApi;
+import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.server.api.IEquoServer;
@@ -21,14 +21,14 @@ public class OptionalViewBuilder {
 
 	private EquoApplicationBuilder equoApplicationBuilder;
 	
-	private IAnalyticsApi analyticsApi;
+	private AnalyticsService analyticsService;
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, IAnalyticsApi analyticsApi) {
+	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
-		this.analyticsApi = analyticsApi;
+		this.analyticsService = analyticsService;
 		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
@@ -187,8 +187,8 @@ public class OptionalViewBuilder {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
 	
-	public OptionalViewBuilder enableAnalitics() {
-		analyticsApi.enableAnalytics();
+	public OptionalViewBuilder enableAnalytics() {
+		analyticsService.enableAnalytics();
 		return this;
 	}
 }

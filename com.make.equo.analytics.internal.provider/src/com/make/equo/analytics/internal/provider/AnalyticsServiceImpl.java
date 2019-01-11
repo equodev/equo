@@ -41,39 +41,38 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private IEquoApplication equoApplication;
 
+	private boolean connected = false;
+	
 	private boolean enabled = false;
 
 	@Activate
 	public void start() {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
+		
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
-		
-		
 		String equoUsername = getInfluxdbProperty("equo_username");
 		String equoPassword = getInfluxdbProperty("equo_password");
 
-		if(equoInfluxdbUrl!=null) {
-			if(equoPassword!=null && equoUsername!=null) {
-				equoUsername = decodeInfluxdbProperty(equoUsername);
-				equoPassword = decodeInfluxdbProperty(equoPassword);
-				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
-			}
-			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl);
+		if (equoInfluxdbUrl != null && equoPassword != null && equoUsername != null) {
+
+			equoUsername = decodeInfluxdbProperty(equoUsername);
+			equoPassword = decodeInfluxdbProperty(equoPassword);
+			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
 			influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
 			this.gson = new Gson();
 			influxDB.enableBatch(BatchOptions.DEFAULTS);
-			enabled =true;
-		}else {
-			enabled = false;
-			System.out.println("Initialization of Analytics Internal provider fails: The equo_influxdb_url Influxdb property " + " of the Equo Platform must be defined.");
-		}
-		
+			connected = true;
+		} 
+
 	}
 
 	
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
+		if (influxdbProperty == null)
+			System.out.println("Initialization of Analytics Internal provider fails: The " + propertyName
+					+ " Influxdb property " + " of the Equo Platform must be defined.");
 		return influxdbProperty;
 	}
 
@@ -107,8 +106,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value) {
-		if (enabled) {
+		if (isEnabled()) {
 			influxDB.write(buildBasicLog(eventKey, value).build());
+		} else {
+			logMessage();
 		}
 	}
 
@@ -119,17 +120,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
-		if (enabled) {
+		if (isEnabled()) {
 			String segmentationAsString = gson.toJson(segmentation);
 			registerEvent(eventKey, value, segmentationAsString);
+		} else {
+			logMessage();
 		}
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
-		if (enabled) {
+		if (isEnabled()) {
 			Point build = buildBasicLog(eventKey, value).tag(getSegmentation(segmentationAsString)).build();
 			influxDB.write(build);
+		} else {
+			logMessage();
 		}
 	}
 
@@ -147,7 +152,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Deactivate
 	public void stop() {
-		if (enabled) {
+		if (connected) {
 			registerSessionTime();
 			if (influxDB != null) {
 				influxDB.close();
@@ -164,10 +169,27 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerLaunchApp() {
-		if (enabled) {
-			appStartTime = System.currentTimeMillis();
-			registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
-		}
+		appStartTime = System.currentTimeMillis();
+		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+		
+	}
+
+
+	@Override
+	public void enableAnalytics() {
+		enabled = true;	
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled && connected;
+	}
+	
+	private void logMessage() {
+		if(!enabled)
+			System.out.println("Analytics are not enabled by the Client App");
+		else System.out.println("Analytics are not working because InfluxDB is not connected");
+		
 	}
 
 }
