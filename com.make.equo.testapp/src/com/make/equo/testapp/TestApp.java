@@ -1,4 +1,4 @@
-package com.make.equo.testapp;
+	package com.make.equo.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,7 +16,7 @@ public class TestApp implements IEquoApplication {
 		// TODO Auto-generated method stub
 		try {
 			return appBuilder
-			        .withSingleView("http://equo.maketechnology.io")
+			        .withSingleView("http://www.maketechnology.io")
 			        .enableAnalytics()
 			        .addCustomScript("js/testAnalytics.js")
 			        .start();

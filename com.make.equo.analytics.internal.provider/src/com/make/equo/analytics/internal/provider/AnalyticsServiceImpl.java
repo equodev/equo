@@ -49,7 +49,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void start() {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
-		
+
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
 		String equoUsername = getInfluxdbProperty("equo_username");
 		String equoPassword = getInfluxdbProperty("equo_password");
@@ -63,16 +63,17 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			this.gson = new Gson();
 			influxDB.enableBatch(BatchOptions.DEFAULTS);
 			connected = true;
-		} 
+		} else {
+			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
+		}
 
 	}
 
-	
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
-		if (influxdbProperty == null)
-			System.out.println("Initialization of Analytics Internal provider fails: The " + propertyName
-					+ " Influxdb property " + " of the Equo Platform must be defined.");
+		if (influxdbProperty == null) {
+			System.out.println("The " + propertyName + " Influxdb property of the Equo Platform must be defined.");
+		}
 		return influxdbProperty;
 	}
 
@@ -152,11 +153,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Deactivate
 	public void stop() {
-		if (connected) {
-			registerSessionTime();
-			if (influxDB != null) {
-				influxDB.close();
-			}
+		registerSessionTime();
+		if (influxDB != null) {
+			influxDB.close();
 		}
 	}
 
