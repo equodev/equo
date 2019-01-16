@@ -27,6 +27,7 @@ public class EquoApplicationBuilder {
 
 	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private ViewBuilder viewBuilder;
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
@@ -191,15 +192,6 @@ public class EquoApplicationBuilder {
 
 	MTrimmedWindow getmWindow() {
 		return mWindow;
-	}
-
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setViewBuilder(ViewBuilder viewBuilder) {
-		this.viewBuilder = viewBuilder;
-	}
-
-	void unsetViewBuilder(ViewBuilder viewBuilder) {
-		this.viewBuilder = null;
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
