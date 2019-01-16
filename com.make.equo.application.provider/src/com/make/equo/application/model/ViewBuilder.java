@@ -51,7 +51,7 @@ public class ViewBuilder {
 
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer);
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService);
 
 		return optionalViewBuilder;
 	}
@@ -114,4 +114,6 @@ public class ViewBuilder {
 	void unsetAnalyticsService(AnalyticsService analyticsService) {
 		this.analyticsService = null;
 	}
+	
+	
 }

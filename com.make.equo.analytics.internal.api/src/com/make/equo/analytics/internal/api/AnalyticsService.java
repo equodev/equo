@@ -11,5 +11,9 @@ public interface AnalyticsService {
 	void registerEvent(String eventKey, double value, String segmentationAsString);
 
 	void registerLaunchApp();
+
+	void enableAnalytics();
+	
+	boolean isEnabled();
 	
 }

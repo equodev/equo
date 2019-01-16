@@ -41,25 +41,38 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private IEquoApplication equoApplication;
 
+	private boolean connected = false;
+	
+	private boolean enabled = false;
+
 	@Activate
 	public void start() {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
-		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
-		String equoUsername = decodeInfluxdbProperty(getInfluxdbProperty("equo_username"));
-		String equoPassword = decodeInfluxdbProperty(getInfluxdbProperty("equo_password"));
 
-		this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
-		influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
-		this.gson = new Gson();
-		influxDB.enableBatch(BatchOptions.DEFAULTS);
+		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
+		String equoUsername = getInfluxdbProperty("equo_username");
+		String equoPassword = getInfluxdbProperty("equo_password");
+
+		if (equoInfluxdbUrl != null && equoPassword != null && equoUsername != null) {
+
+			equoUsername = decodeInfluxdbProperty(equoUsername);
+			equoPassword = decodeInfluxdbProperty(equoPassword);
+			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
+			influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
+			this.gson = new Gson();
+			influxDB.enableBatch(BatchOptions.DEFAULTS);
+			connected = true;
+		} else {
+			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
+		}
+
 	}
 
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
 		if (influxdbProperty == null) {
-			throw new RuntimeException(
-					"The " + propertyName + " Influxdb property " + " of the Equo Platform must be defined.");
+			System.out.println("The " + propertyName + " Influxdb property of the Equo Platform must be defined.");
 		}
 		return influxdbProperty;
 	}
@@ -94,27 +107,36 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value) {
-		influxDB.write(buildBasicLog(eventKey, value).build());
+		if (isEnabled()) {
+			influxDB.write(buildBasicLog(eventKey, value).build());
+		} else {
+			logMessage();
+		}
 	}
 
 	private Builder buildBasicLog(String eventKey, double value) {
-		return addFields(eventKey, value)
-				.tag(IAnalyticsConstants.APP_NAME_TAG, appName)
+		return addFields(eventKey, value).tag(IAnalyticsConstants.APP_NAME_TAG, appName)
 				.tag(IAnalyticsConstants.APP_VERSION_TAG, appVersion);
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
-		String segmentationAsString = gson.toJson(segmentation);
-		registerEvent(eventKey, value, segmentationAsString);
+		if (isEnabled()) {
+			String segmentationAsString = gson.toJson(segmentation);
+			registerEvent(eventKey, value, segmentationAsString);
+		} else {
+			logMessage();
+		}
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
-		Point build = buildBasicLog(eventKey, value)
-						.tag(getSegmentation(segmentationAsString))
-						.build();
-		influxDB.write(build);
+		if (isEnabled()) {
+			Point build = buildBasicLog(eventKey, value).tag(getSegmentation(segmentationAsString)).build();
+			influxDB.write(build);
+		} else {
+			logMessage();
+		}
 	}
 
 	private Builder addFields(String eventKey, double value) {
@@ -148,6 +170,25 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void registerLaunchApp() {
 		appStartTime = System.currentTimeMillis();
 		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+		
+	}
+
+
+	@Override
+	public void enableAnalytics() {
+		enabled = true;	
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled && connected;
+	}
+	
+	private void logMessage() {
+		if(!enabled)
+			System.out.println("Analytics are not enabled by the Client App");
+		else System.out.println("Analytics are not working because InfluxDB is not connected");
+		
 	}
 
 }

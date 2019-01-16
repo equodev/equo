@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
+import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
@@ -17,12 +18,15 @@ public class OptionalViewBuilder {
 	private ViewBuilder viewBuilder;
 
 	private EquoApplicationBuilder equoApplicationBuilder;
+	
+	private AnalyticsService analyticsService;
 
 	private MMenu mainMenu;
 
-	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer) {
+	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
+		this.analyticsService = analyticsService;
 		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
@@ -165,5 +169,10 @@ public class OptionalViewBuilder {
 
 	public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
+	}
+	
+	public OptionalViewBuilder enableAnalytics() {
+		analyticsService.enableAnalytics();
+		return this;
 	}
 }
