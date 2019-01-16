@@ -41,9 +41,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private IEquoApplication equoApplication;
 
-	private boolean connected = false;
-	
-	private boolean enabled = false;
+	private static boolean connected = false;
+
+	private static boolean enabled = false;
 
 	@Activate
 	public void start() {
@@ -170,25 +170,24 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void registerLaunchApp() {
 		appStartTime = System.currentTimeMillis();
 		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
-		
-	}
 
+	}
 
 	@Override
 	public void enableAnalytics() {
-		enabled = true;	
+		enabled = true;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return enabled && connected;
 	}
-	
-	private void logMessage() {
-		if(!enabled)
-			System.out.println("Analytics are not enabled by the Client App");
-		else System.out.println("Analytics are not working because InfluxDB is not connected");
-		
-	}
 
+	private void logMessage() {
+		if (!enabled) {
+			System.out.println("Analytics are not enabled by the Client App");
+		} else {
+			System.out.println("Analytics are not working because InfluxDB is not connected");
+		}
+	}
 }
