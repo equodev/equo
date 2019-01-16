@@ -170,7 +170,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void registerLaunchApp() {
 		appStartTime = System.currentTimeMillis();
 		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
-
 	}
 
 	@Override

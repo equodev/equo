@@ -77,7 +77,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void startServer() {
-		System.out.println("starting equo serverrrr");
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
 				getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(), websocketPort, equoApplication);
