@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -51,18 +52,28 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static final String URL_SCRIPT_SENTENCE = "<script src=\"urlPath\"></script>";
 	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
 
-	private List<String> proxiedUrls = new ArrayList<>();
-	private Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
-	private boolean enableOfflineCache = false;
-	private String limitedConnectionAppBasedPagePath;
+	private static final List<String> proxiedUrls = new ArrayList<>();
+	private static final Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
+	private static boolean enableOfflineCache = false;
+	private static String limitedConnectionAppBasedPagePath;
 
 	private HttpProxyServer proxyServer;
 	private ScheduledExecutorService internetConnectionChecker;
 	private int websocketPort;
 
-	private IEquoApplication equoApplication;
-	private IEquoOfflineServer equoOfflineServer;
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	private volatile IEquoApplication equoApplication;
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+	private volatile IEquoOfflineServer equoOfflineServer;
 	private final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
+
+	@Activate
+	public void start() {
+		if (proxyServer == null && !proxiedUrls.isEmpty()) {
+			startServer();
+		}
+	}
 
 	@Override
 	public void startServer() {
@@ -84,13 +95,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 
 		proxyServer = DefaultHttpProxyServer
-			.bootstrap()
-			.withPort(9896)
-			.withManInTheMiddle(new SelfSignedMitmManager())
-			.withAllowRequestToOriginServer(true)
-			.withTransparent(false)
-			.withFiltersSource(httpFiltersSourceAdapter)
-			.start();
+						.bootstrap()
+						.withPort(9896)
+						.withManInTheMiddle(new SelfSignedMitmManager())
+						.withAllowRequestToOriginServer(true)
+						.withTransparent(false)
+						.withFiltersSource(httpFiltersSourceAdapter)
+						.start();
 	}
 
 	@Deactivate
@@ -121,24 +132,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	void removeEquoContribution(Map<String, Object> props) {
 		equoContributions.remove(props.get("type"));
-	}
-
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
-	void setEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
-		this.equoOfflineServer = equoOfflineServer;
-	}
-
-	void unsetEquoOfflineServer(IEquoOfflineServer equoOfflineServer) {
-		this.equoOfflineServer = null;
-	}
-
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-	void setEquoApplication(IEquoApplication equoApplication) {
-		this.equoApplication = equoApplication;
-	}
-
-	void unsetEquoApplication(IEquoApplication equoApplication) {
-		this.equoApplication = null;
 	}
 
 	@Override
@@ -179,7 +172,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void enableOfflineCache() {
-		this.enableOfflineCache = true;
+		EquoHttpProxyServer.enableOfflineCache = true;
 		if (isOfflineCacheSupported()) {
 			equoOfflineServer.setProxiedUrls(proxiedUrls);
 		}
@@ -213,7 +206,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void addLimitedConnectionPage(String limitedConnectionPagePath) {
-		this.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
+		EquoHttpProxyServer.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
 	}
 
 	private List<String> getEquoContributionsJsApis() {

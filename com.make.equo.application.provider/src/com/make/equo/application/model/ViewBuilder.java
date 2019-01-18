@@ -22,8 +22,11 @@ public class ViewBuilder {
 	private MPart part;
 	private String url;
 
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoServer equoServer;
-	private AnalyticsService analyticsService;
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	private volatile AnalyticsService analyticsService;
 
 	private OptionalViewBuilder optionalViewBuilder;
 
@@ -97,23 +100,4 @@ public class ViewBuilder {
 		return this.equoAppBuilder;
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setEquoServer(IEquoServer equoServer) {
-		this.equoServer = equoServer;
-	}
-
-	void unsetEquoServer(IEquoServer equoServer) {
-		this.equoServer = null;
-	}
-
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-	void setAnalyticsService(AnalyticsService analyticsService) {
-		this.analyticsService = analyticsService;
-	}
-
-	void unsetAnalyticsService(AnalyticsService analyticsService) {
-		this.analyticsService = null;
-	}
-	
-	
 }
