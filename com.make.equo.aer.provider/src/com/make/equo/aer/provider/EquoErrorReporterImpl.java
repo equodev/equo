@@ -7,16 +7,14 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
 import com.make.equo.aer.api.IEquoErrorReporter;
-import com.make.equo.aer.internal.api.IEquoCrashReporter;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 
 @Component
-public class EquoErrorReporterImpl implements IEquoErrorReporter, IEquoCrashReporter{
+public class EquoErrorReporterImpl implements IEquoErrorReporter {
 
 	private static final String INFO = "info";
 	private static final String WARNING = "warning";
 	private static final String ERROR = "error";
-	private static final String CRASH = "crash";
 	
 	private static AnalyticsService analyticsService;
 		
@@ -40,16 +38,9 @@ public class EquoErrorReporterImpl implements IEquoErrorReporter, IEquoCrashRepo
 		this.logInfo(message, null);
 	}
 
-
 	@Override
 	public void logWarning(String message) {
 		this.logWarning(message, null);
-	}
-
-
-	@Override
-	public void logCrash(String message) {
-		this.logCrash(message, null);
 	}
 
 	@Override
@@ -69,12 +60,6 @@ public class EquoErrorReporterImpl implements IEquoErrorReporter, IEquoCrashRepo
 	public void logWarning(String message, JsonObject segmentation) {
 		segmentation = getJson(message, segmentation);
 		analyticsService.registerEvent(WARNING, 1, segmentation);		
-	}
-
-	@Override
-	public void logCrash(String message, JsonObject segmentation) {
-		segmentation = getJson(message, segmentation);
-		analyticsService.registerEvent(CRASH, 1, segmentation);		
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)

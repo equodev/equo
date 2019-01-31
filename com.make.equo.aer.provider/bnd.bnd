@@ -4,6 +4,5 @@ Bundle-SymbolicName: com.make.equo.aer.provider
 -buildpath: \
     com.google.gson,\
     com.make.equo.aer.api;version=latest,\
-    com.make.equo.aer.internal.api;version=latest,\
     com.make.equo.analytics.internal.api;version=latest,\
     osgi.cmpn
