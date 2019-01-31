@@ -16,7 +16,8 @@ public class LifeCycleManager {
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
 			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder, IEquoErrorReporter equoErrorReporter)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		if (System.getProperty("eclipseLogging").equals("true")) {
+		String eclipseLogging = System.getProperty("eclipseLogging");
+		if (eclipseLogging != null && eclipseLogging.equals("true")) {
 			Platform.addLogListener(new LogListener(equoErrorReporter));
 		}
 		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();

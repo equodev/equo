@@ -22,10 +22,10 @@ public class EquoErrorReporterImpl implements IEquoErrorReporter, IEquoCrashRepo
 		
 	private JsonObject getJson(String message, JsonObject segmentation) {
 		if (segmentation != null) {
-			segmentation.addProperty("Message", message);
+			segmentation.addProperty("message", message);
 		} else {
 			segmentation = new JsonObject();
-			segmentation.addProperty("Message", message);
+			segmentation.addProperty("message", message);
 		}
 		return segmentation;
 	}

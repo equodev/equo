@@ -1,6 +1,8 @@
 package com.make.equo.application;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -57,9 +59,15 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 	
 	private void registerEvent(IStatus status) {		
 		JsonObject json = new JsonObject();
-		json.addProperty("Stack Trace", Arrays.asList(status.getException().getStackTrace()).toString());
-		json.addProperty("Crash cause", status.getException().getCause().toString());
-		equoCrashReporter.logCrash(status.getMessage(), json);		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		status.getException().printStackTrace(pw);
+		String stackTrace = sw.toString();
+		stackTrace = stackTrace.replace("\n", "\\n");
+		json.addProperty("stackTrace", stackTrace);
+		json.addProperty("crashCause", status.getException().getCause().toString());
+		json.addProperty("operatingSystem", System.getProperty("os.name").toString() + " " + System.getProperty("os.version").toString());
+		equoCrashReporter.logCrash(status.getMessage(), json);
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
