@@ -27,7 +27,7 @@ public interface IEquoErrorReporter {
 	public void logWarning(String message);
 	
 	/**
-	 * Logs an error with an associated message and detailed info tags
+	 * Logs an error with an associated message and custom tags
 	 * 
 	 * @param message Log message
 	 * @param tags JsonObject tags
@@ -35,7 +35,7 @@ public interface IEquoErrorReporter {
 	public void logError(String message, JsonObject tags);
 	
 	/**
-	 * Logs info with an associated message and detailed info tags
+	 * Logs info with an associated message and custom tags
 	 * 
 	 * @param message Log message
 	 * @param tags JsonObject tags
@@ -43,7 +43,7 @@ public interface IEquoErrorReporter {
 	public void logInfo(String message, JsonObject tags);
 	
 	/**
-	 * Logs a warning with an associated message and detailed info tags
+	 * Logs a warning with an associated message and custom tags
 	 * 
 	 * @param message Log message
 	 * @param tags JsonObject tags

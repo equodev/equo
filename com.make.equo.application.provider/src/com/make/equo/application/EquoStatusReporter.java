@@ -3,7 +3,6 @@ package com.make.equo.application;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -19,7 +18,7 @@ import com.google.gson.JsonObject;
 import com.make.equo.aer.internal.api.IEquoCrashReporter;
 
 @Component
-public class EquoStatusReporter extends WorkbenchStatusReporter{
+public class EquoStatusReporter extends WorkbenchStatusReporter {
 	
 	private static IEquoCrashReporter equoCrashReporter;
 	
@@ -61,13 +60,19 @@ public class EquoStatusReporter extends WorkbenchStatusReporter{
 		JsonObject json = new JsonObject();
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-		status.getException().printStackTrace(pw);
+		status.getException().getCause().printStackTrace(pw);
 		String stackTrace = sw.toString();
 		stackTrace = stackTrace.replace("\n", "\\n");
+		
+		String message = status.getException().getCause().getMessage();
+		if (message == null) {
+			message = status.getMessage();
+		}
+		
 		json.addProperty("stackTrace", stackTrace);
-		json.addProperty("crashCause", status.getException().getCause().toString());
+		json.addProperty("crashCause", message);
 		json.addProperty("operatingSystem", System.getProperty("os.name").toString() + " " + System.getProperty("os.version").toString());
-		equoCrashReporter.logCrash(status.getMessage(), json);
+		equoCrashReporter.logCrash(json);
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)

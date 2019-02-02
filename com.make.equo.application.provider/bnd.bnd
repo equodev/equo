@@ -48,7 +48,6 @@ Export-Package: \
 	org.eclipse.equinox.event.source,\
 	org.eclipse.ui,\
 	org.eclipse.ui.source,\
-	org.eclipse.ui.workbench,\
 	org.java-websocket.Java-WebSocket,\
 	org.java-websocket.Java-WebSocket.source,\
 	com.google.gson,\

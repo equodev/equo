@@ -13,7 +13,7 @@ import com.make.equo.analytics.internal.api.AnalyticsService;
 public class EquoCrashReporterImpl implements IEquoCrashReporter {
 
 	private static final String CRASH = "crash";
-
+	private static final String ECLIPSE = "eclipse";
 	
 	private static AnalyticsService analyticsService;
 	
@@ -22,6 +22,11 @@ public class EquoCrashReporterImpl implements IEquoCrashReporter {
 		analyticsService.registerEvent(CRASH, 1, segmentation);
 	}
 
+	@Override
+	public void logEclipse(JsonObject segmentation) {
+		analyticsService.registerEvent(ECLIPSE, 1, segmentation);
+	}
+	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
 	void setAnalyticsService(AnalyticsService service) {
 		analyticsService = service;

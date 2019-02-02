@@ -12,19 +12,22 @@ import com.make.equo.analytics.internal.api.AnalyticsService;
 @Component
 public class EquoErrorReporterImpl implements IEquoErrorReporter {
 
-	private static final String INFO = "info";
-	private static final String WARNING = "warning";
-	private static final String ERROR = "error";
+	private static final String USER_LOG_MEASUREMENT = "userlogs";
+	
+	private static final String INFO = "Info";
+	private static final String WARNING = "Warning";
+	private static final String ERROR = "Error";
 	
 	private static AnalyticsService analyticsService;
 		
-	private JsonObject getJson(String message, JsonObject segmentation) {
+	private JsonObject getJson(String message, JsonObject segmentation, String severity) {
 		if (segmentation != null) {
 			segmentation.addProperty("message", message);
 		} else {
 			segmentation = new JsonObject();
 			segmentation.addProperty("message", message);
 		}
+		segmentation.addProperty("severity", severity);
 		return segmentation;
 	}
 	
@@ -45,21 +48,21 @@ public class EquoErrorReporterImpl implements IEquoErrorReporter {
 
 	@Override
 	public void logError(String message, JsonObject segmentation) {
-		segmentation = getJson(message, segmentation);
-		analyticsService.registerEvent(ERROR, 1, segmentation);
+		segmentation = getJson(message, segmentation, ERROR);
+		analyticsService.registerEvent(USER_LOG_MEASUREMENT, 1, segmentation);
 	}
 
 	@Override
 	public void logInfo(String message, JsonObject segmentation) {
-		segmentation = getJson(message, segmentation);
-		analyticsService.registerEvent(INFO, 1, segmentation);		
+		segmentation = getJson(message, segmentation, INFO);
+		analyticsService.registerEvent(USER_LOG_MEASUREMENT, 1, segmentation);		
 	}
 
 
 	@Override
 	public void logWarning(String message, JsonObject segmentation) {
-		segmentation = getJson(message, segmentation);
-		analyticsService.registerEvent(WARNING, 1, segmentation);		
+		segmentation = getJson(message, segmentation, WARNING);
+		analyticsService.registerEvent(USER_LOG_MEASUREMENT, 1, segmentation);		
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)

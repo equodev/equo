@@ -1,37 +1,51 @@
 package com.make.equo.application;
 
-import java.util.Arrays;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.services.statusreporter.StatusReporter;
 
 import com.google.gson.JsonObject;
-import com.make.equo.aer.api.IEquoErrorReporter;
+import com.make.equo.aer.internal.api.IEquoCrashReporter;
 
 public class LogListener implements ILogListener {
 	
-	private IEquoErrorReporter equoErrorReporter;
+	private static final String ERROR = "Error";
+	private static final String WARNING = "Warning";
+	private static final String INFO = "Info";
 	
-	public LogListener(IEquoErrorReporter equoErrorReporter) {
-		this.equoErrorReporter = equoErrorReporter;
+	private IEquoCrashReporter equoCrashReporter;
+	
+	public LogListener(IEquoCrashReporter equoCrashReporter) {
+		this.equoCrashReporter = equoCrashReporter;
 	}
 	
 	@Override
 	public void logging(IStatus status, String plugin) {
-		if (equoErrorReporter == null){
+		if (equoCrashReporter == null){
 			return;
 		}
 		
 		JsonObject json = new JsonObject();
-		json.addProperty("stackTrace", Arrays.asList(status.getException().getStackTrace()).toString());
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		status.getException().printStackTrace(pw);
+		String stackTrace = sw.toString();
+		stackTrace = stackTrace.replace("\n", "\\n");
+		json.addProperty("stackTrace", stackTrace);
+		json.addProperty("message", status.getMessage());
 		
 		if (status.matches(StatusReporter.ERROR)) {
-			equoErrorReporter.logError(status.getMessage(), json);
+			json.addProperty("severity", ERROR);
+			equoCrashReporter.logEclipse(json);
 		} else if (status.matches(StatusReporter.WARNING)) {
-			equoErrorReporter.logWarning(status.getMessage(), json);
+			json.addProperty("severity", WARNING);
+			equoCrashReporter.logEclipse(json);
 		} else if (status.matches(StatusReporter.INFO)) {
-			equoErrorReporter.logInfo(status.getMessage(), json);
+			json.addProperty("severity", INFO);
+			equoCrashReporter.logEclipse(json);
 		}
 	}
 }
