@@ -69,6 +69,10 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 			message = status.getMessage();
 		}
 		
+		json.addProperty("javaVendor", System.getProperty("java.vendor"));
+		json.addProperty("javaVersion", System.getProperty("java.version"));
+		json.addProperty("country", System.getProperty("user.country"));
+		json.addProperty("gtkVersion", System.getProperty("org.eclipse.swt.internal.gtk.version"));
 		json.addProperty("stackTrace", stackTrace);
 		json.addProperty("crashCause", message);
 		json.addProperty("operatingSystem", System.getProperty("os.name").toString() + " " + System.getProperty("os.version").toString());
