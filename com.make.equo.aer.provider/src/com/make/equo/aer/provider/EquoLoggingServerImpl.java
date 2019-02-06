@@ -6,11 +6,11 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.JsonObject;
-import com.make.equo.aer.api.IEquoErrorReporter;
+import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 
 @Component
-public class EquoErrorReporterImpl implements IEquoErrorReporter {
+public class EquoLoggingServerImpl implements IEquoLoggingService {
 
 	private static final String USER_LOG_MEASUREMENT = "userlogs";
 	

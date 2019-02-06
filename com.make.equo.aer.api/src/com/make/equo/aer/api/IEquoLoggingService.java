@@ -2,7 +2,7 @@ package com.make.equo.aer.api;
 
 import com.google.gson.JsonObject;
 
-public interface IEquoErrorReporter {
+public interface IEquoLoggingService {
 
 	
 	/**

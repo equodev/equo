@@ -1,5 +1,4 @@
 Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.aer.internal.api
-Bundle-SymbolicName: com.make.equo.aer.internal.api
 -buildpath: \
     com.google.gson
