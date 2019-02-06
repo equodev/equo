@@ -1,29 +1,26 @@
-// Available to customize the build
-plugins {
-    id 'org.ajoberstar.git-publish' version '0.3.3'
+equo {
+    channel = "rls"
 }
 
-gitPublish {
-    def channel = 'rls'
-    repoUri = 'git@github.com:maketechnology/equo.git'
-    branch = 'gh-pages'
-    repoDir = file("$buildDir/gitPublish")
-    contents {
-        from('cnf/release') {
-            into "${project.name}/$channel/repo"
-        }
-        from('cnf') {
-            def rep = "\$1-${version}.\$2"
-            include "equoapp.bnd", "equobuild.bnd", "equoci.yml"
-            rename '(.*)\\.(...)$', rep
-            into "${project.name}/$channel"
-        }
-    }
-    preserve {
-        include '**/*'
-        exclude "${project.name}/$channel"
-    }
-    commitMessage = "Publishing ${project.name} ${version}"
+task uploadEquoApp(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/equoapp-${version}.bnd"
+    file file('cnf/equoapp.bnd')
+}
+
+task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/equobuild-${version}.bnd"
+    file file('cnf/equobuild.bnd')
+}
+
+task uploadEquoCi(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/equoci-${version}.yml"
+    file file('cnf/equoci.yml')
+}
+
+task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
+}
+
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCi, uploadMetadata]) {
 }
 
 task wrapper(type: Wrapper) {

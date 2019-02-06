@@ -6,7 +6,7 @@ stages:
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
 
-# HOME is to cwd so bnd will doenload to ~/.bnd and ~/.m2 with ~=HOME
+# HOME is to cwd so bnd will download to ~/.bnd and ~/.m2 with ~=HOME
 cache:
   key: "gradle"
   paths:
@@ -14,10 +14,13 @@ cache:
     - .m2/
     - .bnd/
 
+before_script:
+  - export HOME=$CI_PROJECT_DIR
+
 build:
   stage: build
   script:
-    - HOME=$CI_PROJECT_DIR gradle check
+    - gradle check
   artifacts:
     paths:
       - cnf/equoapp.bnd
@@ -27,12 +30,12 @@ build:
   except:
     - master
 
-export:
+release:
   stage: build
   script:
-    - HOME=$CI_PROJECT_DIR gradle check
-    - HOME=$CI_PROJECT_DIR gradle release
-    - HOME=$CI_PROJECT_DIR gradle gitPublishPush
+    - gradle jar
+    - gradle release
+    - publish
   artifacts:
     paths:
       - cnf/equoapp.bnd

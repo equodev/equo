@@ -3,15 +3,42 @@ image: registry.gitlab.com/maketechnology/equo/docker/gradle:jdk8-alpine
 stages:
   - build
 
-export:
+variables:
+  GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
+
+cache:
+  key: "gradle"
+  paths:
+    - .gradle-home/
+    - .m2/
+    - .bnd/
+
+before_script:
+  - export HOME=$CI_PROJECT_DIR
+
+build:
   stage: build
   script:
     - gradle check
     - gradle release
     - gradle equo
-    - gradle gitPublishPush
   artifacts:
     paths:
       - cnf/release
     expire_in: 20w
-
+  except:
+    - master
+    
+publish:
+  stage: build
+  script:
+    - gradle check
+    - gradle release
+    - gradle equo
+    - gradle publish
+  artifacts:
+    paths:
+      - cnf/release
+    expire_in: 20w
+  only:
+    - master

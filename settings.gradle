@@ -1,6 +1,20 @@
 buildscript {
-    repositories { mavenCentral() }
-    dependencies { classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}" }
+    ext.repos = { 
+        gradlePluginPortal()
+        maven {
+            url "http://dl.maketechnology.io/gradle/rls/"
+        }
+    }
+    ext.deps = { classpath "com.make.equo:com.make.equo.gradle.plugin:0.2.0" }
+    repositories repos
+    dependencies deps
 }
 
-apply plugin: 'biz.aQute.bnd.workspace'
+gradle.rootProject {
+    buildscript {
+        repositories repos
+        dependencies deps
+    }
+}
+
+apply plugin: "com.make.equo"
