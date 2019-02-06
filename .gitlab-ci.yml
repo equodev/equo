@@ -35,7 +35,7 @@ release:
   script:
     - gradle jar
     - gradle release
-    - publish
+    - gradle publish
   artifacts:
     paths:
       - cnf/equoapp.bnd
