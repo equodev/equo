@@ -20,6 +20,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.analytics.internal.provider.util.IAnalyticsConstants;
@@ -108,7 +109,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	@Override
 	public void registerEvent(String eventKey, double value) {
 		if (isEnabled()) {
-			influxDB.write(buildBasicLog(eventKey, value).build());
+			JsonObject systemInfo = getSystemInfo();
+			String segmentationAsString = gson.toJson(systemInfo);
+			writeInflux(eventKey, value, segmentationAsString);
 		} else {
 			logMessage();
 		}
@@ -122,8 +125,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	@Override
 	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
 		if (isEnabled()) {
-			String segmentationAsString = gson.toJson(segmentation);
-			registerEvent(eventKey, value, segmentationAsString);
+			String segmentationAsString = gson.toJson(addSystemInfo(segmentation));
+			writeInflux(eventKey, value, segmentationAsString);
 		} else {
 			logMessage();
 		}
@@ -131,6 +134,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
+		JsonParser parser = new JsonParser();
+		JsonObject json = parser.parse(segmentationAsString).getAsJsonObject();
+		String segmentationWithSystemProperties = gson.toJson(addSystemInfo(json));
+		writeInflux(eventKey, value, segmentationWithSystemProperties);
+	}
+
+	private void writeInflux(String eventKey, double value, String segmentationAsString) {
 		if (isEnabled()) {
 			Point build = buildBasicLog(eventKey, value).tag(getSegmentation(segmentationAsString)).build();
 			influxDB.write(build);
@@ -170,6 +180,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void registerLaunchApp() {
 		appStartTime = System.currentTimeMillis();
 		registerEvent(IAnalyticsEventsNames.LAUNCH_EVENT, 1);
+	}
+
+	private static JsonObject getSystemInfo() {
+		return addSystemInfo(new JsonObject());
+	}
+
+	private static JsonObject addSystemInfo(JsonObject json) {
+		json.addProperty("javaVendor", System.getProperty("java.vendor"));
+		json.addProperty("javaVersion", System.getProperty("java.version"));
+		json.addProperty("country", System.getProperty("user.country"));
+		json.addProperty("gtkVersion", System.getProperty("org.eclipse.swt.internal.gtk.version"));
+		json.addProperty("osName", System.getProperty("os.name"));
+		json.addProperty("osVersion", System.getProperty("os.version"));
+
+		return json;
 	}
 
 	@Override
