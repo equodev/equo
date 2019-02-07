@@ -85,9 +85,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	private String getEquoAppName() {
 		String appName = System.getProperty("appName");
 		if (appName != null) {
-			return appName.toLowerCase();
+			return appName;
 		} else {
-			return FrameworkUtil.getBundle(equoApplication.getClass()).getSymbolicName().toLowerCase();
+			return FrameworkUtil.getBundle(equoApplication.getClass()).getSymbolicName();
 		}
 	}
 
