@@ -27,6 +27,9 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
 			+ "limitedConnectionPage.html";
 
+	private static final String baseRendererPath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH + "renderersContribution/"
+			+ "baseRenderer.html";
+
 	private Map<String, IEquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
 	private IEquoApplication equoApplication;
@@ -69,9 +72,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
 					websocketPort);
 		}
+
+		if (isEquoRendererRequest(originalRequest)) {
+			return new OfflineRequestFiltersAdapter(originalRequest,
+					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
+					baseRendererPath);
+		}
+
 		if (isLocalFileRequest(originalRequest)) {
 			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 		}
+
 		if (isConnectionLimited()) {
 			if (isOfflineCacheSupported) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
@@ -93,6 +104,11 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
 		}
+	}
+
+	private boolean isEquoRendererRequest(HttpRequest originalRequest) {
+		String uri = originalRequest.getUri();
+		return uri.contains("http://equo_renderers");
 	}
 
 	private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {

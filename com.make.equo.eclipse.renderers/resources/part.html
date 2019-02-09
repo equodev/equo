@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="app">
+    <template>
+      <el-tabs  type="card" >
+        <el-tab-pane
+          v-for="(item, index) in parts"
+          :key="item.id"
+          :label="item.label"
+          :name="item.label"
+        >
+          {{item.label}}
+        </el-tab-pane>
+      </el-tabs>
+    </template>
+   
+  </div>
+</body>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="C:\Make\Equo\equo-framework\ws\git\com.make.equo.ws.provider\resources\equoWebsockets.js"></script>/>
+    
+		<script>
+			function start_receiving_messages(vm){
+				equoWebsockets.on(nameSpace+"_parts",values =>{
+					vm.$data.parts =values;
+					vm.$data.active = values[0].id;
+				});
+			}
+		</script>
+		
+		<script language="JavaScript">
+			function getUrlParameter(sParam) {
+			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),sURLVariables = sPageURL.split('&'),sParameterName,i;
+				for (i = 0; i < sURLVariables.length; i++) {
+			        sParameterName = sURLVariables[i].split('=');
+			
+			        if (sParameterName[0] === sParam) {
+			            return sParameterName[1] === undefined ? true : sParameterName[1];
+			        }
+			    }
+			}
+	  	</script>
+		<script>
+			var	nameSpace= getUrlParameter('nameSpace').toString()
+		</script>
+		<script>
+			new Vue({
+				el: '#app',
+				data: {
+					active: null,
+					parts:[ {
+          label: 'Tab 1',
+          id: '1'
+        }, {
+          label: 'Tab 2',
+          id: '2'
+        }]
+				},
+				methods: {
+					send_onclick: function (accion){
+						equoWebsockets.send(nameSpace+'_systemBarClicked', { accion});
+					},
+					
+				},
+				watch: {
+					active: function (val){
+					console.log('val=', val);
+					
+          equoWebsockets.send(nameSpace+'_tabClicked', { val});
+					},
+				},
+				created: function() {
+				
+    				let vm = this;
+    				start_receiving_messages(vm);
+  				}
+
+			});
+
+		</script>
+
+</html>

@@ -8,23 +8,23 @@ import org.osgi.service.event.EventHandler;
 
 public class CloseContainerEventHandler implements EventHandler {
 
-    private IEventBroker broker;
-    private MElementContainer elementContainer;
+	private IEventBroker broker;
+	private MElementContainer elementContainer;
 
-    public CloseContainerEventHandler(MElementContainer elementContainer, IEventBroker broker) {
-	this.elementContainer = elementContainer;
-	this.broker = broker;
-    }
-
-    @Override
-    public void handleEvent(Event event) {
-	if (elementContainer.getChildren().size() == 0) {
-	    MElementContainer<MUIElement> parent = elementContainer.getParent();
-	    if (parent != null) {
-		parent.getChildren().remove(elementContainer);
-		parent.setToBeRendered(true);
-		broker.unsubscribe(this);
-	    }
+	public CloseContainerEventHandler(MElementContainer elementContainer, IEventBroker broker) {
+		this.elementContainer = elementContainer;
+		this.broker = broker;
 	}
-    }
+
+	@Override
+	public void handleEvent(Event event) {
+		if (elementContainer.getChildren().size() == 0) {
+			MElementContainer<MUIElement> parent = elementContainer.getParent();
+			if (parent != null) {
+				parent.getChildren().remove(elementContainer);
+				parent.setToBeRendered(true);
+				broker.unsubscribe(this);
+			}
+		}
+	}
 }

@@ -39,13 +39,14 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	public static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
+	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
 
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
 
 	protected static final String WEBSOCKET_CONTRIBUTION_TYPE = "websocketContribution";
+	protected static final String RENDERERS_CONTRIBUTION_TYPE = "renderersContribution";
 
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
@@ -66,7 +67,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
-	private final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
+	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
 	@Activate
 	public void start() {
@@ -94,8 +95,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
 		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 
-		proxyServer = DefaultHttpProxyServer
-						.bootstrap()
+		proxyServer = DefaultHttpProxyServer.bootstrap()
 						.withPort(9896)
 						.withManInTheMiddle(new SelfSignedMitmManager())
 						.withAllowRequestToOriginServer(true)
@@ -278,7 +278,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
 		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH);
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH.toLowerCase());
+	}
+
+	@Override
+	public String getEquoContributionPath() {
+		return EQUO_CONTRIBUTION_PATH;
 	}
 
 }
