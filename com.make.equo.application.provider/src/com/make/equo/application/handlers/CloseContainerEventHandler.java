@@ -9,9 +9,10 @@ import org.osgi.service.event.EventHandler;
 public class CloseContainerEventHandler implements EventHandler {
 
 	private IEventBroker broker;
+	@SuppressWarnings("rawtypes")
 	private MElementContainer elementContainer;
 
-	public CloseContainerEventHandler(MElementContainer elementContainer, IEventBroker broker) {
+	public CloseContainerEventHandler(@SuppressWarnings("rawtypes") MElementContainer elementContainer, IEventBroker broker) {
 		this.elementContainer = elementContainer;
 		this.broker = broker;
 	}
