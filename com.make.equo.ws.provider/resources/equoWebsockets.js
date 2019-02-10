@@ -68,11 +68,11 @@ window.equo = window.equo || {};
     };
 
     equo.send = function(actionId) {
-        sendToWebSocketServer(actionId);
+        equo.sendToWebSocketServer(actionId);
     };
 
     equo.send = function(actionId, payload) {
-        sendToWebSocketServer(actionId, payload);
+        equo.sendToWebSocketServer(actionId, payload);
     };
 
     equo.on = function(userEvent, callback) {
