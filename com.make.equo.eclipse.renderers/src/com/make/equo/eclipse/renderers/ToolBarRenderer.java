@@ -52,11 +52,15 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 		Chromium browser = new Chromium(mapComposite, SWT.NONE);
 
 		equoProxyServer.addUrl(EQUO_RENDERERS_URL);
+		String renderersContributionPath = equoProxyServer.getEquoContributionPath() + EquoRenderersContribution.TYPE
+				+ "/";
+		String toolBarContributionUri = renderersContributionPath + "toolBarContribution.js";
 
-//		equoProxyServer.addCustomScript(EQUO_RENDERERS_URL, equoProxyServer.getEquoContributionPath()
-//				+ EquoRenderersContribution.TYPE + "/" + "toolBarContribution.js");
+		equoProxyServer.addCustomScript(EQUO_RENDERERS_URL, toolBarContributionUri);
+
 		String renderersUri = EQUO_RENDERERS_URL + "/" + equoProxyServer.getEquoContributionPath()
 				+ EquoRenderersContribution.TYPE;
+
 		browser.setUrl(renderersUri + "?" + "namespace=" + namespace);
 
 		browser.setLayoutData(data);
