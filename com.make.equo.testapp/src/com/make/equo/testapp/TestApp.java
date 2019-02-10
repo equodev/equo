@@ -16,7 +16,7 @@ public class TestApp implements IEquoApplication {
 		// TODO Auto-generated method stub
 		try {
 			return appBuilder
-			        .withSingleView("http://www.maketechnology.io")
+			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
 			        .addCustomScript("js/testAnalytics.js")
 			        .start();
