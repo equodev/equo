@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.make.equo.eclipse.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer {
@@ -65,8 +66,9 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 
 		browser.setLayoutData(data);
 
-		webSocketSendMessage();
-		webSocketOnMessage();
+		onMessageReceived();
+		sendToolBarModel();
+
 		return mapComposite;
 	}
 
@@ -91,10 +93,12 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 	}
 
 	public void webSocketSendMessage() {
-		equoEventHandler.send(namespace + "_icons", values);
+		System.out.println("Enviando values...");
+		System.out.println(namespace + "model" + " es " + values);
+		equoEventHandler.send(namespace + "model", values);
 	}
 
-	public void webSocketOnMessage() {
+	public void onMessageReceived() {
 		equoEventHandler.on(namespace + "_iconClicked", (JsonObject payload) -> {
 			JsonElement value = payload.get("accion");
 			String id = "";
@@ -102,6 +106,13 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 				id = value.getAsString();
 			}
 			runAccion(id, (JsonObject) payload.get("params"));
+		});
+	}
+
+	public void sendToolBarModel() {
+		equoEventHandler.on(namespace + "getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
+			System.out.println("enviando mensajes.....");
+			webSocketSendMessage();
 		});
 	}
 

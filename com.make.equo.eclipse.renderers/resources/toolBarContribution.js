@@ -3,17 +3,16 @@ $(document).ready(function () {
 
     function getUrlParameter(sParam) {
         var url = new URL(window.location.href);
+        console.log('url is ', url)
         var namespaceValue = url.searchParams.get(sParam);
+        console.log('namespace is ', namespaceValue)
         return namespaceValue;
     }
 
-    equo.on(namespace + "_icons", values => {
-        vm.$data.parts = values;
-        console.log('values= ', values)
-    });
-
-    function receiveToolBarModel(vm) {
-        equo.on(namespace + "_icons", values => {
+    function getToolBarModel(vm) {
+        equo.send(namespace + 'getModel');
+        equo.on(namespace + "model", values => {
+            console.log('iconos son ')
             vm.$data.parts = values;
             console.log('values= ', values)
         });
@@ -35,7 +34,7 @@ $(document).ready(function () {
         },
         created: function () {
             let vm = this;
-            receiveToolBarModel(vm);
+            getToolBarModel(vm);
         }
 
     });
