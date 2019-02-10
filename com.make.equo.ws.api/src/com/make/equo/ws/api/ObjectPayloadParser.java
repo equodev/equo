@@ -14,6 +14,9 @@ public class ObjectPayloadParser<T> implements IEquoRunnableParser<T> {
 
 	@Override
 	public T parsePayload(Object payload) {
+		if (payload == null) {
+			return null;
+		}
 		String jsonString = gson.toJson(payload);
 		Class<T> type = getEquoRunnable().type();
 		T fromJson = gson.fromJson(jsonString, type);
