@@ -1,4 +1,4 @@
-package com.make.equo.eclipse.renderers;
+package com.make.equo.renderers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Display;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.make.equo.eclipse.renderers.contributions.EquoRenderersContribution;
+import com.make.equo.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;

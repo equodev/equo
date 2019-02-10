@@ -1,4 +1,4 @@
-package com.make.equo.eclipse.renderers.contributions;
+package com.make.equo.renderers.contributions;
 
 import java.net.URL;
 import java.util.List;

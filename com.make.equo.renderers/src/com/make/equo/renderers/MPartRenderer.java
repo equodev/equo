@@ -1,4 +1,4 @@
-package com.make.equo.eclipse.renderers;
+package com.make.equo.renderers;
 
 import java.io.File;
 import java.net.MalformedURLException;

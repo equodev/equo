@@ -1,5 +1,5 @@
 Bundle-Version: ${version}.${tstamp}
-Private-Package: com.make.equo.eclipse.renderers.contributions
+Private-Package: com.make.equo.renderers.contributions
 -includeresource: resources/
 -buildpath: \
     org.eclipse.e4.ui.workbench.swt,\
@@ -30,4 +30,4 @@ Private-Package: com.make.equo.eclipse.renderers.contributions
     org.eclipse.equinox.common, \
     org.eclipse.equinox.common.source
 Export-Package: \
-    com.make.equo.eclipse.renderers
+    com.make.equo.renderers
