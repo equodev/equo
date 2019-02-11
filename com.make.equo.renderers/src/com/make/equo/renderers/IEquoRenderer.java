@@ -42,17 +42,14 @@ public interface IEquoRenderer {
 		browser.setUrl(renderersUri + "?" + "namespace=" + namespace);
 
 		List<Map<String, String>> e4Model = getEclipse4Model();
-		sendToolBarModel(e4Model);
+		sendEclipse4Model(e4Model);
 		onActionPerformedOnElement();
 	}
 
-	default void sendToolBarModel(List<Map<String, String>> e4Model) {
+	default void sendEclipse4Model(List<Map<String, String>> e4Model) {
 		String namespace = getNamespace();
 		EquoEventHandler equoEventHandler = getEquoEventHandler();
 		equoEventHandler.on(namespace + "getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
-			System.out.println("enviando mensajes.....");
-			System.out.println("Enviando values...");
-			System.out.println(namespace + "model" + " es " + e4Model);
 			equoEventHandler.send(namespace + "model", e4Model);
 		});
 	};
