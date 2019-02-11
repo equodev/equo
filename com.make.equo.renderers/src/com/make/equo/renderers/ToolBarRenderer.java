@@ -65,7 +65,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Override
 	public List<String> getJsFileNamesForRendering() {
-		return Lists.newArrayList("toolBarContribution.js");
+		return Lists.newArrayList("renderers/toolBarRenderer.js");
 	}
 
 	@Override

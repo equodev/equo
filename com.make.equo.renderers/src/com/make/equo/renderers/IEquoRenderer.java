@@ -28,8 +28,10 @@ public interface IEquoRenderer {
 		String renderersContributionPath = getEquoProxyServer().getEquoContributionPath()
 				+ EquoRenderersContribution.TYPE + "/";
 
-		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
+		String rendererFrameworkJsFileUri = renderersContributionPath + "rendererFramework.js";
+		getEquoProxyServer().addCustomScript(EQUO_RENDERERS_URL, rendererFrameworkJsFileUri);
 
+		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
 		for (String fileName : jsScriptsFilesForRendering) {
 			String e4ElemmentContributionUri = renderersContributionPath + fileName;
 			getEquoProxyServer().addCustomScript(EQUO_RENDERERS_URL, e4ElemmentContributionUri);
