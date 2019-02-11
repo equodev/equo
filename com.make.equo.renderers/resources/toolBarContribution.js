@@ -1,5 +1,13 @@
 $(document).ready(function () {
     const namespace = getUrlParameter('namespace').toString()
+    const knownToolItems = {
+        'com.make.equo.application.provider.handledtoolitem.save': {
+            label: 'Save',
+            icon: 'an-icon-identifier'
+        }
+    }
+
+    let model;
 
     function getUrlParameter(sParam) {
         var url = new URL(window.location.href);
@@ -13,8 +21,7 @@ $(document).ready(function () {
         equo.send(namespace + '_getModel');
         equo.on(namespace + "_model", values => {
             console.log('iconos son ')
-            vm.$data.parts = values;
-            console.log('values= ', values)
+            model = values;
         });
     }
 
@@ -26,7 +33,7 @@ $(document).ready(function () {
         },
         methods: {
             send_onclick: function (accion) {
-                equo.send(namespace + '_iconClicked', {
+                equo.send(namespace + '_itemClicked', {
                     command: accion
                 });
             },

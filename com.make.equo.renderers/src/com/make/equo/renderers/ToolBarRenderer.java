@@ -80,7 +80,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Override
 	public void onActionPerformedOnElement() {
-		equoEventHandler.on(namespace + "_iconClicked", (JsonObject payload) -> {
+		equoEventHandler.on(namespace + "_itemClicked", (JsonObject payload) -> {
 			JsonElement value = payload.get("accion");
 			String id = "";
 			if (value != null) {
