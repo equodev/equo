@@ -49,8 +49,8 @@ public interface IEquoRenderer {
 	default void sendEclipse4Model(List<Map<String, String>> e4Model) {
 		String namespace = getNamespace();
 		EquoEventHandler equoEventHandler = getEquoEventHandler();
-		equoEventHandler.on(namespace + "getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
-			equoEventHandler.send(namespace + "model", e4Model);
+		equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
+			equoEventHandler.send(namespace + "_model", e4Model);
 		});
 	};
 

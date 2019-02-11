@@ -10,8 +10,8 @@ $(document).ready(function () {
     }
 
     function getToolBarModel(vm) {
-        equo.send(namespace + 'getModel');
-        equo.on(namespace + "model", values => {
+        equo.send(namespace + '_getModel');
+        equo.on(namespace + "_model", values => {
             console.log('iconos son ')
             vm.$data.parts = values;
             console.log('values= ', values)
