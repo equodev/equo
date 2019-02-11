@@ -29,6 +29,10 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.client.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.media.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.renderers)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
@@ -112,6 +116,10 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	com.make.equo.analytics.client.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.analytics.internal.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.analytics.internal.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.internal.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.internal.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.contribution.media.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.renderers;version='[0.1.0,0.2.0)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
