@@ -8,7 +8,7 @@ import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 
 public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 
-	protected MPartRenderer stackRenderer;
+//	protected MPartRenderer stackRenderer;
 	protected String id;
 	private ToolBarRenderer toolBarRenderer;
 
@@ -16,10 +16,10 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
 
 		if (uiElement instanceof MPartStack) {
-			stackRenderer = new MPartRenderer();
-			super.initRenderer(stackRenderer);
-
-			return stackRenderer;
+//			stackRenderer = new MPartRenderer();
+//			super.initRenderer(stackRenderer);
+//
+//			return stackRenderer;
 
 		} else if (uiElement instanceof MToolBar) {
 			toolBarRenderer = new ToolBarRenderer();
