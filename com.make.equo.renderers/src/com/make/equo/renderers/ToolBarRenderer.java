@@ -19,20 +19,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.make.equo.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
-import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
-public class ToolBarRenderer extends ToolBarManagerRenderer {
+public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
-	private static final String EQUO_RENDERERS_URL = "http://equo_renderers";
-	protected List<Map<String, String>> values;
-	protected List<MToolBarElement> elementsTool;
-	protected String namespace;
+	private String namespace;
+	private MUIElement toolBar;
 
 	@Inject
 	private EquoEventHandler equoEventHandler;
@@ -41,64 +38,48 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 
 	@Override
 	public Object createWidget(MUIElement toolBar, Object parent) {
-		setTools(toolBar);
-		namespace = "ToolBar" + Integer.toHexString(toolBar.hashCode());
+		this.namespace = "ToolBar" + Integer.toHexString(toolBar.hashCode());
+		this.toolBar = toolBar;
 
-		Composite mapComposite = (Composite) parent;
+		Composite toolBarComposite = (Composite) parent;
+
+		configureAndStartRenderProcess(toolBarComposite);
+
+		return toolBarComposite;
+	}
+
+	@Override
+	public IEquoServer getEquoProxyServer() {
+		return equoProxyServer;
+	}
+
+	@Override
+	public String getNamespace() {
+		return namespace;
+	}
+
+	@Override
+	public EquoEventHandler getEquoEventHandler() {
+		return equoEventHandler;
+	}
+
+	@Override
+	public List<String> getJsFileNamesForRendering() {
+		return Lists.newArrayList("toolBarContribution.js");
+	}
+
+	@Override
+	public Chromium createBrowserComponent(Composite mapComposite) {
 		mapComposite.setLayout(new GridLayout(1, false));
-
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		data.heightHint = 45;
-
 		Chromium browser = new Chromium(mapComposite, SWT.NONE);
-
-		equoProxyServer.addUrl(EQUO_RENDERERS_URL);
-		String renderersContributionPath = equoProxyServer.getEquoContributionPath() + EquoRenderersContribution.TYPE
-				+ "/";
-		String toolBarContributionUri = renderersContributionPath + "toolBarContribution.js";
-
-		equoProxyServer.addCustomScript(EQUO_RENDERERS_URL, toolBarContributionUri);
-
-		String renderersUri = EQUO_RENDERERS_URL + "/" + equoProxyServer.getEquoContributionPath()
-				+ EquoRenderersContribution.TYPE;
-
-		browser.setUrl(renderersUri + "?" + "namespace=" + namespace);
-
 		browser.setLayoutData(data);
-
-		onMessageReceived();
-		sendToolBarModel();
-
-		return mapComposite;
+		return browser;
 	}
 
-	public void setTools(MUIElement element) {
-		elementsTool = new ArrayList<MToolBarElement>();
-		values = new ArrayList<Map<String, String>>();
-		List<MToolBarElement> children = ((MToolBar) element).getChildren();
-		HashMap<String, String> hmap;
-		// platform:/plugin/com.make.appExample/icons/sample.png
-		String id;
-		for (MToolBarElement e : children) {
-			if (e instanceof MUILabel) {
-				hmap = new HashMap<String, String>();
-				hmap.put("iconURI", ((MUILabel) e).getIconURI());
-				id = "Icon" + Integer.toHexString(e.hashCode());
-				e.setElementId(id);
-				hmap.put("id", id);
-				values.add(hmap);
-				elementsTool.add(e);
-			}
-		}
-	}
-
-	public void webSocketSendMessage() {
-		System.out.println("Enviando values...");
-		System.out.println(namespace + "model" + " es " + values);
-		equoEventHandler.send(namespace + "model", values);
-	}
-
-	public void onMessageReceived() {
+	@Override
+	public void onActionPerformedOnElement() {
 		equoEventHandler.on(namespace + "_iconClicked", (JsonObject payload) -> {
 			JsonElement value = payload.get("accion");
 			String id = "";
@@ -109,14 +90,22 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 		});
 	}
 
-	public void sendToolBarModel() {
-		equoEventHandler.on(namespace + "getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
-			System.out.println("enviando mensajes.....");
-			webSocketSendMessage();
-		});
+	@Override
+	public List<Map<String, String>> getEclipse4Model() {
+		List<Map<String, String>> e4Model = new ArrayList<Map<String, String>>();
+		List<MToolBarElement> toolBarElements = ((MToolBar) toolBar).getChildren();
+		for (MToolBarElement e : toolBarElements) {
+			if (e instanceof MUILabel) {
+				HashMap<String, String> elementModel = new HashMap<String, String>();
+				elementModel.put("iconURI", ((MUILabel) e).getIconURI());
+				elementModel.put("id", e.getElementId());
+				e4Model.add(elementModel);
+			}
+		}
+		return e4Model;
 	}
 
-	public void runAccion(String id, JsonObject actionPayload) {
+	private void runAccion(String id, JsonObject actionPayload) {
 		Display defaultDisplay = Display.getDefault();
 
 		defaultDisplay.syncExec(new Runnable() {
@@ -126,11 +115,6 @@ public class ToolBarRenderer extends ToolBarManagerRenderer {
 						"Action performed from JS. Vamos Equo!");
 			}
 		});
-
-		for (MToolBarElement e : elementsTool) {
-			if (e.getElementId().equals(id)) {
-				System.out.println("Action is " + id);
-			}
-		}
 	}
+
 }
