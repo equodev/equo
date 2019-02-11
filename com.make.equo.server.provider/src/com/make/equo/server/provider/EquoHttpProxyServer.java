@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
@@ -39,13 +38,14 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 @Component
 public class EquoHttpProxyServer implements IEquoServer {
 
-	public static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
+	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
 
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
 
 	protected static final String WEBSOCKET_CONTRIBUTION_TYPE = "websocketContribution";
+	protected static final String RENDERERS_CONTRIBUTION_TYPE = "renderersContribution";
 
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
@@ -53,7 +53,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static final String LOCAL_SCRIPT_SENTENCE = "<script src=\"PATHTOSTRING\"></script>";
 
 	private static final List<String> proxiedUrls = new ArrayList<>();
-	private static final Map<String, List<String>> urlsToScripts = new HashMap<String, List<String>>();
+	private static final Map<String, String> urlsToScripts = new HashMap<String, String>();
 	private static boolean enableOfflineCache = false;
 	private static String limitedConnectionAppBasedPagePath;
 
@@ -66,7 +66,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
-	private final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
+	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
 	@Activate
 	public void start() {
@@ -79,7 +79,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				getEquoContributionsJsApis(), getUrlsToScriptsAsStrings(), websocketPort, equoApplication);
+				getEquoContributionsJsApis(), urlsToScripts, websocketPort, equoApplication);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -94,14 +94,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
 		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 
-		proxyServer = DefaultHttpProxyServer
-						.bootstrap()
-						.withPort(9896)
-						.withManInTheMiddle(new SelfSignedMitmManager())
-						.withAllowRequestToOriginServer(true)
-						.withTransparent(false)
-						.withFiltersSource(httpFiltersSourceAdapter)
-						.start();
+		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new SelfSignedMitmManager())
+				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
+				.start();
 	}
 
 	@Deactivate
@@ -137,9 +132,10 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void addCustomScript(String url, String scriptUrl) {
 		if (!urlsToScripts.containsKey(url)) {
-			urlsToScripts.put(url, new ArrayList<>());
+			urlsToScripts.put(url, generateScriptSentence(scriptUrl));
+		} else {
+			urlsToScripts.put(url, appendScriptToExistingOnes(url, scriptUrl));
 		}
-		urlsToScripts.get(url).add(scriptUrl);
 	}
 
 	@Override
@@ -235,23 +231,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return javascriptApis;
 	}
 
-	private Map<String, String> getUrlsToScriptsAsStrings() {
-		Map<String, String> urlToScriptsAsStrings = new HashMap<>();
-		for (String url : urlsToScripts.keySet()) {
-			List<String> scriptsList = urlsToScripts.get(url);
-			String convertedJsScriptsToString = convertJsScriptsToString(scriptsList);
-			urlToScriptsAsStrings.put(url, convertedJsScriptsToString);
-		}
-		return urlToScriptsAsStrings;
-	}
-
-	private String convertJsScriptsToString(List<String> scriptsList) {
-		if (scriptsList.isEmpty()) {
-			return "";
-		}
-		String newLineSeparetedScripts = scriptsList.stream().map(string -> generateScriptSentence(string))
-				.collect(Collectors.joining("\n"));
-		return newLineSeparetedScripts;
+	private String appendScriptToExistingOnes(String url, String scriptUrl) {
+		String existingCustomJsScripts = urlsToScripts.get(url);
+		StringBuilder result = new StringBuilder();
+		result.append(existingCustomJsScripts);
+		result.append("\n");
+		result.append(generateScriptSentence(scriptUrl));
+		return result.toString();
 	}
 
 	private String generateScriptSentence(String scriptPath) {
@@ -278,7 +264,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
 		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH);
+				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH.toLowerCase());
+	}
+
+	@Override
+	public String getEquoContributionPath() {
+		return EQUO_CONTRIBUTION_PATH;
 	}
 
 }

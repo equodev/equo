@@ -27,6 +27,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
 			+ "limitedConnectionPage.html";
 
+	private static final String RENDERERS_CONTRIBUTION_TYPE = "renderersContribution";
+
+	private static final String baseRendererPath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
+			+ RENDERERS_CONTRIBUTION_TYPE + "/baseRenderer.html";
+
+	private static final String EQUO_RENDERERS_URL = "http://equo_renderers";
+
 	private Map<String, IEquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
 	private IEquoApplication equoApplication;
@@ -69,9 +76,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
 					websocketPort);
 		}
+
+		if (isEquoRendererRequest(originalRequest)) {
+			return new RenderersRequestFiltersAdapter(originalRequest,
+					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
+					equoContributionsJsApis, getCustomScripts(EQUO_RENDERERS_URL), baseRendererPath);
+		}
+
 		if (isLocalFileRequest(originalRequest)) {
 			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 		}
+
 		if (isConnectionLimited()) {
 			if (isOfflineCacheSupported) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
@@ -93,6 +108,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
 		}
+	}
+
+	private boolean isEquoRendererRequest(HttpRequest originalRequest) {
+		String uri = originalRequest.getUri();
+		String renderersUri = EQUO_RENDERERS_URL + "/" + EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
+				+ RENDERERS_CONTRIBUTION_TYPE;
+		return uri.contains(renderersUri);
 	}
 
 	private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {

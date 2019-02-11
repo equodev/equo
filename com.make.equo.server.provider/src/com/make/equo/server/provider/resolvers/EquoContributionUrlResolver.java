@@ -24,12 +24,13 @@ public class EquoContributionUrlResolver implements ILocalUrlResolver {
 	@Override
 	public URL resolve(String filePath) {
 		String[] equoContributionParts = filePath.split("/");
-		if (equoContributionParts.length != 2) {
+		if (equoContributionParts.length < 2) {
 			throw new RuntimeException(
 					"The equo contribution must define a \"type\" property and contribute javascript files.");
 		}
 		IEquoContribution equoContribution = equoContributions.get(equoContributionParts[0]);
-		return equoContribution.getJavascriptAPIResource(equoContributionParts[1]);
+		String equoContributionPath = filePath.replaceFirst(equoContributionParts[0] + "/", "");
+		return equoContribution.getJavascriptAPIResource(equoContributionPath);
 	}
 
 }

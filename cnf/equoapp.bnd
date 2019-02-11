@@ -29,7 +29,12 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.client.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.api)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.provider)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.media.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.renderers)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.ds)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.swt)',\
@@ -53,10 +58,11 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.keep=false,\
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
-    com.apple.mrj.application.apple.menu.about.name=${app.bundle}
+    com.apple.mrj.application.apple.menu.about.name=${app.bundle},\
+    rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
 -runproperties.app: \
     app_name=${def;appName},\
-# Set to true if you want to modify the original HTML content. False otherwise. False is the default value.,\
+# Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
     change_original_html=true,\
 # The url of the Influxdb database on Equo Platform. It may contain a token to connect to it. Then it should be generated on the launcher probably,\
     equo_influxdb_url=http://localhost:8086,\
@@ -110,7 +116,12 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	com.make.equo.analytics.client.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.analytics.internal.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.analytics.internal.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.internal.api;version='[0.1.0,0.2.0)',\
+	com.make.equo.aer.internal.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.contribution.media.provider;version='[0.1.0,0.2.0)',\
+	com.make.equo.renderers;version='[0.1.0,0.2.0)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
 	jnr.x86asm;version='[1.0.2,1.0.3)',\

@@ -24,4 +24,6 @@ public interface IEquoServer {
 
 	boolean isAddressReachable(String appUrl);
 
+	String getEquoContributionPath();
+
 }

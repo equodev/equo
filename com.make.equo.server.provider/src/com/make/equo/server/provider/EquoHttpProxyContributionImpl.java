@@ -38,5 +38,5 @@ public class EquoHttpProxyContributionImpl implements IEquoContribution {
 		}
 		return javascriptNames;
 	}
-	
+
 }
