@@ -29,12 +29,17 @@ public class LogListener implements ILogListener {
 		}
 		
 		JsonObject json = new JsonObject();
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		status.getException().printStackTrace(pw);
-		String stackTrace = sw.toString();
-		stackTrace = stackTrace.replace("\n", "\\n");
-		json.addProperty("stackTrace", stackTrace);
+		
+		Throwable throwable = status.getException();
+		if (throwable != null) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			throwable.printStackTrace(pw);
+			String stackTrace = sw.toString();
+			stackTrace = stackTrace.replace("\n", "\\n");
+			json.addProperty("stackTrace", stackTrace);
+		}
+
 		json.addProperty("message", status.getMessage());
 		
 		if (status.matches(StatusReporter.ERROR)) {
