@@ -1,6 +1,6 @@
 -buildpath: \
 	com.make.equo.application.provider;version=latest,\
-	io.netty.all;version='[4.0.44,4.0.45)',\
+	io.netty.all;version=latest,\
 	com.make.equo.server.offline.api;version=latest
 -includeresource: -resources/
 -outputmask: ${@bsn}-${@version}.jar
@@ -51,7 +51,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(osgi.identity=com.make.cef.osx.*)'
 -runproperties.equo: \
     applicationXMI=com.make.equo.application.provider/Application.e4xmi,\
-    eclipse.application=org.eclipse.e4.ui.workbench.swt.E4Application,\
+    eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
     lifeCycleURI=bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager,\
     osgi.compatibility.bootdelegation=true,\
     eclipse.consoleLog=true,\
