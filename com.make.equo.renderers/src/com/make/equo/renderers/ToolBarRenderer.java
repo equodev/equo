@@ -1,9 +1,13 @@
 package com.make.equo.renderers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 import javax.inject.Inject;
 
@@ -28,6 +32,7 @@ import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
+	private static final String ECLIPSE_IDE_IDS_TO_COMMANDS_PROPERTIES = "eclipseIDEIdsToCommands.properties";
 	private String namespace;
 	private MUIElement toolBar;
 
@@ -69,12 +74,28 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite mapComposite) {
-		mapComposite.setLayout(new GridLayout(1, false));
+	public Chromium createBrowserComponent(Composite toolBarParent) {
+		toolBarParent.setLayout(new GridLayout(1, false));
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		data.heightHint = 45;
-		Chromium browser = new Chromium(mapComposite, SWT.NONE);
+		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
 		browser.setLayoutData(data);
+//		ToolBar toolBar = new ToolBar(toolBarParent, SWT.NONE);
+//
+//		RowLayout rowLayout = new RowLayout();
+//
+//		rowLayout.marginLeft = 0;
+//		rowLayout.marginTop = 0;
+//		rowLayout.marginRight = 0;
+//		rowLayout.marginBottom = 0;
+//		rowLayout.spacing = 1;
+//
+//		toolBar.setLayout(rowLayout);
+//
+//		Chromium browser = new Chromium(toolBar, SWT.NONE);
+//		browser.setLayoutData(new RowData());
+//		browser.setLayoutData(data);
+
 		return browser;
 	}
 
@@ -92,13 +113,26 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Override
 	public List<Map<String, String>> getEclipse4Model() {
+		Optional<Properties> knownEclipseIdsToCommands = getKnownEclipseIdsToCommands();
 		List<Map<String, String>> e4Model = new ArrayList<Map<String, String>>();
 		List<MToolBarElement> toolBarElements = ((MToolBar) toolBar).getChildren();
 		for (MToolBarElement e : toolBarElements) {
 			if (e instanceof MUILabel) {
 				HashMap<String, String> elementModel = new HashMap<String, String>();
+				String elementId = e.getElementId();
+//				elementModel.put("id", elementId);
 				elementModel.put("iconURI", ((MUILabel) e).getIconURI());
-				elementModel.put("id", e.getElementId());
+
+				System.out.println("el id es " + elementId);
+
+				if (knownEclipseIdsToCommands.isPresent()) {
+					Properties properties = knownEclipseIdsToCommands.get();
+					if (properties.containsKey(elementId)) {
+						String commandId = properties.getProperty(elementId);
+						elementModel.put("id", commandId);
+					}
+				}
+
 				e4Model.add(elementModel);
 			}
 		}
@@ -117,4 +151,31 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		});
 	}
 
+	private Optional<Properties> getKnownEclipseIdsToCommands() {
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+
+			String filename = ECLIPSE_IDE_IDS_TO_COMMANDS_PROPERTIES;
+			input = ToolBarRenderer.class.getClassLoader().getResourceAsStream(filename);
+			if (input == null) {
+				System.out.println("Sorry, unable to find " + filename);
+				return Optional.empty();
+			}
+			prop.load(input);
+			return Optional.of(prop);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return Optional.empty();
+	}
 }
