@@ -28,6 +28,16 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.osgi.source, \
     osgi.cmpn,\
     org.eclipse.equinox.common, \
-    org.eclipse.equinox.common.source
+    org.eclipse.equinox.common.source, \
+    org.eclipse.equinox.preferences, \
+    org.eclipse.equinox.preferences.source, \
+    org.eclipse.e4.core.services, \
+    org.eclipse.e4.core.services.source, \
+    org.eclipse.e4.core.di.extensions, \
+    org.eclipse.e4.core.di.extensions.source, \
+    org.eclipse.e4.ui.css.swt, \
+    org.eclipse.e4.ui.css.swt.source, \
+    org.eclipse.e4.ui.workbench, \
+    org.eclipse.e4.ui.workbench.source
 Export-Package: \
     com.make.equo.renderers
