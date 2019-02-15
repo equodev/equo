@@ -11,21 +11,23 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 //	protected MPartRenderer stackRenderer;
 	protected String id;
 	private ToolBarRenderer toolBarRenderer;
+	private WebItemStackRenderer stackRenderer;
 
 	@Override
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
 
-		if (uiElement instanceof MPartStack) {
-//			stackRenderer = new MPartRenderer();
-//			super.initRenderer(stackRenderer);
-//
-//			return stackRenderer;
-
-		} else if (uiElement instanceof MToolBar) {
-			toolBarRenderer = new ToolBarRenderer();
-
-			super.initRenderer(toolBarRenderer);
+		if (uiElement instanceof MToolBar) {
+			if (toolBarRenderer == null) {
+				toolBarRenderer = new ToolBarRenderer();
+				super.initRenderer(toolBarRenderer);
+			}
 			return toolBarRenderer;
+		} else if (uiElement instanceof MPartStack) {
+			if (stackRenderer == null) {
+				stackRenderer = new WebItemStackRenderer();
+				super.initRenderer(stackRenderer);
+			}
+			return stackRenderer;
 		}
 		return super.getRenderer(uiElement, parent);
 	}
