@@ -2,7 +2,10 @@ $(document).ready(function () {
 
     const toolItemsData = {
         'com.make.equo.application.provider.handledtoolitem.save': 'save',
-        'com.make.equo.application.provider.handledtoolitem.close': 'close'
+        'com.make.equo.application.provider.handledtoolitem.close': 'close',
+        'org.eclipse.ui.newWizard': 'create_new_folder',
+        'org.eclipse.ui.file.save': 'save',
+        'org.eclipse.ui.file.saveAll': 'save_alt'
     }
 
     let app = {
