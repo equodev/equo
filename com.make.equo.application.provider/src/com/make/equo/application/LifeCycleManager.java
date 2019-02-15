@@ -12,18 +12,22 @@ import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
 
 public class LifeCycleManager {
 
+	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
+
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
-			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder, IEquoCrashReporter equoCrashReporter)
+			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
+			IEquoCrashReporter equoCrashReporter)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Platform.addLogListener(new LogListener(equoCrashReporter));
-		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
-		equoApplicationModel.setMainApplication(mainApplication);
-		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
-				equoApplicationModel, equoApplicationBuilder);
-		equoApplicationBuilderConfigurator.configure();
-		equoApp.buildApp(equoApplicationBuilder);
+		if (!ECLIPSE_RCP_APP_ID.equals(System.getProperty("eclipse.application"))) {
+			Platform.addLogListener(new LogListener(equoCrashReporter));
+			EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
+			equoApplicationModel.setMainApplication(mainApplication);
+			EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
+					equoApplicationModel, equoApplicationBuilder);
+			equoApplicationBuilderConfigurator.configure();
+			equoApp.buildApp(equoApplicationBuilder);
+		}
 	}
-	
-	
+
 }
