@@ -16,12 +16,12 @@ public interface IEquoRenderer {
 	static final String EQUO_RENDERERS_URL = "http://equo_renderers";
 
 	/**
-	 * The initial point to start an Equo render process. It must be call after the
-	 * creation of a Chromium browser.
+	 * The initial point to start an Equo render process.
 	 * 
 	 * @param parent
 	 */
 	default void configureAndStartRenderProcess(Composite parent) {
+		getEquoProxyServer().start();
 		Chromium browser = createBrowserComponent(parent);
 		getEquoProxyServer().addUrl(EQUO_RENDERERS_URL);
 
@@ -49,12 +49,18 @@ public interface IEquoRenderer {
 	}
 
 	default void sendEclipse4Model(List<Map<String, String>> e4Model) {
-		String namespace = getNamespace();
-		EquoEventHandler equoEventHandler = getEquoEventHandler();
-		equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
-			equoEventHandler.send(namespace + "_model", e4Model);
-		});
+		if (!e4Model.isEmpty()) {
+			String namespace = getNamespace();
+			EquoEventHandler equoEventHandler = getEquoEventHandler();
+			equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
+				equoEventHandler.send(namespace + "_model", e4Model);
+			});
+		}
 	};
+
+	default boolean hasStartedRenderProcess() {
+		return true;
+	}
 
 	/**
 	 * Receives a message when an action is performed on an element in the
@@ -85,4 +91,5 @@ public interface IEquoRenderer {
 	IEquoServer getEquoProxyServer();
 
 	Chromium createBrowserComponent(Composite parent);
+
 }
