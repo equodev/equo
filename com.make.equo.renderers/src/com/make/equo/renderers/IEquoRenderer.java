@@ -21,7 +21,6 @@ public interface IEquoRenderer {
 	 * @param parent
 	 */
 	default void configureAndStartRenderProcess(Composite parent) {
-		getEquoProxyServer().start();
 		Chromium browser = createBrowserComponent(parent);
 		getEquoProxyServer().addUrl(EQUO_RENDERERS_URL);
 
@@ -43,9 +42,12 @@ public interface IEquoRenderer {
 		String namespace = getNamespace();
 		browser.setUrl(renderersUri + "?" + "namespace=" + namespace);
 
+		getEquoProxyServer().start();
+
 		List<Map<String, String>> e4Model = getEclipse4Model();
 		sendEclipse4Model(e4Model);
 		onActionPerformedOnElement();
+
 	}
 
 	default void sendEclipse4Model(List<Map<String, String>> e4Model) {
