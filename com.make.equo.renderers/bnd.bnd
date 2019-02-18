@@ -1,4 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
+Bundle-ActivationPolicy: lazy
+Bundle-SymbolicName: com.make.equo.renderers;singleton:=true
 Private-Package: com.make.equo.renderers.contributions
 -includeresource: resources/
 -buildpath: \
@@ -38,6 +40,14 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.e4.ui.css.swt, \
     org.eclipse.e4.ui.css.swt.source, \
     org.eclipse.e4.ui.workbench, \
-    org.eclipse.e4.ui.workbench.source
+    org.eclipse.e4.ui.workbench.source, \
+    org.eclipse.e4.core.di.annotations, \
+    org.eclipse.e4.core.di.annotations.source, \
+    org.eclipse.e4.core.di, \
+    org.eclipse.e4.core.di.source, \
+    org.eclipse.e4.ui.di, \
+    org.eclipse.e4.ui.di.source, \
+    org.eclipse.core.runtime, \
+    org.eclipse.core.runtime.source
 Export-Package: \
     com.make.equo.renderers

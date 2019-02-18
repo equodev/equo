@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="com.make.equo.renderers"
+>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.e4.core.di"/>
+      <import plugin="org.eclipse.e4.ui.workbench"/>
+      <import plugin="org.eclipse.e4.ui.di"/>
+      <import plugin="org.eclipse.e4.core.di.extensions"/>
+   </requires>
+   <extension
+         point="org.eclipse.e4.workbench.model">
+      <!-- if beforefragment="true", then the processor is run before any fragments are stitched in -->
+      <processor
+            beforefragment="false"
+            class="com.make.equo.renderers.contributions.ToolBarModelProcessor">
+      </processor>
+    </extension>
+</plugin>
