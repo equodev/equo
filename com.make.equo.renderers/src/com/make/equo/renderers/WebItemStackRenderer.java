@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.extensions.Preference;
-import org.eclipse.e4.ui.css.swt.properties.custom.CSSPropertyMruVisibleSWTHandler;
 import org.eclipse.e4.ui.internal.workbench.swt.CSSRenderingUtils;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
@@ -18,6 +17,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.w3c.dom.css.CSSValue;
 
+/**
+ * 
+ * TODO: DO NOT PAY ATTENTION TO THIS CLASS. IMPLEMENT YOUR OWN STACK RENDERER.
+ *
+ */
 public class WebItemStackRenderer extends LazyStackRenderer {
 
 	/**
@@ -118,9 +122,11 @@ public class WebItemStackRenderer extends LazyStackRenderer {
 	}
 
 	private boolean getMRUValue(Control control) {
-		if (CSSPropertyMruVisibleSWTHandler.isMRUControlledByCSS()) {
-			return getInitialMRUValue(control);
-		}
-		return getMRUValueFromPreferences();
+//		if (CSSPropertyMruVisibleSWTHandler.isMRUControlledByCSS()) {
+//			return getInitialMRUValue(control);
+//		}
+//		return getMRUValueFromPreferences();
+		
+		return true;
 	}
 }
