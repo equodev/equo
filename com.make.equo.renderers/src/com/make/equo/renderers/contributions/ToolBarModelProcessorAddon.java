@@ -12,26 +12,28 @@ import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBarElement;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.osgi.service.event.Event;
-
-import com.google.common.collect.Lists;
 
 public class ToolBarModelProcessorAddon {
 
-	private static final List<String> toolBarsWhiteList = Lists.newArrayList("PerspectiveSpacer",
-			"PerspectiveSwitcher");
-
 	private static final String ECLIPSE_MAIN_TOOLBAR_ID = "org.eclipse.ui.main.toolbar";
+	private static final String EQUO_MAIN_TOOLBAR = "com.make.equo.main.toolbar";
+
+	private EModelService modelService;
 
 	@Inject
 	@org.eclipse.e4.core.di.annotations.Optional
 	public void applicationStarted(@EventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event,
-			MApplication mainApplication, UISynchronize sync) {
-		hideMainTrimBar(mainApplication, sync);
+			MApplication mainApplication, UISynchronize sync, EModelService modelService) {
+		this.modelService = modelService;
+		hideOldToolBarAndCreateEquoToolBar(mainApplication, sync);
 	}
 
-	private void hideMainTrimBar(MApplication mainApplication, UISynchronize sync) {
+	private void hideOldToolBarAndCreateEquoToolBar(MApplication mainApplication, UISynchronize sync) {
 		List<MWindow> children = mainApplication.getChildren();
 		for (MWindow mWindow : children) {
 			MTrimmedWindow mainTrimmedWindow = (MTrimmedWindow) mWindow;
@@ -40,22 +42,32 @@ public class ToolBarModelProcessorAddon {
 			if (mainTrimBar.isPresent()) {
 				MTrimBar mTrimBar = mainTrimBar.get();
 				sync.asyncExec(() -> {
-					hideTrimBarChildren(mTrimBar);
+//					hideTrimBarChildren(mTrimBar);
+					MToolBar equoToolbar = createEquoToolbar(mTrimBar);
 					mTrimBar.getChildren().clear();
+					mTrimBar.setToBeRendered(false);
+					mTrimBar.getChildren().add(equoToolbar);
+					mTrimBar.setToBeRendered(true);
 				});
 			}
 		}
 	}
 
-	private void hideTrimBarChildren(MTrimBar mTrimBar) {
-		List<MTrimElement> trimmedElements = mTrimBar.getChildren();
+	public MToolBar createEquoToolbar(MTrimBar mTrimBar) {
+		List<MTrimElement> mTrimElements = mTrimBar.getChildren();
 
-		for (MTrimElement trimmedElement : trimmedElements) {
-			if (!toolBarsWhiteList.contains(trimmedElement.getElementId())) {
-				trimmedElement.setToBeRendered(false);
-				trimmedElement.setVisible(false);
+		MToolBar createdToolbar = modelService.createModelElement(MToolBar.class);
+		createdToolbar.setElementId(EQUO_MAIN_TOOLBAR);
+
+		for (MTrimElement mTrimElement : mTrimElements) {
+			if (mTrimElement instanceof MToolBar) {
+				MToolBar mToolbar = (MToolBar) mTrimElement;
+				List<MToolBarElement> toolBarElements = mToolbar.getChildren();
+
+				createdToolbar.getChildren().addAll(toolBarElements);
 			}
 		}
+		return createdToolbar;
 	}
 
 	private Optional<MTrimBar> getMainTrimBar(List<MTrimBar> trimBars) {
