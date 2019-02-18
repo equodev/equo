@@ -25,6 +25,8 @@ import com.make.equo.ws.api.EquoEventHandler;
 @Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder {
 
+	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
+
 	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
@@ -42,6 +44,7 @@ public class EquoApplicationBuilder {
 	 * by the Equo Framework, it should not be called by clients/users applications.
 	 * 
 	 * @param equoApplicationModel
+	 * @param modelService
 	 * @return
 	 */
 	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel) {
@@ -56,6 +59,15 @@ public class EquoApplicationBuilder {
 		} else {
 			appId = IConstants.EQUO_APP_PREFIX;
 		}
+
+		if (!isAnEclipseBasedApp()) {
+			configureEquoApp(appId);
+			return this.viewBuilder.configureViewPart(this);
+		}
+		return null;
+	}
+
+	private void configureEquoApp(String appId) {
 		MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
 		mainMenu.setElementId(appId + "." + "mainmenu");
 		getmWindow().setMainMenu(mainMenu);
@@ -69,8 +81,6 @@ public class EquoApplicationBuilder {
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
-
-		return this.viewBuilder.configureViewPart(this);
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
@@ -197,6 +207,10 @@ public class EquoApplicationBuilder {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
 	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
 		this.equoEventHandler = equoEventHandler;
+	}
+
+	private boolean isAnEclipseBasedApp() {
+		return ECLIPSE_RCP_APP_ID.equals(System.getProperty("eclipse.application"));
 	}
 
 }
