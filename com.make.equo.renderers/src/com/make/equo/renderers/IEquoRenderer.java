@@ -60,10 +60,6 @@ public interface IEquoRenderer {
 		}
 	};
 
-	default boolean hasStartedRenderProcess() {
-		return true;
-	}
-
 	/**
 	 * Receives a message when an action is performed on an element in the
 	 * Javascript side(i.e. click on a toolbar item).

@@ -63,16 +63,17 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		}
 
 		if (belongsToEclipseMainTrimBar(mUIToolbar)) {
-			Composite toolBarComposite = (Composite) parent;
-			if (!hasStartedRenderProcess()) {
-				if (namespace == null) {
-					namespace = "ToolBar" + Integer.toHexString(mUIToolbar.hashCode());
-				}
-				configureAndStartRenderProcess(toolBarComposite);
-			} else {
-				sendToolBarModelToRender((MToolBar) mUIToolbar);
-			}
-			return toolBarComposite;
+			return null;
+//			Composite toolBarComposite = (Composite) parent;
+//			if (!hasStartedRenderProcess()) {
+//				if (namespace == null) {
+//					namespace = "ToolBar" + Integer.toHexString(mUIToolbar.hashCode());
+//				}
+//				configureAndStartRenderProcess(toolBarComposite);
+//			} else {
+//				sendToolBarModelToRender((MToolBar) mUIToolbar);
+//			}
+//			return toolBarComposite;
 		}
 //		if (parent2)
 //			if (isAnIDEToolBar(mUIToolbar)) {
@@ -184,10 +185,10 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		return browser;
 	}
 
-	@Override
-	public boolean hasStartedRenderProcess() {
-		return browser != null && !browser.isDisposed();
-	}
+//	@Override
+//	public boolean hasStartedRenderProcess() {
+//		return browser != null && !browser.isDisposed();
+//	}
 
 	@Override
 	public void onActionPerformedOnElement() {
