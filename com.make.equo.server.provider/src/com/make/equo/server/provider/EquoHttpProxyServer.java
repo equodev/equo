@@ -29,6 +29,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
@@ -57,17 +58,22 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static boolean enableOfflineCache = false;
 	private static String limitedConnectionAppBasedPagePath;
 
-	private HttpProxyServer proxyServer;
+	private static volatile HttpProxyServer proxyServer;
 	private ScheduledExecutorService internetConnectionChecker;
 	private int websocketPort;
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoApplication equoApplication;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	private volatile IEquoLoggingService equoLoggingService;
+
 	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
+	@Override
 	@Activate
 	public void start() {
 		if (proxyServer == null && !proxiedUrls.isEmpty()) {
@@ -110,7 +116,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		}
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)
 	void addEquoContribution(IEquoContribution equoContribution, Map<String, String> props) {
 		String contributionKey = props.get("type");
 		System.out.println("Equo Contribution added: " + contributionKey);
@@ -140,7 +146,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void addUrl(String url) {
-		proxiedUrls.add(url);
+		if (!proxiedUrls.contains(url)) {
+			proxiedUrls.add(url);
+		} else {
+			equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
+		}
 	}
 
 	@Override

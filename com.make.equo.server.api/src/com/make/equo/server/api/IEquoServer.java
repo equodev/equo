@@ -4,6 +4,8 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public interface IEquoServer {
 
+	void start();
+
 	void startServer();
 
 	void addCustomScript(String url, String scriptUrl);
