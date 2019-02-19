@@ -15,9 +15,9 @@ import org.eclipse.e4.ui.model.application.ui.menu.MToolBarElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.renderers.swt.ToolBarManagerRenderer;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
@@ -51,7 +51,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 		Composite parentComp = (Composite) parent;
 
-		Composite browserComposite = new Composite(parentComp, SWT.NONE);
+		Composite browserComposite = new Composite(parentComp, SWT.HORIZONTAL);
 
 		configureAndStartRenderProcess(browserComposite);
 
@@ -85,11 +85,9 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
 				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
-		toolBarParent.setLayout(new GridLayout(1, false));
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-		data.heightHint = 45;
+		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
 		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
-		browser.setLayoutData(data);
+		GridDataFactory.fillDefaults().grab(true, true).hint(2000, 25).applyTo(browser);
 
 		return browser;
 	}
