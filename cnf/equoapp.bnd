@@ -50,6 +50,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(osgi.identity=com.make.cef.linux.*)',\
 	osgi.identity;filter:='(osgi.identity=com.make.cef.osx.*)'
 -runproperties.equo: \
+    applicationCSS=platform:/plugin/com.make.equo.application.provider/default.css, \
     applicationXMI=com.make.equo.application.provider/Application.e4xmi,\
     eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
     lifeCycleURI=bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager,\
