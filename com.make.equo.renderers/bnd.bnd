@@ -39,6 +39,8 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.e4.core.di.extensions.source, \
     org.eclipse.e4.ui.css.swt, \
     org.eclipse.e4.ui.css.swt.source, \
+    org.eclipse.e4.ui.css.core, \
+    org.eclipse.e4.ui.css.core.source, \
     org.eclipse.e4.ui.workbench, \
     org.eclipse.e4.ui.workbench.source, \
     org.eclipse.e4.core.di.annotations, \
@@ -48,6 +50,10 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.e4.ui.di, \
     org.eclipse.e4.ui.di.source, \
     org.eclipse.core.runtime, \
-    org.eclipse.core.runtime.source
+    org.eclipse.core.runtime.source, \
+    org.eclipse.core.commands, \
+    org.eclipse.core.commands.source, \
+    org.eclipse.e4.core.commands,\
+    org.eclipse.e4.core.commands.source
 Export-Package: \
     com.make.equo.renderers
