@@ -1,11 +1,14 @@
 $(document).ready(function () {
 
-    const toolItemsData = {
-        'com.make.equo.application.provider.handledtoolitem.save': 'save',
-        'com.make.equo.application.provider.handledtoolitem.close': 'close',
-        'org.eclipse.ui.newWizard': 'create_new_folder',
-        'org.eclipse.ui.file.save': 'save',
-        'org.eclipse.ui.file.saveAll': 'save_alt'
+    const toolItemsIdsToData = {
+        'save': {
+            icon: 'save',
+            commandId: 'org.eclipse.ui.file.save'
+        },
+        'saveAll': {
+            icon: 'save_alt',
+            commandId: 'org.eclipse.ui.file.saveAll'
+        }
     }
 
     let app = {
@@ -13,49 +16,44 @@ $(document).ready(function () {
       <div class="app">
         
             <span v-for="item in e4Model">
-            <md-button class="md-icon-button md-primary">
-                <md-icon>{{toolItemsData[item.id]}}</md-icon>
+            <md-button v-if="toolItemsIdsToData[item.id] !== undefined" class="md-icon-button md-primary" @click="callE4Command(toolItemsIdsToData[item.id].commandId)">
+                <md-icon>{{toolItemsIdsToData[item.id].icon}}</md-icon>
             </md-button>
             </span>
         
       </div>
       `,
-        // data: function () {
-        //     return {
-        //         txt: 'test',
-        //     };
-        // },
         props: {
-            toolItemsData,
+            namespace: {
+                type: String
+            },
+            toolItemsIdsToData,
             e4Model: {
                 type: Array,
                 required: true
             }
         },
         mounted() {},
-        methods: {},
+        methods: {
+            callE4Command(commandId) {
+                equo.send(this.namespace + '_itemClicked', {
+                    command: commandId
+                });
+            }
+        },
         style: `
         `
     };
     Vue.component("app-comp", app);
     Vue.use(VueMaterial.default)
 
-    // export default app;
-
-    // import app from "./js/component-2.js";
-    // $('.create-b').on('click', function () {
-    //     let toolBarApp = Vue.extend(app);
-    //     let component = new toolBarApp().$mount()
-    //     $('#proexemplelist').append(component.$el)
-    // });
-
     // Add toolbar elements to the html body
-    const createToolbar = function (e4Model) {
-        console.log('The e4 model is ', e4Model);
+    const createToolbar = function (namespace, e4Model) {
         let toolBarApp = Vue.extend(app);
         let component = new toolBarApp({
             propsData: {
-                toolItemsData,
+                namespace,
+                toolItemsIdsToData,
                 e4Model
             }
         }).$mount()
@@ -69,10 +67,4 @@ $(document).ready(function () {
     }
 
     equo.getE4Model(createToolbar);
-
-    const sendOnclick = function (accion) {
-        equo.send(namespace + '_itemClicked', {
-            command: accion
-        });
-    }
 });

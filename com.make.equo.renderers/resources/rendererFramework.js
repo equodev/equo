@@ -13,7 +13,7 @@ window.equo = window.equo || {};
   equo.getE4Model = function (renderE4Model) {
     equo.send(namespace + '_getModel');
     equo.on(namespace + "_model", values => {
-      renderE4Model(values)
+      renderE4Model(namespace, values)
     });
   }
 
