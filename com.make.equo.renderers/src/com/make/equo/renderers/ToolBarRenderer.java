@@ -19,14 +19,11 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.MUILabel;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBarElement;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.renderers.swt.ToolBarManagerRenderer;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -44,9 +41,6 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Inject
 	private static IEquoServer equoProxyServer;
-
-	@Inject
-	private EModelService modelService;
 
 	@Inject
 	private MApplication mApplication;
@@ -155,17 +149,5 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 			}
 		}
 		return e4Model;
-	}
-
-	private void runAccion(String id, JsonObject actionPayload) {
-		Display defaultDisplay = Display.getDefault();
-
-		defaultDisplay.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				MessageDialog.openInformation(defaultDisplay.getActiveShell(), "Action performed from JS",
-						"Action performed from JS. Vamos Equo!");
-			}
-		});
 	}
 }
