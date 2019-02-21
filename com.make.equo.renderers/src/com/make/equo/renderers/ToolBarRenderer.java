@@ -8,6 +8,13 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.MUILabel;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
@@ -30,13 +37,23 @@ import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
+	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
+
 	@Inject
 	private static EquoEventHandler equoEventHandler;
+
 	@Inject
 	private static IEquoServer equoProxyServer;
 
 	@Inject
-	EModelService modelService;
+	private EModelService modelService;
+
+	@Inject
+	private MApplication mApplication;
+
+	@Inject
+	private UISynchronize sync;
+
 	private MToolBar mToolBar;
 
 	private String namespace;
@@ -95,12 +112,28 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	@Override
 	public void onActionPerformedOnElement() {
 		getEquoEventHandler().on(namespace + "_itemClicked", (JsonObject payload) -> {
-			JsonElement value = payload.get("accion");
-			String id = "";
-			if (value != null) {
-				id = value.getAsString();
+			JsonElement commandAsJson = payload.get("commandId");
+			String commandId = commandAsJson.getAsString();
+
+			if (UNKNOWN_EQUO_COMMAND.equals(commandId)) {
+				// TODO Do a real log of the toolBarElement id which does not have an associated
+				// command
+				String toolBarElementId = payload.get("toolBarElementId").getAsString();
+				System.out.println("There is no command for the toolBar element " + toolBarElementId);
+				return;
 			}
-			runAccion(id, (JsonObject) payload.get("params"));
+
+			IEclipseContext eclipseContext = mApplication.getContext();
+			ECommandService commandService = eclipseContext.get(ECommandService.class);
+			Command command = commandService.getCommand(commandId);
+
+			if (command != null) {
+				sync.asyncExec(() -> {
+					ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, null);
+					EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
+					handlerService.executeHandler(parametrizedCommand);
+				});
+			}
 		});
 	}
 

@@ -10,7 +10,11 @@ $(document).ready(function () {
             commandId: 'org.eclipse.ui.file.saveAll'
         },
         newWizardDropDown: {
-            icon: 'folder',
+            icon: 'create_new_folder',
+            commandId: 'org.eclipse.ui.newWizard'
+        },
+        'new.group': {
+            icon: 'arrow_drop_down',
             commandId: 'org.eclipse.ui.newWizard'
         },
         print: {
@@ -18,88 +22,90 @@ $(document).ready(function () {
             commandId: 'org.eclipse.ui.file.print'
         },
         debug: {
-            icon: 'bug',
+            icon: 'bug_report',
             commandId: 'AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction'
         },
         'org.eclipse.debug.internal.ui.actions.DebugDropDownAction': {
-            icon: 'bug',
+            icon: 'bug_report',
             commandId: 'AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction'
         },
         'org.eclipse.debug.internal.ui.actions.RunDropDownAction': {
-            icon: 'play-circle',
+            icon: 'play_circle_filled',
             commandId: 'AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.RunDropDownAction'
         },
         'org.eclipse.jdt.ui.actions.OpenProjectWizard': {
-            icon: 'envelope-open',
+            icon: 'folder_open',
             commandId: 'AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.OpenProjectWizard'
         },
         'org.eclipse.jdt.ui.actions.OpenPackageWizard': {
-            icon: 'envelope-open-o',
+            icon: 'library_books',
             commandId: 'AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.OpenPackageWizard'
         },
         'org.eclipse.jdt.ui.actions.NewTypeDropDown': {
-            icon: 'rocket',
+            icon: 'library_add',
             commandId: 'AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.NewTypeDropDown'
         },
         'org.eclipse.search.OpenSearchDialogPage': {
-            icon: 'search-plus',
+            icon: 'image_search',
             commandId: 'AUTOGEN:::org.eclipse.search.searchActionSet/org.eclipse.search.OpenSearchDialogPage'
         },
         openType: {
-            icon: 'folder-open',
+            icon: 'open_in_new',
             commandId: 'AUTOGEN:::org.eclipse.jdt.ui.SearchActionSet/org.eclipse.jdt.ui.actions.OpenJavaSearchPage'
         },
         backardHistory: {
-            icon: 'backward',
+            icon: 'arrow_back',
             commandId: 'org.eclipse.ui.navigate.backwardHistory'
         },
         forwardHistory: {
-            icon: 'forward',
+            icon: 'arrow_forward',
             commandId: 'org.eclipse.ui.navigate.forwardHistory'
         },
         'org.eclipse.ui.edit.text.gotoNextAnnotation': {
-            icon: 'arrow-down',
+            icon: 'arrow_downward',
             commandId: 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
         },
         'org.eclipse.ui.edit.text.gotoPreviousAnnotation': {
-            icon: 'arrow-up',
+            icon: 'arrow_upward',
             commandId: 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
         },
         'org.eclipse.ui.edit.text.gotoLastEditPosition': {
-            icon: 'arrow-left',
+            icon: 'edit_location',
             commandId: 'org.eclipse.ui.edit.text.gotoLastEditPosition'
         },
-        // the following is an addon, should be handled differently
-        // 'PerspectiveSpacer': {
-        //     icon: '',
-        //     commandId: 'org.eclipse.ui.navigate.forwardHistory'
-        // },
-        // the following is an addon, should be handled differently
-        // 'PerspectiveSwitcher': {
-        //     icon: '',
-        //     commandId: 'org.eclipse.ui.navigate.forwardHistory'
-        // },
-        unknownElement: {
-            icon: 'question-circle',
+        // // the following is an addon, should be handled differently
+        // // 'PerspectiveSpacer': {
+        // //     icon: '',
+        // //     commandId: 'org.eclipse.ui.navigate.forwardHistory'
+        // // },
+        // // the following is an addon, should be handled differently
+        // // 'PerspectiveSwitcher': {
+        // //     icon: '',
+        // //     commandId: 'org.eclipse.ui.navigate.forwardHistory'
+        // // },
+        // unknown icon, it's used for ids that are not found here in this mapping table.
+        'unknownElement': {
+            icon: 'help_outline',
             commandId: 'unknownEquoCommand'
         }
-        // unknown icon, it's used for ids that are not found here in this mapping table.
-
     }
 
     let app = {
         template: `
       <div class="app">
-        
             <span v-for="item in e4Model">
-            <md-button v-if="toolItemsIdsToData[item.id] !== undefined" class="md-icon-button md-primary" @click="callE4Command(toolItemsIdsToData[item.id].commandId)">
-                <md-icon>{{toolItemsIdsToData[item.id].icon}}</md-icon>
-            </md-button>
-            <md-button v-else class="md-icon-button md-primary" @click="callE4Command(toolItemsIdsToData['unknownElement'].commandId)">
-                <md-icon>{{toolItemsIdsToData['unknownElement'].icon}}</md-icon>
-            </md-button>
+                <span v-if="toolItemsIdsToData[item.id] !== null && toolItemsIdsToData[item.id] !== undefined && toolItemsIdsToData[item.id] !== 'undefined'">
+                    <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData[item.id].commandId)">
+                        <md-icon>{{toolItemsIdsToData[item.id].icon}}</md-icon>
+                    </md-button>
+                </span>
+                <span v-else>
+                    <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData['unknownElement'].commandId)">
+                        <md-icon>{{toolItemsIdsToData['unknownElement'].icon}}</md-icon>
+                    </md-button>
+                </span>
             </span>
-        
+
       </div>
       `,
         props: {
@@ -114,9 +120,10 @@ $(document).ready(function () {
         },
         mounted() {},
         methods: {
-            callE4Command(commandId) {
+            callE4Command(toolBarElementId, commandId) {
                 equo.send(this.namespace + '_itemClicked', {
-                    command: commandId
+                    toolBarElementId,
+                    commandId
                 });
             }
         },
