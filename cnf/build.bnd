@@ -9,10 +9,3 @@
         name = ChromiumSWT; \
         url = "https://dl.maketechnology.io/cefswt/rls/repository/"; \
         location = ~/.bnd/cache/cefswt
-        
--plugin.7.P2RepoStudio: \
-     aQute.bnd.repository.p2.provider.P2Repository; \
-        name = StudioRelease; \
-        url = "file:///c:/Users/Escritorio/git7/org.mule.tooling.products/org.mule.tooling.studio.update/target/repository"
-        
-       
