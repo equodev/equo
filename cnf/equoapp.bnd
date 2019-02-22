@@ -66,7 +66,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
     change_original_html=true,\
 # The url of the Influxdb database on Equo Platform. It may contain a token to connect to it. Then it should be generated on the launcher probably,\
-    equo_influxdb_url=http://localhost:8086,\
+    equo_influxdb_url=http://www.dev.appcenter.maketechnology.io/query/,\
 # Username and password to connect to the Equo Platform. For example for analytics.,\
     equo_username=${def;equoUsername},\
     equo_password=${def;equoPassword},\
