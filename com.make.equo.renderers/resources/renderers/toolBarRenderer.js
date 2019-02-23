@@ -7,17 +7,10 @@ $(document).ready(function () {
                 <span v-if="toolItemsIdsToData[item.id] !== null && toolItemsIdsToData[item.id] !== undefined && toolItemsIdsToData[item.id] !== 'undefined'">
                     <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData[item.id].commandId)">
                         <md-icon>{{toolItemsIdsToData[item.id].icon}}</md-icon>
-                        <md-tooltip>Play Music</md-tooltip>
+                        <md-tooltip>{{toolItemsIdsToData[item.id].tooltip}}</md-tooltip>
                     </md-button>
-                </span>
-                <span v-else>
-                    <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData['unknownElement'].commandId)">
-                        <md-icon>{{toolItemsIdsToData['unknownElement'].icon}}</md-icon>
-                    </md-button>
-                    <md-tooltip>Play Music</md-tooltip>
                 </span>
             </span>
-
       </div>
       `,
         props: {
