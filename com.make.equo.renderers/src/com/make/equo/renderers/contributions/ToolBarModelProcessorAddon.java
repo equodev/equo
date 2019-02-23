@@ -60,7 +60,7 @@ public class ToolBarModelProcessorAddon {
 		createdToolbar.setElementId(EQUO_MAIN_TOOLBAR);
 
 		for (MTrimElement mTrimElement : mTrimElements) {
-			if (mTrimElement instanceof MToolBar) {
+			if (mTrimElement instanceof MToolBar && !EQUO_MAIN_TOOLBAR.equals(((MToolBar) mTrimElement).getElementId())) {
 				MToolBar mToolbar = (MToolBar) mTrimElement;
 				List<MToolBarElement> toolBarElements = mToolbar.getChildren();
 
