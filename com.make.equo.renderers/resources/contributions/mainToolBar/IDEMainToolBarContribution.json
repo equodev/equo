@@ -1,0 +1,78 @@
+{
+  "save": {
+     "icon": "save",
+     "commandId": "org.eclipse.ui.file.save"
+  },
+  "saveAll": {
+     "icon": "save_alt",
+     "commandId": "org.eclipse.ui.file.saveAll"
+  },
+  "newWizardDropDown": {
+     "icon": "create_new_folder",
+     "commandId": "org.eclipse.ui.newWizard"
+  },
+  "new.group": {
+     "icon": "arrow_drop_down",
+     "commandId": "org.eclipse.ui.newWizard"
+  },
+  "print": {
+     "icon": "print",
+     "commandId": "org.eclipse.ui.file.print"
+  },
+  "debug": {
+     "icon": "bug_report",
+     "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction"
+  },
+  "org.eclipse.debug.internal.ui.actions.DebugDropDownAction": {
+     "icon": "bug_report",
+     "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction"
+  },
+  "org.eclipse.debug.internal.ui.actions.RunDropDownAction": {
+     "icon": "play_circle_filled",
+     "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.RunDropDownAction"
+  },
+  "org.eclipse.jdt.ui.actions.OpenProjectWizard": {
+     "icon": "folder_open",
+     "commandId": "AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.OpenProjectWizard"
+  },
+  "org.eclipse.jdt.ui.actions.OpenPackageWizard": {
+     "icon": "library_books",
+     "commandId": "AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.OpenPackageWizard"
+  },
+  "org.eclipse.jdt.ui.actions.NewTypeDropDown": {
+     "icon": "library_add",
+     "commandId": "AUTOGEN:::org.eclipse.jdt.ui.JavaElementCreationActionSet/org.eclipse.jdt.ui.actions.NewTypeDropDown"
+  },
+  "org.eclipse.search.OpenSearchDialogPage": {
+     "icon": "image_search",
+     "commandId": "AUTOGEN:::org.eclipse.search.searchActionSet/org.eclipse.search.OpenSearchDialogPage"
+  },
+  "openType": {
+     "icon": "open_in_new",
+     "commandId": "AUTOGEN:::org.eclipse.jdt.ui.SearchActionSet/org.eclipse.jdt.ui.actions.OpenJavaSearchPage"
+  },
+  "backardHistory": {
+     "icon": "arrow_back",
+     "commandId": "org.eclipse.ui.navigate.backwardHistory"
+  },
+  "forwardHistory": {
+     "icon": "arrow_forward",
+     "commandId": "org.eclipse.ui.navigate.forwardHistory"
+  },
+  "org.eclipse.ui.edit.text.gotoNextAnnotation": {
+     "icon": "arrow_downward",
+     "commandId": "org.eclipse.ui.edit.text.actionSet.annotationNavigation"
+  },
+  "org.eclipse.ui.edit.text.gotoPreviousAnnotation": {
+     "icon": "arrow_upward",
+     "commandId": "org.eclipse.ui.edit.text.actionSet.annotationNavigation"
+  },
+  "org.eclipse.ui.edit.text.gotoLastEditPosition": {
+     "icon": "edit_location",
+     "commandId": "org.eclipse.ui.edit.text.gotoLastEditPosition"
+  },
+  "unknownElement": {
+     "icon": "help_outline",
+     "commandId": "unknownEquoCommand"
+  }
+}
