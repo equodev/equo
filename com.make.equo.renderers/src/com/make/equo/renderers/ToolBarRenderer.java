@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 import com.make.swtcef.Chromium;
@@ -35,6 +36,9 @@ import com.make.swtcef.Chromium;
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
 	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
+
+	@Inject
+	private IEquoApplication equoApplication;
 
 	@Inject
 	private static EquoEventHandler equoEventHandler;
@@ -87,6 +91,11 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	@Override
 	public List<String> getJsFileNamesForRendering() {
 		return Lists.newArrayList("renderers/toolBarRenderer.js");
+	}
+
+	@Override
+	public List<String> getFrameworkContributionJSONFileNames() {
+		return Lists.newArrayList(getModelContributionPath() + "IDEMainToolBarContribution.json");
 	}
 
 	@Override
@@ -150,4 +159,15 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		}
 		return e4Model;
 	}
+
+	@Override
+	public IEquoApplication getEquoApplication() {
+		return equoApplication;
+	}
+
+	@Override
+	public String getModelContributionPath() {
+		return "contributions/mainToolBar/";
+	}
+
 }
