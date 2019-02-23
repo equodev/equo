@@ -11,10 +11,16 @@ window.equo = window.equo || {};
   const namespace = equo.getE4ElementNamespace('namespace').toString()
 
   equo.getE4Model = function (renderE4Model) {
-    equo.send(namespace + '_getModel');
     equo.on(namespace + "_model", values => {
       renderE4Model(namespace, values)
     });
+    equo.send(namespace + '_getModel');
   }
 
+  equo.getModelContributions = function (setModelContributions) {
+    equo.on(namespace + "_modelContributions", modelContributionFileIds => {
+      setModelContributions(namespace, modelContributionFileIds)
+    });
+    equo.send(namespace + '_getModelContributions');
+  }
 }(equo));
