@@ -74,16 +74,6 @@
      "commandId": "org.eclipse.ui.navigate.forwardHistory",
      "tooltip": "Forward History"
   },
-  "org.eclipse.ui.edit.text.gotoNextAnnotation": {
-     "icon": "arrow_downward",
-     "commandId": "org.eclipse.ui.edit.text.actionSet.annotationNavigation",
-     "tooltip": "Next Annotation"
-  },
-  "org.eclipse.ui.edit.text.gotoPreviousAnnotation": {
-     "icon": "arrow_upward",
-     "commandId": "org.eclipse.ui.edit.text.actionSet.annotationNavigation",
-     "tooltip": "Previous Annotation"
-  },
   "org.eclipse.ui.edit.text.gotoLastEditPosition": {
      "icon": "edit_location",
      "commandId": "org.eclipse.ui.edit.text.gotoLastEditPosition",
