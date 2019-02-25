@@ -483,13 +483,22 @@ public interface WebdialogPackage extends EPackage {
    int MWEB_DIALOG__RESPONSE = BasicPackageImpl.WINDOW_FEATURE_COUNT + 5;
 
    /**
+    * The feature id for the '<em><b>Type</b></em>' attribute.
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated
+    * @ordered
+    */
+   int MWEB_DIALOG__TYPE = BasicPackageImpl.WINDOW_FEATURE_COUNT + 6;
+
+   /**
     * The number of structural features of the '<em>MWeb Dialog</em>' class.
     * <!-- begin-user-doc -->
     * <!-- end-user-doc -->
     * @generated
     * @ordered
     */
-   int MWEB_DIALOG_FEATURE_COUNT = BasicPackageImpl.WINDOW_FEATURE_COUNT + 6;
+   int MWEB_DIALOG_FEATURE_COUNT = BasicPackageImpl.WINDOW_FEATURE_COUNT + 7;
 
    /**
     * The operation id for the '<em>Update Localization</em>' operation.
@@ -813,6 +822,17 @@ public interface WebdialogPackage extends EPackage {
    EAttribute getMWebDialog_Response();
 
    /**
+    * Returns the meta object for the attribute '{@link com.make.equo.ui.helper.provider.model.MWebDialog#getType <em>Type</em>}'.
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @return the meta object for the attribute '<em>Type</em>'.
+    * @see com.make.equo.ui.helper.provider.model.MWebDialog#getType()
+    * @see #getMWebDialog()
+    * @generated
+    */
+   EAttribute getMWebDialog_Type();
+
+   /**
     * Returns the meta object for class '{@link com.make.equo.ui.helper.provider.model.MButton <em>MButton</em>}'.
     * <!-- begin-user-doc -->
     * <!-- end-user-doc -->
@@ -935,6 +955,14 @@ public interface WebdialogPackage extends EPackage {
        * @generated
        */
       EAttribute MWEB_DIALOG__RESPONSE = eINSTANCE.getMWebDialog_Response();
+
+      /**
+       * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+       * <!-- begin-user-doc -->
+       * <!-- end-user-doc -->
+       * @generated
+       */
+      EAttribute MWEB_DIALOG__TYPE = eINSTANCE.getMWebDialog_Type();
 
       /**
        * The meta object literal for the '{@link com.make.equo.ui.helper.provider.model.impl.MButtonImpl <em>MButton</em>}' class.

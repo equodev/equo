@@ -14,6 +14,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Dialog.ecore#//MWebDialog/parentShell"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Dialog.ecore#//MWebDialog/blocker"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Dialog.ecore#//MWebDialog/response"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Dialog.ecore#//MWebDialog/type"/>
     </genClasses>
     <genClasses ecoreClass="Dialog.ecore#//MButton">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Dialog.ecore#//MButton/action"/>

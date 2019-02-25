@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.make.equo.ui.helper.provider.model.MWebDialog#getParentShell <em>Parent Shell</em>}</li>
  *   <li>{@link com.make.equo.ui.helper.provider.model.MWebDialog#isBlocker <em>Blocker</em>}</li>
  *   <li>{@link com.make.equo.ui.helper.provider.model.MWebDialog#getResponse <em>Response</em>}</li>
+ *   <li>{@link com.make.equo.ui.helper.provider.model.MWebDialog#getType <em>Type</em>}</li>
  * </ul>
  *
  * @see com.make.equo.ui.helper.provider.model.WebdialogPackage#getMWebDialog()
@@ -175,5 +176,31 @@ public interface MWebDialog extends EObject, MWindow {
     * @generated
     */
    void setResponse(int value);
+
+   /**
+    * Returns the value of the '<em><b>Type</b></em>' attribute.
+    * <!-- begin-user-doc -->
+    * <p>
+    * If the meaning of the '<em>Type</em>' attribute isn't clear,
+    * there really should be more of a description here...
+    * </p>
+    * <!-- end-user-doc -->
+    * @return the value of the '<em>Type</em>' attribute.
+    * @see #setType(int)
+    * @see com.make.equo.ui.helper.provider.model.WebdialogPackage#getMWebDialog_Type()
+    * @model required="true"
+    * @generated
+    */
+   int getType();
+
+   /**
+    * Sets the value of the '{@link com.make.equo.ui.helper.provider.model.MWebDialog#getType <em>Type</em>}' attribute.
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @param value the new value of the '<em>Type</em>' attribute.
+    * @see #getType()
+    * @generated
+    */
+   void setType(int value);
 
 } // MWebDialog

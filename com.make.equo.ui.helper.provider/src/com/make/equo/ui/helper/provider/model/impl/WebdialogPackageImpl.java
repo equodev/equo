@@ -179,6 +179,16 @@ public class WebdialogPackageImpl extends EPackageImpl implements WebdialogPacka
     * @generated
     */
    @Override
+   public EAttribute getMWebDialog_Type() {
+      return (EAttribute)mWebDialogEClass.getEStructuralFeatures().get(6);
+   }
+
+   /**
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated
+    */
+   @Override
    public EClass getMButton() {
       return mButtonEClass;
    }
@@ -249,6 +259,7 @@ public class WebdialogPackageImpl extends EPackageImpl implements WebdialogPacka
       createEAttribute(mWebDialogEClass, MWEB_DIALOG__PARENT_SHELL);
       createEAttribute(mWebDialogEClass, MWEB_DIALOG__BLOCKER);
       createEAttribute(mWebDialogEClass, MWEB_DIALOG__RESPONSE);
+      createEAttribute(mWebDialogEClass, MWEB_DIALOG__TYPE);
 
       mButtonEClass = createEClass(MBUTTON);
       createEAttribute(mButtonEClass, MBUTTON__ACTION);
@@ -298,6 +309,7 @@ public class WebdialogPackageImpl extends EPackageImpl implements WebdialogPacka
       initEAttribute(getMWebDialog_ParentShell(), ecorePackage.getEJavaObject(), "parentShell", null, 0, 1, MWebDialog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
       initEAttribute(getMWebDialog_Blocker(), ecorePackage.getEBoolean(), "blocker", null, 1, 1, MWebDialog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
       initEAttribute(getMWebDialog_Response(), ecorePackage.getEInt(), "response", null, 1, 1, MWebDialog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+      initEAttribute(getMWebDialog_Type(), ecorePackage.getEInt(), "type", null, 1, 1, MWebDialog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
       initEClass(mButtonEClass, MButton.class, "MButton", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
       initEAttribute(getMButton_Action(), ecorePackage.getEInt(), "action", null, 1, 1, MButton.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

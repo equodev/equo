@@ -86,6 +86,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       HashMap<String, String> model = new HashMap<String, String>();
       model.put("title", this.dialog.getTitle());
       model.put("message", this.dialog.getMessage());
+      model.put("type", String.valueOf(this.dialog.getType()));
       e4Model.add(model);
 
       EList<MButton> buttons = this.dialog.getButtons();
@@ -210,7 +211,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
          }
       });
       
-      realParentShell.setSize(500, 200);
+      realParentShell.setSize(500, 230);
       
       // Center the dialog relative to the parent shell 
       Rectangle parentBounds = parentShell.getBounds();

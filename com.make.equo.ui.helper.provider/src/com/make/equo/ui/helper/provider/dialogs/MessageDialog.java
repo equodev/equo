@@ -231,26 +231,28 @@ public class MessageDialog {
       this.message = dialogMessage;
 //      this.defaultButtonIndex = defaultIndex;
 
-      initWebDialog(parentShell, title, message, dialogButtonLabels);
+      initWebDialog(parentShell, title, message, dialogImageType, dialogButtonLabels);
    }
 
-   private void initWebDialog(Shell parentShell, String title, String message, String... dialogButtonLabels) {
-      MWebDialog dialog = WebdialogFactory.eINSTANCE.createMWebDialog();
-      this.thisDialog = dialog;
-      dialog.setTitle(title);
-      dialog.setMessage(message);
-      dialog.setParentShell(parentShell);
-      dialog.setBlocker(true);
-      dialog.setVisible(true);
-      dialog.setOnTop(true);
-      dialog.setToBeRendered(true);
+   private void initWebDialog(Shell parentShell, String title, String message, int dialogImageType, String... dialogButtonLabels) {
+      if (thisDialog == null) {
+         thisDialog = WebdialogFactory.eINSTANCE.createMWebDialog();
+      }
+      thisDialog.setTitle(title);
+      thisDialog.setMessage(message);
+      thisDialog.setType(dialogImageType);
+      thisDialog.setParentShell(parentShell);
+      thisDialog.setBlocker(true);
+      thisDialog.setVisible(true);
+      thisDialog.setOnTop(true);
+      thisDialog.setToBeRendered(true);
       
       int i = 0;
       for (String label : dialogButtonLabels) {
          MButton button = WebdialogFactory.eINSTANCE.createMButton();
          button.setLabel(label);
          button.setAction(i);
-         dialog.getButtons().add(button);
+         thisDialog.getButtons().add(button);
          i++;
       }
    }
@@ -272,7 +274,7 @@ public class MessageDialog {
     */
    public int open() {
       injector.attachMWebDialog(thisDialog);
-      return thisDialog.getResponse();
+      return getResponse();
    }
 
    /**

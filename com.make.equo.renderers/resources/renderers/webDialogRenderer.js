@@ -8,9 +8,13 @@ $(document).ready(function () {
           :aria-label="title || 'dialog'"
           ref="dialog">
           <div class="el-dialog__header">
-            <slot name="title">
+            <div name="title">
+              <i v-if="dialogType === '1'" class="el-icon-error"></i>
+              <i v-else-if="dialogType === '2'" class="el-icon-info"></i>
+              <i v-else-if="dialogType === '3' || dialogType === '5' || dialogType === '6'" class="el-icon-question"></i>
+              <i v-else-if="dialogType === '4'" class="el-icon-warning"></i>
               <span class="el-dialog__title">{{ title }}</span>
-            </slot>
+            </div>
             <button
               type="button"
               class="el-dialog__headerbtn"
@@ -55,6 +59,10 @@ $(document).ready(function () {
             message: {
                 type: String,
                 required: true
+            },
+            dialogType: {
+                type: String,
+                required: true
             }
         },
         methods: {
@@ -80,6 +88,8 @@ $(document).ready(function () {
     const createDialog = function (namespace, e4Model) {
         let title = e4Model[0].title;
         let message = e4Model[0].message;
+        let dialogType = e4Model[0].type;
+
         let buttons = e4Model.splice(1);
 
         let webDialog = Vue.extend(dialog);
@@ -90,6 +100,7 @@ $(document).ready(function () {
                 buttons,
                 title,
                 message,
+                dialogType
             }
         }).$mount()
 

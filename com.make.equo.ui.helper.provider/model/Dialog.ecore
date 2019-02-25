@@ -13,6 +13,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="response" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MButton" eSuperTypes="../../org.eclipse.e4.ui.model.workbench/model/UIElements.ecore#//ui/basic/WindowElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="action" lowerBound="1"

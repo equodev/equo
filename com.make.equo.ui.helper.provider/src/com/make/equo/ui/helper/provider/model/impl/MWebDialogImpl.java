@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.swt.SWT;
 
-import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.MWebDialog;
 import com.make.equo.ui.helper.provider.model.WebdialogPackage;
@@ -36,6 +35,7 @@ import com.make.equo.ui.helper.provider.model.WebdialogPackage;
  *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MWebDialogImpl#getParentShell <em>Parent Shell</em>}</li>
  *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MWebDialogImpl#isBlocker <em>Blocker</em>}</li>
  *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MWebDialogImpl#getResponse <em>Response</em>}</li>
+ *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MWebDialogImpl#getType <em>Type</em>}</li>
  * </ul>
  *
  * @generated
@@ -119,7 +119,7 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
     * @generated
     * @ordered
     */
-   protected static final boolean BLOCKER_EDEFAULT = false;
+   protected static final boolean BLOCKER_EDEFAULT = true;
 
    /**
     * The cached value of the '{@link #isBlocker() <em>Blocker</em>}' attribute.
@@ -150,6 +150,26 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
     * @ordered
     */
    protected int response = RESPONSE_EDEFAULT;
+
+   /**
+    * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @see #getType()
+    * @generated
+    * @ordered
+    */
+   protected static final int TYPE_EDEFAULT = 0;
+
+   /**
+    * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @see #getType()
+    * @generated
+    * @ordered
+    */
+   protected int type = TYPE_EDEFAULT;
 
    /**
     * <!-- begin-user-doc -->
@@ -304,6 +324,29 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
     * @generated
     */
    @Override
+   public int getType() {
+      return type;
+   }
+
+   /**
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated
+    */
+   @Override
+   public void setType(int newType) {
+      int oldType = type;
+      type = newType;
+      if (eNotificationRequired())
+         eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MWEB_DIALOG__TYPE, oldType, type));
+   }
+
+   /**
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated
+    */
+   @Override
    public Object eGet(int featureID, boolean resolve, boolean coreType) {
       switch (featureID) {
          case WebdialogPackage.MWEB_DIALOG__BUTTONS:
@@ -318,6 +361,8 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
             return isBlocker();
          case WebdialogPackage.MWEB_DIALOG__RESPONSE:
             return getResponse();
+         case WebdialogPackage.MWEB_DIALOG__TYPE:
+            return getType();
       }
       return super.eGet(featureID, resolve, coreType);
    }
@@ -350,6 +395,9 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
          case WebdialogPackage.MWEB_DIALOG__RESPONSE:
             setResponse((Integer)newValue);
             return;
+         case WebdialogPackage.MWEB_DIALOG__TYPE:
+            setType((Integer)newValue);
+            return;
       }
       super.eSet(featureID, newValue);
    }
@@ -380,6 +428,9 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
          case WebdialogPackage.MWEB_DIALOG__RESPONSE:
             setResponse(RESPONSE_EDEFAULT);
             return;
+         case WebdialogPackage.MWEB_DIALOG__TYPE:
+            setType(TYPE_EDEFAULT);
+            return;
       }
       super.eUnset(featureID);
    }
@@ -404,6 +455,8 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
             return blocker != BLOCKER_EDEFAULT;
          case WebdialogPackage.MWEB_DIALOG__RESPONSE:
             return response != RESPONSE_EDEFAULT;
+         case WebdialogPackage.MWEB_DIALOG__TYPE:
+            return type != TYPE_EDEFAULT;
       }
       return super.eIsSet(featureID);
    }
@@ -428,6 +481,8 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
       result.append(blocker);
       result.append(", response: ");
       result.append(response);
+      result.append(", type: ");
+      result.append(type);
       result.append(')');
       return result.toString();
    }

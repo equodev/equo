@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.WebdialogPackage;
 
@@ -38,7 +37,7 @@ public class MButtonImpl extends UIElementImpl implements MButton {
     * @generated
     * @ordered
     */
-   protected static final int ACTION_EDEFAULT = IDialogConstants.OK_ID;
+   protected static final int ACTION_EDEFAULT = 0;
 
    /**
     * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
