@@ -52,14 +52,8 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       this.namespace = "WebDialog" + Integer.toHexString(dialog.hashCode());
       this.dialog = (MWebDialog) dialog;
 
-      if (parent == null) {
-         parent = (Shell) this.dialog.getParentShell();
-      }
-      if (parent == null) {
-         parent = new Shell();
-      }
-      Shell parentShell = ((Composite) parent).getShell();
-      
+      Shell parentShell = getParentShell();
+            
       prepareShell(parentShell);
 
       configureAndStartRenderProcess(realParentShell);
@@ -229,4 +223,64 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       
       realParentShell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
    }
+   
+   /**
+    * @return this dialog's parent shell
+    */
+   
+   private Shell getParentShell() {
+      Shell parent = (Shell) this.dialog.getParentShell();
+      if (parent == null) {
+         Display d = Display.getCurrent();
+
+         if (d == null) {
+             return null;
+         }
+
+         parent = d.getActiveShell();
+
+         // Make sure we don't pick a parent that has a modal child (this can lock the app)
+         if (parent == null) {
+             // If this is a top-level window, then there must not be any open modal windows.
+             parent = getModalChild(Display.getCurrent().getShells());
+         } else {
+             // If we picked a parent with a modal child, use the modal child instead
+             Shell modalChild = getModalChild(parent.getShells());
+             if (modalChild != null) {
+                 parent = modalChild;
+             }
+         }
+      }
+      return parent;         
+
+   }
+   
+   /**
+   * Returns the most specific modal child from the given list of Shells.
+   *
+   * @param toSearch shells to search for modal children
+   * @return the most specific modal child, or null if none
+   *
+   */
+  private static Shell getModalChild(Shell[] toSearch) {
+      int modal = SWT.APPLICATION_MODAL | SWT.SYSTEM_MODAL | SWT.PRIMARY_MODAL;
+
+      for (int i = toSearch.length - 1; i >= 0; i--) {
+          Shell shell = toSearch[i];
+
+          // Check if this shell has a modal child
+          Shell[] children = shell.getShells();
+          Shell modalChild = getModalChild(children);
+          if (modalChild != null) {
+              return modalChild;
+          }
+
+          // If not, check if this shell is modal itself
+          if (shell.isVisible() && (shell.getStyle() & modal) != 0) {
+              return shell;
+          }
+      }
+
+      return null;
+  }
 }

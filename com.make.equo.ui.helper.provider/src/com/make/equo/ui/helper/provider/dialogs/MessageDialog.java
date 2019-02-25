@@ -218,7 +218,6 @@ public class MessageDialog {
     * @param dialogButtonLabels
     *                           varargs of Strings for the button labels in the
     *                           button bar
-    * @since 3.12
     */
    public MessageDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
          int dialogImageType, int defaultIndex, String... dialogButtonLabels) {
@@ -270,7 +269,6 @@ public class MessageDialog {
     * </p>
     *
     * @return the return code
-    * @see org.eclipse.jface.window.Window#open()
     */
    public int open() {
       injector.attachMWebDialog(thisDialog);
@@ -296,7 +294,6 @@ public class MessageDialog {
     *                for a dialog with sheet behavior
     * @return <code>true</code> if the user presses the OK or Yes button,
     *         <code>false</code> otherwise
-    * @since 3.5
     */
    public static boolean open(int kind, Shell parent, String title, String message, int style) {
       MessageDialog dialog = new MessageDialog(parent, title, null, message, kind, 0, getButtonLabels(kind));
@@ -332,7 +329,6 @@ public class MessageDialog {
     *                           varargs of Strings for the button labels in the
     *                           button bar
     * @return the index of the button that was pressed.
-    * @since 3.13
     */
    public static int open(int kind, Shell parent, String title, String message, int style,
          String... dialogButtonLabels) {
