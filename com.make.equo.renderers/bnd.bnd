@@ -16,6 +16,7 @@ Private-Package: com.make.equo.renderers.contributions
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.server.api;version=latest,\
     com.make.equo.application.provider;version=latest,\
+    com.make.equo.ui.helper.provider;version=latest,\
     org.eclipse.swt.cocoa.macosx.x86_64,\
     org.eclipse.swt.cocoa.macosx.x86_64.source,\
     org.eclipse.swt.gtk.linux.x86_64,\
@@ -54,6 +55,10 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.core.runtime.source, \
     org.eclipse.core.commands, \
     org.eclipse.core.commands.source, \
+    org.eclipse.emf.ecore,\
+    org.eclipse.emf.ecore.source,\
+    org.eclipse.emf.common,\
+    org.eclipse.emf.common.source,\
     org.eclipse.e4.core.commands,\
     org.eclipse.e4.core.commands.source, \
     org.eclipse.osgi,\

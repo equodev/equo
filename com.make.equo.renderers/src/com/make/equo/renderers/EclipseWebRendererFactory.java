@@ -5,13 +5,16 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 
+import com.make.equo.ui.helper.provider.model.MWebDialog;
+
 public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 
 	private static final String EQUO_MAIN_TOOLBAR = "com.make.equo.main.toolbar";
 //	protected MPartRenderer stackRenderer;
 	protected String id;
 	private ToolBarRenderer toolBarRenderer;
-
+	private WebDialogRenderer webDialogRenderer;
+	
 	@Override
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
 
@@ -21,6 +24,12 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 				super.initRenderer(toolBarRenderer);
 			}
 			return toolBarRenderer;
+		} else if (uiElement instanceof MWebDialog) {
+		   if (webDialogRenderer == null) {
+		      webDialogRenderer = new WebDialogRenderer();
+		      super.initRenderer(webDialogRenderer);
+		   }
+		   return webDialogRenderer;
 		}
 //		else if (uiElement instanceof MPartStack) {
 //			if (stackRenderer == null) {

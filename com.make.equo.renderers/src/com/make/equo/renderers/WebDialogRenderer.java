@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
@@ -35,16 +36,19 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 
    private static String ShellMinimizedTag = "shellMinimized"; //$NON-NLS-1$
    private static String ShellMaximizedTag = "shellMaximized"; //$NON-NLS-1$
-   
+
    private String namespace;
    private MWebDialog dialog;
-   
+
+   @Inject
+   private IEquoApplication equoApplication;
+
    @Inject
    private EquoEventHandler equoEventHandler;
 
    @Inject
    private IEquoServer equoProxyServer;
-   
+
    private Shell realParentShell;
 
    @Override
@@ -53,7 +57,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       this.dialog = (MWebDialog) dialog;
 
       Shell parentShell = getParentShell();
-            
+
       prepareShell(parentShell);
 
       configureAndStartRenderProcess(realParentShell);
@@ -66,7 +70,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       equoEventHandler.on(namespace + "_itemClicked", (JsonObject payload) -> {
          JsonElement value = payload.get("command");
          if (value != null) {
-            realParentShell.getDisplay().syncExec( () -> {
+            realParentShell.getDisplay().syncExec(() -> {
                dialog.setResponse(value.getAsInt());
                realParentShell.dispose();
             });
@@ -111,8 +115,23 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
    }
 
    @Override
+   public List<String> getFrameworkContributionJSONFileNames() {
+      return Lists.newArrayList();
+   }
+
+   @Override
+   public String getModelContributionPath() {
+      return "contributions/dialogs/";
+   }
+
+   @Override
    public IEquoServer getEquoProxyServer() {
       return equoProxyServer;
+   }
+
+   @Override
+   public IEquoApplication getEquoApplication() {
+      return equoApplication;
    }
 
    @Override
@@ -155,30 +174,30 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       forceLayout(shell);
       if (shellME.isVisible()) {
          shell.open();
-         
+
          if (dialog.isBlocker()) {
             runEventLoop(shell);
          } else {
             dialog.setResponse(IDialogConstants.OK_ID);
          }
-         
+
       } else {
          shell.setVisible(false);
       }
    }
-   
+
    private void forceLayout(Shell shell) {
       int i = 0;
-      while(shell.isLayoutDeferred()) {
+      while (shell.isLayoutDeferred()) {
          shell.setLayoutDeferred(false);
          i++;
       }
-      while(i > 0) {
+      while (i > 0) {
          shell.setLayoutDeferred(true);
          i--;
       }
    }
-   
+
    private void runEventLoop(Shell loopShell) {
       Display display;
       if (loopShell == null) {
@@ -196,92 +215,94 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
          display.update();
       }
    }
-   
+
    private void prepareShell(Shell parentShell) {
       realParentShell = new Shell(parentShell, SWT.NONE);
-      
+
       realParentShell.addShellListener(new ShellAdapter() {
+
          @Override
          public void shellClosed(ShellEvent event) {
             event.doit = false; // cancel close
-            realParentShell.getDisplay().syncExec( () -> {
+            realParentShell.getDisplay().syncExec(() -> {
                dialog.getParent().getChildren().remove(dialog);
                realParentShell.dispose();
             });
          }
       });
-      
+
       realParentShell.setSize(500, 230);
-      
+
       // Center the dialog relative to the parent shell 
       Rectangle parentBounds = parentShell.getBounds();
       Rectangle thisBounds = realParentShell.getBounds();
-      int locationX = (parentBounds.width - thisBounds.width)/2+parentBounds.x;
-      int locationY = (parentBounds.height - thisBounds.height)/2+parentBounds.y;
+      int locationX = (parentBounds.width - thisBounds.width) / 2 + parentBounds.x;
+      int locationY = (parentBounds.height - thisBounds.height) / 2 + parentBounds.y;
       realParentShell.setLocation(new Point(locationX, locationY));
 
       realParentShell.setLayout(new GridLayout(1, false));
-      
+
       realParentShell.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
    }
-   
+
    /**
     * @return this dialog's parent shell
     */
-   
+
    private Shell getParentShell() {
       Shell parent = (Shell) this.dialog.getParentShell();
       if (parent == null) {
          Display d = Display.getCurrent();
 
          if (d == null) {
-             return null;
+            return null;
          }
 
          parent = d.getActiveShell();
 
          // Make sure we don't pick a parent that has a modal child (this can lock the app)
          if (parent == null) {
-             // If this is a top-level window, then there must not be any open modal windows.
-             parent = getModalChild(Display.getCurrent().getShells());
+            // If this is a top-level window, then there must not be any open modal windows.
+            parent = getModalChild(Display.getCurrent().getShells());
          } else {
-             // If we picked a parent with a modal child, use the modal child instead
-             Shell modalChild = getModalChild(parent.getShells());
-             if (modalChild != null) {
-                 parent = modalChild;
-             }
+            // If we picked a parent with a modal child, use the modal child instead
+            Shell modalChild = getModalChild(parent.getShells());
+            if (modalChild != null) {
+               parent = modalChild;
+            }
          }
       }
-      return parent;         
+      return parent;
 
    }
-   
+
    /**
-   * Returns the most specific modal child from the given list of Shells.
-   *
-   * @param toSearch shells to search for modal children
-   * @return the most specific modal child, or null if none
-   *
-   */
-  private static Shell getModalChild(Shell[] toSearch) {
+    * Returns the most specific modal child from the given list of Shells.
+    *
+    * @param toSearch
+    *                 shells to search for modal children
+    * @return the most specific modal child, or null if none
+    */
+   private static Shell getModalChild(Shell[] toSearch) {
       int modal = SWT.APPLICATION_MODAL | SWT.SYSTEM_MODAL | SWT.PRIMARY_MODAL;
 
       for (int i = toSearch.length - 1; i >= 0; i--) {
-          Shell shell = toSearch[i];
+         Shell shell = toSearch[i];
 
-          // Check if this shell has a modal child
-          Shell[] children = shell.getShells();
-          Shell modalChild = getModalChild(children);
-          if (modalChild != null) {
-              return modalChild;
-          }
+         // Check if this shell has a modal child
+         Shell[] children = shell.getShells();
+         Shell modalChild = getModalChild(children);
+         if (modalChild != null) {
+            return modalChild;
+         }
 
-          // If not, check if this shell is modal itself
-          if (shell.isVisible() && (shell.getStyle() & modal) != 0) {
-              return shell;
-          }
+         // If not, check if this shell is modal itself
+         if (shell.isVisible() && (shell.getStyle() & modal) != 0) {
+            return shell;
+         }
       }
 
       return null;
-  }
+   }
+
 }
