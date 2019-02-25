@@ -14,11 +14,11 @@
      "commandId": "org.eclipse.ui.newWizard",
      "tooltip": "New"
   },
-  "new.group": {
-     "icon": "arrow_drop_down",
-     "commandId": "org.eclipse.ui.newWizard",
-     "tooltip": "New"
-  },
+  // "new.group": {
+  //    "icon": "arrow_drop_down",
+  //    "commandId": "org.eclipse.ui.newWizard",
+  //    "tooltip": "New"
+  // },
   "print": {
      "icon": "print",
      "commandId": "org.eclipse.ui.file.print",
@@ -29,11 +29,11 @@
      "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction",
      "tooltip": "Debug"
   },
-  "org.eclipse.debug.internal.ui.actions.DebugDropDownAction": {
-     "icon": "bug_report",
-     "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction",
-     "tooltip": "Debug"
-  },
+  // "org.eclipse.debug.internal.ui.actions.DebugDropDownAction": {
+  //    "icon": "bug_report",
+  //    "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.DebugDropDownAction",
+  //    "tooltip": "Debug"
+  // },
   "org.eclipse.debug.internal.ui.actions.RunDropDownAction": {
      "icon": "play_circle_filled",
      "commandId": "AUTOGEN:::org.eclipse.debug.ui.launchActionSet/org.eclipse.debug.internal.ui.actions.RunDropDownAction",
