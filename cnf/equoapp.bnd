@@ -123,7 +123,7 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 	com.make.equo.aer.internal.api;version='[0.1.0,0.2.0)',\
 	com.make.equo.aer.internal.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.contribution.media.provider;version='[0.1.0,0.2.0)',\
-	com.make.equo.ui.helper.provider;version='[0.1.0,0.2.0)',\	
+	com.make.equo.ui.helper.provider;version='[0.1.0,0.2.0)',\
 	com.make.equo.renderers;version='[0.1.0,0.2.0)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
