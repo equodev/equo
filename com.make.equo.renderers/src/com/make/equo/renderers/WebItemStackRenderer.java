@@ -10,27 +10,19 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.extensions.Preference;
-import org.eclipse.e4.ui.css.swt.properties.custom.CSSPropertyMruVisibleSWTHandler;
-import org.eclipse.e4.ui.internal.workbench.swt.CSSRenderingUtils;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.UIEvents.Placeholder;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer;
 import org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer;
-import org.eclipse.e4.ui.workbench.renderers.swt.StackRenderer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.w3c.dom.css.CSSValue;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -40,7 +32,7 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 import com.make.swtcef.Chromium;
 
-public class WebItemStackRenderer extends StackRenderer implements IEquoRenderer{
+public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRenderer{
 
 	/**
 	 * Default default value for MRU behavior.
