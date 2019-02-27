@@ -98,7 +98,7 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 				MPlaceholder placeholder = (MPlaceholder) e;
 
 				MUIElement ref = placeholder.getRef();
-				if (ref != null && ref instanceof MPart && ((MPart) ref).isVisible()) {
+				if (ref != null && ref instanceof MPart) {
 					HashMap<String, String> partStackModel = new HashMap<String, String>();
 					MPart mPart = (MPart) ref;
 					partStackModel.put("label", mPart.getLabel());
