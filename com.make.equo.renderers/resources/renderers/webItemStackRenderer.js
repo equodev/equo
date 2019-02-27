@@ -1,19 +1,11 @@
 $(document).ready(function () {
 
-    let tabs = {
+    let app = {
         template: `
-      <div class="app2">
-      <span v-for="item in e4Model">
-        <el-tabs  type="card" @tab-click="callE4Command(item.id)>
-            <el-tab-pane
-                v-for="(item, index) in parts"
-                key="item.id"
-                label="item.label"
-                name="item.label">
-                {{item.label}}
-             </el-tab-pane>
-        </el-tabs>
-        </span>
+      <div class="app">
+        <md-tabs md-sync-route>
+            <md-tab v-for="item in e4Model" :id="item.id" :md-label="item.label"></md-tab>
+        </md-tabs>
       </div>
       `,
         props: {
@@ -27,19 +19,20 @@ $(document).ready(function () {
         },
         mounted() {},
         methods: {
-        	 callE4Command(commandId) {
-        		 console.log(this.activeName);
-        		 equo.send(this.namespace + '_itemClicked', {
-        			 command: commandId
-                 });
-             }
-
+            callE4Command(namespace, tabId) {
+                console.log(this.activeName);
+                equo.send(this.namespace + '_tabClicked', {
+                    partId: tabId,
+                    namespace
+                });
+            }
         },
         style: `
         `
     };
-    Vue.component("tabs-comp", tabs);
-  
+    Vue.component("tabs-comp", app);
+    Vue.use(VueMaterial.default)
+
     // Add web stack elements to the html body
     const createWebItemStack = function (namespace, e4Model) {
         console.log('The e4 model is ', e4Model);
@@ -52,7 +45,7 @@ $(document).ready(function () {
         }).$mount()
 
         $('body').append(component.$el)
-       
+
     }
 
     equo.getE4Model(createWebItemStack);
