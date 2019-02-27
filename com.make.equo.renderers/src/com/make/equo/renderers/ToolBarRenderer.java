@@ -141,7 +141,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public List<Map<String, String>> getEclipse4Model() {
+	public List<Map<String, String>> getEclipse4Model(String namespace) {
 		List<Map<String, String>> e4Model = new ArrayList<Map<String, String>>();
 		List<MToolBarElement> mToolBarElements = mToolBar.getChildren();
 
