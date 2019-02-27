@@ -4,7 +4,7 @@ $(document).ready(function () {
         template: `
       <div class="app">
         <md-tabs md-sync-route>
-            <md-tab v-for="item in e4Model" :id="item.id" :md-label="item.label"></md-tab>
+            <md-tab v-for="item in e4Model" :id="item.id" :md-label="item.label" @click="callE4Command(item.id)"></md-tab>
         </md-tabs>
       </div>
       `,
@@ -19,11 +19,10 @@ $(document).ready(function () {
         },
         mounted() {},
         methods: {
-            callE4Command(namespace, tabId) {
-                console.log(this.activeName);
+            callE4Command(tabId) {
                 equo.send(this.namespace + '_tabClicked', {
                     partId: tabId,
-                    namespace
+                    namespace: this.namespace
                 });
             }
         },
