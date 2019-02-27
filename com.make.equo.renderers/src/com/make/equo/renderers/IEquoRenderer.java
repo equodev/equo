@@ -96,7 +96,7 @@ public interface IEquoRenderer {
 					}
 				});
 		equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
-			List<Map<String, String>> eclipse4Model = getEclipse4Model();
+			List<Map<String, String>> eclipse4Model = getEclipse4Model(namespace);
 			if (!eclipse4Model.isEmpty()) {
 				equoEventHandler.send(namespace + "_model", eclipse4Model);
 			}
@@ -189,7 +189,7 @@ public interface IEquoRenderer {
 
 	EquoEventHandler getEquoEventHandler();
 
-	List<Map<String, String>> getEclipse4Model();
+	List<Map<String, String>> getEclipse4Model(String namespace);
 
 	/**
 	 * Returns a list of JSON file names which contributes to an Eclipse model

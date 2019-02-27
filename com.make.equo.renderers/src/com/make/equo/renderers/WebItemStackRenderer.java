@@ -1,132 +1,165 @@
 package com.make.equo.renderers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.di.extensions.Preference;
-import org.eclipse.e4.ui.internal.workbench.swt.CSSRenderingUtils;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer;
+import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
+import org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.w3c.dom.css.CSSValue;
+import org.eclipse.swt.widgets.Display;
 
-/**
- * 
- * TODO: DO NOT PAY ATTENTION TO THIS CLASS. IMPLEMENT YOUR OWN STACK RENDERER.
- *
- */
-public class WebItemStackRenderer extends LazyStackRenderer {
+import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.make.equo.application.api.IEquoApplication;
+import com.make.equo.server.api.IEquoServer;
+import com.make.equo.ws.api.EquoEventHandler;
+import com.make.swtcef.Chromium;
 
-	/**
-	 * Default default value for MRU behavior.
-	 */
-	public static final boolean MRU_DEFAULT = true;
+public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRenderer {
 
-	/**
-	 * Key to control the default default value of the "most recently used" order
-	 * enablement
-	 */
-	public static final String MRU_KEY_DEFAULT = "enableMRUDefault"; //$NON-NLS-1$
-
-	/**
-	 * Key to control the actual boolean preference of the "most recently used"
-	 * order enablement
-	 */
-	public static final String MRU_KEY = "enableMRU"; //$NON-NLS-1$
-
-	// Minimum characters in for stacks outside the shared area
-	private static int MIN_VIEW_CHARS = 1;
-
-	// Minimum characters in for stacks inside the shared area
-	private static int MIN_EDITOR_CHARS = 15;
+	private String namespace;
+	private static final Map<String, MUIElement> partStacks = new HashMap<String, MUIElement>();
 
 	@Inject
-	@Preference(nodePath = "org.eclipse.e4.ui.workbench.renderers.swt")
-	private IEclipsePreferences preferences;
+	private EquoEventHandler equoEventHandler;
+	@Inject
+	private IEquoServer equoProxyServer;
 
-	public void init(IEclipseContext context) {
-		this.context = context;
-		modelService = context.get(EModelService.class);
-	}
+	@Inject
+	private IEquoApplication equoApplication;
 
 	@Override
 	public Object createWidget(MUIElement element, Object parent) {
-		if (!(element instanceof MPartStack) || !(parent instanceof Composite))
+		if (!(element instanceof MPartStack) || !(parent instanceof Composite)) {
 			return null;
-
-		MPartStack pStack = (MPartStack) element;
-
-		Composite parentComposite = (Composite) parent;
-
-		// Ensure that all rendered PartStacks have an Id
-		if (element.getElementId() == null || element.getElementId().length() == 0) {
-			String generatedId = "PartStack@" + Integer.toHexString(element.hashCode()); //$NON-NLS-1$
-			element.setElementId(generatedId);
 		}
 
-		int styleOverride = getStyleOverride(pStack);
-		int style = styleOverride == -1 ? SWT.BORDER : styleOverride;
-		final CTabFolder tabFolder = new CTabFolder(parentComposite, style);
-		tabFolder.setMRUVisible(getMRUValue(tabFolder));
+		this.namespace = "WebItemStackRenderer" + Integer.toHexString(element.hashCode());
+		partStacks.put(this.namespace, element);
 
-		// Adjust the minimum chars based on the location
-		int location = modelService.getElementLocation(element);
-		if ((location & EModelService.IN_SHARED_AREA) != 0) {
-			tabFolder.setMinimumCharacters(MIN_EDITOR_CHARS);
-			tabFolder.setUnselectedCloseVisible(true);
-		} else {
-			tabFolder.setMinimumCharacters(MIN_VIEW_CHARS);
-			tabFolder.setUnselectedCloseVisible(false);
-		}
+		Composite webItemStackRendererComposite = (Composite) parent;
 
-		bindWidget(element, tabFolder); // ?? Do we need this ?
+		configureAndStartRenderProcess(webItemStackRendererComposite);
 
-		// Add a composite to manage the view's TB and Menu
-//		addTopRight(tabFolder);
-
-		return tabFolder;
+		return webItemStackRendererComposite;
 	}
 
 	@Override
-	protected void createTab(MElementContainer<MUIElement> me, MUIElement part) {
+	public void onActionPerformedOnElement() {
+		equoEventHandler.on(namespace + "_tabClicked", (JsonObject payload) -> {
+			JsonElement value = payload.get("accion");
+			String id = "";
+			if (value != null) {
+				id = value.getAsString();
+			}
+			runAccion(id, (JsonObject) payload.get("params"));
+		});
 	}
 
-	private boolean getInitialMRUValue(Control control) {
-		CSSRenderingUtils util = context.get(CSSRenderingUtils.class);
-		if (util == null) {
-			return getMRUValueFromPreferences();
-		}
+	private void runAccion(String id, JsonObject actionPayload) {
+		Display defaultDisplay = Display.getDefault();
 
-		CSSValue value = util.getCSSValue(control, "MPartStack", "swt-mru-visible"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		if (value == null) {
-			value = util.getCSSValue(control, "MPartStack", "mru-visible"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		if (value == null) {
-			return getMRUValueFromPreferences();
-		}
-		return Boolean.parseBoolean(value.getCssText());
+		defaultDisplay.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				MessageDialog.openInformation(defaultDisplay.getActiveShell(), "Action performed from JS",
+						"Action performed from JS. Vamos Equo!");
+			}
+		});
 	}
 
-	private boolean getMRUValueFromPreferences() {
-		boolean initialMRUValue = preferences.getBoolean(MRU_KEY_DEFAULT, MRU_DEFAULT);
-		boolean actualValue = preferences.getBoolean(MRU_KEY, initialMRUValue);
-		return actualValue;
+	@Override
+	public List<Map<String, String>> getEclipse4Model(String namespace) {
+		List<Map<String, String>> e4Model = new ArrayList<Map<String, String>>();
+
+		if (!partStacks.containsKey(namespace)) {
+			// TODO throw a custom exception
+		}
+
+		MUIElement muiElement = partStacks.get(namespace);
+
+		List<MStackElement> children = ((MPartStack) muiElement).getChildren();
+		for (MStackElement e : children) {
+//			if ((e instanceof MPart) || (e instanceof MPlaceholder)) {
+			if (e instanceof MPlaceholder) {
+				MPlaceholder placeholder = (MPlaceholder) e;
+
+				MUIElement ref = placeholder.getRef();
+				if (ref != null && ref instanceof MPart) {
+					HashMap<String, String> partStackModel = new HashMap<String, String>();
+					MPart mPart = (MPart) ref;
+					partStackModel.put("label", mPart.getLabel());
+					partStackModel.put("visible", Boolean.toString(mPart.isVisible()));
+					partStackModel.put("closeable", Boolean.toString(mPart.isCloseable()));
+					partStackModel.put("tooltip", mPart.getTooltip());
+					partStackModel.put("iconURI", mPart.getIconURI());
+					partStackModel.put("isDirty", Boolean.toString(mPart.isDirty()));
+					e4Model.add(partStackModel);
+				}
+			}
+		}
+		return e4Model;
 	}
 
-	private boolean getMRUValue(Control control) {
-//		if (CSSPropertyMruVisibleSWTHandler.isMRUControlledByCSS()) {
-//			return getInitialMRUValue(control);
-//		}
-//		return getMRUValueFromPreferences();
-		
-		return true;
+	@Override
+	public List<String> getJsFileNamesForRendering() {
+		return Lists.newArrayList("renderers/webItemStackRenderer.js");
+	}
+
+	@Override
+	public String getNamespace() {
+		return namespace;
+	}
+
+	@Override
+	public IEquoServer getEquoProxyServer() {
+		return equoProxyServer;
+	}
+
+	@Override
+	public Chromium createBrowserComponent(Composite toolBarParent) {
+		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
+				new String[] { "ignore-certificate-errors", null },
+				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
+				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
+
+		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
+		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).hint(200, 25).applyTo(browser);
+
+		return browser;
+	}
+
+	@Override
+	public List<String> getFrameworkContributionJSONFileNames() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public IEquoApplication getEquoApplication() {
+		return equoApplication;
+	}
+
+	@Override
+	public EquoEventHandler getEquoEventHandler() {
+		return equoEventHandler;
+	}
+
+	@Override
+	public String getModelContributionPath() {
+		return "contributions/partStack/";
 	}
 }
