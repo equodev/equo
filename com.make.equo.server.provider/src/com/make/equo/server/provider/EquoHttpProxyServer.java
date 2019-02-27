@@ -137,10 +137,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void addCustomScript(String url, String scriptUrl) {
+		String generatedScriptSentence = generateScriptSentence(scriptUrl);
 		if (!urlsToScripts.containsKey(url)) {
-			urlsToScripts.put(url, generateScriptSentence(scriptUrl));
+			urlsToScripts.put(url, generatedScriptSentence);
 		} else {
-			urlsToScripts.put(url, appendScriptToExistingOnes(url, scriptUrl));
+			String existingScripts = urlsToScripts.get(url);
+			if (!existingScripts.contains(generatedScriptSentence)) {
+				urlsToScripts.put(url, appendScriptToExistingOnes(url, generatedScriptSentence));
+			}
 		}
 	}
 
@@ -241,12 +245,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return javascriptApis;
 	}
 
-	private String appendScriptToExistingOnes(String url, String scriptUrl) {
+	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
 		String existingCustomJsScripts = urlsToScripts.get(url);
 		StringBuilder result = new StringBuilder();
 		result.append(existingCustomJsScripts);
 		result.append("\n");
-		result.append(generateScriptSentence(scriptUrl));
+		result.append(generatedScriptSentence);
 		return result.toString();
 	}
 
