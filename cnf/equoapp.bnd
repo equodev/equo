@@ -50,8 +50,13 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(osgi.identity=com.make.cef.windows.*)',\
 	osgi.identity;filter:='(osgi.identity=com.make.cef.linux.*)',\
 	osgi.identity;filter:='(osgi.identity=com.make.cef.osx.*)'
+
+#    aj.weaving.verbose=true,\
+#    org.aspectj.weaver.showWeaveInfo=true,\
+#    org.aspectj.osgi.verbose=true,\
 -runproperties.equo: \
-    applicationCSS=platform:/plugin/com.make.equo.application.provider/default.css, \
+    osgi.framework.extensions=org.eclipse.equinox.weaving.hook,\
+    applicationCSS=platform:/plugin/com.make.equo.application.provider/default.css,\
     applicationXMI=com.make.equo.application.provider/Application.e4xmi,\
     eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
     lifeCycleURI=bundleclass://com.make.equo.application.provider/com.make.equo.application.LifeCycleManager,\
@@ -96,7 +101,14 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 -runbundles.platform: \
     ${swt.fragment},\
     ${cef.fragment}
+-runpath: \
+    org.eclipse.equinox.weaving.hook
 -runbundles.equo: \
+    org.eclipse.equinox.weaving.aspectj,\
+    org.eclipse.equinox.weaving.caching,\
+    com.make.equo.aspects;version='[0.1.0,0.2.0)',\
+    org.aspectj.weaver;version='[1.9.2,1.9.3)',\
+    org.aspectj.runtime;version='[1.9.2,1.9.3)',\
 	bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
 	com.github.jnr.ffi;version='[2.1.7,2.1.8)',\
 	com.github.jnr.jffi;version='[1.2.14,1.2.15)',\
