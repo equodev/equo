@@ -66,7 +66,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 		Composite parentComp = (Composite) parent;
 
-		Composite browserComposite = new Composite(parentComp, SWT.HORIZONTAL);
+		Composite browserComposite = new Composite(parentComp, 1000);
 
 		configureAndStartRenderProcess(browserComposite);
 
@@ -106,8 +106,10 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
 		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
+		toolBarParent.getHorizontalBar().setVisible(false);
+		toolBarParent.getVerticalBar().setVisible(false);
 		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, true).hint(2000, 25).applyTo(browser);
+		GridDataFactory.fillDefaults().grab(true, true).hint(2000, 24).applyTo(browser);
 
 		return browser;
 	}
