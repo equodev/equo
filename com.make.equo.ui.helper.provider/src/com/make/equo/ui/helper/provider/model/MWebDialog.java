@@ -110,7 +110,7 @@ public interface MWebDialog extends EObject, MWindow {
     * @return the value of the '<em>Parent Shell</em>' attribute.
     * @see #setParentShell(Object)
     * @see com.make.equo.ui.helper.provider.model.WebdialogPackage#getMWebDialog_ParentShell()
-    * @model
+    * @model transient="true"
     * @generated
     */
    Object getParentShell();
