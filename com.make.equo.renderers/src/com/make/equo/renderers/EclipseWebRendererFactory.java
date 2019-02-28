@@ -2,6 +2,7 @@ package com.make.equo.renderers;
 
 import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 
@@ -31,13 +32,13 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 		   }
 		   return webDialogRenderer;
 		}
-//		else if (uiElement instanceof MPartStack) {
-//			if (stackRenderer == null) {
-//				stackRenderer = new WebItemStackRenderer();
-//				super.initRenderer(stackRenderer);
-//			}
-//			return stackRenderer;
-//		}
+		else if (uiElement instanceof MPartStack) {
+			if (stackRenderer == null) {
+				stackRenderer = new WebItemStackRenderer();
+				super.initRenderer(stackRenderer);
+			}
+			return stackRenderer;
+		}
 		return super.getRenderer(uiElement, parent);
 	}
 

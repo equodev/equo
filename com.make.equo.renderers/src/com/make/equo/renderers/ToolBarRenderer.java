@@ -35,6 +35,10 @@ import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
+	static final String EQUO_RENDERERS_NAME = "toolbar";
+	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
+			+ EQUO_RENDERERS_URL_SUFFIX;
+
 	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
 
 	@Inject
@@ -170,6 +174,11 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	@Override
 	public String getModelContributionPath() {
 		return "contributions/mainToolBar/";
+	}
+
+	@Override
+	public String getEquoRendererURL() {
+		return EQUO_RENDERERS_URL;
 	}
 
 }

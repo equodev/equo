@@ -12,6 +12,7 @@ import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
+import org.eclipse.e4.ui.model.application.ui.basic.impl.PartStackImpl;
 import org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -29,6 +30,10 @@ import com.make.equo.ws.api.EquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRenderer {
+
+	static final String EQUO_RENDERERS_NAME = "part_stack";
+	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
+			+ EQUO_RENDERERS_URL_SUFFIX;
 
 	private String namespace;
 	private static final Map<String, MUIElement> partStacks = new HashMap<String, MUIElement>();
@@ -91,26 +96,35 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 
 		MUIElement muiElement = partStacks.get(namespace);
 
+		MStackElement selected = ((MPartStack) muiElement).getSelectedElement();
+
 		List<MStackElement> children = ((MPartStack) muiElement).getChildren();
 		for (MStackElement e : children) {
 //			if ((e instanceof MPart) || (e instanceof MPlaceholder)) {
+
+			MUIElement ref = null;
 			if (e instanceof MPlaceholder) {
 				MPlaceholder placeholder = (MPlaceholder) e;
-
-				MUIElement ref = placeholder.getRef();
-				if (ref != null && ref instanceof MPart) {
-					HashMap<String, String> partStackModel = new HashMap<String, String>();
-					MPart mPart = (MPart) ref;
-					partStackModel.put("label", mPart.getLabel());
-					partStackModel.put("visible", Boolean.toString(mPart.isVisible()));
-					partStackModel.put("closeable", Boolean.toString(mPart.isCloseable()));
-					partStackModel.put("tooltip", mPart.getTooltip());
-					partStackModel.put("iconURI", mPart.getIconURI());
-					partStackModel.put("isDirty", Boolean.toString(mPart.isDirty()));
-					e4Model.add(partStackModel);
-				}
+				ref = placeholder.getRef();
+			} else if (e instanceof MPart) {
+				ref = e;
+			}
+			if (ref != null) {
+				HashMap<String, String> partStackModel = new HashMap<String, String>();
+				MPart mPart = (MPart) ref;
+				partStackModel.put("label", mPart.getLabel());
+				partStackModel.put("visible", Boolean.toString(mPart.isVisible()));
+				partStackModel.put("closeable", Boolean.toString(mPart.isCloseable()));
+				partStackModel.put("tooltip", mPart.getTooltip());
+				partStackModel.put("iconURI", mPart.getIconURI());
+				partStackModel.put("isDirty", Boolean.toString(mPart.isDirty()));
+				partStackModel.put("isSelected",
+						Boolean.toString(selected.getElementId().equals(mPart.getElementId())));
+				partStackModel.put("id", mPart.getElementId());
+				e4Model.add(partStackModel);
 			}
 		}
+
 		return e4Model;
 	}
 
@@ -161,5 +175,10 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 	@Override
 	public String getModelContributionPath() {
 		return "contributions/partStack/";
+	}
+
+	@Override
+	public String getEquoRendererURL() {
+		return EQUO_RENDERERS_URL;
 	}
 }

@@ -36,8 +36,9 @@ import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
 public interface IEquoRenderer {
-
-	static final String EQUO_RENDERERS_URL = "http://equo_renderers";
+	
+	static final String EQUO_RENDERERS_URL_PREFIX = "http://";
+	static final String EQUO_RENDERERS_URL_SUFFIX = ".equo_renderers";
 
 	/**
 	 * The initial point to start an Equo render process.
@@ -46,21 +47,22 @@ public interface IEquoRenderer {
 	 */
 	default void configureAndStartRenderProcess(Composite parent) {
 		Chromium browser = createBrowserComponent(parent);
-		getEquoProxyServer().addUrl(EQUO_RENDERERS_URL);
+		
+		getEquoProxyServer().addUrl(getEquoRendererURL());
 
 		String renderersContributionPath = getEquoProxyServer().getEquoContributionPath()
 				+ EquoRenderersContribution.TYPE + "/";
 
 		String rendererFrameworkJsFileUri = renderersContributionPath + "rendererFramework.js";
-		getEquoProxyServer().addCustomScript(EQUO_RENDERERS_URL, rendererFrameworkJsFileUri);
+		getEquoProxyServer().addCustomScript(getEquoRendererURL(), rendererFrameworkJsFileUri);
 
 		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
 		for (String fileName : jsScriptsFilesForRendering) {
 			String e4ElemmentContributionUri = renderersContributionPath + fileName;
-			getEquoProxyServer().addCustomScript(EQUO_RENDERERS_URL, e4ElemmentContributionUri);
+			getEquoProxyServer().addCustomScript(getEquoRendererURL(), e4ElemmentContributionUri);
 		}
 
-		String renderersUri = EQUO_RENDERERS_URL + "/" + getEquoProxyServer().getEquoContributionPath()
+		String renderersUri = getEquoRendererURL() + "/" + getEquoProxyServer().getEquoContributionPath()
 				+ EquoRenderersContribution.TYPE;
 
 		String namespace = getNamespace();
@@ -181,6 +183,12 @@ public interface IEquoRenderer {
 		return Optional.empty();
 	}
 
+	/**
+	 * Return an URL for the Rendeder. 
+	 * @return a String with Equo Render URL 
+	 */
+	String getEquoRendererURL();
+	
 	/**
 	 * Receives a message when an action is performed on an element in the
 	 * Javascript side(i.e. click on a toolbar item).
