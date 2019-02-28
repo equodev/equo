@@ -1,5 +1,6 @@
 package com.make.equo.server.provider;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private static final String baseRendererPath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
 			+ RENDERERS_CONTRIBUTION_TYPE + "/baseRenderer.html";
 
-	private static final String EQUO_RENDERERS_URL = "http://equo_renderers";
+	private static final String EQUO_RENDERERS_SUBFIX = "equo_renderers";
 
 	private Map<String, IEquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
@@ -80,7 +81,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (isEquoRendererRequest(originalRequest)) {
 			return new RenderersRequestFiltersAdapter(originalRequest,
 					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
-					equoContributionsJsApis, getCustomScripts(EQUO_RENDERERS_URL), baseRendererPath);
+					equoContributionsJsApis, getCustomScripts(originalRequest.getUri()), baseRendererPath);
 		}
 
 		if (isLocalFileRequest(originalRequest)) {
@@ -112,7 +113,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private boolean isEquoRendererRequest(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
-		String renderersUri = EQUO_RENDERERS_URL + "/" + EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
+		String renderersUri = EQUO_RENDERERS_SUBFIX + "/" + EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
 				+ RENDERERS_CONTRIBUTION_TYPE;
 		return uri.contains(renderersUri);
 	}
@@ -165,10 +166,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	}
 
 	private String getCustomScripts(String url) {
-		if (!urlsToScriptsAsStrings.containsKey(url)) {
+		URI uri = URI.create(url);
+		String key = uri.getScheme()+"://"+uri.getAuthority();
+		if (!urlsToScriptsAsStrings.containsKey(key)) {
 			return "";
 		}
-		return urlsToScriptsAsStrings.get(url);
+		return urlsToScriptsAsStrings.get(key);
 	}
 
 	@Override

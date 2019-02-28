@@ -147,7 +147,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 			}
 		}
 	}
-
+	
 	@Override
 	public void addUrl(String url) {
 		if (!proxiedUrls.contains(url)) {
