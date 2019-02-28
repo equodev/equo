@@ -18,6 +18,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 	osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.aspects)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.server.api)',\
 	osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
