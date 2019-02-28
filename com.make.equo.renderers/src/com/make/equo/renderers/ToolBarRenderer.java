@@ -110,6 +110,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
 		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
+
 		toolBarParent.getHorizontalBar().setVisible(false);
 		toolBarParent.getVerticalBar().setVisible(false);
 		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
