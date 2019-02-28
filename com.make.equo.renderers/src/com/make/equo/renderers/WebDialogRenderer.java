@@ -218,7 +218,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
    }
 
    private void prepareShell(Shell parentShell) {
-      realParentShell = new Shell(parentShell, SWT.CLOSE);
+      realParentShell = new Shell(parentShell, SWT.NONE);
 
       realParentShell.setSize(500, 250);
 

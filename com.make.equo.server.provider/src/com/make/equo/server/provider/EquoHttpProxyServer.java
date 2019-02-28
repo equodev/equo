@@ -25,6 +25,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ServiceScope;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -36,7 +37,7 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
-@Component
+@Component(scope=ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
 
 	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
@@ -108,12 +109,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Deactivate
 	public void stop() {
 		System.out.println("Stopping proxy...");
-		if (internetConnectionChecker != null) {
-			internetConnectionChecker.shutdownNow();
-		}
-		if (proxyServer != null) {
-			proxyServer.stop();
-		}
+//		if (internetConnectionChecker != null) {
+//			internetConnectionChecker.shutdownNow();
+//		}
+//		if (proxyServer != null) {
+//			proxyServer.stop();
+//		}
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)

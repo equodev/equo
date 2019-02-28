@@ -48,7 +48,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	private static EquoEventHandler equoEventHandler;
 
 	@Inject
-	private static IEquoServer equoProxyServer;
+	private IEquoServer equoProxyServer;
 
 	@Inject
 	private MApplication mApplication;
