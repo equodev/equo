@@ -152,6 +152,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
       shell.addDisposeListener(e -> {
          Shell shell1 = (Shell) e.widget;
          if (disposeME != null) {
+            dialog.getParent().getChildren().remove(dialog);
             disposeME.getTags().remove(ShellMinimizedTag);
             disposeME.getTags().remove(ShellMaximizedTag);
             if (shell1.getMinimized()) {
@@ -218,18 +219,6 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 
    private void prepareShell(Shell parentShell) {
       realParentShell = new Shell(parentShell, SWT.CLOSE);
-
-      realParentShell.addShellListener(new ShellAdapter() {
-
-         @Override
-         public void shellClosed(ShellEvent event) {
-            event.doit = false; // cancel close
-            realParentShell.getDisplay().syncExec(() -> {
-               dialog.getParent().getChildren().remove(dialog);
-               realParentShell.dispose();
-            });
-         }
-      });
 
       realParentShell.setSize(500, 250);
 
