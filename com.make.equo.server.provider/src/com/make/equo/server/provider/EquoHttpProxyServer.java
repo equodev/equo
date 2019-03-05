@@ -37,7 +37,7 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
-@Component(scope=ServiceScope.SINGLETON)
+@Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
 
 	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
@@ -148,7 +148,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 			}
 		}
 	}
-	
+
 	@Override
 	public void addUrl(String url) {
 		if (!proxiedUrls.contains(url)) {

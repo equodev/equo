@@ -167,7 +167,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private String getCustomScripts(String url) {
 		URI uri = URI.create(url);
-		String key = uri.getScheme()+"://"+uri.getAuthority();
+		String key = uri.getScheme() + "://" + uri.getAuthority();
 		if (!urlsToScriptsAsStrings.containsKey(key)) {
 			return "";
 		}
