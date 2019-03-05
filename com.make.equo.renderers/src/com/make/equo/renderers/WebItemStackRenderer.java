@@ -4,21 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
-import org.eclipse.e4.ui.model.application.ui.basic.impl.PartStackImpl;
 import org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.common.collect.Lists;
@@ -55,11 +57,21 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 		this.namespace = "WebItemStackRenderer" + Integer.toHexString(element.hashCode());
 		partStacks.put(this.namespace, element);
 
-		Composite webItemStackRendererComposite = (Composite) parent;
+		Composite container = (Composite) parent;
+		Composite webItemStackRendererComposite = new Composite(container, SWT.BORDER);
+		GridLayoutFactory.fillDefaults().applyTo(webItemStackRendererComposite);
 
 		configureAndStartRenderProcess(webItemStackRendererComposite);
 
 		return webItemStackRendererComposite;
+	}
+
+	@Override
+	public void childRendered(MElementContainer<MUIElement> parentElement, MUIElement element) {
+		super.childRendered(parentElement, element);
+		if (element.getWidget() instanceof Control) {
+			GridDataFactory.fillDefaults().grab(true, true).applyTo((Control) element.getWidget());
+		}
 	}
 
 	@Override
@@ -118,13 +130,12 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 				partStackModel.put("tooltip", mPart.getTooltip());
 				partStackModel.put("iconURI", mPart.getIconURI());
 				partStackModel.put("isDirty", Boolean.toString(mPart.isDirty()));
-				partStackModel.put("isSelected",
-						Boolean.toString(selected.getElementId().equals(mPart.getElementId())));
+				partStackModel.put("isSelected", Boolean
+						.toString(selected != null && Objects.equals(selected.getElementId(), mPart.getElementId())));
 				partStackModel.put("id", mPart.getElementId());
 				e4Model.add(partStackModel);
 			}
 		}
-
 		return e4Model;
 	}
 
@@ -150,9 +161,9 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
 				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
-		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
+//		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
 		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, true).hint(200, 25).applyTo(browser);
+		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
 
 		return browser;
 	}
@@ -181,4 +192,5 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 	public String getEquoRendererURL() {
 		return EQUO_RENDERERS_URL;
 	}
+
 }
