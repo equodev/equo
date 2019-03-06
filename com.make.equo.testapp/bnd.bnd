@@ -1,3 +1,4 @@
+-outputmask: ${@bsn}.jar
 -include: ${build}/equoapp.bnd
 #-runrepos: Release
 
