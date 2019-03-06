@@ -21,4 +21,5 @@ Private-Package: \
 	org.apache.httpcomponents.httpcore,\
 	org.apache.httpcomponents.httpcore.source,\
 	com.make.equo.contribution.api;version=latest,\
-    com.make.equo.application.provider;version=latest
+    com.make.equo.application.provider;version=latest,\
+    com.make.equo.aer.api

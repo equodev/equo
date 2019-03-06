@@ -1,4 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
+Bundle-ActivationPolicy: lazy
+Bundle-SymbolicName: com.make.equo.renderers;singleton:=true
 Private-Package: com.make.equo.renderers.contributions
 -includeresource: resources/
 -buildpath: \
@@ -10,9 +12,11 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.swt,\
     javax.inject,\
     javax.inject.source,\
-    com.make.equo.ws.api,\
+    com.make.equo.ws.api;version=latest,\
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.server.api;version=latest,\
+    com.make.equo.application.provider;version=latest,\
+    com.make.equo.ui.helper.provider;version=latest,\
     org.eclipse.swt.cocoa.macosx.x86_64,\
     org.eclipse.swt.cocoa.macosx.x86_64.source,\
     org.eclipse.swt.gtk.linux.x86_64,\
@@ -28,6 +32,36 @@ Private-Package: com.make.equo.renderers.contributions
     org.eclipse.osgi.source, \
     osgi.cmpn,\
     org.eclipse.equinox.common, \
-    org.eclipse.equinox.common.source
+    org.eclipse.equinox.common.source, \
+    org.eclipse.equinox.preferences, \
+    org.eclipse.equinox.preferences.source, \
+    org.eclipse.e4.core.services, \
+    org.eclipse.e4.core.services.source, \
+    org.eclipse.e4.core.di.extensions, \
+    org.eclipse.e4.core.di.extensions.source, \
+    org.eclipse.e4.ui.css.swt, \
+    org.eclipse.e4.ui.css.swt.source, \
+    org.eclipse.e4.ui.css.core, \
+    org.eclipse.e4.ui.css.core.source, \
+    org.eclipse.e4.ui.workbench, \
+    org.eclipse.e4.ui.workbench.source, \
+    org.eclipse.e4.core.di.annotations, \
+    org.eclipse.e4.core.di.annotations.source, \
+    org.eclipse.e4.core.di, \
+    org.eclipse.e4.core.di.source, \
+    org.eclipse.e4.ui.di, \
+    org.eclipse.e4.ui.di.source, \
+    org.eclipse.core.runtime, \
+    org.eclipse.core.runtime.source, \
+    org.eclipse.core.commands, \
+    org.eclipse.core.commands.source, \
+    org.eclipse.emf.ecore,\
+    org.eclipse.emf.ecore.source,\
+    org.eclipse.emf.common,\
+    org.eclipse.emf.common.source,\
+    org.eclipse.e4.core.commands,\
+    org.eclipse.e4.core.commands.source, \
+    org.eclipse.osgi,\
+    org.eclipse.osgi.source
 Export-Package: \
     com.make.equo.renderers

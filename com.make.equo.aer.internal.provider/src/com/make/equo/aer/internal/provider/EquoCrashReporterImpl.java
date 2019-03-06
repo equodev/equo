@@ -19,12 +19,16 @@ public class EquoCrashReporterImpl implements IEquoCrashReporter {
 	
 	@Override
 	public void logCrash(JsonObject segmentation) {
-		analyticsService.registerEvent(CRASH, 1, segmentation);
+	   if (analyticsService != null) {
+	      analyticsService.registerEvent(CRASH, 1, segmentation);
+	   }
 	}
 
 	@Override
 	public void logEclipse(JsonObject segmentation) {
-		analyticsService.registerEvent(ECLIPSE, 1, segmentation);
+	   if (analyticsService != null) {
+	      analyticsService.registerEvent(ECLIPSE, 1, segmentation);
+	   }
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)

@@ -25,17 +25,19 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ServiceScope;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
-@Component
+@Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
 
 	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
@@ -57,17 +59,22 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static boolean enableOfflineCache = false;
 	private static String limitedConnectionAppBasedPagePath;
 
-	private HttpProxyServer proxyServer;
+	private static volatile HttpProxyServer proxyServer;
 	private ScheduledExecutorService internetConnectionChecker;
 	private int websocketPort;
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoApplication equoApplication;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	private volatile IEquoLoggingService equoLoggingService;
+
 	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
 
+	@Override
 	@Activate
 	public void start() {
 		if (proxyServer == null && !proxiedUrls.isEmpty()) {
@@ -102,15 +109,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Deactivate
 	public void stop() {
 		System.out.println("Stopping proxy...");
-		if (internetConnectionChecker != null) {
-			internetConnectionChecker.shutdownNow();
-		}
-		if (proxyServer != null) {
-			proxyServer.stop();
-		}
+//		if (internetConnectionChecker != null) {
+//			internetConnectionChecker.shutdownNow();
+//		}
+//		if (proxyServer != null) {
+//			proxyServer.stop();
+//		}
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)
 	void addEquoContribution(IEquoContribution equoContribution, Map<String, String> props) {
 		String contributionKey = props.get("type");
 		System.out.println("Equo Contribution added: " + contributionKey);
@@ -131,16 +138,24 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void addCustomScript(String url, String scriptUrl) {
+		String generatedScriptSentence = generateScriptSentence(scriptUrl);
 		if (!urlsToScripts.containsKey(url)) {
-			urlsToScripts.put(url, generateScriptSentence(scriptUrl));
+			urlsToScripts.put(url, generatedScriptSentence);
 		} else {
-			urlsToScripts.put(url, appendScriptToExistingOnes(url, scriptUrl));
+			String existingScripts = urlsToScripts.get(url);
+			if (!existingScripts.contains(generatedScriptSentence)) {
+				urlsToScripts.put(url, appendScriptToExistingOnes(url, generatedScriptSentence));
+			}
 		}
 	}
 
 	@Override
 	public void addUrl(String url) {
-		proxiedUrls.add(url);
+		if (!proxiedUrls.contains(url)) {
+			proxiedUrls.add(url);
+		} else {
+			equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
+		}
 	}
 
 	@Override
@@ -231,12 +246,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return javascriptApis;
 	}
 
-	private String appendScriptToExistingOnes(String url, String scriptUrl) {
+	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
 		String existingCustomJsScripts = urlsToScripts.get(url);
 		StringBuilder result = new StringBuilder();
 		result.append(existingCustomJsScripts);
 		result.append("\n");
-		result.append(generateScriptSentence(scriptUrl));
+		result.append(generatedScriptSentence);
 		return result.toString();
 	}
 

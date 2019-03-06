@@ -4,48 +4,77 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.MUILabel;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBarElement;
 import org.eclipse.e4.ui.workbench.renderers.swt.ToolBarManagerRenderer;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.EquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
-	private String namespace;
-	private MUIElement toolBar;
+	static final String EQUO_RENDERERS_NAME = "toolbar";
+	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
+			+ EQUO_RENDERERS_URL_SUFFIX;
+
+	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
 
 	@Inject
-	private EquoEventHandler equoEventHandler;
+	private IEquoApplication equoApplication;
+
+	@Inject
+	private static EquoEventHandler equoEventHandler;
+
 	@Inject
 	private IEquoServer equoProxyServer;
 
+	@Inject
+	private MApplication mApplication;
+
+	@Inject
+	private UISynchronize sync;
+
+	private MToolBar mToolBar;
+
+	private String namespace;
+
 	@Override
-	public Object createWidget(MUIElement toolBar, Object parent) {
-		this.namespace = "ToolBar" + Integer.toHexString(toolBar.hashCode());
-		this.toolBar = toolBar;
+	public Object createWidget(MUIElement mUIToolbar, Object parent) {
+		if (!(mUIToolbar instanceof MToolBar) || !(parent instanceof Composite)) {
+			return null;
+		}
+		this.mToolBar = (MToolBar) mUIToolbar;
+		this.namespace = "ToolBar" + Integer.toHexString(mUIToolbar.hashCode());
 
-		Composite toolBarComposite = (Composite) parent;
+		Composite parentComp = (Composite) parent;
 
-		configureAndStartRenderProcess(toolBarComposite);
+		Composite browserComposite = new Composite(parentComp, 1000);
 
-		return toolBarComposite;
+		configureAndStartRenderProcess(browserComposite);
+
+		return parentComp;
 	}
 
 	@Override
@@ -69,52 +98,88 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite mapComposite) {
-		mapComposite.setLayout(new GridLayout(1, false));
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-		data.heightHint = 45;
-		Chromium browser = new Chromium(mapComposite, SWT.NONE);
-		browser.setLayoutData(data);
+	public List<String> getFrameworkContributionJSONFileNames() {
+		return Lists.newArrayList(getModelContributionPath() + "IDEMainToolBarContribution.json");
+	}
+
+	@Override
+	public Chromium createBrowserComponent(Composite toolBarParent) {
+		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
+				new String[] { "ignore-certificate-errors", null },
+				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
+				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
+
+		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
+
+		toolBarParent.getHorizontalBar().setVisible(false);
+		toolBarParent.getVerticalBar().setVisible(false);
+		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).hint(2000, 24).applyTo(browser);
+
 		return browser;
 	}
 
 	@Override
 	public void onActionPerformedOnElement() {
-		equoEventHandler.on(namespace + "_itemClicked", (JsonObject payload) -> {
-			JsonElement value = payload.get("accion");
-			String id = "";
-			if (value != null) {
-				id = value.getAsString();
+		getEquoEventHandler().on(namespace + "_itemClicked", (JsonObject payload) -> {
+			JsonElement commandAsJson = payload.get("commandId");
+			String commandId = commandAsJson.getAsString();
+
+			if (UNKNOWN_EQUO_COMMAND.equals(commandId)) {
+				// TODO Do a real log of the toolBarElement id which does not have an associated
+				// command
+				String toolBarElementId = payload.get("toolBarElementId").getAsString();
+				System.out.println("There is no command for the toolBar element " + toolBarElementId);
+				return;
 			}
-			runAccion(id, (JsonObject) payload.get("params"));
+
+			IEclipseContext eclipseContext = mApplication.getContext();
+			ECommandService commandService = eclipseContext.get(ECommandService.class);
+			Command command = commandService.getCommand(commandId);
+
+			if (command != null) {
+				sync.asyncExec(() -> {
+					ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, null);
+					EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
+					handlerService.executeHandler(parametrizedCommand);
+				});
+			}
 		});
 	}
 
 	@Override
-	public List<Map<String, String>> getEclipse4Model() {
+	public List<Map<String, String>> getEclipse4Model(String namespace) {
 		List<Map<String, String>> e4Model = new ArrayList<Map<String, String>>();
-		List<MToolBarElement> toolBarElements = ((MToolBar) toolBar).getChildren();
-		for (MToolBarElement e : toolBarElements) {
-			if (e instanceof MUILabel) {
+		List<MToolBarElement> mToolBarElements = mToolBar.getChildren();
+
+		List<MToolBarElement> toolBarElementsToRendered = mToolBarElements.stream().filter(toolItem -> {
+			return toolItem.isToBeRendered() && toolItem.isVisible();
+		}).collect(Collectors.toList());
+
+		for (MToolBarElement mToolBarElement : toolBarElementsToRendered) {
+			if (mToolBarElement instanceof MUILabel) {
 				HashMap<String, String> elementModel = new HashMap<String, String>();
-				elementModel.put("iconURI", ((MUILabel) e).getIconURI());
-				elementModel.put("id", e.getElementId());
+				String elementId = mToolBarElement.getElementId();
+				elementModel.put("id", elementId);
 				e4Model.add(elementModel);
 			}
 		}
 		return e4Model;
 	}
 
-	private void runAccion(String id, JsonObject actionPayload) {
-		Display defaultDisplay = Display.getDefault();
+	@Override
+	public IEquoApplication getEquoApplication() {
+		return equoApplication;
+	}
 
-		defaultDisplay.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				MessageDialog.openInformation(defaultDisplay.getActiveShell(), "Action performed from JS",
-						"Action performed from JS. Vamos Equo!");
-			}
-		});
+	@Override
+	public String getModelContributionPath() {
+		return "contributions/mainToolBar/";
+	}
+
+	@Override
+	public String getEquoRendererURL() {
+		return EQUO_RENDERERS_URL;
 	}
 
 }
