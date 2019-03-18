@@ -68,7 +68,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.keep=false,\
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
-    com.apple.mrj.application.apple.menu.about.name=${app.bundle},\
+    com.apple.mrj.application.apple.menu.about.name=${def;appName},\
     rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
 -runproperties.app: \
     app_name=${def;appName},\
