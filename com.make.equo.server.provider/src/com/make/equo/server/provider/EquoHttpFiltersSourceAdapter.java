@@ -101,7 +101,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
-			if (url.isPresent()) {
+			if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
 				String appUrl = url.get();
 				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis,
 						getCustomScripts(appUrl), isOfflineCacheSupported, equoOfflineServer);
@@ -109,6 +109,11 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
 		}
+	}
+
+	private boolean isFilteredOutFromProxy(HttpRequest originalRequest) {
+		String uri = originalRequest.getUri();
+		return uri.contains("/shared") || uri.contains("/static");
 	}
 
 	private boolean isEquoRendererRequest(HttpRequest originalRequest) {
@@ -166,6 +171,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	}
 
 	private String getCustomScripts(String url) {
+		if (urlsToScriptsAsStrings.containsKey(url)) {
+			return urlsToScriptsAsStrings.get(url);
+		}
+		if (urlsToScriptsAsStrings.containsKey(url + "/")) {
+			return urlsToScriptsAsStrings.get(url + "/");
+		}
 		URI uri = URI.create(url);
 		String key = uri.getScheme() + "://" + uri.getAuthority();
 		if (!urlsToScriptsAsStrings.containsKey(key)) {
