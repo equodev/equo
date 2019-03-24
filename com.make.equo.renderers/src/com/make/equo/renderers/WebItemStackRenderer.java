@@ -27,6 +27,7 @@ import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -85,24 +86,40 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		partStacks.put(this.namespace, element);
 
 		Composite container = (Composite) parent;
-		Composite webItemStackRendererComposite = new Composite(container, SWT.BORDER);
-		GridLayoutFactory.fillDefaults().applyTo(webItemStackRendererComposite);
+		Composite stackComposite = new Composite(container, SWT.BORDER);
+		GridLayoutFactory.fillDefaults().applyTo(stackComposite);
+		
+		Composite webItemStackRendererComposite = new Composite(stackComposite, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(webItemStackRendererComposite);
+		
+		Composite partStackingComposite = new Composite(stackComposite, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(partStackingComposite);
+		partStackingComposite.setLayout(new StackLayout());
 
-		bindWidget(element, webItemStackRendererComposite);
+		bindWidget(element, partStackingComposite);
 
 		configureAndStartRenderProcess(webItemStackRendererComposite);
 
-		return webItemStackRendererComposite;
+		return partStackingComposite;
 	}
 
 	@Override
 	public void childRendered(MElementContainer<MUIElement> parentElement, MUIElement element) {
 		super.childRendered(parentElement, element);
-		if (element.getWidget() instanceof Control) {
-			if (element.getWidget() instanceof Composite) {
-				GridDataFactory.fillDefaults().grab(true, true).applyTo((Control) element.getWidget());
-			}
+
+		if (!(((MUIElement) parentElement) instanceof MPartStack) || !(element instanceof MStackElement))
+			return;
+
+		
+		
+		if (parentElement.getSelectedElement() == element) {
+			Composite stackComposite = (Composite) parentElement.getWidget();
+			StackLayout layout = (StackLayout) stackComposite.getLayout();
+			layout.topControl = (Control) element.getWidget();
+			stackComposite.layout();
 		}
+		
+//		createTab(parentElement, element);
 	}
 
 	@Override
@@ -157,18 +174,20 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			return;
 		}
 
-		final Composite browser = (Composite) getParentWidget(element);
-
+		final Composite stackComposite = (Composite) getParentWidget(element);
 		createTab(element.getParent(), element);
 
 		Control ctrl = (Control) element.getWidget();
 		Control tabCtrl = null;
 
-		if (ctrl != null && ctrl.getParent() != browser) {
-			ctrl.setParent(browser);
+		if (ctrl != null && ctrl.getParent() != stackComposite) {
+			ctrl.setParent(stackComposite);
+			setTopControl(ctrl);
+		} else if (ctrl != null) {
+			setTopControl(ctrl);
 		} else if (ctrl == null) {
 			tabCtrl = (Control) engine.createGui(element);
-			element.setWidget(tabCtrl);
+			setTopControl(tabCtrl);
 		}
 
 		// Ensure that the newly selected control is correctly sized
@@ -177,6 +196,15 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			// see bug 461573: call below is still needed to make view
 			// descriptions visible after unhiding the view with changed bounds
 			ctiComp.layout(false, true);
+		}
+	}
+	
+	private void setTopControl(Control ctrl) {
+		if (ctrl instanceof Composite) {
+			Composite parent = ((Composite) ctrl).getParent();
+			StackLayout layout = (StackLayout) parent.getLayout();
+			layout.topControl = ctrl;
+			parent.layout(false, true);
 		}
 	}
 
@@ -210,13 +238,26 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			}
 		}
 
+		Object selectedElement = stack.getSelectedElement();
+		boolean isSelected = false;
+		if (selectedElement != null) {
+			if (selectedElement instanceof MPart && selectedElement == part) {
+				isSelected = true;
+			} else if (selectedElement instanceof MPlaceholder) {
+				MPart selectedPart = (MPart) ((MPlaceholder) selectedElement).getRef();
+				if (selectedPart == selectedElement) {
+					isSelected = true;
+				}
+			}
+		}
+		
 		if (part != null) {
-			Map<String, String> partModel = createPartTab(part);
+			Map<String, String> partModel = createPartTab(part, isSelected);
 			equoEventHandler.send(namespace + "_addTab", partModel);
 		}
 	}
 
-	private Map<String, String> createPartTab(MPart mPart) {
+	private Map<String, String> createPartTab(MPart mPart, boolean isSelected) {
 		HashMap<String, String> partTab = new HashMap<String, String>();
 		partTab.put("label", mPart.getLabel());
 		partTab.put("visible", Boolean.toString(mPart.isVisible()));
@@ -224,7 +265,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		partTab.put("tooltip", mPart.getTooltip());
 		partTab.put("iconURI", mPart.getIconURI());
 		partTab.put("isDirty", Boolean.toString(mPart.isDirty()));
-		partTab.put("isSelected", Boolean.toString(false));
+		partTab.put("isSelected", Boolean.toString(isSelected));
 		partTab.put("id", mPart.getElementId());
 		return partTab;
 	}
@@ -268,7 +309,10 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		defaultDisplay.syncExec(new Runnable() {
 			@Override
 			public void run() {
-				partServiceImpl.showPart(id, EPartService.PartState.ACTIVATE);
+				MPartStack partStack = (MPartStack) partStacks.get(namespace);
+//				MUIElement uiElement = partStack.getSelectedElement();
+//				showTab(uiElement);
+				partStack.setSelectedElement(partServiceImpl.showPart(id, EPartService.PartState.ACTIVATE).getCurSharedRef());
 			}
 		});
 	}
@@ -330,14 +374,14 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite toolBarParent) {
+	public Chromium createBrowserComponent(Composite webItemStackRendererComposite) {
 		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
 				new String[] { "ignore-certificate-errors", null },
 				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
 				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
-//		toolBarParent.setLayout(new StackLayout());
-		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
+		// The browser stays 1 level above other parts
+		Chromium browser = new Chromium(webItemStackRendererComposite, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
 
 		return browser;

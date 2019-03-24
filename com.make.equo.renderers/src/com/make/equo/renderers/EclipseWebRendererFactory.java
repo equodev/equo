@@ -2,6 +2,8 @@ package com.make.equo.renderers;
 
 import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
@@ -15,6 +17,8 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 	protected String id;
 	private ToolBarRenderer toolBarRenderer;
 	private WebDialogRenderer webDialogRenderer;
+	private EquoContributedPartRenderer partRenderer;
+	private EquoElementReferenceRenderer placeholderRenderer;
 	
 	@Override
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
@@ -38,6 +42,20 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 				super.initRenderer(stackRenderer);
 			}
 			return stackRenderer;
+		}
+		else if (uiElement instanceof MPart) {
+			if (partRenderer == null) {
+				partRenderer = new EquoContributedPartRenderer();
+				super.initRenderer(partRenderer);
+			}
+			return partRenderer;
+		}
+		else if (uiElement instanceof MPlaceholder) {
+			if (placeholderRenderer == null) {
+				placeholderRenderer = new EquoElementReferenceRenderer();
+				super.initRenderer(placeholderRenderer);
+			}
+			return placeholderRenderer;
 		}
 		return super.getRenderer(uiElement, parent);
 	}
