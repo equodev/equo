@@ -28,7 +28,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRenderer {
@@ -41,7 +41,7 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 	private static final Map<String, MUIElement> partStacks = new HashMap<String, MUIElement>();
 
 	@Inject
-	private EquoEventHandler equoEventHandler;
+	private IEquoEventHandler equoEventHandler;
 	@Inject
 	private IEquoServer equoProxyServer;
 
@@ -179,7 +179,7 @@ public class WebItemStackRenderer extends SWTPartRenderer implements IEquoRender
 	}
 
 	@Override
-	public EquoEventHandler getEquoEventHandler() {
+	public IEquoEventHandler getEquoEventHandler() {
 		return equoEventHandler;
 	}
 

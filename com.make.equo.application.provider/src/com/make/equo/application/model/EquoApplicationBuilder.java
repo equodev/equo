@@ -20,7 +20,7 @@ import com.make.equo.application.EquoApplicationModel;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder {
@@ -33,7 +33,7 @@ public class EquoApplicationBuilder {
 	private ViewBuilder viewBuilder;
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
-	private EquoEventHandler equoEventHandler;
+	private IEquoEventHandler equoEventHandler;
 
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);
@@ -205,7 +205,7 @@ public class EquoApplicationBuilder {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
+	void setEquoEventHandler(IEquoEventHandler equoEventHandler) {
 		this.equoEventHandler = equoEventHandler;
 	}
 

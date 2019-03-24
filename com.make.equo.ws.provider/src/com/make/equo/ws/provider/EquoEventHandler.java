@@ -1,12 +1,21 @@
-package com.make.equo.ws.api;
+package com.make.equo.ws.provider;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
-@Component(service = EquoEventHandler.class)
-public class EquoEventHandler {
+import com.make.equo.ws.api.IEquoEventHandler;
+import com.make.equo.ws.api.IEquoRunnable;
+import com.make.equo.ws.api.IEquoWebSocketService;
+import com.make.equo.ws.api.JsonPayloadEquoRunnable;
+import com.make.equo.ws.api.JsonRunnableParser;
+import com.make.equo.ws.api.ObjectPayloadParser;
+import com.make.equo.ws.api.StringPayloadEquoRunnable;
+import com.make.equo.ws.api.StringPayloadParser;
+
+@Component
+public class EquoEventHandler implements IEquoEventHandler {
 
 	private IEquoWebSocketService equoWebSocketService;
 

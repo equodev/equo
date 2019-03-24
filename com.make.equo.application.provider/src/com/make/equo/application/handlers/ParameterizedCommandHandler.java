@@ -7,14 +7,14 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
 import com.make.equo.application.util.IConstants;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 
 public class ParameterizedCommandHandler {
 
 	@Execute
 	public void execute(@Named("commandId") String commandId,
 			@Named(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT) String userEvent, MApplication mApplication,
-			EModelService modelService, EquoEventHandler equoEventHandler) {
+			EModelService modelService, IEquoEventHandler equoEventHandler) {
 		Runnable runnable = (Runnable) mApplication.getTransientData().get(commandId);
 
 		if (runnable != null) {

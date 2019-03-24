@@ -31,7 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
@@ -89,7 +89,7 @@ public interface IEquoRenderer {
 
 	default void sendEclipse4Model() {
 		String namespace = getNamespace();
-		EquoEventHandler equoEventHandler = getEquoEventHandler();
+		IEquoEventHandler equoEventHandler = getEquoEventHandler();
 		equoEventHandler.on(namespace + "_getModelContributions",
 				(StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
 					Map<String, Map<String, String>> modelContributions = getModelContributions();
@@ -195,7 +195,7 @@ public interface IEquoRenderer {
 	 */
 	void onActionPerformedOnElement();
 
-	EquoEventHandler getEquoEventHandler();
+	IEquoEventHandler getEquoEventHandler();
 
 	List<Map<String, String>> getEclipse4Model(String namespace);
 

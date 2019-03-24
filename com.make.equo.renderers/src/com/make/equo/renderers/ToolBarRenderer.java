@@ -30,7 +30,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
@@ -45,7 +45,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	private IEquoApplication equoApplication;
 
 	@Inject
-	private static EquoEventHandler equoEventHandler;
+	private static IEquoEventHandler equoEventHandler;
 
 	@Inject
 	private IEquoServer equoProxyServer;
@@ -88,7 +88,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public EquoEventHandler getEquoEventHandler() {
+	public IEquoEventHandler getEquoEventHandler() {
 		return equoEventHandler;
 	}
 

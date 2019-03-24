@@ -30,6 +30,6 @@ public class EquoServerProvider {
 	}
 
 	public Optional<IEquoServer> getEquoServer() {
-		return Optional.of(equoServer);
+		return Optional.ofNullable(equoServer);
 	}
 }
