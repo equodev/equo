@@ -23,7 +23,6 @@ $(document).ready(function () {
                     return this.getSelectedTab().id;
                 },
                 set(elem) {
-                    console.log("CALLING SETTER" + elem);
                     this.e4Model.forEach((tab) => {
                         if (tab.id === elem) {
                             tab.isSelected = 'true';
@@ -53,13 +52,14 @@ $(document).ready(function () {
         },
         methods: {
             getSelectedTab(){
+                let selectedTab = this.e4Model[0];
                 this.e4Model.forEach(tab => {
                     if (tab.isSelected === 'true') {
-                        return tab;
+                        selectedTab = tab;
                     }
                 });
-                this.e4Model[0].isSelected = 'true';
-                return this.e4Model[0];
+                selectedTab.isSelected = 'true';
+                return selectedTab;
             },
             handleClick(tab, event) {
                 this.callE4Command(tab.$attrs.id);
