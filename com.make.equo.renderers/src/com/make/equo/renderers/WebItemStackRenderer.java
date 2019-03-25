@@ -28,9 +28,11 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Widget;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -90,19 +92,65 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		GridLayoutFactory.fillDefaults().applyTo(stackComposite);
 		
 		Composite webItemStackRendererComposite = new Composite(stackComposite, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(webItemStackRendererComposite);
+		webItemStackRendererComposite.setLayout(new FillLayout());
+		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(webItemStackRendererComposite);
+//		GridDataFactory.fillDefaults().grab(true, true).applyTo(webItemStackRendererComposite);
 		
 		Composite partStackingComposite = new Composite(stackComposite, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(partStackingComposite);
 		partStackingComposite.setLayout(new StackLayout());
-
-		bindWidget(element, partStackingComposite);
-
+		
 		configureAndStartRenderProcess(webItemStackRendererComposite);
 
 		return partStackingComposite;
 	}
 
+	@Override
+	public Object getUIContainer(MUIElement element) {
+		if (element instanceof MPart || element instanceof MPlaceholder) {
+			if (element.getParent() != null)
+				if (element.getParent().getWidget() instanceof Composite) {
+					return ((Composite) element.getParent().getWidget()).getChildren()[1];
+				}
+			else {
+				Object value = element.getTransientData().get(IPresentationEngine.RENDERING_PARENT_KEY);
+				if (value != null) {
+					return value;
+				}
+			}
+		}
+		return super.getUIContainer(element);
+	}
+	
+	@Override
+	public void bindWidget(MUIElement me, Object widget) {
+		
+		Composite actualStackWidget = null;
+		
+		if (widget instanceof Widget) {
+			((Widget) widget).setData(OWNING_ME, me);
+
+			// Set up the CSS Styling parameters; id & class
+			setCSSInfo(me, widget);
+
+			// Ensure that disposed widgets are unbound form the model
+			Widget swtWidget = (Widget) widget;
+			swtWidget.addDisposeListener(e -> {
+				MUIElement element = (MUIElement) e.widget
+						.getData(OWNING_ME);
+				if (element != null)
+					unbindWidget(element);
+			});
+		}
+		
+		if (widget instanceof Composite) {
+			actualStackWidget = ((Composite) widget).getParent();
+		}
+
+		// Create a bi-directional link between the widget and the model
+		me.setWidget(actualStackWidget == null ? widget : actualStackWidget);
+	}
+	
 	@Override
 	public void childRendered(MElementContainer<MUIElement> parentElement, MUIElement element) {
 		super.childRendered(parentElement, element);
@@ -113,13 +161,13 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		
 		
 		if (parentElement.getSelectedElement() == element) {
-			Composite stackComposite = (Composite) parentElement.getWidget();
+			Composite stackComposite = (Composite) getUIContainer(element);
 			StackLayout layout = (StackLayout) stackComposite.getLayout();
 			layout.topControl = (Control) element.getWidget();
 			stackComposite.layout();
 		}
 		
-//		createTab(parentElement, element);
+		createTab(parentElement, element);
 	}
 
 	@Override
@@ -174,7 +222,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			return;
 		}
 
-		final Composite stackComposite = (Composite) getParentWidget(element);
+		final Composite stackComposite = (Composite) getUIContainer(element);
 		createTab(element.getParent(), element);
 
 		Control ctrl = (Control) element.getWidget();
@@ -310,8 +358,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			@Override
 			public void run() {
 				MPartStack partStack = (MPartStack) partStacks.get(namespace);
-//				MUIElement uiElement = partStack.getSelectedElement();
-//				showTab(uiElement);
 				partStack.setSelectedElement(partServiceImpl.showPart(id, EPartService.PartState.ACTIVATE).getCurSharedRef());
 			}
 		});
@@ -382,7 +428,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 		// The browser stays 1 level above other parts
 		Chromium browser = new Chromium(webItemStackRendererComposite, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
+//		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
 
 		return browser;
 	}

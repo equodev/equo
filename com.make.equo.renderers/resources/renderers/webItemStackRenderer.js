@@ -3,7 +3,7 @@ $(document).ready(function () {
     let app = {
         template: `
       <div class="app">
-        <el-tabs type="card" closable @tab-remove="removeTab" @tab-click="handleClick">
+        <el-tabs v-model="selectedTab" type="card" closable @tab-remove="removeTab" @tab-click="handleClick">
             <el-tab-pane v-for="item in e4Model" :id="item.id" :key="item.id" :name="item.id" :label="item.label"></el-tab-pane>
         </el-tabs>
       </div>
@@ -17,30 +17,49 @@ $(document).ready(function () {
                 required: true
             }
         },
+        computed: {
+            selectedTab: {
+                get() {
+                    return this.getSelectedTab().id;
+                },
+                set(elem) {
+                    console.log("CALLING SETTER" + elem);
+                    this.e4Model.forEach((tab) => {
+                        if (tab.id === elem) {
+                            tab.isSelected = 'true';
+                        }
+                    });                }
+            }
+        },
         mounted() {
             equo.on(this.namespace + "_addTab", tab => {
                 let bool = true;
-                for (existingTab in this.e4Model) {
-                    if (existingTab.id === tab.id) {
+                currentElem = this.getSelectedTab();
+                this.e4Model.forEach(modelElem => {
+                    if (modelElem.id === tab.id) {
                         bool = false;
                     }
-                }
+                });
                 if (bool) {
                     this.e4Model.push(tab);
-                    tab.isSelected = 'true';
                     let previousTab = this.getSelectedTab();
                     previousTab.isSelected = 'false';
+                    this.callE4Command(tab.id);
+                } else if (tab.id !== currentElem.id) {
+                    currentElem.isSelected = 'false';
                     this.callE4Command(tab.id);
                 }
             });
         },
         methods: {
             getSelectedTab(){
-                for (tab in this.e4Model) {
+                this.e4Model.forEach(tab => {
                     if (tab.isSelected === 'true') {
                         return tab;
                     }
-                }
+                });
+                this.e4Model[0].isSelected = 'true';
+                return this.e4Model[0];
             },
             handleClick(tab, event) {
                 this.callE4Command(tab.$attrs.id);
@@ -49,13 +68,13 @@ $(document).ready(function () {
                 let tabs = this.e4Model;
                 let activeTab = this.getSelectedTab();
                 if (activeTab !== undefined && activeTab.name === toDelete) {
-                    activeName.isSelected = false;
+                    activeTab.isSelected = 'false';
                     tabs.forEach((tab, index) => {
                         if (tab.name === toDelete) {
                             let nextTab = tabs[index + 1] || tabs[index - 1];
                             if (nextTab) {
                                 this.callE4Command(nextTab.id);
-                                nextTab.isSelected = true;
+                                nextTab.isSelected = 'true';
                             }
                         }
                     });
