@@ -3,14 +3,18 @@ $(document).ready(function () {
     let app = {
         template: `
       <div class="app">
-        <el-tabs v-model="selectedTab" type="card" closable @tab-remove="removeTab" @tab-click="handleClick">
-            <el-tab-pane v-for="item in e4Model" :id="item.id" :key="item.id" :name="item.id" :label="item.label"></el-tab-pane>
+        <el-tabs v-model="selectedTab" type="card" @tab-remove="removeTab" @tab-click="handleClick">
+            <template v-for='item in e4Model'>
+                <el-tab-pane v-if="item.closeable === 'true'" closable :id="item.id" :key="item.label" :name="item.id + '_' + item.label" :label="item.label"></el-tab-pane>
+                <el-tab-pane v-else :id="item.id" :key="item.label" :name="item.id + '_' + item.label" :label="item.label"></el-tab-pane>
+            </template>
         </el-tabs>
       </div>
       `,
         props: {
             namespace: {
-                type: String
+                type: String,
+                required: true
             },
             e4Model: {
                 type: Array,
@@ -20,79 +24,108 @@ $(document).ready(function () {
         computed: {
             selectedTab: {
                 get() {
-                    return this.getSelectedTab().id;
+                    let tab = this.getSelectedTab();
+                    return tab !== undefined ? tab.id+'_'+tab.label : undefined;
                 },
                 set(elem) {
-                    this.e4Model.forEach((tab) => {
-                        if (tab.id === elem) {
-                            tab.isSelected = 'true';
-                        }
-                    });                }
+                    if (elem !== undefined) {
+                        let elemIdAndLabel = elem.split('_');
+                        let elemId = elemIdAndLabel[0];
+                        let elemLabel = elemIdAndLabel[1];
+
+                        this.e4Model.forEach((tab) => {
+                            if (tab.isSelected === 'true') {
+                                tab.isSelected === 'false';
+                            }
+                            if (tab.id === elemId && tab.label === elemLabel) {
+                                tab.isSelected = 'true';
+                            }
+                        });
+                    }
+                }
             }
         },
         mounted() {
             equo.on(this.namespace + "_addTab", tab => {
                 let bool = true;
                 currentElem = this.getSelectedTab();
-                this.e4Model.forEach(modelElem => {
-                    if (modelElem.id === tab.id) {
-                        bool = false;
+                if (currentElem !== undefined) {
+                    this.e4Model.forEach(modelElem => {
+                        if (modelElem.id === tab.id && modelElem.label === tab.label) {
+                            bool = false;
+                        }
+                    });
+                    if (bool) {
+                        this.e4Model.push(tab);
+                        this.callE4Command(tab.id+'_'+tab.label);
+                    } else if (tab.id !== currentElem.id) {
+                        this.callE4Command(tab.id+'_'+tab.label);
                     }
-                });
-                if (bool) {
-                    this.e4Model.push(tab);
-                    let previousTab = this.getSelectedTab();
-                    previousTab.isSelected = 'false';
-                    this.callE4Command(tab.id);
-                } else if (tab.id !== currentElem.id) {
-                    currentElem.isSelected = 'false';
-                    this.callE4Command(tab.id);
                 }
             });
         },
         methods: {
-            getSelectedTab(){
+            getSelectedTab() {
                 let selectedTab = this.e4Model[0];
                 this.e4Model.forEach(tab => {
                     if (tab.isSelected === 'true') {
                         selectedTab = tab;
                     }
                 });
-                selectedTab.isSelected = 'true';
+                if (selectedTab !== undefined) {
+                    selectedTab.isSelected = 'true';
+                }
                 return selectedTab;
             },
             handleClick(tab, event) {
-                this.callE4Command(tab.$attrs.id);
+                this.callE4Command(tab.name);
             },
-            removeTab(toDelete) {
+            removeTab(tabToDelete) {
                 let tabs = this.e4Model;
+
+                let idAndLabel = tabToDelete.split('_');
+                let toDeleteId = idAndLabel[0];
+                let toDeleteLabel = idAndLabel[1];
+
                 let activeTab = this.getSelectedTab();
-                if (activeTab !== undefined && activeTab.name === toDelete) {
-                    activeTab.isSelected = 'false';
-                    tabs.forEach((tab, index) => {
-                        if (tab.name === toDelete) {
-                            let nextTab = tabs[index + 1] || tabs[index - 1];
-                            if (nextTab) {
-                                this.callE4Command(nextTab.id);
-                                nextTab.isSelected = 'true';
+
+                equo.on(this.namespace + '_proceed', () => {
+                    if (activeTab !== undefined && activeTab.id === toDeleteId && activeTab.label === toDeleteLabel) {
+                        activeTab.isSelected = 'false';
+                        tabs.forEach((tab, index) => {
+                            if (tab.id === toDeleteId) {
+                                let nextTab = tabs[index + 1] || tabs[index - 1];
+                                if (nextTab) {
+                                    this.callE4Command(nextTab.id+'_'+nextTab.label);
+                                }
                             }
-                        }
+                        });
+                    }
+
+                    this.e4Model = tabs.filter(tab => {
+                        return tab.id !== toDeleteId || tab.label !== toDeleteLabel;
                     });
-                }
-
-                this.e4Model = tabs.filter(tab => tab.id !== toDelete);
-
+                });
                 equo.send(this.namespace + '_tabClicked', {
-                    partId: toDelete,
+                    partId: toDeleteId,
+                    partLabel: toDeleteLabel,
                     namespace: this.namespace,
                     close: true
                 });
+
             },
-            callE4Command(tabId) {
+            callE4Command(tab) {
+                let tabIdAndLabel = tab.split('_');
+                let tabId = tabIdAndLabel[0];
+                let tabLabel = tabIdAndLabel[1];
+
                 equo.send(this.namespace + '_tabClicked', {
                     partId: tabId,
+                    partLabel: tabLabel,
                     namespace: this.namespace
                 });
+
+                this.selectedTab = tab;
             }
         },
         style: `

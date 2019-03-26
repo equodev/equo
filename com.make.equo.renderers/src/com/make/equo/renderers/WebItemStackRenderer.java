@@ -21,6 +21,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer;
 import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
@@ -39,7 +40,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
@@ -52,7 +53,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	private static final Map<String, MUIElement> partStacks = new HashMap<String, MUIElement>();
 
 	@Inject
-	private EquoEventHandler equoEventHandler;
+	private IEquoEventHandler equoEventHandler;
 
 	@Inject
 	private IEquoServer equoProxyServer;
@@ -66,6 +67,9 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	@Inject
 	private EPartService partServiceImpl;
 
+	@Inject
+	private EModelService modelService;
+	
 	@Inject
 	@Named(WorkbenchRendererFactory.SHARED_ELEMENTS_STORE)
 	Map<MUIElement, Set<MPlaceholder>> renderedMap;
@@ -184,7 +188,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	 *               if this check should not be performed
 	 * @return <tt>true</tt> if the part was closed, <tt>false</tt> otherwise
 	 */
-	private boolean closePart(MUIElement uiElement, boolean check) {
+	private boolean closePart(MUIElement uiElement, boolean check, String namespace) {
 		MPart part = (MPart) ((uiElement instanceof MPart) ? uiElement : ((MPlaceholder) uiElement).getRef());
 		if (!check && !isClosable(part)) {
 			return false;
@@ -197,6 +201,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		// ask user to save if necessary and close part if it is not dirty
 		EPartService partService = context.get(EPartService.class);
 		if (partService.savePart(part, true)) {
+			equoEventHandler.send(namespace + "_proceed");
 			partService.hidePart(part);
 			return true;
 		}
@@ -285,21 +290,21 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 				part.setCurSharedRef((MPlaceholder) element);
 			}
 		}
-
-		Object selectedElement = stack.getSelectedElement();
-		boolean isSelected = false;
-		if (selectedElement != null) {
-			if (selectedElement instanceof MPart && selectedElement == part) {
-				isSelected = true;
-			} else if (selectedElement instanceof MPlaceholder) {
-				MPart selectedPart = (MPart) ((MPlaceholder) selectedElement).getRef();
-				if (selectedPart == selectedElement) {
+		
+		if (part != null && part.getLabel() != null) {
+			Object selectedElement = stack.getSelectedElement();
+			boolean isSelected = false;
+			if (selectedElement != null) {
+				if (selectedElement instanceof MPart && selectedElement == part) {
 					isSelected = true;
+				} else if (selectedElement instanceof MPlaceholder) {
+					MPart selectedPart = (MPart) ((MPlaceholder) selectedElement).getRef();
+					if (selectedPart == selectedElement) {
+						isSelected = true;
+					}
 				}
 			}
-		}
-		
-		if (part != null) {
+			
 			Map<String, String> partModel = createPartTab(part, isSelected);
 			equoEventHandler.send(namespace + "_addTab", partModel);
 		}
@@ -323,42 +328,74 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		equoEventHandler.on(namespace + "_tabClicked", (JsonObject payload) -> {
 			JsonElement currentNamespace = payload.get("namespace");
 			String namespace = currentNamespace.getAsString();
-			JsonElement value = payload.get("partId");
+			JsonElement idValue = payload.get("partId");
+			JsonElement labelValue = payload.get("partLabel");
 			String id = "";
-			if (value != null) {
-				id = value.getAsString();
+			String label = "";
+			if (idValue != null) {
+				id = idValue.getAsString();
+			}
+			if (labelValue != null) {
+				label = labelValue.getAsString();
 			}
 			JsonElement close = payload.get("close");
 			if (close != null) {
-				closeTab(id, namespace);
+				closeTab(id, label, namespace);
 			} else {
-				selectTab(id, (JsonObject) payload.get("params"), namespace);
+				selectTab(id, label, namespace);
 			}
 		});
 	}
 
-	private void closeTab(String id, String namespace) {
+	private void closeTab(String id, String label, String namespace) {
 		Display defaultDisplay = Display.getDefault();
 
 		defaultDisplay.syncExec(new Runnable() {
 			@Override
 			public void run() {
-				MPart partToClose = partServiceImpl.findPart(id);
+				MPart partToClose = null;
+				if ("org.eclipse.e4.ui.compatibility.editor".equals(id)) {
+					List<MPart> editorParts = modelService.findElements(partStacks.get(namespace), id, MPart.class, null,
+							EModelService.OUTSIDE_PERSPECTIVE | EModelService.IN_ACTIVE_PERSPECTIVE
+									| EModelService.IN_SHARED_AREA);
+					for (MPart editorPart : editorParts) {
+						if (label.equals(editorPart.getLabel())) {
+							partToClose = editorPart;
+							break;
+						}
+					}
+				} else {
+					partToClose = partServiceImpl.findPart(id);
+				}
 				if (partToClose != null) {
-					closePart(partToClose, false);
+					closePart(partToClose, false, namespace);
 				}
 			}
 		});
 	}
 
-	private void selectTab(String id, JsonObject actionPayload, String namespace) {
+	private void selectTab(String id, String label, String namespace) {
 		Display defaultDisplay = Display.getDefault();
 
 		defaultDisplay.syncExec(new Runnable() {
 			@Override
 			public void run() {
+				MPart partToShow = null;
 				MPartStack partStack = (MPartStack) partStacks.get(namespace);
-				partStack.setSelectedElement(partServiceImpl.showPart(id, EPartService.PartState.ACTIVATE).getCurSharedRef());
+				if ("org.eclipse.e4.ui.compatibility.editor".equals(id)) {
+					List<MPart> editorParts = modelService.findElements(partStack, id, MPart.class, null,
+							EModelService.OUTSIDE_PERSPECTIVE | EModelService.IN_ACTIVE_PERSPECTIVE
+									| EModelService.IN_SHARED_AREA);
+					for (MPart editorPart : editorParts) {
+						if (label.equals(editorPart.getLabel())) {
+							partToShow = editorPart;
+							break;
+						}
+					}
+				} else {
+					partToShow = partServiceImpl.findPart(id);
+				}
+				partStack.setSelectedElement(partServiceImpl.showPart(partToShow, EPartService.PartState.ACTIVATE).getCurSharedRef());
 			}
 		});
 	}
@@ -444,7 +481,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public EquoEventHandler getEquoEventHandler() {
+	public IEquoEventHandler getEquoEventHandler() {
 		return equoEventHandler;
 	}
 
