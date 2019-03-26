@@ -27,7 +27,7 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.MWebDialog;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
@@ -46,7 +46,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	private IEquoApplication equoApplication;
 
 	@Inject
-	private EquoEventHandler equoEventHandler;
+	private IEquoEventHandler equoEventHandler;
 
 	@Inject
 	private IEquoServer equoProxyServer;
@@ -81,7 +81,7 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	}
 
 	@Override
-	public EquoEventHandler getEquoEventHandler() {
+	public IEquoEventHandler getEquoEventHandler() {
 		return equoEventHandler;
 	}
 

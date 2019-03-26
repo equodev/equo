@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
-import com.make.equo.ws.api.EquoEventHandler;
+import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 /**
@@ -32,7 +32,7 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 	private static final String CUSTOM_EVENT_KEY = "customEvent";
 	static final int DEFAULT_COUNT = 1;
 	private AnalyticsService analyticsService;
-	private EquoEventHandler equoEventHandler;
+	private IEquoEventHandler equoEventHandler;
 
 	@Activate
 	public void start() {
@@ -58,7 +58,7 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	void setEquoEventHandler(EquoEventHandler equoEventHandler) {
+	void setEquoEventHandler(IEquoEventHandler equoEventHandler) {
 		this.equoEventHandler = equoEventHandler;
 	}
 

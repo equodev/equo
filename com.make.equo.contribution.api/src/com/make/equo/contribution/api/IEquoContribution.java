@@ -27,7 +27,9 @@ public interface IEquoContribution {
 	 * added to the list after the file it depends on.
 	 * 
 	 * @return a list of Javascript files names. An empty list if this contribution
-	 *         does not contribute any Javascript API.
+	 *         does not contribute any Javascript API. Importan: This contribution
+	 *         files will contribute to the whole framework, that means they are
+	 *         going to be accessible in every page/url.
 	 */
 	List<String> getJavascriptFileNames();
 
