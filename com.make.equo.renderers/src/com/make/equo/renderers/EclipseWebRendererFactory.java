@@ -1,8 +1,12 @@
 package com.make.equo.renderers;
 
+import java.util.HashMap;
+
+import javax.annotation.PostConstruct;
+
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
@@ -12,13 +16,13 @@ import com.make.equo.ui.helper.provider.model.MWebDialog;
 
 public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 
+	public static final String HASHED_PARTS = "com.make.equo.renderers.HASHED_PARTS";
+	
 	private static final String EQUO_MAIN_TOOLBAR = "com.make.equo.main.toolbar";
-	protected WebItemStackRenderer stackRenderer;
 	protected String id;
 	private ToolBarRenderer toolBarRenderer;
 	private WebDialogRenderer webDialogRenderer;
-	private EquoContributedPartRenderer partRenderer;
-	private EquoElementReferenceRenderer placeholderRenderer;
+	private WebItemStackRenderer stackRenderer;
 	
 	@Override
 	public AbstractPartRenderer getRenderer(MUIElement uiElement, Object parent) {
@@ -43,24 +47,17 @@ public class EclipseWebRendererFactory extends WorkbenchRendererFactory {
 			}
 			return stackRenderer;
 		}
-		else if (uiElement instanceof MPart) {
-			if (partRenderer == null) {
-				partRenderer = new EquoContributedPartRenderer();
-				super.initRenderer(partRenderer);
-			}
-			return partRenderer;
-		}
-		else if (uiElement instanceof MPlaceholder) {
-			if (placeholderRenderer == null) {
-				placeholderRenderer = new EquoElementReferenceRenderer();
-				super.initRenderer(placeholderRenderer);
-			}
-			return placeholderRenderer;
-		}
 		return super.getRenderer(uiElement, parent);
 	}
 
 	private boolean isEquoMainToolBar(MUIElement mUIToolbar) {
 		return (mUIToolbar instanceof MToolBar) && EQUO_MAIN_TOOLBAR.equals(((MToolBar) mUIToolbar).getElementId());
+	}
+	
+	@Override
+	@PostConstruct
+	public void init(IEclipseContext context) {
+		super.init(context);
+		context.set(HASHED_PARTS, new HashMap<String, MPart>());
 	}
 }
