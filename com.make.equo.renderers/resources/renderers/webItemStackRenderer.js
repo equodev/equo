@@ -21,11 +21,15 @@ $(document).ready(function () {
                 required: true
             }
         },
+        data() {
+            return {
+                selected: ''
+            };
+        },
         computed: {
             selectedTab: {
                 get() {
-                    let tab = this.getSelectedTab();
-                    return tab !== undefined ? tab.name : undefined;
+                    return this.selected !== '' ? this.selected : this.e4Model[0] !== undefined ? this.e4Model[0].name : undefined;
                 },
                 set(tabName) {
                     if (tabName !== undefined) {
@@ -35,6 +39,7 @@ $(document).ready(function () {
                             }
                             if (tab.name === tabName) {
                                 tab.isSelected = 'true';
+                                this.selected = tab.name;
                             }
                         });
                     }
@@ -42,24 +47,29 @@ $(document).ready(function () {
             }
         },
         mounted() {
+            this.e4Model.forEach(elem => {
+                if (elem.isSelected === 'true') {
+                    this.selected = elem.name;
+                    return;
+                }
+            })
             equo.on(this.namespace + "_addTab", tab => {
-                let bool = true;
+                let tabAlreadyRendered = true;
                 if (this.e4Model.length === 0) {
                     this.e4Model.push(tab);
                     this.callE4Command(tab.name);
                 } else {
-                    currentElem = this.getSelectedTab();
-                    if (currentElem !== undefined) {
+                    if (this.selectedTab !== undefined && this.selectedTab !== '') {
                         this.e4Model.forEach(modelElem => {
                             if (modelElem.name === tab.name) {
-                                bool = false;
+                                tabAlreadyRendered = false;
                                 return;
                             }
                         });
-                        if (bool) {
+                        if (tabAlreadyRendered) {
                             this.e4Model.push(tab);
                             this.callE4Command(tab.name);
-                        } else if (tab.name !== currentElem.name) {
+                        } else if (tab.name !== this.selectedTab) {
                             this.callE4Command(tab.name);
                         }
                     }
@@ -77,29 +87,14 @@ $(document).ready(function () {
             })
         },
         methods: {
-            getSelectedTab() {
-                let selectedTab = this.e4Model[0];
-                this.e4Model.forEach(tab => {
-                    if (tab.isSelected === 'true') {
-                        selectedTab = tab;
-                    }
-                });
-                if (selectedTab !== undefined) {
-                    selectedTab.isSelected = 'true';
-                }
-                return selectedTab;
-            },
             handleClick(tab, event) {
                 this.callE4Command(tab.name);
             },
             removeTab(tabName) {
                 let tabs = this.e4Model;
 
-                let activeTab = this.getSelectedTab();
-
                 equo.on(this.namespace + '_proceedClose', () => {
-                    if (activeTab !== undefined && activeTab.name === tabName) {
-                        activeTab.isSelected = 'false';
+                    if (this.selected !== undefined && this.selected === tabName) {
                         tabs.forEach((tab, index) => {
                             if (tab.name === tabName) {
                                 let nextTab = tabs[index + 1] || tabs[index - 1];
