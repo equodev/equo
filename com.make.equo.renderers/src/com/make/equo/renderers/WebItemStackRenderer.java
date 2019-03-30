@@ -274,15 +274,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 		String namespace = partStacksToNamespaces.get(stack);
 
-		MPart part = null;
-		if (element instanceof MPart) {
-			part = (MPart) element;
-			hashedParts.put(Integer.toString(element.hashCode()), (MPart) element);
-		} else if (element instanceof MPlaceholder) {
-			part = (MPart) ((MPlaceholder) element).getRef();
-			hashedParts.put(Integer.toString(part.hashCode()), part);
-		}
-
 		// this would mean we haven't rendered a browser for this stack
 		if (namespace == null) {
 			return;
@@ -293,6 +284,15 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			return;
 		}
 
+		MPart part = null;
+		if (element instanceof MPart) {
+			part = (MPart) element;
+			hashedParts.put(Integer.toString(element.hashCode()), (MPart) element);
+		} else if (element instanceof MPlaceholder) {
+			part = (MPart) ((MPlaceholder) element).getRef();
+			hashedParts.put(Integer.toString(part.hashCode()), part);
+		}
+		
 		if (part != null && part instanceof MPlaceholder) {
 			part.setCurSharedRef((MPlaceholder) element);
 		}
