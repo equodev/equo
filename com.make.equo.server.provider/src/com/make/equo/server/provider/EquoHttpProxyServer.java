@@ -34,6 +34,7 @@ import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.ContributionDefinition;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
@@ -61,7 +62,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private static volatile HttpProxyServer proxyServer;
 	private ScheduledExecutorService internetConnectionChecker;
-	private int websocketPort;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoApplication equoApplication;
@@ -72,7 +72,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoLoggingService equoLoggingService;
 
-	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
+	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<String, IEquoContribution>();
+	private Map<String, ContributionDefinition> equoExternalContributions = new HashMap<String, ContributionDefinition>();
 
 	@Override
 	@Activate
@@ -84,9 +85,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void startServer() {
-		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
+		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions, equoExternalContributions, 
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				getEquoContributionsJsApis(), urlsToScripts, websocketPort, equoApplication);
+				getEquoContributionsJsApis(), urlsToScripts, equoApplication);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -128,7 +129,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 				throw new RuntimeException(
 						"The websocketPort property must be defined in the Equo websocket contribution.");
 			}
-			this.websocketPort = (Integer) properties.get("websocketPort");
+//			this.websocketPort = (Integer) properties.get("websocketPort");
 		}
 	}
 
@@ -222,9 +223,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private List<String> getEquoContributionsJsApis() {
 		List<String> javascriptApis = new ArrayList<>();
-		for (String contributionType : equoContributions.keySet()) {
-			IEquoContribution equoContribution = equoContributions.get(contributionType);
-			List<String> javascriptFilesNames = equoContribution.getJavascriptFileNames();
+		for (ContributionDefinition contribution : equoExternalContributions.values()) {
+			List<String> javascriptFilesNames = contribution.getContributedScripts();
 			if (!javascriptFilesNames.isEmpty()) {
 				Function<String, String> function = new Function<String, String>() {
 					@Override
@@ -234,7 +234,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 							String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
 							return scriptSentence;
 						} catch (MalformedURLException e) {
-							return createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType + "/" + input);
+							return createLocalScriptSentence(contribution.getContributionBaseUri() + "/" + input);
 						}
 
 					}
@@ -285,6 +285,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public String getEquoContributionPath() {
 		return EQUO_CONTRIBUTION_PATH;
+	}
+
+	@Override
+	public void addContribution(ContributionDefinition contribution) {
+		equoExternalContributions.put(contribution.getContributionBaseUri(), contribution);
 	}
 
 }
