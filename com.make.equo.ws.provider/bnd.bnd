@@ -2,6 +2,8 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.ws.provider
 -includeresource: resources/
 -buildpath: \
+    org.littleshoot.littleproxy,\
+    org.littleshoot.littleproxy.source,\
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
 	com.google.gson,\
@@ -9,6 +11,10 @@ Private-Package: com.make.equo.ws.provider
 	org.java-websocket.Java-WebSocket,\
 	org.java-websocket.Java-WebSocket.source,\
 	com.make.equo.ws.api;version=latest,\
+	com.make.equo.server.api;version=latest,\
+	com.make.equo.server.provider;version=latest,\
+	com.make.equo.server.offline.api;version=latest,\
+	io.netty.all,\
+    io.netty.all.source,\
 	osgi.annotation,\
-	osgi.cmpn,\
-	com.make.equo.contribution.api;version=latest
+	osgi.cmpn

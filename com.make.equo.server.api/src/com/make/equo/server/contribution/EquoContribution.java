@@ -3,11 +3,18 @@ package com.make.equo.server.contribution;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.littleshoot.proxy.HttpFiltersAdapter;
+
+import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
-public class ContributionDefinition {
+import io.netty.handler.codec.http.HttpRequest;
 
+public class EquoContribution {
+
+	private IEquoServer server = null;
+	
 	private String contributedResourceName = "index.html";
 	private String contributionBaseUri;
 
@@ -20,26 +27,35 @@ public class ContributionDefinition {
 	});
 
 	private ILocalUrlResolver urlResolver = null;
+	private HttpFiltersAdapter filtersAdapter = HttpFiltersAdapter.NOOP_FILTER;
 
-	public ContributionDefinition() {
+	public EquoContribution() {
 		this.contributedScripts = new ArrayList<String>();
 		this.excludedResources = new ArrayList<String>();
 		this.contributedUris = new ArrayList<String>();
 	}
-
+	
+	public IEquoServer getServer() {
+		return this.server;
+	}
+	
+	void setServer(IEquoServer server) {
+		this.server = server;
+	}
+	
 	public String getContributedResourceName() {
 		return contributedResourceName;
 	}
 
-	public void setContributedResourceName(String name) {
+	void setContributedResourceName(String name) {
 		this.contributedResourceName = name;
 	}
-	
+
 	public String getContributionBaseUri() {
 		return contributionBaseUri;
 	}
 
-	public void setContributionUri(String contributionUri) {
+	void setContributionUri(String contributionUri) {
 		this.contributionBaseUri = contributionUri;
 	}
 
@@ -49,10 +65,17 @@ public class ContributionDefinition {
 
 	public void addContributedScript(String script) {
 		if (!this.contributedScripts.contains(script)) {
+			if (this.server != null) {
+				this.server.addScriptToContribution(script, this);
+			}
 			this.contributedScripts.add(script);
 		}
 	}
-
+	
+	void setContributedScripts(List<String> scripts) {
+		this.contributedScripts = scripts;
+	}
+	
 	public List<String> getExcludedResources() {
 		return excludedResources;
 	}
@@ -62,6 +85,10 @@ public class ContributionDefinition {
 			this.excludedResources.add(excludedResource);
 		}
 	}
+	
+	void setExcludedResources(List<String> excludedResources) {
+		this.excludedResources = excludedResources;
+	}
 
 	public List<String> getContributedUris() {
 		return contributedUris;
@@ -69,6 +96,9 @@ public class ContributionDefinition {
 
 	public void addUri(String uri) {
 		if (!this.contributedUris.contains(uri)) {
+			if (this.server != null) {
+				this.server.addUrl(uri);
+			}
 			this.contributedUris.add(uri);
 		}
 	}
@@ -87,6 +117,26 @@ public class ContributionDefinition {
 
 	public void setUrlResolver(ILocalUrlResolver urlResolver) {
 		this.urlResolver = urlResolver;
+	}
+
+	public boolean hasCustomFiltersAdapter() {
+		return this.filtersAdapter != HttpFiltersAdapter.NOOP_FILTER;
+	}
+	
+	public HttpFiltersAdapter getFiltersAdapter(HttpRequest originalRequest) {
+		return filtersAdapter;
+	}
+
+	public void setFiltersAdapter(HttpFiltersAdapter filtersAdapter) {
+		this.filtersAdapter = filtersAdapter;
+	}
+	
+	public boolean startContributing() {
+		if (this.server != null) {
+			this.server.addContribution(this);
+			return true;
+		}
+		return false;
 	}
 
 }

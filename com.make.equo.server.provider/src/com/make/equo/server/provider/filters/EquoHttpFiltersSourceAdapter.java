@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
 import java.net.URI;
 import java.util.List;
@@ -11,13 +11,12 @@ import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
 
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.contribution.api.IEquoContribution;
-import com.make.equo.server.contribution.ContributionDefinition;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.provider.EquoHttpProxyServer;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
-import com.make.equo.server.provider.resolvers.EquoContributionUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -36,8 +35,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private static final String EQUO_RENDERERS_SUBFIX = "equo_renderers";
 
-	private Map<String, IEquoContribution> equoContributions;
-	private Map<String, ContributionDefinition> equoExternalContributions;
+	private Map<String, EquoContribution> equoExternalContributions;
 	private IEquoOfflineServer equoOfflineServer;
 	private IEquoApplication equoApplication;
 
@@ -50,12 +48,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private List<String> equoContributionsJsApis;
 	private Map<String, String> urlsToScriptsAsStrings;
 
-	public EquoHttpFiltersSourceAdapter(Map<String, IEquoContribution> equoContributions,
-			Map<String, ContributionDefinition> equoExternalContributions, IEquoOfflineServer equoOfflineServer,
+	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoExternalContributions, IEquoOfflineServer equoOfflineServer,
 			boolean isOfflineCacheSupported, String limitedConnectionAppBasedPagePath, List<String> proxiedUrls,
 			List<String> equoContributionsJsApis, Map<String, String> urlsToScriptsAsStrings,
 			IEquoApplication equoApplication) {
-		this.equoContributions = equoContributions;
 		this.equoExternalContributions = equoExternalContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -82,18 +78,16 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		URI uri = URI.create(originalRequest.getUri());
 		String key = uri.getScheme() + "://" + uri.getAuthority();
 		if (isContributionRequest(key)) {
-			ContributionDefinition contribution = equoExternalContributions.get(key);
-			contribution.getFilter().applyFilter(originalRequest);
-			return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
-					equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
-					contribution.getContributedResourceName());
+			EquoContribution contribution = equoExternalContributions.get(key);
+			if (contribution.hasCustomFiltersAdapter()) {
+				return contribution.getFiltersAdapter(originalRequest);
+			} else {
+				contribution.getFilter().applyFilter(originalRequest);
+				return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
+						equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
+						contribution.getContributedResourceName());
+			}
 		}
-
-//		if (isEquoRendererRequest(originalRequest)) {
-//			return new RenderersRequestFiltersAdapter(originalRequest,
-//					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
-//					equoContributionsJsApis, getCustomScripts(originalRequest.getUri()), baseRendererPath);
-//		}
 
 		if (isLocalFileRequest(originalRequest)) {
 			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));

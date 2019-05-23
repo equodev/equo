@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;

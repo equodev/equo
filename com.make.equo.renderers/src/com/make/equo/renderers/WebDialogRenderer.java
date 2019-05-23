@@ -32,9 +32,7 @@ import com.make.swtcef.Chromium;
 
 public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 
-	static final String EQUO_RENDERERS_NAME = "webdialog";
-	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
-			+ EQUO_RENDERERS_URL_SUFFIX;
+	static final String EQUO_RENDERERS_NAME = "WebDialog";
 
 	private static String ShellMinimizedTag = "shellMinimized"; //$NON-NLS-1$
 	private static String ShellMaximizedTag = "shellMaximized"; //$NON-NLS-1$
@@ -297,8 +295,8 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	}
 
 	@Override
-	public String getEquoRendererURL() {
-		return EQUO_RENDERERS_URL;
+	public String getEquoRendererName() {
+		return EQUO_RENDERERS_NAME;
 	}
 
 }

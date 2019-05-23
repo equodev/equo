@@ -31,15 +31,15 @@ import com.google.gson.reflect.TypeToken;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
 public interface IEquoRenderer {
 	
-	static final String EQUO_RENDERERS_URL_PREFIX = "http://";
-	static final String EQUO_RENDERERS_URL_SUFFIX = ".equo_renderers";
-
+	static final String RENDERER_FRAMEWORK_JS_FILE = "rendererFramework.js";
+	
 	/**
 	 * The initial point to start an Equo render process.
 	 * 
@@ -48,27 +48,20 @@ public interface IEquoRenderer {
 	default void configureAndStartRenderProcess(Composite parent) {
 		Chromium browser = createBrowserComponent(parent);
 		
-		getEquoProxyServer().addUrl(getEquoRendererURL());
-
-		String renderersContributionPath = getEquoProxyServer().getEquoContributionPath()
-				+ EquoRenderersContribution.TYPE + "/";
-
-		String rendererFrameworkJsFileUri = renderersContributionPath + "rendererFramework.js";
-		getEquoProxyServer().addCustomScript(getEquoRendererURL(), rendererFrameworkJsFileUri);
-
+		EquoContribution thisContribution = EquoRenderersContribution.getContributionDefinition();
+		String rendererURL = thisContribution.getContributionBaseUri() + getEquoRendererName();
+		
+		thisContribution.addUri(rendererURL);
+		
 		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
 		for (String fileName : jsScriptsFilesForRendering) {
-			String e4ElemmentContributionUri = renderersContributionPath + fileName;
-			getEquoProxyServer().addCustomScript(getEquoRendererURL(), e4ElemmentContributionUri);
+			thisContribution.addContributedScript(fileName);
 		}
 
-		String renderersUri = getEquoRendererURL() + "/" + getEquoProxyServer().getEquoContributionPath()
-				+ EquoRenderersContribution.TYPE;
-
 		String namespace = getNamespace();
-		browser.setUrl(renderersUri + "?" + "namespace=" + namespace);
+		browser.setUrl(rendererURL + "?" + "namespace=" + namespace);
 
-		getEquoProxyServer().start();
+		thisContribution.getServer().start();
 
 		sendEclipse4Model();
 		onActionPerformedOnElement();
@@ -184,10 +177,10 @@ public interface IEquoRenderer {
 	}
 
 	/**
-	 * Return an URL for the Rendeder. 
-	 * @return a String with Equo Render URL 
+	 * Return a name for the Rendeder. 
+	 * @return a String with the Equo Renderer's name 
 	 */
-	String getEquoRendererURL();
+	String getEquoRendererName();
 	
 	/**
 	 * Receives a message when an action is performed on an element in the

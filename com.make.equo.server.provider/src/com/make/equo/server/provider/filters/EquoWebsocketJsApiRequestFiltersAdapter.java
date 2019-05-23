@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
 import java.nio.charset.Charset;
 

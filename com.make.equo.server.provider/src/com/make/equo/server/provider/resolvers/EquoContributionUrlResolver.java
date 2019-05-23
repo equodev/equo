@@ -2,14 +2,14 @@ package com.make.equo.server.provider.resolvers;
 
 import java.net.URL;
 
-import com.make.equo.server.contribution.ContributionDefinition;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 public class EquoContributionUrlResolver implements ILocalUrlResolver {
 
-	private ContributionDefinition contribution;
+	private EquoContribution contribution;
 
-	public EquoContributionUrlResolver(ContributionDefinition contribution) {
+	public EquoContributionUrlResolver(EquoContribution contribution) {
 		this.contribution = contribution;
 	}
 

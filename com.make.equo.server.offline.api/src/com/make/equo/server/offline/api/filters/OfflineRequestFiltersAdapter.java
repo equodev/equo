@@ -41,6 +41,10 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+		if ("".equals(urlResolver.getProtocol())) {
+			URL resolvedUrl = urlResolver.resolve(localFilePathWithProtocol);
+			return buildHttpResponse(resolvedUrl);
+		}
 		String protocol = urlResolver.getProtocol();
 		String originalFileName = localFilePathWithProtocol.substring(localFilePathWithProtocol.lastIndexOf(protocol));
 		String fileWithoutProtocol = originalFileName.replace(protocol, "");

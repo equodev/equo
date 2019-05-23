@@ -34,14 +34,15 @@ import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.server.contribution.ContributionDefinition;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
 
-	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
+	public static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
 
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
@@ -73,7 +74,11 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private volatile IEquoLoggingService equoLoggingService;
 
 	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<String, IEquoContribution>();
-	private Map<String, ContributionDefinition> equoExternalContributions = new HashMap<String, ContributionDefinition>();
+	private Map<String, EquoContribution> equoExternalContributions = new HashMap<String, EquoContribution>();
+	
+	private List<String> contributionJsApis = new ArrayList<String>();
+	
+	private Map<String, EquoContribution> localScriptToContribution = new HashMap<String, EquoContribution>();
 
 	@Override
 	@Activate
@@ -85,9 +90,10 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void startServer() {
-		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions, equoExternalContributions, 
-				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				getEquoContributionsJsApis(), urlsToScripts, equoApplication);
+		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(
+				equoExternalContributions, equoOfflineServer, isOfflineCacheSupported(),
+				limitedConnectionAppBasedPagePath, proxiedUrls, contributionJsApis, urlsToScripts,
+				equoApplication);
 
 		Runnable internetConnectionRunnable = new Runnable() {
 			@Override
@@ -221,29 +227,26 @@ public class EquoHttpProxyServer implements IEquoServer {
 		EquoHttpProxyServer.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
 	}
 
-	private List<String> getEquoContributionsJsApis() {
-		List<String> javascriptApis = new ArrayList<>();
-		for (ContributionDefinition contribution : equoExternalContributions.values()) {
-			List<String> javascriptFilesNames = contribution.getContributedScripts();
-			if (!javascriptFilesNames.isEmpty()) {
-				Function<String, String> function = new Function<String, String>() {
-					@Override
-					public String apply(String input) {
-						try {
-							URL url = new URL(input);
-							String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
-							return scriptSentence;
-						} catch (MalformedURLException e) {
-							return createLocalScriptSentence(contribution.getContributionBaseUri() + "/" + input);
-						}
-
+	private void addEquoContributionJsApis(EquoContribution contribution) {
+		List<String> javascriptFilesNames = contribution.getContributedScripts();
+		if (!javascriptFilesNames.isEmpty()) {
+			Function<String, String> function = new Function<String, String>() {
+				@Override
+				public String apply(String input) {
+					try {
+						URL url = new URL(input);
+						String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+						return scriptSentence;
+					} catch (MalformedURLException e) {
+						localScriptToContribution.put(input, contribution);
+						return createLocalScriptSentence(contribution.getContributionBaseUri() + "/" + input);
 					}
-				};
-				Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
-				javascriptApis.addAll(Lists.newArrayList(result));
-			}
+
+				}
+			};
+			Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
+			contributionJsApis.addAll(Lists.newArrayList(result));
 		}
-		return javascriptApis;
 	}
 
 	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
@@ -279,7 +282,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
 		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH.toLowerCase());
+				|| localScriptToContribution.containsKey(scriptPath);
 	}
 
 	@Override
@@ -288,8 +291,19 @@ public class EquoHttpProxyServer implements IEquoServer {
 	}
 
 	@Override
-	public void addContribution(ContributionDefinition contribution) {
-		equoExternalContributions.put(contribution.getContributionBaseUri(), contribution);
+	public void addContribution(EquoContribution contribution) {
+		URI uri = URI.create(contribution.getContributionBaseUri().toLowerCase());
+		String key = uri.getScheme() + "://" + uri.getAuthority();
+		equoExternalContributions.put(key, contribution);
+		addEquoContributionJsApis(contribution);
+	}
+	
+	@Override
+	public void addScriptToContribution(String script, EquoContribution contribution) {
+		localScriptToContribution.put(script, contribution);
+		String processedScript = generateScriptSentence(script);
+		contributionJsApis.add(processedScript);
+		localScriptToContribution.put(script, contribution);
 	}
 
 }

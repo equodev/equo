@@ -1,31 +1,43 @@
 package com.make.equo.renderers.contributions;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-import com.google.common.collect.Lists;
-import com.make.equo.contribution.api.IEquoContribution;
+import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.EquoContribution;
+import com.make.equo.server.contribution.EquoContributionBuilder;
 
-@Component(name = "equoRenderersContribution", property = { "type=renderersContribution" })
-public class EquoRenderersContribution implements IEquoContribution {
-
-	public static final String TYPE = "renderersContribution";
-
-	@Override
-	public URL getJavascriptAPIResource(String name) {
-		return this.getClass().getClassLoader().getResource(name);
+@Component
+public class EquoRenderersContribution {
+	
+	public static final String EQUO_RENDERERS_BASE_URI = "http://equoRenderers/";
+	
+	private IEquoServer server;
+	private static EquoContribution contribution;
+	
+	@Activate
+	protected void activate() {
+		contribution = EquoContributionBuilder.createContribution()
+			.withContributedResource("baseRenderer.html")
+			.withScriptFile("rendererFramework.js")
+			.withContributionBaseUri(EQUO_RENDERERS_BASE_URI)
+			.withURLResolver(new EquoRenderersURLResolver())
+			.withServer(server)
+			.build();
+		contribution.startContributing();
 	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-		return null;
+	
+	public static EquoContribution getContributionDefinition() {
+		return contribution;
 	}
-
-	@Override
-	public List<String> getJavascriptFileNames() {
-		return Lists.newArrayList();
+	
+	@Reference
+	void setEquoServer(IEquoServer server) {
+		this.server = server;
+	}
+	
+	void unsetEquoServer(IEquoServer server) {
+		this.server = null;
 	}
 }

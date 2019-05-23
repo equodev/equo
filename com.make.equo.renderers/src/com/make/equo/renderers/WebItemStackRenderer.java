@@ -54,9 +54,7 @@ import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
 
-	static final String EQUO_RENDERERS_NAME = "part_stack";
-	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
-			+ EQUO_RENDERERS_URL_SUFFIX;
+	static final String EQUO_RENDERERS_NAME = "PartStack";
 
 	private String namespace;
 
@@ -463,8 +461,8 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public String getEquoRendererURL() {
-		return EQUO_RENDERERS_URL;
+	public String getEquoRendererName() {
+		return EQUO_RENDERERS_NAME;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -15,14 +15,14 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
-public class RenderersRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
+public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
 
 	private String customJsScripts;
 	private List<String> equoContributionsJsApis;
 
-	public RenderersRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
-			List<String> equoContributionsJsApis, String customJsScripts, String baseRendererPath) {
-		super(originalRequest, urlResolver, baseRendererPath);
+	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
+			List<String> equoContributionsJsApis, String customJsScripts, String contributedFilePath) {
+		super(originalRequest, urlResolver, contributedFilePath);
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 	}

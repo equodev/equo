@@ -1,8 +1,11 @@
 Bundle-Version: ${version}.${tstamp}
 Export-Package: \
     com.make.equo.server.api,\
-    com.make.equo.server.contribution
+    com.make.equo.server.contribution,\
+    com.make.equo.server.contribution.builder
 -buildpath: \
+    org.littleshoot.littleproxy,\
+    org.littleshoot.littleproxy.source,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	com.make.equo.server.offline.api;version=latest,\
