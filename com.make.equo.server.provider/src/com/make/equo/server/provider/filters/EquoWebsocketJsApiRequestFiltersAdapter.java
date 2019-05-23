@@ -18,7 +18,7 @@ public class EquoWebsocketJsApiRequestFiltersAdapter extends LocalFileRequestFil
 		super(originalRequest, urlResolver);
 		this.portNumber = portNumber;
 	}
-
+	
 	@Override
 	protected HttpResponse buildResponse(ByteBuf buffer, String contentType) {
 		String contentFile = buffer.toString(Charset.defaultCharset());

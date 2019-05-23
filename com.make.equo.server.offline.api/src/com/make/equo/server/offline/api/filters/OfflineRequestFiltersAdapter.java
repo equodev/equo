@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpVersion;
 
 public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 
-	private ILocalUrlResolver urlResolver;
+	protected ILocalUrlResolver urlResolver;
 	private String localFilePathWithProtocol;
 
 	public OfflineRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver) {
@@ -41,18 +41,14 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		if ("".equals(urlResolver.getProtocol())) {
-			URL resolvedUrl = urlResolver.resolve(localFilePathWithProtocol);
-			return buildHttpResponse(resolvedUrl);
-		}
-		String protocol = urlResolver.getProtocol();
+		String protocol = urlResolver.getProtocol().toLowerCase();
 		String originalFileName = localFilePathWithProtocol.substring(localFilePathWithProtocol.lastIndexOf(protocol));
 		String fileWithoutProtocol = originalFileName.replace(protocol, "");
 		URL resolvedUrl = urlResolver.resolve(fileWithoutProtocol);
 		return buildHttpResponse(resolvedUrl);
 	}
 
-	private HttpResponse buildHttpResponse(URL resolvedUrl) {
+	protected HttpResponse buildHttpResponse(URL resolvedUrl) {
 		try {
 			final URLConnection connection = resolvedUrl.openConnection();
 			InputStream inputStream = connection.getInputStream();

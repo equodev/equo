@@ -50,12 +50,12 @@ public interface IEquoRenderer {
 		
 		EquoContribution thisContribution = EquoRenderersContribution.getContributionDefinition();
 		String rendererURL = thisContribution.getContributionBaseUri() + getEquoRendererName();
-		
 		thisContribution.addUri(rendererURL);
+		thisContribution.getServer().addCustomScript(rendererURL, RENDERER_FRAMEWORK_JS_FILE);
 		
 		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
 		for (String fileName : jsScriptsFilesForRendering) {
-			thisContribution.addContributedScript(fileName);
+			thisContribution.getServer().addCustomScript(rendererURL, fileName);
 		}
 
 		String namespace = getNamespace();

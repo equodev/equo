@@ -2,7 +2,6 @@ package com.make.equo.ws.provider;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.server.api.IEquoServer;
@@ -12,23 +11,24 @@ import com.make.equo.server.provider.filters.EquoWebsocketJsApiRequestFiltersAda
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 @Component
-public class EquoWebSocketContributionImpl {
+public class EquoWebSocketContribution {
 
 	private static final String equoWebsocketsJsApi = "equoWebsockets.js";
+	private EquoContribution contribution;
+	
 	private IEquoWebSocketService equoWebSocketService;
 	private IEquoServer server;
 
 	@Activate
-	@Modified
 	protected void activate() {
-		EquoContribution contribution = EquoContributionBuilder.createContribution()
+		contribution = EquoContributionBuilder.createContribution()
 				.withScriptFile(equoWebsocketsJsApi)
 				.withServer(server)
-				.withFiltersAdapter(new EquoWebsocketJsApiRequestFiltersAdapter(null, new EquoWebSocketURLResolver(), this.equoWebSocketService.getPort()))
+				.withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
 				.build();
 		contribution.startContributing();
 	}
-
+	
 	@Reference
 	void setEquoWebSocketService(IEquoWebSocketService equoWebSocketService) {
 		this.equoWebSocketService = equoWebSocketService;

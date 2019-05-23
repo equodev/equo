@@ -13,8 +13,12 @@ import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoContribution {
 
-	private IEquoServer server = null;
+	private boolean activeContribution = false;
 	
+	private IEquoServer server = null;
+	private ILocalUrlResolver urlResolver = null;
+	private IFiltersAdapterHandler filtersAdapterHandler = null;
+
 	private String contributedResourceName = "index.html";
 	private String contributionBaseUri;
 
@@ -25,14 +29,15 @@ public class EquoContribution {
 	private IHttpRequestFilter filter = ((originalRequest) -> {
 		return originalRequest;
 	});
-
-	private ILocalUrlResolver urlResolver = null;
-	private HttpFiltersAdapter filtersAdapter = HttpFiltersAdapter.NOOP_FILTER;
-
+	
 	public EquoContribution() {
 		this.contributedScripts = new ArrayList<String>();
 		this.excludedResources = new ArrayList<String>();
 		this.contributedUris = new ArrayList<String>();
+	}
+	
+	public void setActive(boolean status) {
+		this.activeContribution = status;
 	}
 	
 	public IEquoServer getServer() {
@@ -55,7 +60,7 @@ public class EquoContribution {
 		return contributionBaseUri;
 	}
 
-	void setContributionUri(String contributionUri) {
+	void setContributionBaseUri(String contributionUri) {
 		this.contributionBaseUri = contributionUri;
 	}
 
@@ -65,7 +70,7 @@ public class EquoContribution {
 
 	public void addContributedScript(String script) {
 		if (!this.contributedScripts.contains(script)) {
-			if (this.server != null) {
+			if (this.server != null && activeContribution) {
 				this.server.addScriptToContribution(script, this);
 			}
 			this.contributedScripts.add(script);
@@ -96,7 +101,7 @@ public class EquoContribution {
 
 	public void addUri(String uri) {
 		if (!this.contributedUris.contains(uri)) {
-			if (this.server != null) {
+			if (this.server != null && activeContribution) {
 				this.server.addUrl(uri);
 			}
 			this.contributedUris.add(uri);
@@ -120,23 +125,24 @@ public class EquoContribution {
 	}
 
 	public boolean hasCustomFiltersAdapter() {
-		return this.filtersAdapter != HttpFiltersAdapter.NOOP_FILTER;
+		return this.filtersAdapterHandler != null;
 	}
 	
-	public HttpFiltersAdapter getFiltersAdapter(HttpRequest originalRequest) {
-		return filtersAdapter;
+	void setFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
+		this.filtersAdapterHandler = filtersAdapterHandler;
 	}
 
-	public void setFiltersAdapter(HttpFiltersAdapter filtersAdapter) {
-		this.filtersAdapter = filtersAdapter;
+	public HttpFiltersAdapter getFiltersAdapter(HttpRequest request) {
+		if (filtersAdapterHandler == null) {
+			return HttpFiltersAdapter.NOOP_FILTER;
+		}
+		return filtersAdapterHandler.getFiltersAdapter(request);
 	}
 	
-	public boolean startContributing() {
+	public void startContributing() {
 		if (this.server != null) {
 			this.server.addContribution(this);
-			return true;
 		}
-		return false;
 	}
 
 }

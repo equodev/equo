@@ -2,7 +2,6 @@ package com.make.equo.server.contribution;
 
 import java.util.List;
 
-import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 
@@ -14,14 +13,14 @@ import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 public class EquoContributionBuilder {
 
 	public static Integer CONTRIBUTION_COUNT = 0;
-	public static String DEFAULT_CONTRIBUTION_URI = "http://equoContribution" + CONTRIBUTION_COUNT;
+	public static String DEFAULT_CONTRIBUTION_URI = "http://equoContribution";
 
 	private EquoContribution contribution;
 
 	public EquoContributionBuilder() {
 		this.contribution = new EquoContribution();
-		contribution.setContributionUri(DEFAULT_CONTRIBUTION_URI);
-		CONTRIBUTION_COUNT++;
+		contribution.setContributionBaseUri(DEFAULT_CONTRIBUTION_URI + CONTRIBUTION_COUNT + "/");
+		CONTRIBUTION_COUNT = CONTRIBUTION_COUNT + 1;
 	}
 	
 	public static EquoContributionBuilder createContribution() {
@@ -35,7 +34,7 @@ public class EquoContributionBuilder {
 	}
 	
 	public EquoContributionBuilder withContributionBaseUri(String contributionBaseUri) {
-		this.contribution.setContributionUri(contributionBaseUri);
+		this.contribution.setContributionBaseUri(contributionBaseUri);
 		return this;
 	}
 	
@@ -64,8 +63,8 @@ public class EquoContributionBuilder {
 		return this;
 	}
 	
-	public EquoContributionBuilder withFiltersAdapter(HttpFiltersAdapter filtersAdapter) {
-		this.contribution.setFiltersAdapter(filtersAdapter);
+	public EquoContributionBuilder withFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
+		this.contribution.setFiltersAdapterHandler(filtersAdapterHandler);
 		return this;
 	}
 	

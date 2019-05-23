@@ -20,7 +20,6 @@ public class EquoRenderersContribution {
 	protected void activate() {
 		contribution = EquoContributionBuilder.createContribution()
 			.withContributedResource("baseRenderer.html")
-			.withScriptFile("rendererFramework.js")
 			.withContributionBaseUri(EQUO_RENDERERS_BASE_URI)
 			.withURLResolver(new EquoRenderersURLResolver())
 			.withServer(server)

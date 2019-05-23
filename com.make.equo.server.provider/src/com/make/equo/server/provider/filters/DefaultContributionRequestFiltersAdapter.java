@@ -1,5 +1,6 @@
 package com.make.equo.server.provider.filters;
 
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
@@ -19,14 +21,22 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 
 	private String customJsScripts;
 	private List<String> equoContributionsJsApis;
+	private String contributedFilePath;
 
 	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
 			List<String> equoContributionsJsApis, String customJsScripts, String contributedFilePath) {
 		super(originalRequest, urlResolver, contributedFilePath);
+		this.contributedFilePath = contributedFilePath;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 	}
 
+	@Override
+	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+		URL resolvedUrl = urlResolver.resolve(contributedFilePath);
+		return super.buildHttpResponse(resolvedUrl);
+	}
+	
 	@Override
 	protected HttpResponse buildResponse(ByteBuf buffer, String defaultContentType) {
 		String contentFile = buffer.toString(Charset.defaultCharset());
