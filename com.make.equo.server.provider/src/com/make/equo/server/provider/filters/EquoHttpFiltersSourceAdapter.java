@@ -64,25 +64,29 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			return new HttpFiltersAdapter(originalRequest, clientCtx);
 		}
 
-		URI uri = URI.create(originalRequest.getUri());
-		String key = uri.getScheme() + "://" + uri.getAuthority();
-		if (isContributionRequest(key)) {
-			EquoContribution contribution = equoExternalContributions.get(key);
-			if (contribution.hasCustomFiltersAdapter()) {
-				return contribution.getFiltersAdapter(originalRequest);
-			} else {
-				originalRequest = contribution.getFilter().applyFilter(originalRequest);
-				
-				if (isLocalFileRequest(originalRequest)) {
-					return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
+		try {
+			URI uri = URI.create(originalRequest.getUri());
+			String key = uri.getScheme() + "://" + uri.getAuthority();
+			if (isContributionRequest(key)) {
+				EquoContribution contribution = equoExternalContributions.get(key);
+				if (contribution.hasCustomFiltersAdapter()) {
+					return contribution.getFiltersAdapter(originalRequest);
+				} else {
+					originalRequest = contribution.getFilter().applyFilter(originalRequest);
+					
+					if (isLocalFileRequest(originalRequest)) {
+						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
+					}
+	
+					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
+							equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
+							contribution.getContributedResourceName());
 				}
-
-				return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
-						equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
-						contribution.getContributedResourceName());
 			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
 		}
-
+		
 		if (isConnectionLimited()) {
 			if (isOfflineCacheSupported) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);

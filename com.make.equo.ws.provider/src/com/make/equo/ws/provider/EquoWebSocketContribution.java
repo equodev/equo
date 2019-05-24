@@ -7,7 +7,6 @@ import org.osgi.service.component.annotations.Reference;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
-import com.make.equo.server.provider.filters.EquoWebsocketJsApiRequestFiltersAdapter;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 @Component
@@ -24,8 +23,8 @@ public class EquoWebSocketContribution {
 		contribution = EquoContributionBuilder.createContribution()
 				.withScriptFile(equoWebsocketsJsApi)
 				.withServer(server)
-				.withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
 				.build();
+		contribution.setFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService, contribution));
 		contribution.startContributing();
 	}
 	

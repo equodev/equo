@@ -14,8 +14,9 @@ public class EquoWebSocketFiltersAdapterHandler implements IFiltersAdapterHandle
 	private IEquoWebSocketService equoWebSocketService;
 	private EquoContribution contribution;
 	
-	EquoWebSocketFiltersAdapterHandler(IEquoWebSocketService equoWebSocketService) {
+	EquoWebSocketFiltersAdapterHandler(IEquoWebSocketService equoWebSocketService, EquoContribution contribution) {
 		this.equoWebSocketService = equoWebSocketService;
+		this.contribution = contribution;
 	}
 	
 	@Override

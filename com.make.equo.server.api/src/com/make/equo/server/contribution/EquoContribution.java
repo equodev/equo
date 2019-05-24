@@ -128,7 +128,7 @@ public class EquoContribution {
 		return this.filtersAdapterHandler != null;
 	}
 	
-	void setFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
+	public void setFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
 		this.filtersAdapterHandler = filtersAdapterHandler;
 	}
 

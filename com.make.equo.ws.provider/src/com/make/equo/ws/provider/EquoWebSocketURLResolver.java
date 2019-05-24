@@ -20,7 +20,7 @@ public class EquoWebSocketURLResolver implements ILocalUrlResolver {
 	
 	@Override
 	public URL resolve(String pathToResolve) {
-		return this.getClass().getResource(pathToResolve);
+		return this.getClass().getClassLoader().getResource(pathToResolve);
 	}
 
 }

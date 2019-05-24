@@ -57,7 +57,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static String limitedConnectionAppBasedPagePath;
 
 	private static volatile HttpProxyServer proxyServer;
-	private ScheduledExecutorService internetConnectionChecker;
+//	private ScheduledExecutorService internetConnectionChecker;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoApplication equoApplication;
@@ -88,18 +88,18 @@ public class EquoHttpProxyServer implements IEquoServer {
 				limitedConnectionAppBasedPagePath, proxiedUrls, contributionJsApis, localScripts, urlsToScripts,
 				equoApplication);
 
-		Runnable internetConnectionRunnable = new Runnable() {
-			@Override
-			public void run() {
-				if (!isInternetReachable()) {
-					httpFiltersSourceAdapter.setConnectionLimited();
-				} else {
-					httpFiltersSourceAdapter.setConnectionUnlimited();
-				}
-			}
-		};
-		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
-		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
+//		Runnable internetConnectionRunnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				if (!isInternetReachable()) {
+//					httpFiltersSourceAdapter.setConnectionLimited();
+//				} else {
+//					httpFiltersSourceAdapter.setConnectionUnlimited();
+//				}
+//			}
+//		};
+//		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
+//		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 
 		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new SelfSignedMitmManager())
 				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
@@ -178,12 +178,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		}
 	}
 
-	private boolean isInternetReachable() {
-		if (proxiedUrls.isEmpty()) {
-			return false;
-		}
-		return isAddressReachable(proxiedUrls.get(0));
-	}
+//	private boolean isInternetReachable() {
+//		if (proxiedUrls.isEmpty()) {
+//			return false;
+//		}
+//		return isAddressReachable(proxiedUrls.get(0));
+//	}
 
 	@Override
 	public boolean isAddressReachable(String appUrl) {
