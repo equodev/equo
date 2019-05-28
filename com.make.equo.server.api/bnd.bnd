@@ -1,4 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
+Private-Package: \
+    com.make.equo.server.contribution.parser
 Export-Package: \
     com.make.equo.server.api,\
     com.make.equo.server.contribution,\
@@ -8,6 +10,9 @@ Export-Package: \
     org.littleshoot.littleproxy.source,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
+	com.google.gson,\
+	com.google.gson.source,\
+	com.make.equo.aer.api,\
 	com.make.equo.server.offline.api;version=latest,\
 	com.make.equo.contribution.api;version=latest,\
 	io.netty.all,\

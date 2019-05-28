@@ -13,9 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
@@ -68,7 +65,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoLoggingService equoLoggingService;
 
-	private Map<String, EquoContribution> equoExternalContributions = new HashMap<String, EquoContribution>();
+	private Map<String, EquoContribution> equoContributions = new HashMap<String, EquoContribution>();
 	
 	private List<String> contributionJsApis = new ArrayList<String>();
 	private Set<String> localScripts = new HashSet<String>();
@@ -84,7 +81,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(
-				equoExternalContributions, equoOfflineServer, isOfflineCacheSupported(),
+				equoContributions, equoOfflineServer, isOfflineCacheSupported(),
 				limitedConnectionAppBasedPagePath, proxiedUrls, contributionJsApis, localScripts, urlsToScripts,
 				equoApplication);
 
@@ -253,9 +250,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void addContribution(EquoContribution contribution) {
 		URI uri = URI.create(contribution.getContributionBaseUri().toLowerCase());
 		String key = uri.getScheme() + "://" + uri.getAuthority();
-		equoExternalContributions.put(key, contribution);
+		equoContributions.put(key, contribution);
 		addEquoContributionJsApis(contribution);
-		contribution.setActive(true);
 	}
 	
 	@Override

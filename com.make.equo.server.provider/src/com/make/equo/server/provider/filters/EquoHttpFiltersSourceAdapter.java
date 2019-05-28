@@ -29,7 +29,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private static final String limitedConnectionGenericPageFilePath = "/limitedConnectionPage.html";
 
-	private Map<String, EquoContribution> equoExternalContributions;
+	private Map<String, EquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
 	private IEquoApplication equoApplication;
 
@@ -43,11 +43,11 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private Set<String> localScripts;
 	private Map<String, String> urlsToScriptsAsStrings;
 
-	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoExternalContributions, IEquoOfflineServer equoOfflineServer,
+	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions, IEquoOfflineServer equoOfflineServer,
 			boolean isOfflineCacheSupported, String limitedConnectionAppBasedPagePath, List<String> proxiedUrls,
 			List<String> equoContributionsJsApis, Set<String> localScripts, Map<String, String> urlsToScriptsAsStrings,
 			IEquoApplication equoApplication) {
-		this.equoExternalContributions = equoExternalContributions;
+		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
@@ -68,7 +68,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			URI uri = URI.create(originalRequest.getUri());
 			String key = uri.getScheme() + "://" + uri.getAuthority();
 			if (isContributionRequest(key)) {
-				EquoContribution contribution = equoExternalContributions.get(key);
+				EquoContribution contribution = equoContributions.get(key);
 				if (contribution.hasCustomFiltersAdapter()) {
 					return contribution.getFiltersAdapter(originalRequest);
 				} else {
@@ -115,7 +115,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	}
 
 	private boolean isContributionRequest(String key) {
-		return equoExternalContributions.containsKey(key);
+		return equoContributions.containsKey(key);
 	}
 
 	private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
@@ -135,7 +135,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		}
 		URI realUri = URI.create(uri);
 		String key = realUri.getScheme() + "://" + realUri.getAuthority();
-		EquoContribution contribution = equoExternalContributions.get(key);
+		EquoContribution contribution = equoContributions.get(key);
 		return contribution != null ? contribution.getUrlResolver() : null;
 	}
 

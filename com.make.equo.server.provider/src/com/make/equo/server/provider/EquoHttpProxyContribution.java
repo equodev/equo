@@ -4,7 +4,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
@@ -17,14 +16,12 @@ public class EquoHttpProxyContribution {
 
 	private EquoContribution contribution;
 	
-	private IEquoServer server;
+	private EquoContributionBuilder builder;
 
 	@Activate
 	protected void activate() {
-		contribution = EquoContributionBuilder.createContribution()
-				.withScriptFile(equoFrameworkJsApi)
+		contribution = builder.withScriptFile(equoFrameworkJsApi)
 				.withScriptFile(jqueryJsApi)
-				.withServer(server)
 				.build();
 		contribution.setUrlResolver(new EquoHttpProxyServerURLResolver(contribution));
 		String value = System.getProperty("change_original_html");
@@ -35,11 +32,11 @@ public class EquoHttpProxyContribution {
 	}
 	
 	@Reference
-	void setEquoServer(IEquoServer server) {
-		this.server = server;
+	void setEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = builder;
 	}
 
-	void unsetEquoServer(IEquoServer server) {
-		this.server = null;
+	void unsetEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = null;
 	}
 }

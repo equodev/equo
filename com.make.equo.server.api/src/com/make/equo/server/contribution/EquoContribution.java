@@ -1,6 +1,5 @@
 package com.make.equo.server.contribution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
@@ -15,31 +14,34 @@ public class EquoContribution {
 
 	private boolean activeContribution = false;
 	
-	private IEquoServer server = null;
-	private ILocalUrlResolver urlResolver = null;
-	private IFiltersAdapterHandler filtersAdapterHandler = null;
+	private IEquoServer server;
+	private ILocalUrlResolver urlResolver;
+	private IFiltersAdapterHandler filtersAdapterHandler;
 
-	private String contributedResourceName = "index.html";
+	private String contributedResourceName;
 	private String contributionBaseUri;
 
 	private List<String> contributedUris;
 	private List<String> contributedScripts;
 	private List<String> excludedResources;
 
-	private IHttpRequestFilter filter = ((originalRequest) -> {
-		return originalRequest;
-	});
+	private IHttpRequestFilter filter;
 	
-	public EquoContribution() {
-		this.contributedScripts = new ArrayList<String>();
-		this.excludedResources = new ArrayList<String>();
-		this.contributedUris = new ArrayList<String>();
+	public EquoContribution(IEquoServer server, ILocalUrlResolver urlResolver, IFiltersAdapterHandler filtersAdapterHandler,
+			String contributedResourceName, String contributionBaseUri, List<String> contributedUris,
+			List<String> contributedScripts, List<String> excludedResources, IHttpRequestFilter filter) {
+		this.server = server;
+		this.urlResolver = urlResolver;
+		this.filtersAdapterHandler = filtersAdapterHandler;
+		this.contributedResourceName = contributedResourceName;
+		this.contributionBaseUri = contributionBaseUri;
+		this.contributedUris = contributedUris;
+		this.contributedScripts = contributedScripts;
+		this.excludedResources = excludedResources;
+		this.filter = filter;
+		this.startContributing();
 	}
-	
-	public void setActive(boolean status) {
-		this.activeContribution = status;
-	}
-	
+		
 	public IEquoServer getServer() {
 		return this.server;
 	}
@@ -139,10 +141,18 @@ public class EquoContribution {
 		return filtersAdapterHandler.getFiltersAdapter(request);
 	}
 	
-	public void startContributing() {
+	/**
+	 * Adds the contribution to its server
+	 * 
+	 * @return true if the contribution was added successfully to the server
+	 */
+	public boolean startContributing() {
 		if (this.server != null) {
 			this.server.addContribution(this);
+			this.activeContribution = true;
+			return true;
 		}
+		return false;
 	}
 
 }

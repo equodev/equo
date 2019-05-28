@@ -4,7 +4,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
@@ -13,16 +12,14 @@ public class EquoRenderersContribution {
 	
 	public static final String EQUO_RENDERERS_BASE_URI = "http://equoRenderers/";
 	
-	private IEquoServer server;
+	private EquoContributionBuilder builder;
 	private static EquoContribution contribution;
 	
 	@Activate
 	protected void activate() {
-		contribution = EquoContributionBuilder.createContribution()
-			.withContributedResource("baseRenderer.html")
+		contribution = builder.withContributedResource("baseRenderer.html")
 			.withContributionBaseUri(EQUO_RENDERERS_BASE_URI)
 			.withURLResolver(new EquoRenderersURLResolver())
-			.withServer(server)
 			.build();
 		contribution.startContributing();
 	}
@@ -32,11 +29,11 @@ public class EquoRenderersContribution {
 	}
 	
 	@Reference
-	void setEquoServer(IEquoServer server) {
-		this.server = server;
+	void setEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = builder;
 	}
 	
-	void unsetEquoServer(IEquoServer server) {
-		this.server = null;
+	void unsetEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = null;
 	}
 }
