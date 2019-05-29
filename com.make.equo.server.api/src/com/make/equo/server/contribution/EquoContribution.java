@@ -39,7 +39,6 @@ public class EquoContribution {
 		this.contributedScripts = contributedScripts;
 		this.excludedResources = excludedResources;
 		this.filter = filter;
-		this.startContributing();
 	}
 		
 	public IEquoServer getServer() {
