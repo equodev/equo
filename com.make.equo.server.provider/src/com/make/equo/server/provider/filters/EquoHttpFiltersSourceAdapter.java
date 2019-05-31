@@ -74,7 +74,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				} else {
 					originalRequest = contribution.getFilter().applyFilter(originalRequest);
 					
-					if (isLocalFileRequest(originalRequest)) {
+					if (isContributionLocalFileRequest(originalRequest)) {
 						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 					}
 	
@@ -85,6 +85,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			}
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
+		}
+		
+		if (isLocalFileRequest(originalRequest)) {
+			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 		}
 		
 		if (isConnectionLimited()) {
@@ -139,13 +143,18 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		return contribution != null ? contribution.getUrlResolver() : null;
 	}
 
-	private boolean isLocalFileRequest(HttpRequest originalRequest) {
+	private boolean isContributionLocalFileRequest(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
 		for (String script : localScripts) {
 			if (uri.contains(script)) {
 				return true;
 			}
 		}
+		return false;
+	}
+	
+	private boolean isLocalFileRequest(HttpRequest originalRequest) {
+		String uri = originalRequest.getUri();
 		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
