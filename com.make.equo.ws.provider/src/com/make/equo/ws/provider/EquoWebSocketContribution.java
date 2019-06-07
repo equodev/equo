@@ -40,7 +40,7 @@ public class EquoWebSocketContribution {
 		this.builder = builder;
 	}
 
-	void unsetEquoServer(EquoContributionBuilder builder) {
+	void unsetEquoBuilder(EquoContributionBuilder builder) {
 		this.builder = null;
 	}
 

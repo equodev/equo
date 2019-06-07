@@ -4,7 +4,9 @@ import java.net.URL;
 
 public interface ILocalUrlResolver {
 
-	String getProtocol();
+	default String getProtocol() {
+		return "";
+	};
 
 	URL resolve(String pathToResolve);
 

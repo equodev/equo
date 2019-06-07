@@ -67,9 +67,9 @@ public class OptionalViewBuilder {
 	 * @throws URISyntaxException
 	 * 
 	 */
-	public OptionalViewBuilder addCustomScript(String scriptPath) throws IOException, URISyntaxException {
+	public OptionalViewBuilder withCustomScript(String scriptPath) throws IOException, URISyntaxException {
 		String url = viewBuilder.getUrl();
-		return addCustomScript(url, scriptPath);
+		return withCustomScript(url, scriptPath);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class OptionalViewBuilder {
 	 *             TODO add support to save scripts per url (To be defined)
 	 * 
 	 */
-	private OptionalViewBuilder addCustomScript(String url, String scriptPath) throws URISyntaxException {
+	private OptionalViewBuilder withCustomScript(String url, String scriptPath) throws URISyntaxException {
 		URI scriptUri = new URI(scriptPath);
 		String scriptReference;
 		if (!scriptUri.isAbsolute()) {

@@ -4,7 +4,6 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.IFiltersAdapterHandler;
-import com.make.equo.server.provider.filters.EquoWebsocketJsApiRequestFiltersAdapter;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.handler.codec.http.HttpRequest;

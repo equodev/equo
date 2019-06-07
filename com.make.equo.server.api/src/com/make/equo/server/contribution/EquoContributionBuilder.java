@@ -11,15 +11,15 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
-@Component (scope = ServiceScope.PROTOTYPE, service = EquoContributionBuilder.class)
+@Component(scope = ServiceScope.PROTOTYPE, service = EquoContributionBuilder.class)
 public class EquoContributionBuilder {
 
 	public static Integer CONTRIBUTION_COUNT = 0;
-	public static String DEFAULT_CONTRIBUTION_URI = "http://equoContribution";
-	
+	public static String DEFAULT_CONTRIBUTION_URI = "http://equocontribution";
+
 	@Reference
 	private IEquoServer server;
-	
+
 	private ILocalUrlResolver urlResolver;
 	private IFiltersAdapterHandler filtersAdapterHandler;
 
@@ -31,7 +31,7 @@ public class EquoContributionBuilder {
 	private List<String> excludedResources;
 
 	private IHttpRequestFilter filter;
-	
+
 	public EquoContributionBuilder() {
 		this.contributedUris = new ArrayList<String>();
 		this.contributedScripts = new ArrayList<String>();
@@ -43,50 +43,50 @@ public class EquoContributionBuilder {
 		this.contributedResourceName = "";
 		CONTRIBUTION_COUNT = CONTRIBUTION_COUNT + 1;
 	}
-		
+
 	public EquoContributionBuilder withServer(IEquoServer server) {
 		this.server = server;
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withContributionBaseUri(String contributionBaseUri) {
 		this.contributionBaseUri = contributionBaseUri;
 		return this;
 	}
-	
-	public EquoContributionBuilder withContributedResource(String contributedResourceName) {
+
+	public EquoContributionBuilder withBaseHtmlResource(String contributedResourceName) {
 		this.contributedResourceName = contributedResourceName;
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withScriptFile(String script) {
 		this.contributedScripts.add(script);
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withScriptFiles(List<String> scripts) {
 		this.contributedScripts.addAll(scripts);
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withURLResolver(ILocalUrlResolver urlResolver) {
 		this.urlResolver = urlResolver;
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withFilter(IHttpRequestFilter filter) {
 		this.filter = filter;
 		return this;
 	}
-	
+
 	public EquoContributionBuilder withFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
 		this.filtersAdapterHandler = filtersAdapterHandler;
 		return this;
 	}
-	
+
 	public EquoContribution build() {
-		return new EquoContribution(server, urlResolver, filtersAdapterHandler, contributedResourceName, contributionBaseUri, contributedUris, contributedScripts, excludedResources, filter);
+		return new EquoContribution(server, urlResolver, filtersAdapterHandler, contributedResourceName,
+				contributionBaseUri.toLowerCase(), contributedUris, contributedScripts, excludedResources, filter);
 	}
-	
-	
+
 }

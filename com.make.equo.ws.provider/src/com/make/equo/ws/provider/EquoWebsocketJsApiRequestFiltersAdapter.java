@@ -1,8 +1,9 @@
-package com.make.equo.server.provider.filters;
+package com.make.equo.ws.provider;
 
 import java.nio.charset.Charset;
 
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.provider.filters.LocalFileRequestFiltersAdapter;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

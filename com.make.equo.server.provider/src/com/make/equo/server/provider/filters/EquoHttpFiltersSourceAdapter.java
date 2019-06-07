@@ -43,10 +43,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private Set<String> localScripts;
 	private Map<String, String> urlsToScriptsAsStrings;
 
-	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions, IEquoOfflineServer equoOfflineServer,
-			boolean isOfflineCacheSupported, String limitedConnectionAppBasedPagePath, List<String> proxiedUrls,
-			List<String> equoContributionsJsApis, Set<String> localScripts, Map<String, String> urlsToScriptsAsStrings,
-			IEquoApplication equoApplication) {
+	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
+			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
+			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
+			Set<String> localScripts, Map<String, String> urlsToScriptsAsStrings, IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -73,11 +73,11 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					return contribution.getFiltersAdapter(originalRequest);
 				} else {
 					originalRequest = contribution.getFilter().applyFilter(originalRequest);
-					
+
 					if (isContributionLocalFileRequest(originalRequest)) {
-						return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
+						return new ContributionFileRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(), contribution.getContributionBaseUri());
 					}
-	
+
 					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
 							equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
 							contribution.getContributedResourceName());
@@ -86,11 +86,11 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		if (isLocalFileRequest(originalRequest)) {
 			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
 		}
-		
+
 		if (isConnectionLimited()) {
 			if (isOfflineCacheSupported) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
@@ -98,8 +98,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new OfflineRequestFiltersAdapter(originalRequest,
-						new EquoHttpProxyServerURLResolver("/"), limitedConnectionGenericPageFilePath);
+				return new OfflineRequestFiltersAdapter(originalRequest, new EquoHttpProxyServerURLResolver("/"),
+						limitedConnectionGenericPageFilePath);
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
@@ -137,10 +137,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
-		URI realUri = URI.create(uri);
-		String key = realUri.getScheme() + "://" + realUri.getAuthority();
-		EquoContribution contribution = equoContributions.get(key);
-		return contribution != null ? contribution.getUrlResolver() : null;
+		return null;
 	}
 
 	private boolean isContributionLocalFileRequest(HttpRequest originalRequest) {
@@ -152,7 +149,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		}
 		return false;
 	}
-	
+
 	private boolean isLocalFileRequest(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
 		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)

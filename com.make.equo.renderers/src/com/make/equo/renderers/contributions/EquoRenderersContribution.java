@@ -17,7 +17,7 @@ public class EquoRenderersContribution {
 	
 	@Activate
 	protected void activate() {
-		contribution = builder.withContributedResource("baseRenderer.html")
+		contribution = builder.withBaseHtmlResource("baseRenderer.html")
 			.withContributionBaseUri(EQUO_RENDERERS_BASE_URI)
 			.withURLResolver(new EquoRenderersURLResolver())
 			.build();
