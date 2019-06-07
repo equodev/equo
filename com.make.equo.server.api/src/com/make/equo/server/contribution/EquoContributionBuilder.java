@@ -50,7 +50,11 @@ public class EquoContributionBuilder {
 	}
 
 	public EquoContributionBuilder withContributionBaseUri(String contributionBaseUri) {
-		this.contributionBaseUri = contributionBaseUri;
+		if (contributionBaseUri.endsWith("/")) {
+			this.contributionBaseUri = contributionBaseUri.toLowerCase();
+		} else {
+			this.contributionBaseUri = contributionBaseUri.toLowerCase() + "/";
+		}
 		return this;
 	}
 
@@ -86,7 +90,7 @@ public class EquoContributionBuilder {
 
 	public EquoContribution build() {
 		return new EquoContribution(server, urlResolver, filtersAdapterHandler, contributedResourceName,
-				contributionBaseUri.toLowerCase(), contributedUris, contributedScripts, excludedResources, filter);
+				contributionBaseUri, contributedUris, contributedScripts, excludedResources, filter);
 	}
 
 }
