@@ -6,8 +6,9 @@ Private-Package: com.make.equo.analytics.client.provider
     com.google.gson.source,\
     com.make.equo.analytics.client.api;version=latest,\
     com.make.equo.analytics.internal.api;version=latest,\
+    com.make.equo.server.api;version=latest,\
+    com.make.equo.server.offline.api;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.squareup.okhttp3.okhttp,\
     com.squareup.okhttp3.okhttp.source,\
-    osgi.cmpn,\
-    com.make.equo.contribution.api;version=latest
+    osgi.cmpn
