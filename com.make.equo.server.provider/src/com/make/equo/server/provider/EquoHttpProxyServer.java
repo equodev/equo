@@ -219,6 +219,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 			contributionJsApis.addAll(Lists.newArrayList(result));
 		}
 	}
+	
+	private void addEquoContributionUris(EquoContribution contribution) {
+		for (String url : contribution.getContributedUris()) {
+			addUrl(url);
+		}
+	}
 
 	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
 		String existingCustomJsScripts = urlsToScripts.get(url);
@@ -252,6 +258,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String key = uri.getScheme() + "://" + uri.getAuthority();
 		equoContributions.put(key, contribution);
 		addEquoContributionJsApis(contribution);
+		addEquoContributionUris(contribution);
 	}
 	
 	@Override

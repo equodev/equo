@@ -80,6 +80,17 @@ public class EquoContributionBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds an URI to the contribution.
+	 * These URIs will be proxied by the EquoServer when accessed, adding all contributed scripts to it.
+	 * 
+	 * @param contributedUri
+	 * @return this
+	 */
+	public EquoContributionBuilder withContributedUri(String contributedUri) {
+		this.contributedUris.add(contributedUri);
+		return this;
+	}
 	
 	/**
 	 * Defines an HTML resource to proxy for the contribution.
