@@ -1,32 +1,36 @@
 package com.make.equo.contribution.media.provider;
 
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.contribution.api.IEquoContribution;
+import com.make.equo.server.contribution.EquoContribution;
+import com.make.equo.server.contribution.EquoContributionBuilder;
 
-@Component(name = "equoMediaContribution", property = { "type=equoMediaContribution" })
-public class EquoMediaApiContributionImpl implements IEquoContribution {
+@Component
+public class EquoMediaApiContributionImpl {
 
-	private static final String mediaJsApi = "media.js";
+	private static final String MEDIA_JS_API = "media.js";
 
-	@Override
-	public Map<String, Object> getProperties() {
-		return null;
+	private EquoContributionBuilder builder;
+	
+	private EquoContribution contribution;
+
+	@Activate
+	protected void activate() {
+		contribution = builder.withScriptFile(MEDIA_JS_API)
+				.withURLResolver(new MediaContributionURLResolver())
+				.build();
+		contribution.startContributing();
 	}
 
-	@Override
-	public URL getJavascriptAPIResource(String name) {
-		return this.getClass().getClassLoader().getResource(name);
+	@Reference
+	void setEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = builder;
 	}
 
-	@Override
-	public List<String> getJavascriptFileNames() {
-		return Arrays.asList(mediaJsApi);
+	void unsetEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = null;
 	}
 
 }
