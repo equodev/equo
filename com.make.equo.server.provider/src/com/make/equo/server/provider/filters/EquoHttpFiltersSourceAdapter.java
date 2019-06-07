@@ -98,7 +98,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new OfflineRequestFiltersAdapter(originalRequest, new EquoHttpProxyServerURLResolver("/"),
+				return new OfflineRequestFiltersAdapter(originalRequest, new EquoHttpProxyServerURLResolver(),
 						limitedConnectionGenericPageFilePath);
 			}
 		} else {
@@ -137,7 +137,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
-		return null;
+		URI realUri = URI.create(uri);
+		String key = realUri.getScheme() + "://" + realUri.getAuthority();
+		EquoContribution contribution = equoContributions.get(key);
+		return contribution != null ? contribution.getUrlResolver() : null;
 	}
 
 	private boolean isContributionLocalFileRequest(HttpRequest originalRequest) {

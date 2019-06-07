@@ -10,27 +10,27 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 @Component
 public class EquoHttpProxyContribution {
 
-	private static final String equoFrameworkJsApi = "equoFramework.js";
-	private static final String domModifierJsApi = "domModifier.js";
-	private static final String jqueryJsApi = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js";
+	private static final String EQUO_FRAMEWORK_JS_API = "equoFramework.js";
+	private static final String JQUERY_JS_API = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js";
+	private static final String DOM_MODIFIER_JS_API = "domModifier.js";
 
 	private EquoContribution contribution;
-	
+
 	private EquoContributionBuilder builder;
 
 	@Activate
 	protected void activate() {
-		contribution = builder.withScriptFile(equoFrameworkJsApi)
-				.withScriptFile(jqueryJsApi)
+		contribution = builder.withScriptFile(EQUO_FRAMEWORK_JS_API)
+				.withScriptFile(JQUERY_JS_API)
+				.withURLResolver(new EquoHttpProxyServerURLResolver())
 				.build();
-		contribution.setUrlResolver(new EquoHttpProxyServerURLResolver(contribution));
 		String value = System.getProperty("change_original_html");
 		if (value == null || (value != null && Boolean.parseBoolean(value))) {
-			contribution.addContributedScript(domModifierJsApi);
+			contribution.addContributedScript(DOM_MODIFIER_JS_API);
 		}
 		contribution.startContributing();
 	}
-	
+
 	@Reference
 	void setEquoBuilder(EquoContributionBuilder builder) {
 		this.builder = builder;

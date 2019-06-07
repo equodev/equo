@@ -3,20 +3,20 @@ package com.make.equo.ws.provider;
 import java.nio.charset.Charset;
 
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
-import com.make.equo.server.provider.filters.LocalFileRequestFiltersAdapter;
+import com.make.equo.server.provider.filters.ContributionFileRequestFiltersAdapter;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
-public class EquoWebsocketJsApiRequestFiltersAdapter extends LocalFileRequestFiltersAdapter {
+public class EquoWebsocketJsApiRequestFiltersAdapter extends ContributionFileRequestFiltersAdapter {
 
 	private int portNumber;
 
 	public EquoWebsocketJsApiRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
 			int portNumber) {
-		super(originalRequest, urlResolver);
+		super(originalRequest, urlResolver, EquoWebSocketContribution.WEBSOCKET_BASE_URI);
 		this.portNumber = portNumber;
 	}
 	

@@ -10,7 +10,7 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 @Component
 public class EquoRenderersContribution {
 	
-	public static final String EQUO_RENDERERS_BASE_URI = "http://equoRenderers/";
+	public static final String EQUO_RENDERERS_BASE_URI = "http://equorenderers/";
 	
 	private EquoContributionBuilder builder;
 	private static EquoContribution contribution;
