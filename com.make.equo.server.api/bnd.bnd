@@ -14,7 +14,6 @@ Export-Package: \
 	com.google.gson.source,\
 	com.make.equo.aer.api,\
 	com.make.equo.server.offline.api;version=latest,\
-	com.make.equo.contribution.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
 	osgi.cmpn
