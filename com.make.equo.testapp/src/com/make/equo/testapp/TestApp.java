@@ -13,13 +13,47 @@ public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
-		// TODO Auto-generated method stub
 		try {
-			return appBuilder
+			 return appBuilder
 			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
 			        .withCustomScript("js/testAnalytics.js")
-			        .start();
+			        .withMainMenu("File")
+			         	.addMenuItem("New")
+			         	.onClick(new Runnable() {
+							
+							@Override
+							public void run() {
+								System.out.println("ON_NEW");
+								
+							}
+						})
+			         	.onAbout(new Runnable() {
+							
+							@Override
+							public void run() {
+								System.out.println("ON_ABOUT");
+								
+							}
+						})
+			         	.onPreferences(new Runnable() {
+							
+							@Override
+							public void run() {
+								System.out.println("ON_PREFERENCES");
+								
+							}
+						})
+			         	.onBeforeExit(new Runnable() {
+							
+							@Override
+							public void run() {
+								System.out.println("Bye Bye Equo");
+								
+							}
+						})
+			         .start();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
