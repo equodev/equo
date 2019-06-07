@@ -18,7 +18,7 @@ public class TestApp implements IEquoApplication {
 			return appBuilder
 			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
-			        .addCustomScript("js/testAnalytics.js")
+			        .withCustomScript("js/testAnalytics.js")
 			        .start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
