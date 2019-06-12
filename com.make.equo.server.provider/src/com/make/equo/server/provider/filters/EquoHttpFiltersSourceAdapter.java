@@ -40,7 +40,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private List<String> proxiedUrls;
 
 	private List<String> equoContributionsJsApis;
+	private List<String> equoContributionStyles;
+	private Set<String> localResources;
 	private Map<String, String> urlsToScriptsAsStrings;
+	private Map<String, String> urlsToStylesAsStrings;
 
 	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
@@ -52,7 +55,9 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
 		this.proxiedUrls = proxiedUrls;
 		this.equoContributionsJsApis = equoContributionsJsApis;
+		this.equoContributionStyles = equoContributionStyles;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
+		this.urlsToStylesAsStrings = urlsToStylesAsStrings;
 		this.equoApplication = equoApplication;
 	}
 
@@ -78,7 +83,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					}
 
 					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
-							equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
+							equoContributionsJsApis, equoContributionStyles, getCustomScripts(originalRequest.getUri()), getCustomStyles(originalRequest.getUri()),
 							contribution.getContributedResourceName());
 				}
 			}
@@ -104,8 +109,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
 				String appUrl = url.get();
-				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis,
-						getCustomScripts(appUrl), isOfflineCacheSupported, equoOfflineServer);
+				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis, equoContributionStyles,
+						getCustomScripts(appUrl), getCustomStyles(appUrl), isOfflineCacheSupported, equoOfflineServer);
 			} else {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
@@ -184,6 +189,21 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			}
 		}
 		return urlsToScriptsAsStrings.get(key);
+	}
+
+	private String getCustomStyles(String url) {
+		if (urlsToStylesAsStrings.containsKey(url)) {
+			return urlsToScriptsAsStrings.get(url);
+		}
+		if (urlsToStylesAsStrings.containsKey(url + "/")) {
+			return urlsToStylesAsStrings.get(url + "/");
+		}
+		URI uri = URI.create(url);
+		String key = (uri.getScheme() + "://" + uri.getAuthority() + uri.getPath()).toLowerCase();
+		if (!urlsToStylesAsStrings.containsKey(key)) {
+			return "";
+		}
+		return urlsToStylesAsStrings.get(key);
 	}
 
 	@Override

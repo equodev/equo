@@ -10,13 +10,17 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 
 	private FullHttpResponse originalFullHttpResponse;
 	private List<String> equoContributionsJsApis;
+	private List<String> equoContributionStyles;
 	private String customJsScripts;
+	private String customStyles;
 
 	public FullHttpResponseWithTransformersScripts(FullHttpResponse originalFullHttpResponse,
-			List<String> equoContributionsJsApis, String customJsScripts) {
+			List<String> equoContributionsJsApis, List<String> equoContributionStyles, String customJsScripts, String customStyles) {
 		this.originalFullHttpResponse = originalFullHttpResponse;
 		this.equoContributionsJsApis = equoContributionsJsApis;
+		this.equoContributionStyles = equoContributionStyles;
 		this.customJsScripts = customJsScripts;
+		this.customStyles = customStyles;
 	}
 
 	@Override
@@ -32,11 +36,15 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 
 	@Override
 	public String modifyOriginalResponse(String responseToTransform) {
-		StringBuilder customResponseWithScripts = new StringBuilder(responseToTransform);
+		StringBuilder customResponse = new StringBuilder(responseToTransform);
 		for (String jsApi : equoContributionsJsApis) {
-			customResponseWithScripts.append(jsApi);
+			customResponse.append(jsApi);
 		}
-		customResponseWithScripts.append(customJsScripts);
-		return customResponseWithScripts.toString();
+		for (String style : equoContributionStyles) {
+			customResponse.append(style);
+		}
+		customResponse.append(customJsScripts);
+		customResponse.append(customStyles);
+		return customResponse.toString();
 	}
 }

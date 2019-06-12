@@ -112,6 +112,30 @@ public class OptionalViewBuilder {
 		equoServer.addCustomScript(url, resolvedUrl);
 	}
 	
+	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
+		String url = viewBuilder.getUrl();
+		return withCustomStyle(url, stylePath);
+	}
+
+	private OptionalViewBuilder withCustomStyle(String url, String stylePath) throws URISyntaxException {
+		URI styleUri = new URI(stylePath);
+		String styleReference;
+		if (!styleUri.isAbsolute()) {
+			styleReference = equoServer.getLocalStyleProtocol() + stylePath;
+		} else if (styleUri.getScheme().startsWith("http")) {
+			styleReference = stylePath;
+		} else {
+			styleReference = equoServer.getBundleStyleProtocol() + stylePath;
+		}
+		addCustomStyleToProxyServer(url, styleReference);
+		return this;
+	}
+
+	private void addCustomStyleToProxyServer(String url, String resolvedUrl) {
+		equoServer.addCustomStyle(url, resolvedUrl);
+	}
+
+	
 	/**
 	 * Enable an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if
