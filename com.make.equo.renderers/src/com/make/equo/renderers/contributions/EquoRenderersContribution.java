@@ -13,26 +13,23 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
 @Component
 public class EquoRenderersContribution {
 	
 	private EquoContributionBuilder builder;
-	private EquoContribution contribution;
 	
 	@Activate
 	protected void activate() {
-		contribution = builder
-				.withBaseHtmlResource(BASE_HTML_FILE)
-				.withContributionName(EQUO_RENDERERS_CONTRIBUTION_NAME)
-				.withPathWithScript(DIALOG_RENDERER_NAME, DIALOG_RENDERER_SCRIPT_FILE)
-				.withPathWithScript(PARTSTACK_RENDERER_NAME, PARTSTACK_RENDERER_SCRIPT_FILE)
-				.withPathWithScript(TOOLBAR_RENDERER_NAME, TOOLBAR_RENDERER_SCRIPT_FILE)
-				.withURLResolver(new EquoRenderersURLResolver())
-				.build();
-		contribution.startContributing();
+		builder
+			.withBaseHtmlResource(BASE_HTML_FILE)
+			.withContributionName(EQUO_RENDERERS_CONTRIBUTION_NAME)
+			.withPathWithScript(DIALOG_RENDERER_NAME, DIALOG_RENDERER_SCRIPT_FILE)
+			.withPathWithScript(PARTSTACK_RENDERER_NAME, PARTSTACK_RENDERER_SCRIPT_FILE)
+			.withPathWithScript(TOOLBAR_RENDERER_NAME, TOOLBAR_RENDERER_SCRIPT_FILE)
+			.withURLResolver(new EquoRenderersURLResolver())
+			.build();
 	}
 	
 	@Reference

@@ -4,7 +4,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
@@ -16,16 +15,15 @@ public class EquoWebSocketContribution {
 	
 	private EquoContributionBuilder builder;
 	
-	private EquoContribution contribution;
 	private IEquoWebSocketService equoWebSocketService;
 
 	@Activate
 	protected void activate() {
-		contribution = builder.withScriptFile(EQUO_WEBSOCKET_JS_API)
-				.withContributionName(WEBSOCKET_BASE_NAME)
-				.withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
-				.build();
-		contribution.startContributing();
+		builder
+			.withScriptFile(EQUO_WEBSOCKET_JS_API)
+			.withContributionName(WEBSOCKET_BASE_NAME)
+			.withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
+			.build();
 	}
 	
 	@Reference

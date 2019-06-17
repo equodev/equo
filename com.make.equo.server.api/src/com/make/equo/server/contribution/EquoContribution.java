@@ -45,6 +45,7 @@ public class EquoContribution {
 		this.excludedResources = excludedResources;
 		this.pathsToScripts = pathsToScripts;
 		this.filter = filter;
+		startContributing();
 	}
 
 	public String getContributedResourceName() {
@@ -97,17 +98,10 @@ public class EquoContribution {
 		return false;
 	}
 
-	/**
-	 * Adds the contribution to its server
-	 * 
-	 * @return true if the contribution was added successfully to the server
-	 */
-	public boolean startContributing() {
+	private void startContributing() {
 		if (server != null) {
 			server.addContribution(this);
-			return true;
 		}
-		return false;
 	}
 
 }

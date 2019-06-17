@@ -4,7 +4,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
 @Component
@@ -15,30 +14,27 @@ public class EquoHttpProxyContribution {
 	private static final String EQUO_FRAMEWORK_JS_API = "equoFramework.js";
 	private static final String DOM_MODIFIER_JS_API = "domModifier.js";
 
-	private EquoContribution contribution;
-
 	private EquoContributionBuilder builder;
 
 	@Activate
 	protected void activate() {
 		String value = System.getProperty("change_original_html");
 		if (value == null || (value != null && Boolean.parseBoolean(value))) {
-			contribution = builder
-					.withContributionName(PROXY_CONTRIBUTION_NAME)
-					.withScriptFile(EQUO_FRAMEWORK_JS_API)
-					.withScriptFile(JQUERY_JS_API)
-					.withScriptFile(DOM_MODIFIER_JS_API)
-					.withURLResolver(new EquoHttpProxyServerURLResolver())
-					.build();
+			builder
+				.withContributionName(PROXY_CONTRIBUTION_NAME)
+				.withScriptFile(EQUO_FRAMEWORK_JS_API)
+				.withScriptFile(JQUERY_JS_API)
+				.withScriptFile(DOM_MODIFIER_JS_API)
+				.withURLResolver(new EquoHttpProxyServerURLResolver())
+				.build();
 		} else {
-			contribution = builder
-					.withContributionName(PROXY_CONTRIBUTION_NAME)
-					.withScriptFile(EQUO_FRAMEWORK_JS_API)
-					.withScriptFile(JQUERY_JS_API)
-					.withURLResolver(new EquoHttpProxyServerURLResolver())
-					.build();
+			builder
+				.withContributionName(PROXY_CONTRIBUTION_NAME)
+				.withScriptFile(EQUO_FRAMEWORK_JS_API)
+				.withScriptFile(JQUERY_JS_API)
+				.withURLResolver(new EquoHttpProxyServerURLResolver())
+				.build();
 		}
-		contribution.startContributing();
 	}
 
 	@Reference

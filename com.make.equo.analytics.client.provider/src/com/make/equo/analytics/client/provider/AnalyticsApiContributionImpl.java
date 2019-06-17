@@ -5,7 +5,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.analytics.client.api.IAnalyticsApi;
-import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
 @Component
@@ -19,16 +18,13 @@ public class AnalyticsApiContributionImpl {
 
 	private EquoContributionBuilder builder;
 	
-	private EquoContribution contribution;
-
 	@Activate
 	protected void activate() {
-		contribution = builder
-				.withContributionName(ANALYTICS_CONTRIBUTION_NAME)
-				.withScriptFile(ANALYTICS_JS_API)
-				.withURLResolver(new AnalyticsURLResolver())
-				.build();
-		contribution.startContributing();
+		builder
+			.withContributionName(ANALYTICS_CONTRIBUTION_NAME)
+			.withScriptFile(ANALYTICS_JS_API)
+			.withURLResolver(new AnalyticsURLResolver())
+			.build();
 	}
 
 	@Reference
