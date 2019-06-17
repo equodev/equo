@@ -257,6 +257,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void addContribution(EquoContribution contribution) {
 		equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
+		addUrl(contribution.getContributionName());
 		addEquoContributionJsApis(contribution);
 		addEquoContributionProxiedUris(contribution);
 		addEquoContributionCustomScripts(contribution);
