@@ -13,20 +13,20 @@ import io.netty.handler.codec.http.HttpResponse;
 
 public class ContributionFileRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
 
-	private String contributionBaseUri;
+	private String contributionName;
 	protected IEquoContributionUrlResolver urlResolver;
 
 	public ContributionFileRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
-			String contributionBaseUri) {
+			String contributionName) {
 		super(originalRequest);
 		this.urlResolver = urlResolver;
-		this.contributionBaseUri = contributionBaseUri;
+		this.contributionName = contributionName;
 	}
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 		String requestUri = originalRequest.getUri();
-		String fileName = requestUri.substring(requestUri.indexOf(contributionBaseUri) + contributionBaseUri.length(), requestUri.length());
+		String fileName = requestUri.substring(requestUri.indexOf(contributionName) + contributionName.length(), requestUri.length());
 		URL resolvedUrl = urlResolver.resolve(fileName);
 		return super.buildHttpResponse(resolvedUrl);
 	}
