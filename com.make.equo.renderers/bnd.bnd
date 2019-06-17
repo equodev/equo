@@ -1,7 +1,8 @@
 Bundle-Version: ${version}.${tstamp}
 Bundle-ActivationPolicy: lazy
 Bundle-SymbolicName: com.make.equo.renderers;singleton:=true
-Private-Package: com.make.equo.renderers.contributions
+Private-Package: com.make.equo.renderers.contributions,\
+    com.make.equo.renderers.util
 -includeresource: resources/
 -buildpath: \
     org.eclipse.e4.ui.workbench.swt,\

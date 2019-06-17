@@ -9,10 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
@@ -66,24 +65,22 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private volatile IEquoLoggingService equoLoggingService;
 
 	private Map<String, EquoContribution> equoContributions = new HashMap<String, EquoContribution>();
-	
+
 	private List<String> contributionJsApis = new ArrayList<String>();
-	private Set<String> localScripts = new HashSet<String>();
-	
+
 	@Override
 	@Activate
 	public void start() {
-		if (proxyServer == null && !proxiedUrls.isEmpty()) {
+		if (proxyServer == null) {
 			startServer();
 		}
 	}
 
 	@Override
 	public void startServer() {
-		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(
-				equoContributions, equoOfflineServer, isOfflineCacheSupported(),
-				limitedConnectionAppBasedPagePath, proxiedUrls, contributionJsApis, localScripts, urlsToScripts,
-				equoApplication);
+		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
+				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
+				contributionJsApis, urlsToScripts, equoApplication);
 
 //		Runnable internetConnectionRunnable = new Runnable() {
 //			@Override
@@ -210,8 +207,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 						String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
 						return scriptSentence;
 					} catch (MalformedURLException e) {
-						localScripts.add(input);
-						return createLocalScriptSentence(contribution.getContributionBaseUri() + input);
+						return createLocalScriptSentence(contribution.getContributionName() + "/" + input);
 					}
 				}
 			};
@@ -219,13 +215,20 @@ public class EquoHttpProxyServer implements IEquoServer {
 			contributionJsApis.addAll(Lists.newArrayList(result));
 		}
 	}
-	
-	private void addEquoContributionUris(EquoContribution contribution) {
-		for (String url : contribution.getContributedUris()) {
+
+	private void addEquoContributionProxiedUris(EquoContribution contribution) {
+		for (String url : contribution.getProxiedUris()) {
 			addUrl(url);
 		}
 	}
 
+	private void addEquoContributionCustomScripts(EquoContribution contribution) {
+		for (Entry<String, String> entry : contribution.getPathsToScripts().entrySet()) {
+			addUrl(contribution.getContributionName() + "/" + entry.getKey());
+			addCustomScript(entry.getKey(), entry.getValue());
+		}
+	}
+	
 	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
 		String existingCustomJsScripts = urlsToScripts.get(url);
 		StringBuilder result = new StringBuilder();
@@ -241,7 +244,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 			String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
 			return scriptSentence;
 		} catch (MalformedURLException e) {
-			localScripts.add(scriptPath);
 			return createLocalScriptSentence(scriptPath);
 		}
 
@@ -254,15 +256,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Override
 	public void addContribution(EquoContribution contribution) {
-		URI uri = URI.create(contribution.getContributionBaseUri().toLowerCase());
-		String key = uri.getScheme() + "://" + uri.getAuthority();
-		equoContributions.put(key, contribution);
+		equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
 		addEquoContributionJsApis(contribution);
-		addEquoContributionUris(contribution);
+		addEquoContributionProxiedUris(contribution);
+		addEquoContributionCustomScripts(contribution);
+		System.out.println("Equo Contribution added: " + contribution.getContributionName());
 	}
-	
+
 	@Override
-	public void addScriptToContribution(String script, EquoContribution contribution) {
+	public void addScriptToContribution(String script) {
 		String processedScript = generateScriptSentence(script);
 		contributionJsApis.add(processedScript);
 	}

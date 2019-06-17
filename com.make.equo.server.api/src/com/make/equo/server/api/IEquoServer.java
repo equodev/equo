@@ -15,7 +15,7 @@ public interface IEquoServer {
 	
 	void addContribution(EquoContribution contribution);
 	
-	void addScriptToContribution(String script, EquoContribution contribution);
+	void addScriptToContribution(String script);
 
 	String getLocalScriptProtocol();
 

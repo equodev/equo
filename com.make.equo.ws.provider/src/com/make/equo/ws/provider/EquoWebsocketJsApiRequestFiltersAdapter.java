@@ -2,7 +2,7 @@ package com.make.equo.ws.provider;
 
 import java.nio.charset.Charset;
 
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.provider.filters.ContributionFileRequestFiltersAdapter;
 
 import io.netty.buffer.ByteBuf;
@@ -14,9 +14,9 @@ public class EquoWebsocketJsApiRequestFiltersAdapter extends ContributionFileReq
 
 	private int portNumber;
 
-	public EquoWebsocketJsApiRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
+	public EquoWebsocketJsApiRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
 			int portNumber) {
-		super(originalRequest, urlResolver, EquoWebSocketContribution.WEBSOCKET_BASE_URI);
+		super(originalRequest, urlResolver, EquoWebSocketContribution.WEBSOCKET_BASE_NAME);
 		this.portNumber = portNumber;
 	}
 	

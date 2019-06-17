@@ -15,7 +15,7 @@ public class EquoContributionUrlResolver implements ILocalUrlResolver {
 
 	@Override
 	public String getProtocol() {
-		return this.contribution.getUrlResolver().getProtocol();
+		return this.contribution.getContributionName();
 	}
 
 	@Override

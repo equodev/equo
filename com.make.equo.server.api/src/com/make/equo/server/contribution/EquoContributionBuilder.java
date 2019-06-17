@@ -1,15 +1,17 @@
 package com.make.equo.server.contribution;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 /**
  * 
@@ -22,32 +24,35 @@ import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 @Component(scope = ServiceScope.PROTOTYPE, service = EquoContributionBuilder.class)
 public class EquoContributionBuilder {
 
-	public static Integer CONTRIBUTION_COUNT = 0;
-	public static String DEFAULT_CONTRIBUTION_URI = "http://equocontribution";
+	private static Integer CONTRIBUTION_COUNT = 0;
+	private static String DEFAULT_CONTRIBUTION_NAME = "equocontribution";
 
 	@Reference
 	private IEquoServer server;
 
-	private ILocalUrlResolver urlResolver;
+	private IEquoContributionUrlResolver urlResolver;
 	private IFiltersAdapterHandler filtersAdapterHandler;
 
 	private String contributedHtmlName;
-	private String contributionBaseUri;
+	private String contributionName;
 
-	private List<String> contributedUris;
+	private List<String> proxiedUris;
 	private List<String> contributedScripts;
 	private List<String> excludedResources;
+	
+	private Map<String, String> pathsToScripts;
 
 	private IHttpRequestFilter filter;
 
 	public EquoContributionBuilder() {
-		this.contributedUris = new ArrayList<String>();
+		this.proxiedUris = new ArrayList<String>();
 		this.contributedScripts = new ArrayList<String>();
 		this.excludedResources = new ArrayList<String>();
+		this.pathsToScripts = new HashMap<String, String>();
 		this.filter = ((originalRequest) -> {
 			return originalRequest;
 		});
-		this.contributionBaseUri = DEFAULT_CONTRIBUTION_URI + CONTRIBUTION_COUNT + "/";
+		this.contributionName = DEFAULT_CONTRIBUTION_NAME + CONTRIBUTION_COUNT;
 		this.contributedHtmlName = "";
 		CONTRIBUTION_COUNT = CONTRIBUTION_COUNT + 1;
 	}
@@ -68,15 +73,11 @@ public class EquoContributionBuilder {
 	 * Defines the base URI of the contribution. Used to resolve resource locations for this contribution.
 	 * If not assigned a default value will be used.
 	 * 
-	 * @param contributionBaseUri URI for this contribution.
+	 * @param contributionName Name for this contribution.
 	 * @return this
 	 */
-	public EquoContributionBuilder withContributionBaseUri(String contributionBaseUri) {
-		if (contributionBaseUri.endsWith("/")) {
-			this.contributionBaseUri = contributionBaseUri.toLowerCase();
-		} else {
-			this.contributionBaseUri = contributionBaseUri.toLowerCase() + "/";
-		}
+	public EquoContributionBuilder withContributionName(String contributionName) {
+		this.contributionName = contributionName.toLowerCase();
 		return this;
 	}
 
@@ -84,14 +85,26 @@ public class EquoContributionBuilder {
 	 * Adds an URI to the contribution.
 	 * These URIs will be proxied by the EquoServer when accessed, adding all contributed scripts to it.
 	 * 
-	 * @param contributedUri
+	 * @param proxiedUri
 	 * @return this
 	 */
-	public EquoContributionBuilder withContributedUri(String contributedUri) {
-		this.contributedUris.add(contributedUri);
+	public EquoContributionBuilder withProxiedUri(String proxiedUri) {
+		this.proxiedUris.add(proxiedUri);
 		return this;
 	}
 	
+	/**
+	 * Adds a script to a specific path to be handled by the contribution.
+	 * 
+	 * @param path Path for the script to be added to. Will be treated as relative to the contribution's name.
+	 * @param script Name of the script file to be added.
+	 * @return this
+	 */
+	public EquoContributionBuilder withPathWithScript(String path, String script) {
+		this.pathsToScripts.put(path, script);
+		return this;
+	}
+		
 	/**
 	 * Defines an HTML resource to proxy for the contribution.
 	 * A browser accessing this contribution's base URI will be proxied using the file defined here as a base.
@@ -134,7 +147,7 @@ public class EquoContributionBuilder {
 	 * @param urlResolver
 	 * @return this
 	 */
-	public EquoContributionBuilder withURLResolver(ILocalUrlResolver urlResolver) {
+	public EquoContributionBuilder withURLResolver(IEquoContributionUrlResolver urlResolver) {
 		this.urlResolver = urlResolver;
 		return this;
 	}
@@ -170,7 +183,7 @@ public class EquoContributionBuilder {
 	 */
 	public EquoContribution build() {
 		return new EquoContribution(server, urlResolver, filtersAdapterHandler, contributedHtmlName,
-				contributionBaseUri, contributedUris, contributedScripts, excludedResources, filter);
+				contributionName, proxiedUris, contributedScripts, excludedResources, pathsToScripts, filter);
 	}
 
 }

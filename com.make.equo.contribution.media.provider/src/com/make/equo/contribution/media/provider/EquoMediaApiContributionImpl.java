@@ -10,6 +10,7 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 @Component
 public class EquoMediaApiContributionImpl {
 
+	private static final String MEDIA_CONTRIBUTION_NAME = "equomedia";
 	private static final String MEDIA_JS_API = "media.js";
 
 	private EquoContributionBuilder builder;
@@ -18,7 +19,9 @@ public class EquoMediaApiContributionImpl {
 
 	@Activate
 	protected void activate() {
-		contribution = builder.withScriptFile(MEDIA_JS_API)
+		contribution = builder
+				.withContributionName(MEDIA_CONTRIBUTION_NAME)
+				.withScriptFile(MEDIA_JS_API)
 				.withURLResolver(new MediaContributionURLResolver())
 				.build();
 		contribution.startContributing();

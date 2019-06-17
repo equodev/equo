@@ -2,9 +2,9 @@ package com.make.equo.analytics.client.provider;
 
 import java.net.URL;
 
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 
-public class AnalyticsURLResolver implements ILocalUrlResolver {
+public class AnalyticsURLResolver implements IEquoContributionUrlResolver {
 
 	@Override
 	public URL resolve(String pathToResolve) {

@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.apache.http.entity.ContentType;
 
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -19,13 +19,16 @@ import io.netty.handler.codec.http.HttpResponse;
 
 public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
 
+	protected IEquoContributionUrlResolver urlResolver;
+	
 	private String customJsScripts;
-	private List<String> equoContributionsJsApis;
 	private String contributedFilePath;
+	private List<String> equoContributionsJsApis;
 
-	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
+	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
 			List<String> equoContributionsJsApis, String customJsScripts, String contributedFilePath) {
-		super(originalRequest, urlResolver, contributedFilePath);
+		super(originalRequest);
+		this.urlResolver = urlResolver;
 		this.contributedFilePath = contributedFilePath;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;

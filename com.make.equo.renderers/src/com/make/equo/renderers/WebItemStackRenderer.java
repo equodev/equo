@@ -1,5 +1,7 @@
 package com.make.equo.renderers;
 
+import static com.make.equo.renderers.util.IRendererConstants.PARTSTACK_RENDERER_NAME;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.osgi.service.event.Event;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
@@ -53,8 +54,6 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
-
-	static final String EQUO_RENDERERS_NAME = "PartStack";
 
 	private String namespace;
 
@@ -290,7 +289,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			part = (MPart) ((MPlaceholder) element).getRef();
 			hashedParts.put(Integer.toString(part.hashCode()), part);
 		}
-		
+
 		if (part != null && part instanceof MPlaceholder) {
 			part.setCurSharedRef((MPlaceholder) element);
 		}
@@ -412,11 +411,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public List<String> getJsFileNamesForRendering() {
-		return Lists.newArrayList("renderers/webItemStackRenderer.js");
-	}
-
-	@Override
 	public String getNamespace() {
 		return namespace;
 	}
@@ -462,7 +456,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 	@Override
 	public String getEquoRendererName() {
-		return EQUO_RENDERERS_NAME;
+		return PARTSTACK_RENDERER_NAME;
 	}
 
 	@Override

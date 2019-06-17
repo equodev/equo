@@ -10,8 +10,9 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 @Component
 public class EquoHttpProxyContribution {
 
-	private static final String EQUO_FRAMEWORK_JS_API = "equoFramework.js";
+	private static final String PROXY_CONTRIBUTION_NAME = "equoproxy";
 	private static final String JQUERY_JS_API = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js";
+	private static final String EQUO_FRAMEWORK_JS_API = "equoFramework.js";
 	private static final String DOM_MODIFIER_JS_API = "domModifier.js";
 
 	private EquoContribution contribution;
@@ -20,13 +21,22 @@ public class EquoHttpProxyContribution {
 
 	@Activate
 	protected void activate() {
-		contribution = builder.withScriptFile(EQUO_FRAMEWORK_JS_API)
-				.withScriptFile(JQUERY_JS_API)
-				.withURLResolver(new EquoHttpProxyServerURLResolver())
-				.build();
 		String value = System.getProperty("change_original_html");
 		if (value == null || (value != null && Boolean.parseBoolean(value))) {
-			contribution.addContributedScript(DOM_MODIFIER_JS_API);
+			contribution = builder
+					.withContributionName(PROXY_CONTRIBUTION_NAME)
+					.withScriptFile(EQUO_FRAMEWORK_JS_API)
+					.withScriptFile(JQUERY_JS_API)
+					.withScriptFile(DOM_MODIFIER_JS_API)
+					.withURLResolver(new EquoHttpProxyServerURLResolver())
+					.build();
+		} else {
+			contribution = builder
+					.withContributionName(PROXY_CONTRIBUTION_NAME)
+					.withScriptFile(EQUO_FRAMEWORK_JS_API)
+					.withScriptFile(JQUERY_JS_API)
+					.withURLResolver(new EquoHttpProxyServerURLResolver())
+					.build();
 		}
 		contribution.startContributing();
 	}

@@ -2,9 +2,9 @@ package com.make.equo.server.provider;
 
 import java.net.URL;
 
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 
-public class EquoHttpProxyServerURLResolver implements ILocalUrlResolver {
+public class EquoHttpProxyServerURLResolver implements IEquoContributionUrlResolver {
 
 	@Override
 	public URL resolve(String pathToResolve) {

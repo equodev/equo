@@ -11,6 +11,7 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 @Component
 public class AnalyticsApiContributionImpl {
 
+	private static final String ANALYTICS_CONTRIBUTION_NAME = "equoanalytics";
 	private static final String ANALYTICS_JS_API = "analyticsApi.js";
 	
 	@SuppressWarnings("unused")
@@ -22,7 +23,9 @@ public class AnalyticsApiContributionImpl {
 
 	@Activate
 	protected void activate() {
-		contribution = builder.withScriptFile(ANALYTICS_JS_API)
+		contribution = builder
+				.withContributionName(ANALYTICS_CONTRIBUTION_NAME)
+				.withScriptFile(ANALYTICS_JS_API)
 				.withURLResolver(new AnalyticsURLResolver())
 				.build();
 		contribution.startContributing();

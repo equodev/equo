@@ -1,136 +1,86 @@
 package com.make.equo.server.contribution;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoContribution {
 
-	private boolean activeContribution = false;
-	
-	private IEquoServer server;
-	private ILocalUrlResolver urlResolver;
-	private IFiltersAdapterHandler filtersAdapterHandler;
+	private final IEquoServer server;
+	private final IEquoContributionUrlResolver urlResolver;
+	private final IFiltersAdapterHandler filtersAdapterHandler;
 
-	private String contributedResourceName;
-	private String contributionBaseUri;
+	private final String contributedHtmlName;
+	private final String contributionName;
 
-	private List<String> contributedUris;
-	private List<String> contributedScripts;
-	private List<String> excludedResources;
+	private final List<String> proxiedUris;
+	private final List<String> contributedScripts;
+	private final List<String> excludedResources;
 
-	private IHttpRequestFilter filter;
-	
-	public EquoContribution(IEquoServer server, ILocalUrlResolver urlResolver, IFiltersAdapterHandler filtersAdapterHandler,
-			String contributedResourceName, String contributionBaseUri, List<String> contributedUris,
-			List<String> contributedScripts, List<String> excludedResources, IHttpRequestFilter filter) {
+	private final Map<String, String> pathsToScripts;
+
+	private final IHttpRequestFilter filter;
+
+	public EquoContribution(IEquoServer server, IEquoContributionUrlResolver urlResolver,
+			IFiltersAdapterHandler filtersAdapterHandler, String contributedHtmlName, String contributionName,
+			List<String> proxiedUris, List<String> contributedScripts, List<String> excludedResources,
+			Map<String, String> pathsToScripts, IHttpRequestFilter filter) {
 		this.server = server;
 		this.urlResolver = urlResolver;
 		this.filtersAdapterHandler = filtersAdapterHandler;
-		this.contributedResourceName = contributedResourceName;
-		this.contributionBaseUri = contributionBaseUri;
-		this.contributedUris = contributedUris;
+		this.contributedHtmlName = contributedHtmlName;
+		this.contributionName = contributionName;
+		this.proxiedUris = proxiedUris;
 		this.contributedScripts = contributedScripts;
 		this.excludedResources = excludedResources;
+		this.pathsToScripts = pathsToScripts;
 		this.filter = filter;
 	}
-		
-	public IEquoServer getServer() {
-		return this.server;
-	}
-	
-	void setServer(IEquoServer server) {
-		this.server = server;
-	}
-	
+
 	public String getContributedResourceName() {
-		return contributedResourceName;
+		return contributedHtmlName;
 	}
 
-	void setContributedResourceName(String name) {
-		this.contributedResourceName = name;
+	public String getContributionName() {
+		return contributionName;
 	}
 
-	public String getContributionBaseUri() {
-		return contributionBaseUri;
-	}
-
-	void setContributionBaseUri(String contributionUri) {
-		this.contributionBaseUri = contributionUri;
+	public List<String> getProxiedUris() {
+		return new ArrayList<String>(proxiedUris);
 	}
 
 	public List<String> getContributedScripts() {
-		return contributedScripts;
+		return new ArrayList<String>(contributedScripts);
 	}
 
-	public void addContributedScript(String script) {
-		if (!this.contributedScripts.contains(script)) {
-			if (this.server != null && activeContribution) {
-				this.server.addScriptToContribution(script, this);
-			}
-			this.contributedScripts.add(script);
-		}
-	}
-	
-	void setContributedScripts(List<String> scripts) {
-		this.contributedScripts = scripts;
-	}
-	
 	public List<String> getExcludedResources() {
-		return excludedResources;
+		return new ArrayList<String>(excludedResources);
 	}
 
-	public void addExcludedResource(String excludedResource) {
-		if (!this.excludedResources.contains(excludedResource)) {
-			this.excludedResources.add(excludedResource);
-		}
-	}
-	
-	void setExcludedResources(List<String> excludedResources) {
-		this.excludedResources = excludedResources;
-	}
-
-	public List<String> getContributedUris() {
-		return contributedUris;
-	}
-
-	public void addUri(String uri) {
-		if (!this.contributedUris.contains(uri)) {
-			if (this.server != null && activeContribution) {
-				this.server.addUrl(uri);
-			}
-			this.contributedUris.add(uri);
-		}
+	public Map<String, String> getPathsToScripts() {
+		return new HashMap<String, String>(pathsToScripts);
 	}
 
 	public IHttpRequestFilter getFilter() {
 		return filter;
 	}
 
-	public void setFilter(IHttpRequestFilter filter) {
-		this.filter = filter;
-	}
-
-	public ILocalUrlResolver getUrlResolver() {
+	public IEquoContributionUrlResolver getUrlResolver() {
 		return urlResolver;
 	}
 
-	public void setUrlResolver(ILocalUrlResolver urlResolver) {
-		this.urlResolver = urlResolver;
-	}
-
 	public boolean hasCustomFiltersAdapter() {
-		return this.filtersAdapterHandler != null;
-	}
-	
-	public void setFiltersAdapterHandler(IFiltersAdapterHandler filtersAdapterHandler) {
-		this.filtersAdapterHandler = filtersAdapterHandler;
+		return filtersAdapterHandler != null;
 	}
 
 	public HttpFiltersAdapter getFiltersAdapter(HttpRequest request) {
@@ -139,16 +89,22 @@ public class EquoContribution {
 		}
 		return filtersAdapterHandler.getFiltersAdapter(request);
 	}
-	
+
+	public boolean accepts(HttpRequest request, URI requestUri) {
+		if (requestUri.getPath() != null && requestUri.getPath().matches(".*\\..+$")) {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Adds the contribution to its server
 	 * 
 	 * @return true if the contribution was added successfully to the server
 	 */
 	public boolean startContributing() {
-		if (this.server != null) {
-			this.server.addContribution(this);
-			this.activeContribution = true;
+		if (server != null) {
+			server.addContribution(this);
 			return true;
 		}
 		return false;

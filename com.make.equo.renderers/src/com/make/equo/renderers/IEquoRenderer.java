@@ -1,5 +1,7 @@
 package com.make.equo.renderers;
 
+import static com.make.equo.renderers.util.IRendererConstants.EQUO_RENDERERS_CONTRIBUTION_NAME;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,17 +31,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.renderers.contributions.EquoRenderersContribution;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.swtcef.Chromium;
 
 public interface IEquoRenderer {
-	
-	static final String RENDERER_FRAMEWORK_JS_FILE = "rendererFramework.js";
-	
+
 	/**
 	 * The initial point to start an Equo render process.
 	 * 
@@ -47,21 +45,11 @@ public interface IEquoRenderer {
 	 */
 	default void configureAndStartRenderProcess(Composite parent) {
 		Chromium browser = createBrowserComponent(parent);
-		
-		EquoContribution thisContribution = EquoRenderersContribution.getContributionDefinition();
-		String rendererURL = thisContribution.getContributionBaseUri() + getEquoRendererName();
-		thisContribution.addUri(rendererURL);
-		thisContribution.getServer().addCustomScript(rendererURL, RENDERER_FRAMEWORK_JS_FILE);
-		
-		List<String> jsScriptsFilesForRendering = getJsFileNamesForRendering();
-		for (String fileName : jsScriptsFilesForRendering) {
-			thisContribution.getServer().addCustomScript(rendererURL, fileName);
-		}
+
+		String rendererURL = EQUO_RENDERERS_CONTRIBUTION_NAME + "/" + getEquoRendererName();
 
 		String namespace = getNamespace();
 		browser.setUrl(rendererURL + "?" + "namespace=" + namespace);
-
-		thisContribution.getServer().start();
 
 		sendEclipse4Model();
 		onActionPerformedOnElement();
@@ -177,11 +165,12 @@ public interface IEquoRenderer {
 	}
 
 	/**
-	 * Return a name for the Rendeder. 
-	 * @return a String with the Equo Renderer's name 
+	 * Return a name for the Rendeder.
+	 * 
+	 * @return a String with the Equo Renderer's name
 	 */
 	String getEquoRendererName();
-	
+
 	/**
 	 * Receives a message when an action is performed on an element in the
 	 * Javascript side(i.e. click on a toolbar item).
@@ -211,15 +200,6 @@ public interface IEquoRenderer {
 	 * @return the contribution path
 	 */
 	String getModelContributionPath();
-
-	/**
-	 * Returns a list of custom Javascript file names which are used to render an
-	 * element. These scripts will be processed by the Equo Proxy and added to the
-	 * base Equo Renderer file.
-	 * 
-	 * @return a list of Javascript files
-	 */
-	List<String> getJsFileNamesForRendering();
 
 	/**
 	 * Returns a unique namespace for the element to be rendered.

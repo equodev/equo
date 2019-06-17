@@ -28,6 +28,10 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 	protected ILocalUrlResolver urlResolver;
 	private String localFilePathWithProtocol;
 
+	protected OfflineRequestFiltersAdapter(HttpRequest originalRequest) {
+		super(originalRequest);
+	}
+	
 	public OfflineRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver) {
 		super(originalRequest);
 		this.urlResolver = urlResolver;
