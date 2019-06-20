@@ -7,7 +7,7 @@ import org.osgi.service.component.annotations.Reference;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
 @Component
-public class EquoMediaApiContributionImpl {
+public class EquoMediaApiContribution {
 
 	private static final String MEDIA_CONTRIBUTION_NAME = "equomedia";
 	private static final String MEDIA_JS_API = "media.js";

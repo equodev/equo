@@ -8,7 +8,7 @@ import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 
 @Component
-public class AnalyticsApiContributionImpl {
+public class AnalyticsApiContribution {
 
 	private static final String ANALYTICS_CONTRIBUTION_NAME = "equoanalytics";
 	private static final String ANALYTICS_JS_API = "analyticsApi.js";
