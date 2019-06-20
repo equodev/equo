@@ -225,7 +225,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private void addEquoContributionCustomScripts(EquoContribution contribution) {
 		for (Entry<String, String> entry : contribution.getPathsToScripts().entrySet()) {
 			addUrl(contribution.getContributionName() + "/" + entry.getKey());
-			addCustomScript(entry.getKey(), entry.getValue());
+			addCustomScript(contribution.getContributionName() + "/" + entry.getKey(), entry.getValue());
 		}
 	}
 	
