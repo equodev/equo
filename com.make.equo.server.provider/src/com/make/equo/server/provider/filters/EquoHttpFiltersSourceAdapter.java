@@ -146,11 +146,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
-		URI uriAsUri = URI.create(uri);
-		Optional<String> maybeContributionKey = getContributionKeyIfPresent(uriAsUri);
-		if (maybeContributionKey.isPresent()) {
-			return new EquoContributionUrlResolver(equoContributions.get(maybeContributionKey.get()));
-		}
 		return null;
 	}
 
