@@ -92,10 +92,7 @@ public class EquoContribution {
 	}
 
 	public boolean accepts(HttpRequest request, URI requestUri) {
-		if (requestUri.getPath() != null && requestUri.getPath().matches(".*\\..+$")) {
-			return true;
-		}
-		return false;
+		return urlResolver.accepts(request, requestUri);
 	}
 
 	private void startContributing() {
