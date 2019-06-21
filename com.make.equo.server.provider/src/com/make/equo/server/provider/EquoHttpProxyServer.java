@@ -88,7 +88,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				contributionJsApis, contributionStyles, urlsToScripts, equoApplication);
+				contributionJsApis, contributionStyles, urlsToScripts, urlsToStyles, equoApplication);
 
 //		Runnable internetConnectionRunnable = new Runnable() {
 //			@Override
@@ -214,19 +214,29 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private void addEquoContributionJsAndCss(EquoContribution contribution) {
 		List<String> javascriptFilesNames = contribution.getContributedScripts();
 		if (!javascriptFilesNames.isEmpty()) {
-			Function<String, String> function = new Function<String, String>() {
-				@Override
-				public String apply(String input) {
-					try {
-						URL url = new URL(input);
-						String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
-						return scriptSentence;
-					} catch (MalformedURLException e) {
-						return createLocalScriptSentence(contribution.getContributionName() + "/" + input);
-					}
+			List<String> result = javascriptFilesNames.stream().map(input -> {
+				try {
+					URL url = new URL(input);
+					String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+					return scriptSentence;
+				} catch (MalformedURLException e) {
+					return createLocalSentence(contribution.getContributionName() + "/" + input, LOCAL_SCRIPT_SENTENCE);
 				}
 			}).collect(Collectors.toList());
 			contributionJsApis.addAll(Lists.newArrayList(result));
+		}
+		List<String> cssFilesNames = contribution.getContributedStyles();
+		if (!cssFilesNames.isEmpty()) {
+			List<String> result = cssFilesNames.stream().map(input -> {
+				try {
+					URL url = new URL(input);
+					String styleSentence = URL_CSS_SENTENCE.replaceAll(URL_PATH, url.toString());
+					return styleSentence;
+				} catch (MalformedURLException e) {
+					return createLocalSentence(contribution.getContributionName() + "/" + input, LOCAL_CSS_SENTENCE);
+				}
+			}).collect(Collectors.toList());
+			contributionStyles.addAll(Lists.newArrayList(result));
 		}
 	}
 
@@ -242,16 +252,23 @@ public class EquoHttpProxyServer implements IEquoServer {
 			addCustomScript(contribution.getContributionName() + "/" + entry.getKey(), entry.getValue());
 		}
 	}
+
+	private void addEquoContributionCustomStyles(EquoContribution contribution) {
+		for (Entry<String, String> entry : contribution.getPathsToStyles().entrySet()) {
+			addUrl(contribution.getContributionName() + "/" + entry.getKey());
+			addCustomStyle(entry.getKey(), entry.getValue());
+		}
+	}
 	
 	private void handleResourceAdd(String url, String resourceUrl, String baseSentence, String localSentence,
-			Map<String, String> existingResources) {
-		String generatedScriptSentence = generateSentence(resourceUrl, baseSentence, localSentence);
-		if (!existingResources.containsKey(url.toLowerCase())) {
-			existingResources.put(url, generatedScriptSentence);
+			Map<String, String> existingResourceMap) {
+		String generatedResourceSentence = generateSentence(resourceUrl, baseSentence, localSentence);
+		if (!existingResourceMap.containsKey(url.toLowerCase())) {
+			existingResourceMap.put(url, generatedResourceSentence);
 		} else {
-			String existingScripts = existingResources.get(url);
-			if (!existingScripts.contains(generatedScriptSentence)) {
-				existingResources.put(url, appendToExistingOnes(url, generatedScriptSentence, existingResources));
+			String existingResources = existingResourceMap.get(url);
+			if (!existingResources.contains(generatedResourceSentence)) {
+				existingResourceMap.put(url, appendToExistingOnes(url, generatedResourceSentence, existingResourceMap));
 			}
 		}
 	}
@@ -271,7 +288,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 			String scriptSentence = baseSentence.replaceAll(URL_PATH, url.toString());
 			return scriptSentence;
 		} catch (MalformedURLException e) {
-			return createLocalScriptSentence(scriptPath);
+			return createLocalSentence(scriptPath, localSentence);
 		}
 
 	}
@@ -288,9 +305,16 @@ public class EquoHttpProxyServer implements IEquoServer {
 		addEquoContributionJsAndCss(contribution);
 		addEquoContributionProxiedUris(contribution);
 		addEquoContributionCustomScripts(contribution);
+		addEquoContributionCustomStyles(contribution);
 		System.out.println("Equo Contribution added: " + contribution.getContributionName());
 	}
 
+	@Override
+	public void addStyleToContribution(String style) {
+		String processedStyle = generateSentence(style, URL_CSS_SENTENCE, LOCAL_CSS_SENTENCE);
+		contributionStyles.add(processedStyle);
+	}
+	
 	@Override
 	public void addScriptToContribution(String script) {
 		String processedScript = generateSentence(script, URL_SCRIPT_SENTENCE, LOCAL_SCRIPT_SENTENCE);

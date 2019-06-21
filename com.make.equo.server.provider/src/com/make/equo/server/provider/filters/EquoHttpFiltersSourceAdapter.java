@@ -41,14 +41,14 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private List<String> equoContributionsJsApis;
 	private List<String> equoContributionStyles;
-	private Set<String> localResources;
 	private Map<String, String> urlsToScriptsAsStrings;
 	private Map<String, String> urlsToStylesAsStrings;
 
 	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
-			Map<String, String> urlsToScriptsAsStrings, IEquoApplication equoApplication) {
+			List<String> equoContributionStyles, Map<String, String> urlsToScriptsAsStrings, Map<String, String> urlsToStylesAsStrings, 
+			IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -150,6 +150,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
+		if (uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)) {
+			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL, equoApplication);
+		}
+		if (uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL)) {
+			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
+		}
 		return null;
 	}
 
@@ -157,7 +163,9 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		String uri = originalRequest.getUri();
 		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
+				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
+				|| uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)
+				|| uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
 	}
 
 	private Optional<String> getRequestedUrl(HttpRequest originalRequest) {

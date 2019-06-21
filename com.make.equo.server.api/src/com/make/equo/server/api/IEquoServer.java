@@ -19,6 +19,8 @@ public interface IEquoServer {
 	
 	void addScriptToContribution(String script);
 
+	void addStyleToContribution(String style);
+
 	String getLocalScriptProtocol();
 
 	String getBundleScriptProtocol();

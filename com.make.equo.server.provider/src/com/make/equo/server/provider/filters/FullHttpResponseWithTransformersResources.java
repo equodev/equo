@@ -6,7 +6,7 @@ import com.make.equo.server.offline.api.filters.IModifiableResponse;
 
 import io.netty.handler.codec.http.FullHttpResponse;
 
-public class FullHttpResponseWithTransformersScripts implements IModifiableResponse {
+public class FullHttpResponseWithTransformersResources implements IModifiableResponse {
 
 	private FullHttpResponse originalFullHttpResponse;
 	private List<String> equoContributionsJsApis;
@@ -14,7 +14,7 @@ public class FullHttpResponseWithTransformersScripts implements IModifiableRespo
 	private String customJsScripts;
 	private String customStyles;
 
-	public FullHttpResponseWithTransformersScripts(FullHttpResponse originalFullHttpResponse,
+	public FullHttpResponseWithTransformersResources(FullHttpResponse originalFullHttpResponse,
 			List<String> equoContributionsJsApis, List<String> equoContributionStyles, String customJsScripts, String customStyles) {
 		this.originalFullHttpResponse = originalFullHttpResponse;
 		this.equoContributionsJsApis = equoContributionsJsApis;

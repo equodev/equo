@@ -38,17 +38,21 @@ public class EquoContributionBuilder {
 
 	private List<String> proxiedUris;
 	private List<String> contributedScripts;
+	private List<String> contributedStyles;
 	private List<String> excludedResources;
 	
 	private Map<String, String> pathsToScripts;
+	private Map<String, String> pathsToStyles;
 
 	private IHttpRequestFilter filter;
 
 	public EquoContributionBuilder() {
 		this.proxiedUris = new ArrayList<String>();
 		this.contributedScripts = new ArrayList<String>();
+		this.contributedStyles = new ArrayList<String>();
 		this.excludedResources = new ArrayList<String>();
 		this.pathsToScripts = new HashMap<String, String>();
+		this.pathsToStyles = new HashMap<String, String>();
 		this.filter = ((originalRequest) -> {
 			return originalRequest;
 		});
@@ -104,6 +108,18 @@ public class EquoContributionBuilder {
 		this.pathsToScripts.put(path, script);
 		return this;
 	}
+	
+	/**
+	 * Adds a style to a specific path to be handled by the contribution.
+	 * 
+	 * @param path Path for the style to be added to. Will be treated as relative to the contribution's name.
+	 * @param style Name of the style file to be added.
+	 * @return this
+	 */
+	public EquoContributionBuilder withPathWithStyle(String path, String style) {
+		this.pathsToStyles.put(path, style);
+		return this;
+	}
 		
 	/**
 	 * Defines an HTML resource to proxy for the contribution.
@@ -140,6 +156,27 @@ public class EquoContributionBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds an style to the contribution. These styles are global and can be used by other contributions of the framework.
+	 * 
+	 * @param style Name of the style file to be added.
+	 * @return this
+	 */
+	public EquoContributionBuilder withStyleFile(String stlye) {
+		this.contributedStyles.add(stlye);
+		return this;
+	}
+
+	/**
+	 * Adds a list of styles to the contribution. These styles are global and can be used by other contributions of the framework.
+	 * 
+	 * @param styles List of names of the style files to be added.
+	 * @return this
+	 */
+	public EquoContributionBuilder withStyleFiles(List<String> stlye) {
+		this.contributedStyles.addAll(stlye);
+		return this;
+	}
 	
 	/**
 	 * Changes the URL resolver of the contribution. The URL resolver is required by the framework to process file requests to the contribution.
@@ -183,7 +220,8 @@ public class EquoContributionBuilder {
 	 */
 	public EquoContribution build() {
 		return new EquoContribution(server, urlResolver, filtersAdapterHandler, contributedHtmlName,
-				contributionName, proxiedUris, contributedScripts, excludedResources, pathsToScripts, filter);
+				contributionName, proxiedUris, contributedScripts, contributedStyles, excludedResources, 
+				pathsToScripts, pathsToStyles, filter);
 	}
 
 }

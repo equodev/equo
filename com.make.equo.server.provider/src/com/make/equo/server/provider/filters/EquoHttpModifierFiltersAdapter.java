@@ -31,10 +31,10 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 		if (httpObject instanceof FullHttpResponse
 				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
-			IModifiableResponse fullHttpResponseWithTransformersScripts = new FullHttpResponseWithTransformersScripts(
+			IModifiableResponse fullHttpResponseWithTransformersResources = new FullHttpResponseWithTransformersResources(
 					fullResponse, equoContributionsJsApis, equoContributionStyles, customJsScripts, customStyles);
-			if (fullHttpResponseWithTransformersScripts.isModifiable()) {
-				FullHttpResponse generatedModifiedResponse = fullHttpResponseWithTransformersScripts
+			if (fullHttpResponseWithTransformersResources.isModifiable()) {
+				FullHttpResponse generatedModifiedResponse = fullHttpResponseWithTransformersResources
 						.generateModifiedResponse();
 				saveRequestResponseIfPossible(originalRequest, generatedModifiedResponse);
 				return generatedModifiedResponse;
