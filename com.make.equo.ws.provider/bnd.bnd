@@ -12,7 +12,6 @@ Private-Package: com.make.equo.ws.provider
 	org.java-websocket.Java-WebSocket.source,\
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.server.api;version=latest,\
-	com.make.equo.server.provider;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
     io.netty.all.source,\

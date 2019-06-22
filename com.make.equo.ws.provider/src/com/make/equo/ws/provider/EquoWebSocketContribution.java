@@ -10,7 +10,7 @@ import com.make.equo.ws.api.IEquoWebSocketService;
 @Component
 public class EquoWebSocketContribution {
 
-	static final String WEBSOCKET_BASE_NAME = "equowebsocket";
+	static final String WEBSOCKET_CONTRIBUTION_NAME = "equowebsocket";
 	private static final String EQUO_WEBSOCKET_JS_API = "equoWebsockets.js";
 	
 	private EquoContributionBuilder builder;
@@ -21,7 +21,7 @@ public class EquoWebSocketContribution {
 	protected void activate() {
 		builder
 			.withScriptFile(EQUO_WEBSOCKET_JS_API)
-			.withContributionName(WEBSOCKET_BASE_NAME)
+			.withContributionName(WEBSOCKET_CONTRIBUTION_NAME)
 			.withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
 			.build();
 	}

@@ -9,7 +9,6 @@ Export-Package: \
 	org.littleshoot.littleproxy,\
 	org.littleshoot.littleproxy.source,\
 	com.make.equo.server.api;version=latest,\
-	com.make.equo.ws.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
