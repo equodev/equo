@@ -7,6 +7,7 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
+import com.make.equo.application.model.OptionalViewBuilder;
 
 @Component
 public class TestApp implements IEquoApplication {

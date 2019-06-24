@@ -4,7 +4,9 @@
   <handlers xmi:id="_Q7ZAcAUgEeiOMIu6XCOPmA" elementId="com.make.equo.application.handlers.ExitHandler" contributionURI="bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.ExitHandler" command="_9_KnAAUfEeiOMIu6XCOPmA"/>
   <handlers xmi:id="_FDE1YPS0Eei60uCQm0HoPA" elementId="com.make.equo.application.handlers.AboutHandler" contributionURI="bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.AboutHandler" command="_V6CLcPS0Eei60uCQm0HoPA"/>
   <handlers xmi:id="_RHZ0APTiEei60uCQm0HoPA" elementId="com.make.equo.application.handlers.PropertiesHandler" contributionURI="bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.PreferencesHandler" command="_N2Pv0PTjEei60uCQm0HoPA"/>
-  <commands xmi:id="_9_KnAAUfEeiOMIu6XCOPmA" elementId="org.eclipse.ui.file.exit" commandName="Exit" description="Close the Application"/>
+  <commands xmi:id="_9_KnAAUfEeiOMIu6XCOPmA" elementId="org.eclipse.ui.file.exit" commandName="Exit" description="Close the Application">
+     <parameters xmi:id="_sNxziHdaEemsw_Za0xitxA" elementId="mayPrompt" name="may prompt"/>
+  </commands>
   <commands xmi:id="_V6CLcPS0Eei60uCQm0HoPA" elementId="org.eclipse.ui.help.aboutAction" commandName="About" description="Display the About dialog"/>
   <commands xmi:id="_N2Pv0PTjEei60uCQm0HoPA" elementId="org.eclipse.ui.window.preferences" commandName="Preferences" description="Open application preferences"/>
   <addons xmi:id="_cParoZWREeejT9iXCdYVRA" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
