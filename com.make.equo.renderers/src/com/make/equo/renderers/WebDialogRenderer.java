@@ -1,5 +1,7 @@
 package com.make.equo.renderers;
 
+import static com.make.equo.renderers.util.IRendererConstants.DIALOG_RENDERER_NAME;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +33,6 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
-
-	static final String EQUO_RENDERERS_NAME = "webdialog";
-	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
-			+ EQUO_RENDERERS_URL_SUFFIX;
 
 	private static String ShellMinimizedTag = "shellMinimized"; //$NON-NLS-1$
 	private static String ShellMaximizedTag = "shellMaximized"; //$NON-NLS-1$
@@ -104,11 +102,6 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 			e4Model.add(elementModel);
 		}
 		return e4Model;
-	}
-
-	@Override
-	public List<String> getJsFileNamesForRendering() {
-		return Lists.newArrayList("renderers/webDialogRenderer.js");
 	}
 
 	@Override
@@ -297,8 +290,8 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	}
 
 	@Override
-	public String getEquoRendererURL() {
-		return EQUO_RENDERERS_URL;
+	public String getEquoRendererName() {
+		return DIALOG_RENDERER_NAME;
 	}
 
 }

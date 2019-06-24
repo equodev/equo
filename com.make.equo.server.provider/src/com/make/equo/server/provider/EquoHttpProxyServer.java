@@ -9,12 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Map.Entry;
 
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
@@ -32,22 +29,18 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.contribution.api.IEquoContribution;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
+import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
 
-	static final String EQUO_CONTRIBUTION_PATH = "equoContribution/";
-
 	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
 	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
 	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
-
-	protected static final String WEBSOCKET_CONTRIBUTION_TYPE = "websocketContribution";
-	protected static final String RENDERERS_CONTRIBUTION_TYPE = "renderersContribution";
 
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
@@ -60,8 +53,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static String limitedConnectionAppBasedPagePath;
 
 	private static volatile HttpProxyServer proxyServer;
-	private ScheduledExecutorService internetConnectionChecker;
-	private int websocketPort;
+//	private ScheduledExecutorService internetConnectionChecker;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoApplication equoApplication;
@@ -72,12 +64,14 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private volatile IEquoLoggingService equoLoggingService;
 
-	private static final Map<String, IEquoContribution> equoContributions = new LinkedHashMap<>();
+	private Map<String, EquoContribution> equoContributions = new HashMap<String, EquoContribution>();
+
+	private List<String> contributionJsApis = new ArrayList<String>();
 
 	@Override
 	@Activate
 	public void start() {
-		if (proxyServer == null && !proxiedUrls.isEmpty()) {
+		if (proxyServer == null) {
 			startServer();
 		}
 	}
@@ -86,20 +80,20 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				getEquoContributionsJsApis(), urlsToScripts, websocketPort, equoApplication);
+				contributionJsApis, urlsToScripts, equoApplication);
 
-		Runnable internetConnectionRunnable = new Runnable() {
-			@Override
-			public void run() {
-				if (!isInternetReachable()) {
-					httpFiltersSourceAdapter.setConnectionLimited();
-				} else {
-					httpFiltersSourceAdapter.setConnectionUnlimited();
-				}
-			}
-		};
-		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
-		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
+//		Runnable internetConnectionRunnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				if (!isInternetReachable()) {
+//					httpFiltersSourceAdapter.setConnectionLimited();
+//				} else {
+//					httpFiltersSourceAdapter.setConnectionUnlimited();
+//				}
+//			}
+//		};
+//		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
+//		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 
 		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new SelfSignedMitmManager())
 				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
@@ -117,34 +111,16 @@ public class EquoHttpProxyServer implements IEquoServer {
 //		}
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)
-	void addEquoContribution(IEquoContribution equoContribution, Map<String, String> props) {
-		String contributionKey = props.get("type");
-		System.out.println("Equo Contribution added: " + contributionKey);
-		equoContributions.put(contributionKey, equoContribution);
-		if (contributionKey.equals(WEBSOCKET_CONTRIBUTION_TYPE)) {
-			Map<String, Object> properties = equoContribution.getProperties();
-			if (!properties.containsKey("websocketPort")) {
-				throw new RuntimeException(
-						"The websocketPort property must be defined in the Equo websocket contribution.");
-			}
-			this.websocketPort = (Integer) properties.get("websocketPort");
-		}
-	}
-
-	void removeEquoContribution(Map<String, Object> props) {
-		equoContributions.remove(props.get("type"));
-	}
-
 	@Override
 	public void addCustomScript(String url, String scriptUrl) {
+		String lowerCaseURL = url.toLowerCase();
 		String generatedScriptSentence = generateScriptSentence(scriptUrl);
-		if (!urlsToScripts.containsKey(url)) {
-			urlsToScripts.put(url, generatedScriptSentence);
+		if (!urlsToScripts.containsKey(url.toLowerCase())) {
+			urlsToScripts.put(lowerCaseURL, generatedScriptSentence);
 		} else {
-			String existingScripts = urlsToScripts.get(url);
+			String existingScripts = urlsToScripts.get(lowerCaseURL);
 			if (!existingScripts.contains(generatedScriptSentence)) {
-				urlsToScripts.put(url, appendScriptToExistingOnes(url, generatedScriptSentence));
+				urlsToScripts.put(lowerCaseURL, appendScriptToExistingOnes(lowerCaseURL, generatedScriptSentence));
 			}
 		}
 	}
@@ -196,12 +172,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		}
 	}
 
-	private boolean isInternetReachable() {
-		if (proxiedUrls.isEmpty()) {
-			return false;
-		}
-		return isAddressReachable(proxiedUrls.get(0));
-	}
+//	private boolean isInternetReachable() {
+//		if (proxiedUrls.isEmpty()) {
+//			return false;
+//		}
+//		return isAddressReachable(proxiedUrls.get(0));
+//	}
 
 	@Override
 	public boolean isAddressReachable(String appUrl) {
@@ -220,32 +196,39 @@ public class EquoHttpProxyServer implements IEquoServer {
 		EquoHttpProxyServer.limitedConnectionAppBasedPagePath = limitedConnectionPagePath;
 	}
 
-	private List<String> getEquoContributionsJsApis() {
-		List<String> javascriptApis = new ArrayList<>();
-		for (String contributionType : equoContributions.keySet()) {
-			IEquoContribution equoContribution = equoContributions.get(contributionType);
-			List<String> javascriptFilesNames = equoContribution.getJavascriptFileNames();
-			if (!javascriptFilesNames.isEmpty()) {
-				Function<String, String> function = new Function<String, String>() {
-					@Override
-					public String apply(String input) {
-						try {
-							URL url = new URL(input);
-							String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
-							return scriptSentence;
-						} catch (MalformedURLException e) {
-							return createLocalScriptSentence(EQUO_CONTRIBUTION_PATH + contributionType + "/" + input);
-						}
-
+	private void addEquoContributionJsApis(EquoContribution contribution) {
+		List<String> javascriptFilesNames = contribution.getContributedScripts();
+		if (!javascriptFilesNames.isEmpty()) {
+			Function<String, String> function = new Function<String, String>() {
+				@Override
+				public String apply(String input) {
+					try {
+						URL url = new URL(input);
+						String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+						return scriptSentence;
+					} catch (MalformedURLException e) {
+						return createLocalScriptSentence(contribution.getContributionName() + "/" + input);
 					}
-				};
-				Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
-				javascriptApis.addAll(Lists.newArrayList(result));
-			}
+				}
+			};
+			Iterable<String> result = Iterables.transform(javascriptFilesNames, function);
+			contributionJsApis.addAll(Lists.newArrayList(result));
 		}
-		return javascriptApis;
 	}
 
+	private void addEquoContributionProxiedUris(EquoContribution contribution) {
+		for (String url : contribution.getProxiedUris()) {
+			addUrl(url);
+		}
+	}
+
+	private void addEquoContributionCustomScripts(EquoContribution contribution) {
+		for (Entry<String, String> entry : contribution.getPathsToScripts().entrySet()) {
+			addUrl(contribution.getContributionName() + "/" + entry.getKey());
+			addCustomScript(contribution.getContributionName() + "/" + entry.getKey(), entry.getValue());
+		}
+	}
+	
 	private String appendScriptToExistingOnes(String url, String generatedScriptSentence) {
 		String existingCustomJsScripts = urlsToScripts.get(url);
 		StringBuilder result = new StringBuilder();
@@ -257,17 +240,13 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private String generateScriptSentence(String scriptPath) {
 		try {
-			if (isLocalScript(scriptPath)) {
-				return createLocalScriptSentence(scriptPath);
-			} else {
-				URL url = new URL(scriptPath);
-				String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
-				return scriptSentence;
-			}
+			URL url = new URL(scriptPath);
+			String scriptSentence = URL_SCRIPT_SENTENCE.replaceAll(URL_PATH, url.toString());
+			return scriptSentence;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			return createLocalScriptSentence(scriptPath);
 		}
-		return "";
+
 	}
 
 	private String createLocalScriptSentence(String scriptPath) {
@@ -275,16 +254,20 @@ public class EquoHttpProxyServer implements IEquoServer {
 		return scriptSentence;
 	}
 
-	private boolean isLocalScript(String scriptPath) {
-		String scriptPathLoweredCase = scriptPath.trim().toLowerCase();
-		return scriptPathLoweredCase.startsWith(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| scriptPathLoweredCase.startsWith(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH.toLowerCase());
+	@Override
+	public void addContribution(EquoContribution contribution) {
+		equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
+		addUrl(contribution.getContributionName());
+		addEquoContributionJsApis(contribution);
+		addEquoContributionProxiedUris(contribution);
+		addEquoContributionCustomScripts(contribution);
+		System.out.println("Equo Contribution added: " + contribution.getContributionName());
 	}
 
 	@Override
-	public String getEquoContributionPath() {
-		return EQUO_CONTRIBUTION_PATH;
+	public void addScriptToContribution(String script) {
+		String processedScript = generateScriptSentence(script);
+		contributionJsApis.add(processedScript);
 	}
 
 }

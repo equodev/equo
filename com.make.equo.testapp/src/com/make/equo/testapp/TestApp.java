@@ -14,12 +14,11 @@ public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
-		// TODO Auto-generated method stub
 		try {
 			 return appBuilder
 			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
-			        .addCustomScript("js/testAnalytics.js")
+			        .withCustomScript("js/testAnalytics.js")
 			        .withMainMenu("File")
 			         	.addMenuItem("New")
 			         	.onClick(new Runnable() {

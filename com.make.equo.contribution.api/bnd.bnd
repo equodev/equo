@@ -1,3 +1,0 @@
-Bundle-Version: ${version}.${tstamp}
-Export-Package: \
-    com.make.equo.contribution.api

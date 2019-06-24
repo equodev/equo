@@ -1,32 +1,45 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.http.entity.ContentType;
 
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
-public class RenderersRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
+public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
 
+	protected IEquoContributionUrlResolver urlResolver;
+	
 	private String customJsScripts;
+	private String contributedFilePath;
 	private List<String> equoContributionsJsApis;
 
-	public RenderersRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
-			List<String> equoContributionsJsApis, String customJsScripts, String baseRendererPath) {
-		super(originalRequest, urlResolver, baseRendererPath);
+	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
+			List<String> equoContributionsJsApis, String customJsScripts, String contributedFilePath) {
+		super(originalRequest);
+		this.urlResolver = urlResolver;
+		this.contributedFilePath = contributedFilePath;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.customJsScripts = customJsScripts;
 	}
 
+	@Override
+	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+		URL resolvedUrl = urlResolver.resolve(contributedFilePath);
+		return super.buildHttpResponse(resolvedUrl);
+	}
+	
 	@Override
 	protected HttpResponse buildResponse(ByteBuf buffer, String defaultContentType) {
 		String contentFile = buffer.toString(Charset.defaultCharset());

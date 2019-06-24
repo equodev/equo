@@ -1,5 +1,7 @@
 package com.make.equo.renderers;
 
+import static com.make.equo.renderers.util.IRendererConstants.TOOLBAR_RENDERER_NAME;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +36,6 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
-
-	static final String EQUO_RENDERERS_NAME = "toolbar";
-	static final String EQUO_RENDERERS_URL = EQUO_RENDERERS_URL_PREFIX + EQUO_RENDERERS_NAME
-			+ EQUO_RENDERERS_URL_SUFFIX;
 
 	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
 
@@ -90,11 +88,6 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	@Override
 	public IEquoEventHandler getEquoEventHandler() {
 		return equoEventHandler;
-	}
-
-	@Override
-	public List<String> getJsFileNamesForRendering() {
-		return Lists.newArrayList("renderers/toolBarRenderer.js");
 	}
 
 	@Override
@@ -178,8 +171,8 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public String getEquoRendererURL() {
-		return EQUO_RENDERERS_URL;
+	public String getEquoRendererName() {
+		return TOOLBAR_RENDERER_NAME;
 	}
 
 }

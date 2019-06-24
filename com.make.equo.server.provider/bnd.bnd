@@ -2,12 +2,13 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: \
 	com.make.equo.server.provider,\
 	com.make.equo.server.provider.resolvers
+Export-Package: \
+    com.make.equo.server.provider.filters
 -includeresource: resources/
 -buildpath: \
 	org.littleshoot.littleproxy,\
 	org.littleshoot.littleproxy.source,\
 	com.make.equo.server.api;version=latest,\
-	com.make.equo.ws.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
@@ -20,6 +21,5 @@ Private-Package: \
 	com.google.guava.source;version=20.0,\
 	org.apache.httpcomponents.httpcore,\
 	org.apache.httpcomponents.httpcore.source,\
-	com.make.equo.contribution.api;version=latest,\
     com.make.equo.application.provider;version=latest,\
     com.make.equo.aer.api

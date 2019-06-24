@@ -18,7 +18,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aspects)',\
-    osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.server.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.ws.api)',\
@@ -124,7 +123,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.cef;version='[1.0.0,1.0.1)',\
     com.make.equo.application.client;version='[0.1.0,0.2.0)',\
     com.make.equo.application.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.contribution.api;version='[0.1.0,0.2.0)',\
     com.make.equo.server.api;version='[0.1.0,0.2.0)',\
     com.make.equo.server.provider;version='[0.1.0,0.2.0)',\
     com.make.equo.ws.api;version='[0.1.0,0.2.0)',\

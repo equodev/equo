@@ -92,10 +92,6 @@ public class ViewBuilder {
 	}
 
 	public EquoApplicationBuilder start() {
-		// first check if an url of an app was set
-		if (url != null) {
-			equoServer.startServer();
-		}
 		analyticsService.registerLaunchApp();
 		return this.equoAppBuilder;
 	}

@@ -1,4 +1,4 @@
-package com.make.equo.server.provider;
+package com.make.equo.server.provider.filters;
 
 import java.net.URI;
 import java.util.List;
@@ -10,11 +10,14 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
 
+import com.google.common.collect.Lists;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.contribution.api.IEquoContribution;
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.provider.EquoHttpProxyServer;
+import com.make.equo.server.provider.EquoHttpProxyServerURLResolver;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
 import com.make.equo.server.provider.resolvers.EquoContributionUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
@@ -25,17 +28,9 @@ import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
-	private static final String limitedConnectionGenericPageFilePath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
-			+ "limitedConnectionPage.html";
+	private static final String limitedConnectionGenericPageFilePath = "/limitedConnectionPage.html";
 
-	private static final String RENDERERS_CONTRIBUTION_TYPE = "renderersContribution";
-
-	private static final String baseRendererPath = EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
-			+ RENDERERS_CONTRIBUTION_TYPE + "/baseRenderer.html";
-
-	private static final String EQUO_RENDERERS_SUBFIX = "equo_renderers";
-
-	private Map<String, IEquoContribution> equoContributions;
+	private Map<String, EquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
 	private IEquoApplication equoApplication;
 
@@ -48,12 +43,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private List<String> equoContributionsJsApis;
 	private Map<String, String> urlsToScriptsAsStrings;
 
-	private int websocketPort;
-
-	public EquoHttpFiltersSourceAdapter(Map<String, IEquoContribution> equoContributions,
+	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
-			Map<String, String> urlsToScriptsAsStrings, int websocketPort, IEquoApplication equoApplication) {
+			Map<String, String> urlsToScriptsAsStrings, IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -61,7 +54,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		this.proxiedUrls = proxiedUrls;
 		this.equoContributionsJsApis = equoContributionsJsApis;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
-		this.websocketPort = websocketPort;
 		this.equoApplication = equoApplication;
 	}
 
@@ -70,18 +62,29 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (ProxyUtils.isCONNECT(originalRequest)) {
 			return new HttpFiltersAdapter(originalRequest, clientCtx);
 		}
-		// It's necessary to distinguish between the websocket contribution and the
-		// other Equo contributions in order to parse and generate the port dinamically
-		if (isEquoWebsocketJsApi(originalRequest)) {
-			return new EquoWebsocketJsApiRequestFiltersAdapter(originalRequest,
-					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
-					websocketPort);
-		}
 
-		if (isEquoRendererRequest(originalRequest)) {
-			return new RenderersRequestFiltersAdapter(originalRequest,
-					new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
-					equoContributionsJsApis, getCustomScripts(originalRequest.getUri()), baseRendererPath);
+		try {
+			URI uri = URI.create(originalRequest.getUri());
+			Optional<String> key = getContributionKeyIfPresent(uri);
+			if (key.isPresent()) {
+				EquoContribution contribution = equoContributions.get(key.get());
+				if (contribution.hasCustomFiltersAdapter()) {
+					return contribution.getFiltersAdapter(originalRequest);
+				} else {
+					originalRequest = contribution.getFilter().applyFilter(originalRequest);
+
+					if (contribution.accepts(originalRequest, uri)) {
+						return new ContributionFileRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
+								contribution.getContributionName());
+					}
+
+					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
+							equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
+							contribution.getContributedResourceName());
+				}
+			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
 		}
 
 		if (isLocalFileRequest(originalRequest)) {
@@ -95,8 +98,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new OfflineRequestFiltersAdapter(originalRequest,
-						new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions),
+				return new DefaultContributionRequestFiltersAdapter(originalRequest, new EquoHttpProxyServerURLResolver(), Lists.newArrayList(), "",
 						limitedConnectionGenericPageFilePath);
 			}
 		} else {
@@ -116,16 +118,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		return uri.contains("/shared") || uri.contains("/static");
 	}
 
-	private boolean isEquoRendererRequest(HttpRequest originalRequest) {
-		String uri = originalRequest.getUri();
-		String renderersUri = EQUO_RENDERERS_SUBFIX + "/" + EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH
-				+ RENDERERS_CONTRIBUTION_TYPE;
-		return uri.contains(renderersUri);
-	}
-
-	private boolean isEquoWebsocketJsApi(HttpRequest originalRequest) {
-		String uri = originalRequest.getUri();
-		return uri.contains(EquoHttpProxyServer.WEBSOCKET_CONTRIBUTION_TYPE);
+	private Optional<String> getContributionKeyIfPresent(URI uri) {
+		String[] path = uri.getPath().split("/");
+		for (String s : path) {
+			if (equoContributions.containsKey(s)) {
+				return Optional.of(s);
+			}
+		}
+		if (equoContributions.containsKey(uri.getAuthority())) {
+			return Optional.of(uri.getAuthority());
+		}
+		return Optional.empty();
 	}
 
 	private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
@@ -134,9 +137,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	}
 
 	private ILocalUrlResolver getUrlResolver(String uri) {
-		if (uri.contains(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH)) {
-			return new EquoContributionUrlResolver(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH, equoContributions);
-		}
 		if (uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)) {
 			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL, equoApplication);
 		}
@@ -151,8 +151,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private boolean isLocalFileRequest(HttpRequest originalRequest) {
 		String uri = originalRequest.getUri();
-		return uri.contains(EquoHttpProxyServer.EQUO_CONTRIBUTION_PATH)
-				|| uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
+		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 	}
@@ -178,9 +177,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			return urlsToScriptsAsStrings.get(url + "/");
 		}
 		URI uri = URI.create(url);
-		String key = uri.getScheme() + "://" + uri.getAuthority();
+		String key = (uri.getScheme() + "://" + uri.getAuthority() + uri.getPath()).toLowerCase();
 		if (!urlsToScriptsAsStrings.containsKey(key)) {
-			return "";
+			key = (uri.getAuthority() + uri.getPath()).toLowerCase();
+			if (!urlsToScriptsAsStrings.containsKey(key)) {
+				return "";
+			}
 		}
 		return urlsToScriptsAsStrings.get(key);
 	}

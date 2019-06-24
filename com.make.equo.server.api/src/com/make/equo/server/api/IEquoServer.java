@@ -1,5 +1,6 @@
 package com.make.equo.server.api;
 
+import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public interface IEquoServer {
@@ -11,6 +12,10 @@ public interface IEquoServer {
 	void addCustomScript(String url, String scriptUrl);
 
 	void addUrl(String url);
+	
+	void addContribution(EquoContribution contribution);
+	
+	void addScriptToContribution(String script);
 
 	String getLocalScriptProtocol();
 
@@ -25,7 +30,4 @@ public interface IEquoServer {
 	String getLocalFileProtocol();
 
 	boolean isAddressReachable(String appUrl);
-
-	String getEquoContributionPath();
-
 }

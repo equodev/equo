@@ -1,17 +1,20 @@
-package com.make.equo.server.offline.api.filters;
+package com.make.equo.ws.provider;
+
+import static com.make.equo.ws.provider.EquoWebSocketContribution.WEBSOCKET_CONTRIBUTION_NAME;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 
 import javax.activation.MimetypesFileTypeMap;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.google.common.io.ByteStreams;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
+import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -23,36 +26,26 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
-public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
+public class EquoWebsocketJsApiRequestFiltersAdapter extends HttpFiltersAdapter {
 
-	protected ILocalUrlResolver urlResolver;
-	private String localFilePathWithProtocol;
-
-	protected OfflineRequestFiltersAdapter(HttpRequest originalRequest) {
-		super(originalRequest);
-	}
+	private int portNumber;
+	private IEquoContributionUrlResolver urlResolver;
 	
-	public OfflineRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver) {
+	public EquoWebsocketJsApiRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
+			int portNumber) {
 		super(originalRequest);
 		this.urlResolver = urlResolver;
+		this.portNumber = portNumber;
 	}
-
-	public OfflineRequestFiltersAdapter(HttpRequest originalRequest, ILocalUrlResolver urlResolver,
-			String localFilePathWithProtocol) {
-		this(originalRequest, urlResolver);
-		this.localFilePathWithProtocol = localFilePathWithProtocol;
-	}
-
-	@Override
+	
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		String protocol = urlResolver.getProtocol().toLowerCase();
-		String originalFileName = localFilePathWithProtocol.substring(localFilePathWithProtocol.lastIndexOf(protocol));
-		String fileWithoutProtocol = originalFileName.replace(protocol, "");
-		URL resolvedUrl = urlResolver.resolve(fileWithoutProtocol);
+		String requestUri = originalRequest.getUri();
+		String fileName = requestUri.substring(requestUri.indexOf(WEBSOCKET_CONTRIBUTION_NAME) + WEBSOCKET_CONTRIBUTION_NAME.length(), requestUri.length());
+		URL resolvedUrl = urlResolver.resolve(fileName);
 		return buildHttpResponse(resolvedUrl);
 	}
-
-	protected HttpResponse buildHttpResponse(URL resolvedUrl) {
+	
+	private HttpResponse buildHttpResponse(URL resolvedUrl) {
 		try {
 			final URLConnection connection = resolvedUrl.openConnection();
 			InputStream inputStream = connection.getInputStream();
@@ -75,15 +68,16 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 			}
 		}
 	}
-
-	protected HttpResponse buildResponse(ByteBuf buffer, String contentType) {
-		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
-		HttpHeaders.setContentLength(response, buffer.readableBytes());
+	
+	private HttpResponse buildResponse(ByteBuf buffer, String contentType) {
+		String contentFile = buffer.toString(Charset.defaultCharset());
+		String responseAsString = String.format(contentFile, portNumber);
+		byte[] bytes = responseAsString.getBytes();
+		ByteBuf newBuffer = Unpooled.wrappedBuffer(bytes);
+		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, newBuffer);
+		HttpHeaders.setContentLength(response, newBuffer.readableBytes());
 		HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
 		return response;
 	}
 
-	protected void setLocalFilePathWithProtocol(String localFilePathWithProtocol) {
-		this.localFilePathWithProtocol = localFilePathWithProtocol;
-	}
 }

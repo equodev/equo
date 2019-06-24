@@ -1,31 +1,43 @@
 package com.make.equo.renderers.contributions;
 
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
+import static com.make.equo.renderers.util.IRendererConstants.BASE_HTML_FILE;
+import static com.make.equo.renderers.util.IRendererConstants.DIALOG_RENDERER_NAME;
+import static com.make.equo.renderers.util.IRendererConstants.DIALOG_RENDERER_SCRIPT_FILE;
+import static com.make.equo.renderers.util.IRendererConstants.EQUO_RENDERERS_CONTRIBUTION_NAME;
+import static com.make.equo.renderers.util.IRendererConstants.PARTSTACK_RENDERER_NAME;
+import static com.make.equo.renderers.util.IRendererConstants.PARTSTACK_RENDERER_SCRIPT_FILE;
+import static com.make.equo.renderers.util.IRendererConstants.TOOLBAR_RENDERER_NAME;
+import static com.make.equo.renderers.util.IRendererConstants.TOOLBAR_RENDERER_SCRIPT_FILE;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-import com.google.common.collect.Lists;
-import com.make.equo.contribution.api.IEquoContribution;
+import com.make.equo.server.contribution.EquoContributionBuilder;
 
-@Component(name = "equoRenderersContribution", property = { "type=renderersContribution" })
-public class EquoRenderersContribution implements IEquoContribution {
-
-	public static final String TYPE = "renderersContribution";
-
-	@Override
-	public URL getJavascriptAPIResource(String name) {
-		return this.getClass().getClassLoader().getResource(name);
+@Component
+public class EquoRenderersContribution {
+	
+	private EquoContributionBuilder builder;
+	
+	@Activate
+	protected void activate() {
+		builder
+			.withBaseHtmlResource(BASE_HTML_FILE)
+			.withContributionName(EQUO_RENDERERS_CONTRIBUTION_NAME)
+			.withPathWithScript(DIALOG_RENDERER_NAME, DIALOG_RENDERER_SCRIPT_FILE)
+			.withPathWithScript(PARTSTACK_RENDERER_NAME, PARTSTACK_RENDERER_SCRIPT_FILE)
+			.withPathWithScript(TOOLBAR_RENDERER_NAME, TOOLBAR_RENDERER_SCRIPT_FILE)
+			.withURLResolver(new EquoRenderersURLResolver())
+			.build();
 	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-		return null;
+	
+	@Reference
+	void setEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = builder;
 	}
-
-	@Override
-	public List<String> getJavascriptFileNames() {
-		return Lists.newArrayList();
+	
+	void unsetEquoBuilder(EquoContributionBuilder builder) {
+		this.builder = null;
 	}
 }
