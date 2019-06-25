@@ -259,7 +259,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 			addCustomStyle(entry.getKey(), entry.getValue());
 		}
 	}
-	
+
 	private void handleResourceAdd(String url, String resourceUrl, String baseSentence, String localSentence,
 			Map<String, String> existingResourceMap) {
 		String generatedResourceSentence = generateSentence(resourceUrl, baseSentence, localSentence);
@@ -314,7 +314,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		String processedStyle = generateSentence(style, URL_CSS_SENTENCE, LOCAL_CSS_SENTENCE);
 		contributionStyles.add(processedStyle);
 	}
-	
+
 	@Override
 	public void addScriptToContribution(String script) {
 		String processedScript = generateSentence(script, URL_SCRIPT_SENTENCE, LOCAL_SCRIPT_SENTENCE);
@@ -325,7 +325,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void withBaseHtml(String baseHtmlPathWithPrefix) {
 		new EquoContribution(this, new EquoGenericURLResolver(equoApplication.getClass().getClassLoader()), null,
 				baseHtmlPathWithPrefix, "plainequoapp", Lists.newArrayList(), Lists.newArrayList(),
-				Lists.newArrayList(), Maps.newHashMap(), ((originalRequest) -> {
+				Lists.newArrayList(), Lists.newArrayList(), Maps.newHashMap(), Maps.newHashMap(), ((originalRequest) -> {
 					return originalRequest;
 				}));
 	}

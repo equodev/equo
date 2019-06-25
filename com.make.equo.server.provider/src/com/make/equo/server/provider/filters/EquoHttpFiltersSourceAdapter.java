@@ -47,8 +47,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
-			List<String> equoContributionStyles, Map<String, String> urlsToScriptsAsStrings, Map<String, String> urlsToStylesAsStrings, 
-			IEquoApplication equoApplication) {
+			List<String> equoContributionStyles, Map<String, String> urlsToScriptsAsStrings,
+			Map<String, String> urlsToStylesAsStrings, IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -83,8 +83,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					}
 
 					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
-							equoContributionsJsApis, equoContributionStyles, getCustomScripts(originalRequest.getUri()), getCustomStyles(originalRequest.getUri()),
-							contribution.getContributedResourceName());
+							equoContributionsJsApis, equoContributionStyles, getCustomScripts(originalRequest.getUri()),
+							getCustomStyles(originalRequest.getUri()), contribution.getContributedResourceName());
 				}
 			}
 		} catch (IllegalArgumentException e) {
@@ -102,15 +102,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new DefaultContributionRequestFiltersAdapter(originalRequest, new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()), Lists.newArrayList(), "",
-						limitedConnectionGenericPageFilePath);
+				return new DefaultContributionRequestFiltersAdapter(originalRequest,
+						new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()),
+						Lists.newArrayList(), Lists.newArrayList(), "", "", limitedConnectionGenericPageFilePath);
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
 				String appUrl = url.get();
-				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis, equoContributionStyles,
-						getCustomScripts(appUrl), getCustomStyles(appUrl), isOfflineCacheSupported, equoOfflineServer);
+				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis,
+						equoContributionStyles, getCustomScripts(appUrl), getCustomStyles(appUrl),
+						isOfflineCacheSupported, equoOfflineServer);
 			} else {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
