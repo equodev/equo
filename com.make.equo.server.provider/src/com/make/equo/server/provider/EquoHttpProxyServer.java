@@ -57,7 +57,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static final Map<String, String> urlsToStyles = new HashMap<String, String>();
 
 	private static boolean enableOfflineCache = false;
-	static String limitedConnectionAppBasedPagePath;
+	private static String limitedConnectionAppBasedPagePath;
 
 	private static volatile HttpProxyServer proxyServer;
 //	private ScheduledExecutorService internetConnectionChecker;

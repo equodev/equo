@@ -1,6 +1,7 @@
 package com.make.equo.server.provider.filters;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
 
-import com.google.common.collect.Lists;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
@@ -103,8 +103,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
 				return new DefaultContributionRequestFiltersAdapter(originalRequest,
+<<<<<<< Upstream, based on origin/master
 						new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()),
 						Lists.newArrayList(), Lists.newArrayList(), "", "", limitedConnectionGenericPageFilePath);
+=======
+						new EquoHttpProxyServerURLResolver(), new ArrayList<>(), new ArrayList<>(), "", "",
+						limitedConnectionGenericPageFilePath);
+>>>>>>> 105191c Removing guava dependency from server.provider
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
