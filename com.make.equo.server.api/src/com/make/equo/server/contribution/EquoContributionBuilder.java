@@ -162,8 +162,8 @@ public class EquoContributionBuilder {
 	 * @param style Name of the style file to be added.
 	 * @return this
 	 */
-	public EquoContributionBuilder withStyleFile(String stlye) {
-		this.contributedStyles.add(stlye);
+	public EquoContributionBuilder withStyleFile(String style) {
+		this.contributedStyles.add(style);
 		return this;
 	}
 
@@ -173,8 +173,8 @@ public class EquoContributionBuilder {
 	 * @param styles List of names of the style files to be added.
 	 * @return this
 	 */
-	public EquoContributionBuilder withStyleFiles(List<String> stlye) {
-		this.contributedStyles.addAll(stlye);
+	public EquoContributionBuilder withStyleFiles(List<String> style) {
+		this.contributedStyles.addAll(style);
 		return this;
 	}
 	
