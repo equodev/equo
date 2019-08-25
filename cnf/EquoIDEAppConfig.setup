@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Configuration
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0">
+  <installation
+      name="equo.ide.installation"
+      label="Equo IDE Installation">
+    <setupTask
+        xsi:type="setup.p2:P2Task"
+        label="BND">
+      <requirement
+          name="bndtools.main.feature.feature.group"/>
+      <repository
+          url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
+    </setupTask>
+    <productVersion
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='2019-06']"/>
+    <description>The Equo IDE installation provides a full development environment for working with Equo Apps</description>
+  </installation>
+  <workspace
+      name="equo.ide.workspace"
+      label="Equo IDE Workspace">
+    <description>The Equo IDE workspace contains the Equo Apps projects for you organization</description>
+  </workspace>
+</setup:Configuration>
