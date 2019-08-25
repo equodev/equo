@@ -37,7 +37,7 @@ task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCi, uploadMetadata]) {
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadMetadata]) {
 }
 
 task wrapper(type: Wrapper) {
