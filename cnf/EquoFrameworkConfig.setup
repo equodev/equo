@@ -20,7 +20,7 @@
       <requirement
           name="org.dadacoalition.yedit.feature.feature.group"/>
       <repository
-          url="https://dl.bintray.com/bndtools/bndtools/latest/"/>
+          url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
       <repository
           url="https://ecd-plugin.github.io/update"/>
       <repository
@@ -29,7 +29,7 @@
           url="http://dadacoalition.org/yedit"/>
     </setupTask>
     <productVersion
-        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='2019-06']"/>
     <description>Equo IDE installation</description>
   </installation>
   <workspace

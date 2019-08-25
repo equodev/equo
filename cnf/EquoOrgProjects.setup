@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:ProjectCatalog
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    name="equo.org._owner.projects"
+    label="Equo _Owner Projects">
+  <annotation
+      source="http://www.eclipse.org/oomph/setup/BrandingInfo">
+    <detail
+        key="imageURI">
+      <value>https://www.dev.equoplatform.com/assets/img/blue_logo_navbar.png</value>
+    </detail>
+    <detail
+        key="siteURI">
+      <value>https://www.dev.controlplane.equoplatform.com/</value>
+    </detail>
+  </annotation>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      name="Global Variables"/>
+  <setupTask
+      xsi:type="setup:WorkspaceTask"
+      id="workspace"/>
+  <setupTask
+      xsi:type="setup:ResourceCreationTask"
+      content="MAX_RECENT_WORKSPACES=5&#xD;&#xA;RECENT_WORKSPACES=${workspace.location|property}&#xD;&#xA;RECENT_WORKSPACES_PROTOCOL=3&#xD;&#xA;SHOW_WORKSPACE_SELECTION_DIALOG=true&#xD;&#xA;eclipse.preferences.version=1"
+      targetURL="configuration:/.settings/org.eclipse.ui.ide.prefs"/>
+  <setupTask
+      xsi:type="setup:TextModifyTask"
+      url="configuration:/config.ini">
+    <modification
+        pattern="osgi\.instance\.area\.default=(@user\.home/workspace)">
+      <substitution>${workspace.location|path}</substitution>
+    </modification>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:EclipseIniTask"
+      option="-Doomph.redirection._OwnerCatalog="
+      value="index:/redirectable.projects.setup->file://${user.home/.equo/Equo_OwnerProjects.setup}"
+      vm="true">
+    <description></description>
+  </setupTask>
+  <project href="user:/Equo_OwnerProjects.setup?name='equo._owner.project',label='&lt;Equo _Owner>',description='Equo projects from _Owner'#/"/>
+  <project href="EquoOwnerApp.setup#/"/>
+  <description>Equo projects from _Owner. Select the Equo app project to setup locally, click Next and then select the folder to install the IDE. </description>
+</setup:ProjectCatalog>
