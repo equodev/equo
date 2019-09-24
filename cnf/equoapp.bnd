@@ -13,6 +13,7 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 -runvm: ${vmargs}
 -runrequires.equo: \
+    osgi.identity;filter:='(&(osgi.identity=org.eclipse.equinox.weaving.hook)(version>=1.2.200))',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
     osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
@@ -105,12 +106,14 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
 -runbundles.platform: \
     ${fragment.and.cocoa}
     
--runpath: \
-    org.eclipse.equinox.weaving.hook
+-runpath.equo: \
+    org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)'
+    
 -runbundles.equo: \
+    org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)',\
     bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
-    org.eclipse.equinox.weaving.aspectj,\
-    org.eclipse.equinox.weaving.caching,\
+    org.eclipse.equinox.weaving.aspectj;version='[1.0.400,1.0.401)',\
+    org.eclipse.equinox.weaving.caching;version='[1.1.200,1.1.201)',\
     com.make.equo.aspects;version='[0.1.0,0.2.0)',\
     org.aspectj.weaver;version='[1.9.2,1.9.3)',\
     org.aspectj.runtime;version='[1.9.2,1.9.3)',\
