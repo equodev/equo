@@ -38,7 +38,6 @@ public class SinglePagePart {
 		if (equoAppUrl != null) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(GridLayoutFactory.fillDefaults().create());
-			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 			browser = new Chromium(composite, SWT.NONE);
 			browser.setUrl(equoAppUrl);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
