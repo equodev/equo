@@ -60,11 +60,19 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 		JsonObject json = new JsonObject();
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-		status.getException().getCause().printStackTrace(pw);
+		
+		Throwable t = status.getException().getCause();
+		
+		if (t == null) {
+			t = status.getException();
+		}
+		
+		t.printStackTrace(pw);
+		
 		String stackTrace = sw.toString();
 		stackTrace = stackTrace.replace("\n", "\\n");
 		
-		String message = status.getException().getCause().getMessage();
+		String message = t.getMessage();
 		if (message == null) {
 			message = status.getMessage();
 		}
