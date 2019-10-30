@@ -4,7 +4,7 @@ import java.net.URL;
 
 import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
 
-public class CrashReporterURLResolver implements IEquoContributionUrlResolver {
+public class LoggingURLResolver implements IEquoContributionUrlResolver {
 
 	@Override
 	public URL resolve(String pathToResolve) {
