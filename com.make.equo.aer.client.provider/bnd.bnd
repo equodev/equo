@@ -1,0 +1,11 @@
+Bundle-Version: ${version}.${tstamp}
+Export-Package: com.make.equo.aer.client.provider
+-includeresource: resources/
+-buildpath: \
+    com.google.gson,\
+    com.make.equo.aer.client.api;version=latest,\
+    com.make.equo.aer.provider;version=latest,\
+    com.make.equo.aer.api;version=latest,\
+    com.make.equo.ws.api;version=latest,\
+    com.make.equo.server.api;version=latest,\
+    osgi.cmpn
