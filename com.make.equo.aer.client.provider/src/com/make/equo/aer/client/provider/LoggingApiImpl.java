@@ -15,18 +15,16 @@ import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 @Component
 public class LoggingApiImpl implements ILoggingApi {
 
-	private static final String LOGGING_INFO_EVENT_KEY = "loggingInfoEvent";
-	private static final String LOGGING_WARNING_EVENT_KEY = "loggingWarningEvent";
-	private static final String LOGGING_ERROR_EVENT_KEY = "loggingErrorEvent";
+	private static final String LOGGING_EVENT_KEY = "loggingEvent";
+
+
 	private IEquoLoggingService equoLoggingService;
 	private IEquoEventHandler equoEventHandler;
 
 	@Activate
 	public void start() {
 		System.out.println("Initializing Logging Client provider...");
-		equoEventHandler.on(LOGGING_INFO_EVENT_KEY, new LoggingInfoEventPayloadRunnable());
-		equoEventHandler.on(LOGGING_ERROR_EVENT_KEY, new LoggingErrorEventPayloadRunnable());
-		equoEventHandler.on(LOGGING_WARNING_EVENT_KEY, new LoggingWarningEventPayloadRunnable());
+		equoEventHandler.on(LOGGING_EVENT_KEY, new LoggingEventPayloadRunnable());
 	}
 
 	@Override
@@ -56,67 +54,42 @@ public class LoggingApiImpl implements ILoggingApi {
 		this.equoLoggingService = equoLoggingService;
 	}
 
-	private class LoggingInfoEventPayloadRunnable implements JsonPayloadEquoRunnable {
+	private class LoggingEventPayloadRunnable implements JsonPayloadEquoRunnable {
 
 		private static final long serialVersionUID = 1L;
 		private static final String SEGMENTATION_KEY = "tags";
 		private static final String MESSAGE_LOG = "message";
+		private static final String TYPE_LOG = "type";
+		private static final String TYPE_INFO = "info";
+		private static final String TYPE_WARNING = "warning";
+		private static final String TYPE_ERROR = "error";
 
 		@Override
 		public void run(JsonObject payload) {
 			System.out.println("Log Info Event json payload is " + payload);
 			JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
+			JsonElement typeJsonElement = payload.get(TYPE_LOG);
 
-			if (messageJsonElement == null) {
+			if ((typeJsonElement == null) || (messageJsonElement == null)) {
 				throw new RuntimeException(
-						"A \"message\" member which identified the event name must be defined in the Logging object.");
+						"A \"type\" nor \"message\" member which identified the event name must be defined in the Logging object.");
 			}
+			String type = typeJsonElement.getAsString();
 			String message = messageJsonElement.getAsString();
 			JsonObject segmentationJsonObject = payload.getAsJsonObject(SEGMENTATION_KEY);
-			logInfo(message, segmentationJsonObject);
+			switch(type) {
+			case TYPE_INFO:
+				logInfo(message,segmentationJsonObject);
+				break;
+			case TYPE_WARNING:
+				logWarning(message,segmentationJsonObject);
+				break;
+			case TYPE_ERROR:
+				logError(message,segmentationJsonObject);
+				break;
+			}
 		}
 	}
 
-	private class LoggingWarningEventPayloadRunnable implements JsonPayloadEquoRunnable {
-
-		private static final long serialVersionUID = 1L;
-		private static final String SEGMENTATION_KEY = "tags";
-		private static final String MESSAGE_LOG = "message";
-
-		@Override
-		public void run(JsonObject payload) {
-			System.out.println("Log Warning Event json payload is " + payload);
-			JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
-
-			if (messageJsonElement == null) {
-				throw new RuntimeException(
-						"A  \"message\" member which identified the event name must be defined in the Logging object.");
-			}
-			String message = messageJsonElement.getAsString();
-			JsonObject segmentationJsonObject = payload.getAsJsonObject(SEGMENTATION_KEY);
-			logWarning(message, segmentationJsonObject);
-		}
-	}
-
-	private class LoggingErrorEventPayloadRunnable implements JsonPayloadEquoRunnable {
-
-		private static final long serialVersionUID = 1L;
-		private static final String SEGMENTATION_KEY = "tags";
-		private static final String MESSAGE_LOG = "message";
-
-		@Override
-		public void run(JsonObject payload) {
-			System.out.println("Log Error Event json payload is " + payload);
-			JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
-
-			if (messageJsonElement == null) {
-				throw new RuntimeException(
-						"A \"message\" member which identified the event name must be defined in the Logging object.");
-			}
-			String message = messageJsonElement.getAsString();
-			JsonObject segmentationJsonObject = payload.getAsJsonObject(SEGMENTATION_KEY);
-			logError(message, segmentationJsonObject);
-		}
-	}
 
 }

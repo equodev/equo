@@ -3,15 +3,18 @@ window.equo = window.equo || {};
 (function (equo) {
 
   equo.logInfo = function(payload) {
-    equo.sendToWebSocketServer('loggingInfoEvent', payload);
+  	payload.type = 'info';
+    equo.sendToWebSocketServer('loggingEvent', payload);
   };
 
     equo.logError = function(payload) {
-    equo.sendToWebSocketServer('loggingErrorEvent', payload);
+    payload.type = 'error';
+    equo.sendToWebSocketServer('loggingEvent', payload);
   };
 
     equo.logWarning = function(payload) {
-    equo.sendToWebSocketServer('loggingWarningEvent', payload);
+    payload.type = 'warning';
+    equo.sendToWebSocketServer('loggingEvent', payload);
   };
 
 }(equo));
