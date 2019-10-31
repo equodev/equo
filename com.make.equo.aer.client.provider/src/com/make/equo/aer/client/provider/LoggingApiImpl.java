@@ -23,7 +23,6 @@ public class LoggingApiImpl implements ILoggingApi {
 
 	@Activate
 	public void start() {
-		System.out.println("Initializing Logging Client provider...");
 		equoEventHandler.on(LOGGING_EVENT_KEY, new LoggingEventPayloadRunnable());
 	}
 
@@ -66,7 +65,6 @@ public class LoggingApiImpl implements ILoggingApi {
 
 		@Override
 		public void run(JsonObject payload) {
-			System.out.println("Log Info Event json payload is " + payload);
 			JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
 			JsonElement typeJsonElement = payload.get(TYPE_LOG);
 

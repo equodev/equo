@@ -10,10 +10,10 @@ import com.make.equo.server.contribution.EquoContributionBuilder;
 public class LoggingApiContribution {
 
 	private static final String LOGGING_CONTRIBUTION_NAME = "equologging";
-	private static final String LOGGING_JS_API = "loggingApi.js"; // y esto? necesito un script, pero cual?
+	private static final String LOGGING_JS_API = "loggingApi.js"; 
 	
 	@SuppressWarnings("unused")
-	private ILoggingApi crashReporterApi;
+	private ILoggingApi loggingApi;
 
 	private EquoContributionBuilder builder;
 	

@@ -7,12 +7,12 @@ window.equo = window.equo || {};
     equo.sendToWebSocketServer('loggingEvent', payload);
   };
 
-    equo.logError = function(payload) {
+  equo.logError = function(payload) {
     payload.type = 'error';
     equo.sendToWebSocketServer('loggingEvent', payload);
   };
 
-    equo.logWarning = function(payload) {
+  equo.logWarn = function(payload) {
     payload.type = 'warning';
     equo.sendToWebSocketServer('loggingEvent', payload);
   };
