@@ -10,16 +10,21 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.BundleTracker;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.configservice.EquoContributionConfigService;
 
 @Component
 public class EquoConfigParser {
 	
 	private static final String CONFIG_FILE_NAME = "equoConfig.json";
+	
+	private EquoContributionConfigService contributionConfigService;
 	
 	private BundleTracker<URL> tracker;
 	
@@ -61,7 +66,15 @@ public class EquoConfigParser {
 		if (jsonReader != null) {
 			jsonDefinition = jsonParser.parse(jsonReader);
 		}
-		
+		contributionConfigService.defineContributions(jsonDefinition.getAsJsonObject(),bundle);
 	}
 
+	@Reference
+	public void setContributionConfigService(EquoContributionConfigService contributionConfigService) {
+		this.contributionConfigService = contributionConfigService;
+	}
+
+	public void unsetContributionConfigService(EquoContributionConfigService contributionConfigService) {
+		this.contributionConfigService = null;
+	}
 }

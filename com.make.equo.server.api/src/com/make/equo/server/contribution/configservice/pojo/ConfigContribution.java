@@ -42,5 +42,10 @@ public class ConfigContribution {
 		this.pathsWithScripts = pathsWithScripts;
 	}
 
+	public boolean isEmpty() {
+		return ((this.getContributionName() == null) && (this.getContributionHtmlName() == null)
+				&& (this.getProxiedUris() == null) && (this.getContributedScripts() == null)
+				&& (this.getPathsWithScripts() == null));
+	}
 	
 }
