@@ -31,6 +31,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aer.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aer.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.aer.client.api)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.aer.client.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aer.internal.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.ui.helper.provider)',\
@@ -138,6 +140,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.analytics.internal.provider;version='[0.1.0,0.2.0)',\
     com.make.equo.aer.api;version='[0.1.0,0.2.0)',\
     com.make.equo.aer.provider;version='[0.1.0,0.2.0)',\
+    com.make.equo.aer.client.api;version='[0.1.0,0.2.0)',\
+    com.make.equo.aer.client.provider;version='[0.1.0,0.2.0)',\
     com.make.equo.aer.internal.api;version='[0.1.0,0.2.0)',\
     com.make.equo.aer.internal.provider;version='[0.1.0,0.2.0)',\
     com.make.equo.contribution.media.provider;version='[0.1.0,0.2.0)',\
