@@ -22,6 +22,14 @@ public class EquoContributionConfigService {
 
 	EquoContributionBuilder builder;
 	
+	
+	/* Constructor necesario para poder testear unitariamente la clase sin necesidad de Usar inyeccion de
+		Dependencias de OSGi
+	*/
+	public EquoContributionConfigService() {
+		this.builder = new EquoContributionBuilder();
+	}
+	
 	public List<EquoContribution> defineContributions(JsonObject configJson, Bundle bundle){
 		
 
@@ -36,6 +44,9 @@ public class EquoContributionConfigService {
 	
 
 	public EquoContribution parseContributionJsonConfig(ConfigContribution config, Bundle bundle) {
+		
+		//este new es util para poder resetear el builder de manera manual. es solo para testeo.
+		builder = new EquoContributionBuilder();
 		
 		String contributionName = config.getContributionName();
 		String contributionHtmlName = config.getContributionHtmlName();
