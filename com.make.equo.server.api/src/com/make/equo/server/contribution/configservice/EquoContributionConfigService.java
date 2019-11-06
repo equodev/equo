@@ -47,7 +47,7 @@ public class EquoContributionConfigService {
 		
 		//este new es util para poder resetear el builder de manera manual. es solo para testeo.
 		builder = new EquoContributionBuilder();
-		
+
 		String contributionName = config.getContributionName();
 		String contributionHtmlName = config.getContributionHtmlName();
 		List<String> proxiedUris = config.getProxiedUris();
