@@ -16,7 +16,6 @@ import org.osgi.util.tracker.BundleTracker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.contribution.configservice.EquoContributionConfigService;
 
 @Component

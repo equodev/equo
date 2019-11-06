@@ -6,58 +6,43 @@ import java.util.Map;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.contribution.configservice.pojo.ConfigContribution;
 import com.make.equo.server.contribution.configservice.pojo.ContributionSet;
 
-
 @Component
 public class EquoContributionConfigService {
 
-	EquoContributionBuilder builder;
-	
-	
-	/* Constructor necesario para poder testear unitariamente la clase sin necesidad de Usar inyeccion de
-		Dependencias de OSGi
-	*/
-	public EquoContributionConfigService() {
-		this.builder = new EquoContributionBuilder();
-	}
-	
-	public List<EquoContribution> defineContributions(JsonObject configJson, Bundle bundle){
-		
+	public List<EquoContribution> defineContributions(JsonObject configJson, Bundle bundle) {
 
 		ArrayList<EquoContribution> contributions = new ArrayList<EquoContribution>();
 		Gson parser = new Gson();
 		ContributionSet configSet = parser.fromJson(configJson, ContributionSet.class);
-		for(ConfigContribution configCont : configSet.getContributions()) {
-			contributions.add(parseContributionJsonConfig(configCont,bundle));
+		for (ConfigContribution configCont : configSet.getContributions()) {
+			contributions.add(parseContributionJsonConfig(configCont, bundle));
 		}
 		return contributions;
 	}
-	
 
 	public EquoContribution parseContributionJsonConfig(ConfigContribution config, Bundle bundle) {
-		
-		//este new es util para poder resetear el builder de manera manual. es solo para testeo.
-		builder = new EquoContributionBuilder();
+
+		EquoContributionBuilder builder = new EquoContributionBuilder();
 
 		String contributionName = config.getContributionName();
 		String contributionHtmlName = config.getContributionHtmlName();
 		List<String> proxiedUris = config.getProxiedUris();
 		List<String> scripts = config.getContributedScripts();
 		Map<String, String> pathsWithScripts = config.getPathsWithScripts();
-		
-		if(config.isEmpty()) {
-			throw new RuntimeException("A Contribution Config request must be at least one field in the Json config declared.");
+
+		if (config.isEmpty()) {
+			throw new RuntimeException(
+					"A Contribution Config request must be at least one field in the Json config declared.");
 		}
-		
+
 		if (contributionName != null) {
 			builder.withContributionName(contributionName);
 		}
@@ -77,18 +62,7 @@ public class EquoContributionConfigService {
 				builder.withPathWithScript(path, pathsWithScripts.get(path));
 			}
 		}
-		return builder.
-				withURLResolver(new CustomContributionURLResolver(bundle))
-				.build();
-	}
-
-	@Reference
-	void setEquoBuilder(EquoContributionBuilder builder) {
-		this.builder = builder;
-	}
-
-	void unsetEquoBuilder(EquoContributionBuilder builder) {
-		this.builder = null;
+		return builder.withURLResolver(new CustomContributionURLResolver(bundle)).build();
 	}
 
 }
