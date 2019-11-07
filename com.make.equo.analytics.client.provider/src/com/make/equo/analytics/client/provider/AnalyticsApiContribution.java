@@ -6,6 +6,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component
 public class AnalyticsApiContribution {
@@ -23,7 +24,7 @@ public class AnalyticsApiContribution {
 		builder
 			.withContributionName(ANALYTICS_CONTRIBUTION_NAME)
 			.withScriptFile(ANALYTICS_JS_API)
-			.withURLResolver(new AnalyticsURLResolver())
+			.withURLResolver(new EquoGenericURLResolver(AnalyticsApiContribution.class.getClassLoader()))
 			.build();
 	}
 

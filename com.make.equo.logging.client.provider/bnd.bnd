@@ -3,6 +3,8 @@ Export-Package: com.make.equo.aer.client.provider
 -includeresource: resources/
 -buildpath: \
     com.google.gson,\
+    org.eclipse.osgi,\
+    org.eclipse.osgi.source,\
     com.make.equo.aer.client.api;version=latest,\
     com.make.equo.aer.provider;version=latest,\
     com.make.equo.aer.api;version=latest,\

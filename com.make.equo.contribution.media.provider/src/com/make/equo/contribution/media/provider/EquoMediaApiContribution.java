@@ -5,6 +5,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component
 public class EquoMediaApiContribution {
@@ -19,7 +20,7 @@ public class EquoMediaApiContribution {
 		builder
 			.withContributionName(MEDIA_CONTRIBUTION_NAME)
 			.withScriptFile(MEDIA_JS_API)
-			.withURLResolver(new MediaContributionURLResolver())
+			.withURLResolver(new EquoGenericURLResolver(EquoMediaApiContribution.class.getClassLoader()))
 			.build();
 	}
 

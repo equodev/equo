@@ -26,18 +26,28 @@ $(document).ready(function () {
 	
 	testSection.append(testDiv);
 	
+
 	testDiv.click(function () {
 
+		equo.logInfo("this is a info log.");
+
+		equo.logWarn("this is a warning log.");
+
+		equo.logError("this is a error log.");
+
 		equo.logInfo({
-			message: "this is a info log."
+			message: "this is a info log.",
+			segmentation : {}
 		});
 
 		equo.logWarn({
-			message: "this is a warning log."
+			message: "this is a warning log.",
+			segmentation : {}
 		});
 
 		equo.logError({
-			message: "this is a error log."
+			message: "this is a error log.",
+			segmentation : {}
 		});
 	});
 	

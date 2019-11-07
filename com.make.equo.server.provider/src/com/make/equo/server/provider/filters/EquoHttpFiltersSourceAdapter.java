@@ -13,13 +13,12 @@ import org.littleshoot.proxy.impl.ProxyUtils;
 import com.google.common.collect.Lists;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.contribution.EquoContribution;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
 import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
 import com.make.equo.server.provider.EquoHttpProxyServer;
-import com.make.equo.server.provider.EquoHttpProxyServerURLResolver;
 import com.make.equo.server.provider.resolvers.BundleUrlResolver;
-import com.make.equo.server.provider.resolvers.EquoContributionUrlResolver;
 import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -98,7 +97,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new DefaultContributionRequestFiltersAdapter(originalRequest, new EquoHttpProxyServerURLResolver(), Lists.newArrayList(), "",
+				return new DefaultContributionRequestFiltersAdapter(originalRequest, new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()), Lists.newArrayList(), "",
 						limitedConnectionGenericPageFilePath);
 			}
 		} else {
