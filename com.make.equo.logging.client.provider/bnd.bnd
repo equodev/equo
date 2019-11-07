@@ -5,7 +5,7 @@ Export-Package: com.make.equo.aer.client.provider
     com.google.gson,\
     org.eclipse.osgi,\
     org.eclipse.osgi.source,\
-    com.make.equo.aer.client.api;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
     com.make.equo.aer.provider;version=latest,\
     com.make.equo.aer.api;version=latest,\
     com.make.equo.ws.api;version=latest,\
