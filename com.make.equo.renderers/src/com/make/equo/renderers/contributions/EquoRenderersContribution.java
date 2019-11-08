@@ -14,6 +14,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component
 public class EquoRenderersContribution {
@@ -28,7 +29,7 @@ public class EquoRenderersContribution {
 			.withPathWithScript(DIALOG_RENDERER_NAME, DIALOG_RENDERER_SCRIPT_FILE)
 			.withPathWithScript(PARTSTACK_RENDERER_NAME, PARTSTACK_RENDERER_SCRIPT_FILE)
 			.withPathWithScript(TOOLBAR_RENDERER_NAME, TOOLBAR_RENDERER_SCRIPT_FILE)
-			.withURLResolver(new EquoRenderersURLResolver())
+			.withURLResolver(new EquoGenericURLResolver(EquoRenderersContribution.class.getClassLoader()))
 			.build();
 	}
 	

@@ -15,10 +15,12 @@ public class TestApp implements IEquoApplication {
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
+			
 			 return appBuilder
 			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
 			        .withCustomScript("js/testAnalytics.js")
+			        .withCustomScript("js/testLogging.js")
 			        .withMainMenu("File")
 			         	.addMenuItem("New")
 			         	.onClick(new Runnable() {

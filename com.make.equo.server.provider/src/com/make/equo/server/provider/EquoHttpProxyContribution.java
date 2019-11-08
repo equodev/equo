@@ -5,6 +5,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component
 public class EquoHttpProxyContribution {
@@ -20,20 +21,15 @@ public class EquoHttpProxyContribution {
 	protected void activate() {
 		String value = System.getProperty("change_original_html");
 		if (value == null || (value != null && Boolean.parseBoolean(value))) {
-			builder
-				.withContributionName(PROXY_CONTRIBUTION_NAME)
-				.withScriptFile(EQUO_FRAMEWORK_JS_API)
-				.withScriptFile(JQUERY_JS_API)
-				.withScriptFile(DOM_MODIFIER_JS_API)
-				.withURLResolver(new EquoHttpProxyServerURLResolver())
-				.build();
+			builder.withContributionName(PROXY_CONTRIBUTION_NAME).withScriptFile(EQUO_FRAMEWORK_JS_API)
+					.withScriptFile(JQUERY_JS_API).withScriptFile(DOM_MODIFIER_JS_API)
+					.withURLResolver(new EquoGenericURLResolver(EquoHttpProxyContribution.class.getClassLoader()))
+					.build();
 		} else {
-			builder
-				.withContributionName(PROXY_CONTRIBUTION_NAME)
-				.withScriptFile(EQUO_FRAMEWORK_JS_API)
-				.withScriptFile(JQUERY_JS_API)
-				.withURLResolver(new EquoHttpProxyServerURLResolver())
-				.build();
+			builder.withContributionName(PROXY_CONTRIBUTION_NAME).withScriptFile(EQUO_FRAMEWORK_JS_API)
+					.withScriptFile(JQUERY_JS_API)
+					.withURLResolver(new EquoGenericURLResolver(EquoHttpProxyContribution.class.getClassLoader()))
+					.build();
 		}
 	}
 
