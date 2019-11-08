@@ -44,12 +44,12 @@ public class LoggingApiImpl implements ILoggingApi {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	void setLoggingService(IEquoEventHandler equoEventHandler) {
+	void setEquoEventHandler(IEquoEventHandler equoEventHandler) {
 		this.equoEventHandler = equoEventHandler;
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	void setEquoEventHandler(IEquoLoggingService equoLoggingService) {
+	void setLoggingService(IEquoLoggingService equoLoggingService) {
 		this.equoLoggingService = equoLoggingService;
 	}
 
