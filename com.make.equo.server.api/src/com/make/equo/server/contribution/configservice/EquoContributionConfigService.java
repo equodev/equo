@@ -6,16 +6,20 @@ import java.util.Map;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.contribution.configservice.pojo.ConfigContribution;
 import com.make.equo.server.contribution.configservice.pojo.ContributionSet;
 
 @Component
-public class EquoContributionConfigService {
+public class EquoContributionConfigService implements IContributionConfigService {
+
+	private IEquoServer server;
 
 	public List<EquoContribution> defineContributions(JsonObject configJson, Bundle bundle) {
 
@@ -30,6 +34,11 @@ public class EquoContributionConfigService {
 
 	public EquoContribution parseContributionJsonConfig(ConfigContribution config, Bundle bundle) {
 
+		if (config.isEmpty()) {
+			throw new RuntimeException(
+					"A Contribution Config request must be at least one field in the Json config declared.");
+		}
+
 		EquoContributionBuilder builder = new EquoContributionBuilder();
 
 		String contributionName = config.getContributionName();
@@ -37,11 +46,6 @@ public class EquoContributionConfigService {
 		List<String> proxiedUris = config.getProxiedUris();
 		List<String> scripts = config.getContributedScripts();
 		Map<String, String> pathsWithScripts = config.getPathsWithScripts();
-
-		if (config.isEmpty()) {
-			throw new RuntimeException(
-					"A Contribution Config request must be at least one field in the Json config declared.");
-		}
 
 		if (contributionName != null) {
 			builder.withContributionName(contributionName);
@@ -62,7 +66,16 @@ public class EquoContributionConfigService {
 				builder.withPathWithScript(path, pathsWithScripts.get(path));
 			}
 		}
-		return builder.withURLResolver(new CustomContributionURLResolver(bundle)).build();
+		return builder.withServer(server).withURLResolver(new CustomContributionURLResolver(bundle)).build();
+	}
+
+	@Reference
+	public void setServer(IEquoServer server) {
+		this.server = server;
+	}
+
+	public void unsetServer(IEquoServer server) {
+		this.server = null;
 	}
 
 }

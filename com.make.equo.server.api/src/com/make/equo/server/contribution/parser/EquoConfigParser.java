@@ -11,48 +11,56 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.util.tracker.BundleTracker;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.make.equo.server.contribution.configservice.EquoContributionConfigService;
+import com.make.equo.server.contribution.configservice.IContributionConfigService;
 
 @Component
 public class EquoConfigParser {
-	
+
 	private static final String CONFIG_FILE_NAME = "equoConfig.json";
-	
-	private EquoContributionConfigService contributionConfigService;
-	
+
+	private IContributionConfigService equoContributionConfigService;
+
 	private BundleTracker<URL> tracker;
-	
+
+	boolean fileParsed = false;
+
 	@Activate
 	void activate(BundleContext context) {
+
 		tracker = new BundleTracker<URL>(context, Bundle.STARTING, null) {
-			
+
 			@Override
 			public URL addingBundle(Bundle bundle, BundleEvent event) {
-				URL configFile = bundle.getResource(CONFIG_FILE_NAME);
-				if (configFile != null) {
-					Runnable runnable = () -> {
-						parse(configFile, bundle);
-					};
-					Thread thread = new Thread(runnable, "Parsing");
-					thread.start();
+				if (!fileParsed) {
+					URL configFile = bundle.getResource(CONFIG_FILE_NAME);
+					if (configFile != null) {
+						Runnable runnable = () -> {
+							parse(configFile, bundle);
+						};
+						fileParsed = true;
+						Thread thread = new Thread(runnable, "Parsing");
+						thread.start();
+					}
+					return configFile;
 				}
- 				return configFile;
+				return null;
 			}
-			
+
 		};
 		tracker.open();
 	}
-	
+
 	@Deactivate
 	void deactivate() {
 		tracker.close();
 	}
-	
+
 	private void parse(URL configFile, Bundle bundle) {
 		JsonReader jsonReader = null;
 		try {
@@ -65,15 +73,16 @@ public class EquoConfigParser {
 		if (jsonReader != null) {
 			jsonDefinition = jsonParser.parse(jsonReader);
 		}
-		contributionConfigService.defineContributions(jsonDefinition.getAsJsonObject(),bundle);
+		equoContributionConfigService.defineContributions(jsonDefinition.getAsJsonObject(), bundle);
 	}
 
-	@Reference
-	public void setContributionConfigService(EquoContributionConfigService contributionConfigService) {
-		this.contributionConfigService = contributionConfigService;
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	public void setEquoContributionConfigService(IContributionConfigService equoContributionConfigService) {
+		this.equoContributionConfigService = equoContributionConfigService;
 	}
 
-	public void unsetContributionConfigService(EquoContributionConfigService contributionConfigService) {
-		this.contributionConfigService = null;
+	public void unsetEquoContributionConfigService(IContributionConfigService equoContributionConfigService) {
+		this.equoContributionConfigService = null;
 	}
+
 }

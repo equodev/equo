@@ -71,6 +71,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
+    osgi.console= ,\
     rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
 -runproperties.app: \
     app_name=${def;appName},\
@@ -215,7 +216,12 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     com.squareup.moshi;version='[1.4.0,1.4.1)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
-    org.influxdb.java;version='[2.9.0,2.9.1)'
+    org.influxdb.java;version='[2.9.0,2.9.1)',\
+    org.eclipse.equinox.console,\
+    org.apache.felix.gogo.command,\
+    org.apache.felix.gogo.runtime,\
+    org.apache.felix.gogo.shell,\
+    org.junit
 
 app.bundle: ${basename;${dir;${p_sourcepath}}}
 -runrequires: \
