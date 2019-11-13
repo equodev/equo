@@ -3,6 +3,8 @@ package com.make.equo.server.contribution.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -28,28 +30,26 @@ public class EquoConfigParser {
 
 	private BundleTracker<URL> tracker;
 
-	boolean fileParsed = false;
+	List<URL> filesRead;
 
 	@Activate
 	void activate(BundleContext context) {
+		filesRead = new ArrayList<URL>();
 
 		tracker = new BundleTracker<URL>(context, Bundle.STARTING, null) {
 
 			@Override
 			public URL addingBundle(Bundle bundle, BundleEvent event) {
-				if (!fileParsed) {
-					URL configFile = bundle.getResource(CONFIG_FILE_NAME);
-					if (configFile != null) {
-						Runnable runnable = () -> {
-							parse(configFile, bundle);
-						};
-						fileParsed = true;
-						Thread thread = new Thread(runnable, "Parsing");
-						thread.start();
-					}
-					return configFile;
+				URL configFile = bundle.getResource(CONFIG_FILE_NAME);
+				if ((configFile != null) && (!filesRead.contains(configFile))) {
+					Runnable runnable = () -> {
+						parse(configFile, bundle);
+					};
+					filesRead.add(configFile);
+					Thread thread = new Thread(runnable, "Parsing");
+					thread.start();
 				}
-				return null;
+				return configFile;
 			}
 
 		};
@@ -61,7 +61,7 @@ public class EquoConfigParser {
 		tracker.close();
 	}
 
-	private void parse(URL configFile, Bundle bundle) {
+	public void parse(URL configFile, Bundle bundle) {
 		JsonReader jsonReader = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(configFile.openStream()));

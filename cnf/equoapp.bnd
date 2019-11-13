@@ -221,7 +221,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     org.apache.felix.gogo.command,\
     org.apache.felix.gogo.runtime,\
     org.apache.felix.gogo.shell,\
-    org.junit
 
 app.bundle: ${basename;${dir;${p_sourcepath}}}
 -runrequires: \
