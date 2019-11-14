@@ -1,5 +1,4 @@
 -buildpath: \
-    ${junit},\
     com.make.equo.application.provider;version=latest,\
     io.netty.all;version=latest,\
     com.make.equo.server.offline.api;version=latest
@@ -222,7 +221,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     com.squareup.moshi;version='[1.4.0,1.4.1)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
-    org.influxdb.java;version='[2.9.0,2.9.1)',\
+    org.influxdb.java;version='[2.9.0,2.9.1)'
     
 #-runbundles.debug: \    
 #    org.eclipse.equinox.console,\
