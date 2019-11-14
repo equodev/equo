@@ -1,4 +1,5 @@
 -buildpath: \
+    ${junit},\
     com.make.equo.application.provider;version=latest,\
     io.netty.all;version=latest,\
     com.make.equo.server.offline.api;version=latest
@@ -53,6 +54,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.cef.linux.*)',\
     osgi.identity;filter:='(osgi.identity=com.make.cef.osx.*)'
 
+
+
 -runproperties.equo: \
     equinox.use.ds=true,\
     ds.delayed.keepInstances=true,\
@@ -71,7 +74,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
-    osgi.console= ,\
     rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
 -runproperties.app: \
     app_name=${def;appName},\
@@ -94,6 +96,9 @@ cef.fragment: com.make.cef.${cefos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}}
 
 
+#-runproperties.debug: \
+#    osgi.console= 
+
 #-augment.cef: \
 #    com.make.cef; \
 #        requirement:= "osgi.native;filter:='(&(osgi.native=com.make.cef)(osgi.native.osname=${os}))'"
@@ -113,6 +118,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)'
     
 -runbundles.equo: \
+    org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)',\
     org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)',\
     bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
     org.eclipse.equinox.weaving.aspectj;version='[1.0.400,1.0.401)',\
@@ -217,10 +223,12 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.squareup.moshi;version='[1.4.0,1.4.1)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
     org.influxdb.java;version='[2.9.0,2.9.1)',\
-    org.eclipse.equinox.console,\
-    org.apache.felix.gogo.command,\
-    org.apache.felix.gogo.runtime,\
-    org.apache.felix.gogo.shell,\
+    
+#-runbundles.debug: \    
+#    org.eclipse.equinox.console,\
+#    org.apache.felix.gogo.command,\
+#    org.apache.felix.gogo.runtime,\
+#    org.apache.felix.gogo.shell,\
 
 app.bundle: ${basename;${dir;${p_sourcepath}}}
 -runrequires: \

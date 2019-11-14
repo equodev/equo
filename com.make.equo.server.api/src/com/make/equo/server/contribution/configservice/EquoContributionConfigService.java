@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -15,6 +16,7 @@ import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.contribution.configservice.pojo.ConfigContribution;
 import com.make.equo.server.contribution.configservice.pojo.ContributionSet;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component
 public class EquoContributionConfigService implements IContributionConfigService {
@@ -66,7 +68,7 @@ public class EquoContributionConfigService implements IContributionConfigService
 				builder.withPathWithScript(path, pathsWithScripts.get(path));
 			}
 		}
-		return builder.withServer(server).withURLResolver(new CustomContributionURLResolver(bundle)).build();
+		return builder.withServer(server).withURLResolver(new EquoGenericURLResolver(bundle.adapt(BundleWiring.class).getClassLoader())).build();
 	}
 
 	@Reference

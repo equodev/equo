@@ -46,7 +46,7 @@ public class EquoConfigParser {
 						parse(configFile, bundle);
 					};
 					filesRead.add(configFile);
-					Thread thread = new Thread(runnable, "Parsing");
+					Thread thread = new Thread(runnable, "EquoConfigParser");
 					thread.start();
 				}
 				return configFile;
