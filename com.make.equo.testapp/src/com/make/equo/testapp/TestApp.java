@@ -19,7 +19,7 @@ public class TestApp implements IEquoApplication {
 			        .withSingleView("https://www.maketechnology.io")
 			        .enableAnalytics()
 			        .withCustomScript("js/testAnalytics.js")
-			        .withCustomScript("js/testLogging.js")
+			        //.withCustomScript("js/testLogging.js")
 			        .withMainMenu("File")
 			         	.addMenuItem("New")
 			         	.onClick(new Runnable() {

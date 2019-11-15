@@ -30,6 +30,12 @@
 				"path11" : "script11.js",
 				"path12" : "script12.js"
 			}
+		},
+		{
+
+			"contributionName" : "usingloggingcontribution",
+
+			"contributedScripts" : ["js/testLogging.js"]
 		}
 	]
 }
