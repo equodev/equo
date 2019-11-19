@@ -1,4 +1,4 @@
-	package com.make.equo.testapp;
+package com.make.equo.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,48 +14,40 @@ public class TestApp implements IEquoApplication {
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
-			
-			 return appBuilder
-			        .withSingleView("https://www.maketechnology.io")
-			        .enableAnalytics()
-			        .withCustomScript("js/testAnalytics.js")
-			        //.withCustomScript("js/testLogging.js")
-			        .withMainMenu("File")
-			         	.addMenuItem("New")
-			         	.onClick(new Runnable() {
-							
-							@Override
-							public void run() {
-								System.out.println("ON_NEW");
-								
-							}
-						})
-			         	.onAbout(new Runnable() {
-							
-							@Override
-							public void run() {
-								System.out.println("ON_ABOUT");
-								
-							}
-						})
-			         	.onPreferences(new Runnable() {
-							
-							@Override
-							public void run() {
-								System.out.println("ON_PREFERENCES");
-								
-							}
-						})
-			         	.onBeforeExit(new Runnable() {
-							
-							@Override
-							public void run() {
-								System.out.println("Bye Bye Equo");
-								
-							}
-						})
-			         .start();
-			
+
+			return appBuilder.withSingleView("https://www.maketechnology.io").enableAnalytics()
+					.withCustomScript("js/testAnalytics.js")
+					// .withCustomScript("js/testLogging.js")
+					.withMainMenu("File").addMenuItem("New").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_NEW");
+
+						}
+					}).onAbout(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_ABOUT");
+
+						}
+					}).onPreferences(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_PREFERENCES");
+
+						}
+					}).onBeforeExit(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("Bye Bye Equo");
+
+						}
+					}).start();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

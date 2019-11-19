@@ -19,6 +19,10 @@ Export-Package: \
 	osgi.cmpn,\
 	${junit},\
 	org.assertj.core;version=3.9
+
+-runbundles.equo: \
+    org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)'
+	
 Private-Package: \
 	com.make.equo.server.contribution.configservice,\
 	com.make.equo.server.contribution.configservice.pojo,\

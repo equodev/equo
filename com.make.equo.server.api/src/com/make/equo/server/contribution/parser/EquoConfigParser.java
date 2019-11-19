@@ -74,6 +74,11 @@ public class EquoConfigParser {
 			jsonDefinition = jsonParser.parse(jsonReader);
 		}
 		equoContributionConfigService.defineContributions(jsonDefinition.getAsJsonObject(), bundle);
+		try {
+			jsonReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
