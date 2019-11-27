@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.swt.SWT;
 
 import com.make.equo.ui.helper.provider.model.MButton;
+import com.make.equo.ui.helper.provider.model.MButtonToggle;
 import com.make.equo.ui.helper.provider.model.MWebDialog;
 import com.make.equo.ui.helper.provider.model.WebdialogPackage;
 
@@ -50,6 +51,8 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
     * @ordered
     */
    protected EList<MButton> buttons;
+   
+   protected MButtonToggle toggle;
 
    /**
     * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
@@ -190,6 +193,15 @@ public class MWebDialogImpl extends WindowImpl implements MWebDialog {
       return WebdialogPackage.Literals.MWEB_DIALOG;
    }
 
+   
+   public MButtonToggle getToggle() {
+	   return this.toggle;
+   }
+   
+   public void setToggle(MButtonToggle toggle) {
+	   this.toggle = toggle;
+   }
+   
    /**
     * <!-- begin-user-doc -->
     * <!-- end-user-doc -->

@@ -28,6 +28,7 @@ import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
+import com.make.equo.ui.helper.provider.model.MButtonToggle;
 import com.make.equo.ui.helper.provider.model.MWebDialog;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.swtcef.Chromium;
@@ -101,6 +102,17 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 			elementModel.put("id", e.getElementId());
 			e4Model.add(elementModel);
 		}
+		if(this.dialog.getToggle()!=null) {
+			MButtonToggle e = this.dialog.getToggle();
+			HashMap<String, String> toggleModel = new HashMap<String, String>();
+			toggleModel.put("bLabel", e.getLabel());
+			toggleModel.put("action", String.valueOf(e.getAction()));
+			toggleModel.put("id", e.getElementId());
+			toggleModel.put("message",e.getMessageToggle());
+			toggleModel.put("status", Boolean.toString(e.isToggled()));
+			e4Model.add(toggleModel);
+		}
+			
 		return e4Model;
 	}
 

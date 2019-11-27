@@ -9,6 +9,8 @@ import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.OptionalViewBuilder;
 
+
+
 @Component
 public class TestApp implements IEquoApplication {
 
@@ -52,6 +54,17 @@ public class TestApp implements IEquoApplication {
 							@Override
 							public void run() {
 								System.out.println("Bye Bye Equo");
+								
+							}
+						})
+			         .addMenuItem("Test")
+			         .onClick(new Runnable() {
+							
+							@Override
+							public void run() {
+								System.out.println("Testeando"); 
+								
+								//MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION ,new String[] {"Boton 1"}, 0);
 								
 							}
 						})
