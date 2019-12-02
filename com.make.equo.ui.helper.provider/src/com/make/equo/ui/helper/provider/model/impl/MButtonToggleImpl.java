@@ -15,290 +15,376 @@ import com.make.equo.ui.helper.provider.model.WebdialogPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>MButton</b></em>'.
+ * An implementation of the model object '<em><b>MButton Toggle</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MButtonImpl#getAction <em>Action</em>}</li>
- *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MButtonImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link com.make.equo.ui.helper.provider.model.impl.MButtonImpl#isDefault <em>Default</em>}</li>
+ *   <li>{@link webdialog.impl.MButtonToggleImpl#getAction <em>Action</em>}</li>
+ *   <li>{@link webdialog.impl.MButtonToggleImpl#getLabel <em>Label</em>}</li>
+ *   <li>{@link webdialog.impl.MButtonToggleImpl#getMessage <em>Message</em>}</li>
+ *   <li>{@link webdialog.impl.MButtonToggleImpl#isStatus <em>Status</em>}</li>
+ *   <li>{@link webdialog.impl.MButtonToggleImpl#isDefault <em>Default</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class MButtonToggleImpl extends UIElementImpl implements MButtonToggle {
-   /**
-    * The default value of the '{@link #getAction() <em>Action</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #getAction()
-    * @generated
-    * @ordered
-    */
-   protected static final int ACTION_EDEFAULT = 0;
+	/**
+	 * The default value of the '{@link #getAction() <em>Action</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAction()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int ACTION_EDEFAULT = 0;
 
-   /**
-    * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #getAction()
-    * @generated
-    * @ordered
-    */
-   protected int action = ACTION_EDEFAULT;
+	/**
+	 * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAction()
+	 * @generated
+	 * @ordered
+	 */
+	protected int action = ACTION_EDEFAULT;
 
-   /**
-    * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #getLabel()
-    * @generated
-    * @ordered
-    */
-   protected static final String LABEL_EDEFAULT = "";
+	/**
+	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLabel()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LABEL_EDEFAULT = null;
 
-   /**
-    * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #getLabel()
-    * @generated
-    * @ordered
-    */
-   protected String label = LABEL_EDEFAULT;
+	/**
+	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLabel()
+	 * @generated
+	 * @ordered
+	 */
+	protected String label = LABEL_EDEFAULT;
 
-   /**
-    * The default value of the '{@link #isDefault() <em>Default</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #isDefault()
-    * @generated
-    * @ordered
-    */
-   protected static final boolean DEFAULT_EDEFAULT = false;
+	/**
+	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMessage()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MESSAGE_EDEFAULT = null;
 
-   /**
-    * The cached value of the '{@link #isDefault() <em>Default</em>}' attribute.
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @see #isDefault()
-    * @generated
-    * @ordered
-    */
-   protected boolean default_ = DEFAULT_EDEFAULT;
-   
-   protected boolean status = false;
-   
-   protected String message = "";
+	/**
+	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMessage()
+	 * @generated
+	 * @ordered
+	 */
+	protected String message = MESSAGE_EDEFAULT;
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   protected MButtonToggleImpl() {
-      super();
-   }
+	/**
+	 * The default value of the '{@link #isStatus() <em>Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isStatus()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean STATUS_EDEFAULT = false;
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   protected EClass eStaticClass() {
-      return WebdialogPackage.Literals.MBUTTON;
-   }
+	/**
+	 * The cached value of the '{@link #isStatus() <em>Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isStatus()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean status = STATUS_EDEFAULT;
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public int getAction() {
-      return action;
-   }
+	/**
+	 * The default value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DEFAULT_EDEFAULT = false;
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public void setAction(int newAction) {
-      int oldAction = action;
-      action = newAction;
-      if (eNotificationRequired())
-         eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON__ACTION, oldAction, action));
-   }
+	/**
+	 * The cached value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean default_ = DEFAULT_EDEFAULT;
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public String getLabel() {
-      return label;
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected MButtonToggleImpl() {
+		super();
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public void setLabel(String newLabel) {
-      String oldLabel = label;
-      label = newLabel;
-      if (eNotificationRequired())
-         eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON__LABEL, oldLabel, label));
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return WebdialogPackage.Literals.MBUTTON_TOGGLE;
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public boolean isDefault() {
-      return default_;
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getAction() {
+		return action;
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public void setDefault(boolean newDefault) {
-      boolean oldDefault = default_;
-      default_ = newDefault;
-      if (eNotificationRequired())
-         eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON__DEFAULT, oldDefault, default_));
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAction(int newAction) {
+		int oldAction = action;
+		action = newAction;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON_TOGGLE__ACTION, oldAction, action));
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public Object eGet(int featureID, boolean resolve, boolean coreType) {
-      switch (featureID) {
-         case WebdialogPackage.MBUTTON__ACTION:
-            return getAction();
-         case WebdialogPackage.MBUTTON__LABEL:
-            return getLabel();
-         case WebdialogPackage.MBUTTON__DEFAULT:
-            return isDefault();
-      }
-      return super.eGet(featureID, resolve, coreType);
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getLabel() {
+		return label;
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public void eSet(int featureID, Object newValue) {
-      switch (featureID) {
-         case WebdialogPackage.MBUTTON__ACTION:
-            setAction((Integer)newValue);
-            return;
-         case WebdialogPackage.MBUTTON__LABEL:
-            setLabel((String)newValue);
-            return;
-         case WebdialogPackage.MBUTTON__DEFAULT:
-            setDefault((Boolean)newValue);
-            return;
-      }
-      super.eSet(featureID, newValue);
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setLabel(String newLabel) {
+		String oldLabel = label;
+		label = newLabel;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON_TOGGLE__LABEL, oldLabel, label));
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public void eUnset(int featureID) {
-      switch (featureID) {
-         case WebdialogPackage.MBUTTON__ACTION:
-            setAction(ACTION_EDEFAULT);
-            return;
-         case WebdialogPackage.MBUTTON__LABEL:
-            setLabel(LABEL_EDEFAULT);
-            return;
-         case WebdialogPackage.MBUTTON__DEFAULT:
-            setDefault(DEFAULT_EDEFAULT);
-            return;
-      }
-      super.eUnset(featureID);
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getMessage() {
+		return message;
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public boolean eIsSet(int featureID) {
-      switch (featureID) {
-         case WebdialogPackage.MBUTTON__ACTION:
-            return action != ACTION_EDEFAULT;
-         case WebdialogPackage.MBUTTON__LABEL:
-            return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
-         case WebdialogPackage.MBUTTON__DEFAULT:
-            return default_ != DEFAULT_EDEFAULT;
-      }
-      return super.eIsSet(featureID);
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setMessage(String newMessage) {
+		String oldMessage = message;
+		message = newMessage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON_TOGGLE__MESSAGE, oldMessage, message));
+	}
 
-   /**
-    * <!-- begin-user-doc -->
-    * <!-- end-user-doc -->
-    * @generated
-    */
-   @Override
-   public String toString() {
-      if (eIsProxy()) return super.toString();
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isStatus() {
+		return status;
+	}
 
-      StringBuilder result = new StringBuilder(super.toString());
-      result.append(" (action: ");
-      result.append(action);
-      result.append(", label: ");
-      result.append(label);
-      result.append(", default: ");
-      result.append(default_);
-      result.append(')');
-      return result.toString();
-   }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setStatus(boolean newStatus) {
+		boolean oldStatus = status;
+		status = newStatus;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON_TOGGLE__STATUS, oldStatus, status));
+	}
 
-@Override
-public String getMessageToggle() {
-	return this.message;
-}
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefault() {
+		return default_;
+	}
 
-@Override
-public boolean isToggled() {
-	return this.status;
-}
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefault(boolean newDefault) {
+		boolean oldDefault = default_;
+		default_ = newDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, WebdialogPackage.MBUTTON_TOGGLE__DEFAULT, oldDefault, default_));
+	}
 
-@Override
-public void setMessageToggle(String message) {
-	this.message = message;
-	
-}
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case WebdialogPackage.MBUTTON_TOGGLE__ACTION:
+				return getAction();
+			case WebdialogPackage.MBUTTON_TOGGLE__LABEL:
+				return getLabel();
+			case WebdialogPackage.MBUTTON_TOGGLE__MESSAGE:
+				return getMessage();
+			case WebdialogPackage.MBUTTON_TOGGLE__STATUS:
+				return isStatus();
+			case WebdialogPackage.MBUTTON_TOGGLE__DEFAULT:
+				return isDefault();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
-@Override
-public void setToggleStatus(boolean status) {
-	this.status = status;
-	
-}
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case WebdialogPackage.MBUTTON_TOGGLE__ACTION:
+				setAction((Integer)newValue);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__LABEL:
+				setLabel((String)newValue);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__MESSAGE:
+				setMessage((String)newValue);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__STATUS:
+				setStatus((Boolean)newValue);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__DEFAULT:
+				setDefault((Boolean)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
-} //MButtonImpl
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case WebdialogPackage.MBUTTON_TOGGLE__ACTION:
+				setAction(ACTION_EDEFAULT);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__LABEL:
+				setLabel(LABEL_EDEFAULT);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__MESSAGE:
+				setMessage(MESSAGE_EDEFAULT);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__STATUS:
+				setStatus(STATUS_EDEFAULT);
+				return;
+			case WebdialogPackage.MBUTTON_TOGGLE__DEFAULT:
+				setDefault(DEFAULT_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case WebdialogPackage.MBUTTON_TOGGLE__ACTION:
+				return action != ACTION_EDEFAULT;
+			case WebdialogPackage.MBUTTON_TOGGLE__LABEL:
+				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+			case WebdialogPackage.MBUTTON_TOGGLE__MESSAGE:
+				return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
+			case WebdialogPackage.MBUTTON_TOGGLE__STATUS:
+				return status != STATUS_EDEFAULT;
+			case WebdialogPackage.MBUTTON_TOGGLE__DEFAULT:
+				return default_ != DEFAULT_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (action: ");
+		result.append(action);
+		result.append(", label: ");
+		result.append(label);
+		result.append(", message: ");
+		result.append(message);
+		result.append(", status: ");
+		result.append(status);
+		result.append(", default: ");
+		result.append(default_);
+		result.append(')');
+		return result.toString();
+	}
+
+} //MButtonToggleImpl

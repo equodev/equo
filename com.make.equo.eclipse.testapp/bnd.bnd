@@ -23,7 +23,8 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.launching)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.ui)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.apt.core)',\
-	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.apt.ui)'
+	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.apt.ui)',\
+	osgi.identity;filter:='(osgi.identity=com.make.equo.eclipse.testapp.contributions)'
 -runbundles: \
 	bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
 	com.github.jnr.ffi;version='[2.1.7,2.1.8)',\
@@ -68,7 +69,6 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
 	org.apache.felix.scr;version='[2.0.10,2.0.11)',\
 	org.apache.httpcomponents.httpcore;version='[4.4.6,4.4.7)',\
-	org.aspectj.runtime;version='[1.9.2,1.9.3)',\
 	org.eclipse.compare;version='[3.7.101,3.7.102)',\
 	org.eclipse.compare.core;version='[3.6.100,3.6.101)',\
 	org.eclipse.core.commands;version='[3.9.0,3.9.1)',\
@@ -172,4 +172,8 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.eclipse.search;version='[3.11.100,3.11.101)',\
 	org.eclipse.ui.cheatsheets;version='[3.5.100,3.5.101)',\
 	org.eclipse.ui.console;version='[3.7.1,3.7.2)',\
-	org.eclipse.ui.intro;version='[3.5.100,3.5.101)'
+	org.eclipse.ui.intro;version='[3.5.100,3.5.101)',\
+	com.make.equo.eclipse.testapp.contributions;version=snapshot,\
+	com.make.equo.logging.client.api;version=snapshot,\
+	com.make.equo.logging.client.provider;version=snapshot,\
+	org.eclipse.equinox.weaving.hook;version='[1.2.200,1.2.201)'

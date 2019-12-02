@@ -3,6 +3,8 @@
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
@@ -57,15 +59,21 @@ public class TestApp implements IEquoApplication {
 								
 							}
 						})
-			         .addMenuItem("Test")
+			         .addMenuItem("Test Dialogs")
 			         .onClick(new Runnable() {
 							
 							@Override
 							public void run() {
-								System.out.println("Testeando"); 
-								
-								//MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION ,new String[] {"Boton 1"}, 0);
-								
+								try {
+									
+									MessageDialogWithToggle.openInformation(null, "hola", "hola mensaje" );
+									//MessageDialogWithToggle dialog = new MessageDialogWithToggle(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button 1"},0, "toggle message", true);
+									//MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button 1"},0);
+									//MessageDialog.openInformation(null, "gilada", "gilada msg");
+									//dialog.open();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}								
 							}
 						})
 			         .start();

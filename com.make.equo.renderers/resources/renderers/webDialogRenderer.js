@@ -26,6 +26,12 @@ $(document).ready(function () {
           <div class="el-dialog__body">
             <span> {{ message }} </span>
           </div>
+          <div>
+              <template v-if= "isToggle === true">
+                  <input type="checkbox" id="checkbox" v-model="toggle.status">
+                  <label for="checkbox">{{ toggle.message }}</label>
+              </template>
+          </div>
           <div class="el-dialog__footer">
             <template v-for="button in buttons">
                 <template v-if="button.bLabel === 'Confirm' || button.bLabel === 'Yes'">
@@ -48,6 +54,10 @@ $(document).ready(function () {
                 type: String,
                 required: true
             },
+            isToggle: {
+                type: Boolean,
+                required: true
+            },
             buttons: {
                 type: Array,
                 required: true
@@ -63,6 +73,9 @@ $(document).ready(function () {
             dialogType: {
                 type: String,
                 required: true
+            },
+            toggle: {
+              type: Object
             }
         },
         methods: {
@@ -89,18 +102,28 @@ $(document).ready(function () {
         let title = e4Model[0].title;
         let message = e4Model[0].message;
         let dialogType = e4Model[0].type;
+        let isToggle = (e4Model[0].isToggle == 'true');
+        let toggle = {};
+        let buttons = [];
 
-        let buttons = e4Model.splice(1);
+        if(isToggle === true){
+          toggle = e4Model[1];
+          buttons = e4Model.splice(2);
+        }else{
+          buttons = e4Model.splice(1);
+        }
 
         let webDialog = Vue.extend(dialog);
 
         let component = new webDialog({
             propsData: {
                 namespace,
+                isToggle,
                 buttons,
                 title,
                 message,
-                dialogType
+                dialogType,
+                toggle
             }
         }).$mount()
 
