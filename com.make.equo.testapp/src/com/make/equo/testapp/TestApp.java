@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -65,13 +66,15 @@ public class TestApp implements IEquoApplication {
 							@Override
 							public void run() {
 								try {
-									
-									MessageDialogWithToggle.openInformation(null, "hola", "hola mensaje" );
-									//MessageDialogWithToggle dialog = new MessageDialogWithToggle(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button 1"},0, "toggle message", true);
-									//MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button 1"},0);
-									//MessageDialog.openInformation(null, "gilada", "gilada msg");
-									//dialog.open();
-								} catch (Exception e) {
+									//LinkedHashMap<String, Integer> buttons = new LinkedHashMap<String, Integer>();
+									//buttons.put("Button :)", 1);
+									//MessageDialogWithToggle.open(MessageDialog.ERROR, null, "Error", "Error message", "Error toggle message", true, null, "key" , 0, buttons);
+									//MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje", "soy el toggle del mensaje", true, null , "key" );
+									//MessageDialogWithToggle dialog = new MessageDialogWithToggle(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,buttons,0, "toggle message", true);
+									MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button $"},0);
+									//MessageDialog.openInformation(null, "info dialog", "info msg");
+									dialog.open();
+									} catch (Exception e) {
 									e.printStackTrace();
 								}								
 							}
