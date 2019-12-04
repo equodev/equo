@@ -60,20 +60,37 @@ public class TestApp implements IEquoApplication {
 								
 							}
 						})
-			         .addMenuItem("Test Dialogs")
+			         .withMainMenu("Dialog Test")
+			         .addMenuItem("Message Dialog")
 			         .onClick(new Runnable() {
 							
 							@Override
 							public void run() {
 								try {
-									//LinkedHashMap<String, Integer> buttons = new LinkedHashMap<String, Integer>();
-									//buttons.put("Button :)", 1);
-									//MessageDialogWithToggle.open(MessageDialog.ERROR, null, "Error", "Error message", "Error toggle message", true, null, "key" , 0, buttons);
-									//MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje", "soy el toggle del mensaje", true, null , "key" );
+									LinkedHashMap<String, Integer> buttons = new LinkedHashMap<String, Integer>();
+									buttons.put("Button :)", 1);
 									//MessageDialogWithToggle dialog = new MessageDialogWithToggle(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,buttons,0, "toggle message", true);
-									MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button $"},0);
-									//MessageDialog.openInformation(null, "info dialog", "info msg");
-									dialog.open();
+									//MessageDialog dialog = new MessageDialog(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,new String[] {"button $"},0);
+									//MessageDialog dialog2 = new MessageDialog(null, "hola error", null, "Hola soy el mensaje", MessageDialog.ERROR,new String[] {"button $"},0);
+									MessageDialog.openInformation(null, "info dialog", "info msg");
+									//dialog.open();
+									} catch (Exception e) {
+									e.printStackTrace();
+								}								
+							}
+						})
+			         .addMenuItem("Message Dialog with Toggle")
+			         .onClick(new Runnable() {
+							
+							@Override
+							public void run() {
+								try {
+									LinkedHashMap<String, Integer> buttons = new LinkedHashMap<String, Integer>();
+									buttons.put("Button :)", 1);
+									//MessageDialogWithToggle.open(MessageDialog.ERROR, null, "Error", "Error message", "Error toggle message", true, null, "key" , 0);
+									MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje", "soy el toggle del mensaje", true, null , "key" );
+									//MessageDialogWithToggle dialog = new MessageDialogWithToggle(null, "hola", null, "Hola soy el mensaje", MessageDialog.INFORMATION,buttons,0, "toggle message", true);
+									//dialog.open();
 									} catch (Exception e) {
 									e.printStackTrace();
 								}								

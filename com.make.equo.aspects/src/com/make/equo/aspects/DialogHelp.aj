@@ -6,10 +6,12 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import java.util.LinkedHashMap;
+import java.util.Hashtable;
 
 
 public aspect DialogHelp {
 
+    Hashtable<MessageDialog,com.make.equo.ui.helper.provider.dialogs.MessageDialog> dialogos = new Hashtable();
     
     com.make.equo.ui.helper.provider.dialogs.MessageDialog dialog;
 
@@ -18,7 +20,7 @@ public aspect DialogHelp {
   execution(org.eclipse.jface.dialogs.MessageDialog.new(Shell, String, Image, String , int , String[], int));
 
     pointcut openMessage(MessageDialog message): 
-        execution(void org.eclipse.jface.dialogs.MessageDialog.open()) &&
+        execution(int org.eclipse.jface.dialogs.MessageDialog.open()) &&
         target(message);
 
     pointcut openInformation(Shell parent, String title, String message):
@@ -57,12 +59,13 @@ public aspect DialogHelp {
         dialogImageType,dialogButtonLabels, defaultIndex){
         this.dialog = new com.make.equo.ui.helper.provider.dialogs.MessageDialog(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,dialogButtonLabels, defaultIndex);
-        //dialog.open();
     }
     
-   void around(MessageDialog message): openMessage(message){
-        //dialog.open();
-        System.out.println("It is not necessary use open() method to create the widget DialogMessage");        
+   int around(MessageDialog message): openMessage(message){
+        dialog.open();
+        //System.out.println("--------> " + thisJoinPoint);
+        System.out.println("It is not necessary use open() method to create the widget DialogMessage");
+        return 0;        
     }
 
     void around(Shell parent, String title, String message): openInformation(parent, title, message) {
@@ -107,64 +110,59 @@ public aspect DialogHelp {
     args(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,buttonLabelToIdMap, defaultIndex,toggleMessage, toggleState) &&
     execution(org.eclipse.jface.dialogs.MessageDialogWithToggle.new(Shell, String, Image, String , int, LinkedHashMap<String, Integer>, int, String, boolean));
-    
-    
-    pointcut openMessageToggle(MessageDialogWithToggle message): 
-        execution(int org.eclipse.jface.dialogs.MessageDialogWithToggle.open()) &&
-        target(message);
 
     pointcut openInformationToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openInformation(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openInformation(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
 
     pointcut openErrorToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openError(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openError(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
 
     pointcut openWarningToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openWarning(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openWarning(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
         
     pointcut openYesNoCancelQuestionToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openYesNoCancelQuestion(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openYesNoCancelQuestion(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
             
     pointcut openOkCancelConfirmToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openOkCancelConfirm(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openOkCancelConfirm(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
             
     pointcut openYesNoQuestionToggle(Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key):
         args(parent,title, message, toggleMessage,
             toggleState, store, key) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.openYesNoQuestion(Shell, String, String , String ,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.openYesNoQuestion(Shell, String, String , String ,
             boolean, IPreferenceStore , String));
             
     pointcut openToggle(int kind, Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key, int style):
         args(kind,parent,title, message, toggleMessage, toggleState, store, key, style) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.open(int, Shell, String, String, String,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.open(int, Shell, String, String, String,
             boolean , IPreferenceStore , String , int ));
             
     pointcut openToggleHash(int kind, Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key, int style, LinkedHashMap<String, Integer> buttonLabelToIdMap):
         args(kind,parent,title, message, toggleMessage, toggleState, store, key, style,buttonLabelToIdMap) &&
-        execution( void org.eclipse.jface.dialogs.MessageDialogWithToggle.open(int, Shell, String, String, String,
+        execution( MessageDialogWithToggle org.eclipse.jface.dialogs.MessageDialogWithToggle.open(int, Shell, String, String, String,
             boolean , IPreferenceStore , String , int, LinkedHashMap<String, Integer>));
 
     // advices MessageDialogWithToggle -------------------------
@@ -172,57 +170,56 @@ public aspect DialogHelp {
     
     void around(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage, int dialogImageType, String[] dialogButtonLabels, int defaultIndex, String toggleMessage, boolean toggleState): buildMessageToggle(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,dialogButtonLabels, defaultIndex,toggleMessage, toggleState){
-        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle message = new com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
+        this.dialog = new com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,dialogButtonLabels, defaultIndex, toggleMessage,toggleState);
-        System.out.println("constructor 1");
-        //message.open();
     }
     
     void around(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage, int dialogImageType, LinkedHashMap<String, Integer> buttonLabelToIdMap, int defaultIndex, String toggleMessage, boolean toggleState): buildMessageToggleHash(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType, buttonLabelToIdMap, defaultIndex,toggleMessage, toggleState){
-        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle message = new com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
+        this.dialog = new com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,buttonLabelToIdMap, defaultIndex, toggleMessage,toggleState);
-        System.out.println("constructor 2");
-        //message.open();
     }
-    
-    void around(MessageDialog message): openMessageToggle(message){
-        //dialog.open();
-        System.out.println("It is not necessary use open() method to create the widget DialogMessage");        
-    }
-    
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openInformationToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openInformationToggle(parent,title, message,toggleMessage,toggleState, store, key) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openInformation(parent,title, message,toggleMessage, toggleState, store, key);
+        return null;
      }
      
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openErrorToggle(parent,title, message,toggleMessage,toggleState, store, key) {
-        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openError(parent,title, message,toggleMessage, toggleState, store, key);  
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openErrorToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openError(parent,title, message,toggleMessage, toggleState, store, key);
+        return null;  
      }
      
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openWarningToggle(parent,title, message,toggleMessage,toggleState, store, key) {
-        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openWarning(parent,title, message,toggleMessage, toggleState, store, key); 
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openWarningToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+        com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openWarning(parent,title, message,toggleMessage, toggleState, store, key);
+        return null; 
      }
      
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openYesNoCancelQuestionToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openYesNoCancelQuestionToggle(parent,title, message,toggleMessage,toggleState, store, key) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openYesNoCancelQuestion(parent,title, message,toggleMessage, toggleState, store, key);
+        return null;
      }
      
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openOkCancelConfirmToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openOkCancelConfirmToggle(parent,title, message,toggleMessage,toggleState, store, key) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openOkCancelConfirm(parent,title, message,toggleMessage, toggleState, store, key);
+        return null;
      }
      
-    void around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openYesNoQuestionToggle(parent,title, message,toggleMessage,toggleState, store, key) {
+    MessageDialogWithToggle around(Shell parent, String title, String message, String toggleMessage, boolean toggleState, IPreferenceStore store, String key): openYesNoQuestionToggle(parent,title, message,toggleMessage,toggleState, store, key) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.openYesNoQuestion(parent,title, message,toggleMessage, toggleState, store, key);
+        return null; 
      }
      
-    void around(int kind, Shell parent, String title, String message, String toggleMessage,
+    MessageDialogWithToggle around(int kind, Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key, int style): openToggle(kind,parent,title, message, toggleMessage, toggleState, store, key, style) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.open(kind,parent,title, message, toggleMessage, toggleState, store, key, style);
+        return null;
      }
      
-    void around(int kind, Shell parent, String title, String message, String toggleMessage,
+    MessageDialogWithToggle around(int kind, Shell parent, String title, String message, String toggleMessage,
             boolean toggleState, IPreferenceStore store, String key, int style, LinkedHashMap<String, Integer> buttonLabelToIdMap): openToggleHash(kind,parent,title, message, toggleMessage, toggleState, store, key, style,buttonLabelToIdMap) {
         com.make.equo.ui.helper.provider.dialogs.MessageDialogWithToggle.open(kind,parent,title, message, toggleMessage, toggleState, store, key, style, buttonLabelToIdMap);
+        return null;
      }
      
 }

@@ -37,51 +37,51 @@ public class MessageDialogWithToggle extends MessageDialog {
 		thisDialog.setToggle(button);
 	}
 
-	public static void openError(Shell parent, String title, String message, String toggleMessage, boolean toggleState,
+	public static MessageDialogWithToggle openError(Shell parent, String title, String message, String toggleMessage, boolean toggleState,
 			IPreferenceStore store, String key) {
-		open(ERROR, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(ERROR, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static void openInformation(Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle openInformation(Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key) {
-		open(INFORMATION, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(INFORMATION, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static void openOkCancelConfirm(Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle openOkCancelConfirm(Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key) {
-		open(CONFIRM, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(CONFIRM, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static void openWarning(Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle openWarning(Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key) {
-		open(WARNING, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(WARNING, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static void openYesNoCancelQuestion(Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle openYesNoCancelQuestion(Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key) {
-		open(QUESTION_WITH_CANCEL, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(QUESTION_WITH_CANCEL, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static void openYesNoQuestion(Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle openYesNoQuestion(Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key) {
-		open(QUESTION, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
+		return open(QUESTION, parent, title, message, toggleMessage, toggleState, store, key, SWT.NONE);
 	}
 
-	public static boolean open(int kind, Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle open(int kind, Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key, int style) {
 		MessageDialogWithToggle dialog = new MessageDialogWithToggle(parent, title, null, message, kind,
 				getButtonLabels(kind), 0, toggleMessage, toggleState);
 		injector.attachMWebDialog(dialog.getDialog());
-		return dialog.getResponse() == IDialogConstants.OK_ID;
+		return dialog;
 	}
 
-	public static boolean open(int kind, Shell parent, String title, String message, String toggleMessage,
+	public static MessageDialogWithToggle open(int kind, Shell parent, String title, String message, String toggleMessage,
 			boolean toggleState, IPreferenceStore store, String key, int style,
 			LinkedHashMap<String, Integer> buttonLabelToIdMap) {
 		MessageDialogWithToggle dialog = new MessageDialogWithToggle(parent, title, null, message, kind,
 				buttonLabelToIdMap, 0, toggleMessage, toggleState);
 		injector.attachMWebDialog(dialog.getDialog());
-		return dialog.getResponse() == IDialogConstants.OK_ID;
+		return dialog;
 	}
 
 	public MButtonToggle getToggle() {
