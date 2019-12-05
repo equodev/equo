@@ -1,4 +1,4 @@
-	package com.make.equo.testapp;
+package com.make.equo.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,7 +10,6 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
-import com.make.equo.application.model.OptionalViewBuilder;
 
 
 
@@ -97,7 +96,7 @@ public class TestApp implements IEquoApplication {
 							}
 						})
 			         .start();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

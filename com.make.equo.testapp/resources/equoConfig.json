@@ -1,0 +1,43 @@
+{
+	"contributions" : 	[
+		{
+			"contributionName" : "Contribution1",
+
+			"contributionHtmlName" : "example.html",
+
+			"contributedScripts" : ["script1.js", "script2.js","script3.js"],
+
+			"proxiedUris" : ["uri1","uri2"],
+
+			"pathsWithScripts": {	"path7" : "script7.js",
+				"path8" : "script8.js",
+				"path9" : "script9.js"
+			}
+		},
+		{
+
+			"contributionName" : "Contribution2",
+
+			"contributionHtmlName" : "example2.html",
+
+			"contributedScripts" : ["script01.js", "script02.js","script03.js"],
+
+			"contributedScriptsscripts" : ["script4.js", "script5.js","script6.js"],
+
+			"proxiedUris" : ["uri3","uri4"],
+
+			"pathsWithScripts": {   "path10" : "script10.js",
+				"path11" : "script11.js",
+				"path12" : "script12.js"
+			}
+		},
+		{
+
+			"contributionName" : "usingloggingcontribution",
+
+			"contributedScripts" : ["js/testLogging.js"]
+		}
+	]
+}
+
+
