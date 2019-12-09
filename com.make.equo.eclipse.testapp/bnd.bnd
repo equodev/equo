@@ -69,6 +69,7 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
 	org.apache.felix.scr;version='[2.0.10,2.0.11)',\
 	org.apache.httpcomponents.httpcore;version='[4.4.6,4.4.7)',\
+	org.aspectj.runtime;version='[1.9.2,1.9.3)',\
 	org.eclipse.compare;version='[3.7.101,3.7.102)',\
 	org.eclipse.compare.core;version='[3.6.100,3.6.101)',\
 	org.eclipse.core.commands;version='[3.9.0,3.9.1)',\
@@ -176,3 +177,4 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	com.make.equo.logging.client.api;version=snapshot,\
 	com.make.equo.logging.client.provider;version=snapshot,\
 	org.eclipse.equinox.weaving.hook;version='[1.2.200,1.2.201)'
+	

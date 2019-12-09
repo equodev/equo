@@ -90,21 +90,21 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 		model.put("title", this.dialog.getTitle());
 		model.put("message", this.dialog.getMessage());
 		model.put("type", String.valueOf(this.dialog.getType()));
-		boolean isToggle = this.dialog.getToggle()!=null;
+		boolean isToggle = this.dialog.getToggle() != null;
 		model.put("isToggle", String.valueOf(isToggle));
 		e4Model.add(model);
 
-		if(isToggle) {
+		if (isToggle) {
 			MButtonToggle e = this.dialog.getToggle();
 			HashMap<String, String> toggleModel = new HashMap<String, String>();
 			toggleModel.put("bLabel", e.getLabel());
 			toggleModel.put("action", String.valueOf(e.getAction()));
 			toggleModel.put("id", e.getElementId());
-			toggleModel.put("message",e.getMessage());
+			toggleModel.put("message", e.getMessage());
 			toggleModel.put("status", Boolean.toString(e.isStatus()));
 			e4Model.add(toggleModel);
 		}
-		
+
 		EList<MButton> buttons = this.dialog.getButtons();
 		for (MButton e : buttons) {
 			HashMap<String, String> elementModel = new HashMap<String, String>();
@@ -114,7 +114,6 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 			e4Model.add(elementModel);
 		}
 
-			
 		return e4Model;
 	}
 
