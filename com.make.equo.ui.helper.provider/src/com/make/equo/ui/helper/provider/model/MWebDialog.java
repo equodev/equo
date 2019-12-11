@@ -31,7 +31,12 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface MWebDialog extends EObject, MWindow {
-   /**
+   
+	MButtonToggle getToggle();
+	
+	void setToggle(MButtonToggle toggle);
+	
+	/**
     * Returns the value of the '<em><b>Buttons</b></em>' reference list.
     * The list contents are of type {@link com.make.equo.ui.helper.provider.model.MButton}.
     * <!-- begin-user-doc -->

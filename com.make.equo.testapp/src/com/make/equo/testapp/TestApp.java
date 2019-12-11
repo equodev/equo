@@ -3,6 +3,8 @@ package com.make.equo.testapp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
@@ -16,9 +18,8 @@ public class TestApp implements IEquoApplication {
 		try {
 
 			return appBuilder.withSingleView("https://www.maketechnology.io").enableAnalytics()
-					.withCustomScript("js/testAnalytics.js")
-					// .withCustomScript("js/testLogging.js")
-					.withMainMenu("File").addMenuItem("New").onClick(new Runnable() {
+					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
+					.addMenuItem("New").onClick(new Runnable() {
 
 						@Override
 						public void run() {
@@ -45,6 +46,27 @@ public class TestApp implements IEquoApplication {
 						public void run() {
 							System.out.println("Bye Bye Equo");
 
+						}
+					}).withMainMenu("Dialog Test").addMenuItem("Message Dialog").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								MessageDialog.openInformation(null, "info dialog", "info msg");
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}).addMenuItem("Message Dialog with Toggle").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
+										"soy el toggle del mensaje", true, null, "key");
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}).start();
 

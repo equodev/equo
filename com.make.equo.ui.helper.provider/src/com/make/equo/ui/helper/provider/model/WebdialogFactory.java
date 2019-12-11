@@ -38,6 +38,8 @@ public interface WebdialogFactory extends EFactory {
     * @generated
     */
    MButton createMButton();
+   
+   MButtonToggle createMButtonToggle();
 
    /**
     * Returns the package supported by this factory.

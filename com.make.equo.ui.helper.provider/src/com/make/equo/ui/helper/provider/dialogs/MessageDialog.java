@@ -101,7 +101,7 @@ public class MessageDialog {
    /**
     * Used to hook this dialog to the application model
     */
-   private static ModelElementInjector injector;
+   protected static ModelElementInjector injector;
 
 //   /**
 //    * Index into <code>buttonLabels</code> of the default button.
@@ -111,14 +111,14 @@ public class MessageDialog {
    /**
     * Dialog title (a localized string).
     */
-   private String title;
+   protected String title;
 
    /**
     * Dialog message (a string)
     */
-   private String message;
+   protected String message;
 
-   private MWebDialog thisDialog;
+   protected MWebDialog thisDialog;
 
    /**
     * Create a message dialog. Note that the dialog will have no visual
