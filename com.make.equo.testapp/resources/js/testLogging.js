@@ -29,6 +29,11 @@ $(document).ready(function () {
 
 	testDiv.click(function () {
 
+		equo.send("ActionHandlerExample",{"param1":"this is the param 1","segmentation":{},"type":"userAction"});
+
+
+		equo.send("ActionHandlerExampleTwo");
+
 		equo.logInfo("this is a info log.");
 
 		equo.logWarn("this is a warning log.");

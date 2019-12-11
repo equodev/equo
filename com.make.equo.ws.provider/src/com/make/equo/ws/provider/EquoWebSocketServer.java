@@ -12,21 +12,26 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.make.equo.ws.api.IEquoRunnable;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.NamedActionMessage;
+import com.make.equo.ws.api.actions.IActionHandler;
 
 class EquoWebSocketServer extends WebSocketServer {
 
 	private Gson gsonParser;
 	private Map<String, IEquoRunnableParser<?>> eventHandlers;
+	private Map<String,IActionHandler> actions;
 	private boolean firstClientConnected = false;
 	List<String> messagesToSend = new ArrayList<>();
 
 	private volatile boolean started;
 
-	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers) {
+	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers,Map<String, IActionHandler> actionHandlers) {
 		super(new InetSocketAddress(0));
+		this.actions = actionHandlers;
 		this.eventHandlers = eventHandlers;
 		this.gsonParser = new Gson();
 		this.started = false;
@@ -62,6 +67,15 @@ class EquoWebSocketServer extends WebSocketServer {
 			Object parsedPayload = equoRunnableParser.parsePayload(actionMessage.getParams());
 			IEquoRunnable equoRunnable = equoRunnableParser.getEquoRunnable();
 			equoRunnable.run(parsedPayload);
+		} else if (actions.containsKey(action)) {
+			JsonObject parsedPayload = null;
+			if(actionMessage.getParams()!= null) {
+				Gson gson = new Gson();
+				JsonParser jsonParser = new JsonParser();
+				String jsonString = gson.toJson(actionMessage.getParams());
+				parsedPayload = jsonParser.parse(jsonString).getAsJsonObject();
+			}
+			actions.get(action).call(parsedPayload);
 		}
 	}
 
