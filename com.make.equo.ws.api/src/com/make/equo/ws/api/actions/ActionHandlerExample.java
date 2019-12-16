@@ -4,11 +4,9 @@ import org.osgi.service.component.annotations.Component;
 
 import com.google.gson.JsonObject;
 
-@Component(
-    immediate = true,
-    service = EquoActionHandler.class
-)
-public class ActionHandlerExample extends EquoActionHandler {
+@Component
+
+public class ActionHandlerExample implements IActionHandler {
 
 	private static final long serialVersionUID = 1L;
 

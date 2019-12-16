@@ -5,7 +5,9 @@ import org.osgi.service.component.annotations.Component;
 import com.google.gson.JsonObject;
 
 @Component
-public class ActionHandlerExampleTwo extends EquoActionHandler{
+public class ActionHandlerExampleTwo implements IActionHandler{
+	
+
 	@Override
 	public Object call(JsonObject payload) {
 		System.out.println("Hola, soy el handler 2 activado");
