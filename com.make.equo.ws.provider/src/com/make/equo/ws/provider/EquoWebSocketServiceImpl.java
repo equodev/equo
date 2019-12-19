@@ -21,7 +21,6 @@ import com.make.equo.ws.api.actions.IActionHandler;
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
-	private IActionHandler actionHandler;
 
 	private Map<String, IActionHandler> actionHandlers = new HashMap<>();
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
@@ -69,11 +68,6 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
 	public EquoWebSocketServer getEquoWebSocketServer() {
 		return equoWebSocketServer;
-	}
-
-	@Override
-	public void addActionHandler(String actionId, IActionHandler handler) {
-		actionHandlers.put(actionId, handler);
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)

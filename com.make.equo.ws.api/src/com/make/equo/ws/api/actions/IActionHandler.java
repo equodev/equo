@@ -1,9 +1,17 @@
 package com.make.equo.ws.api.actions;
 
-import com.google.gson.JsonObject;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
-public interface IActionHandler extends IEquoCallable<JsonObject>{
+public interface IActionHandler<T> extends IEquoCallable<T>{
 	
-	
-	public Object call(JsonObject payload);
+    default public Class getGenericInterfaceType(){
+        Class c = getClass();
+        ParameterizedType parameterizedType = (ParameterizedType) c.getGenericInterfaces()[0];
+        Type[] typeArguments = parameterizedType.getActualTypeArguments();
+        Class<?> typeArgument = (Class<?>) typeArguments[0];
+        return typeArgument;
+    }
+		
+	public Object call(T payload);
 }

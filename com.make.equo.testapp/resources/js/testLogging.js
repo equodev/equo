@@ -29,7 +29,7 @@ $(document).ready(function () {
 
 	testDiv.click(function () {
 
-		equo.send("ActionHandlerExample",{"param1":"this is the param 1","segmentation":{},"type":"userAction"});
+		equo.send("ActionHandlerExample",{"name": "John","address": "FakeStreet 123" });
 
 
 		equo.send("ActionHandlerExampleTwo");
