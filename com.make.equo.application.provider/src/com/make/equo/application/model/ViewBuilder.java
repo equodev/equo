@@ -65,8 +65,8 @@ public class ViewBuilder {
 
 	private String normalizeUrl(String url) {
 		String protocolURl = url.substring(0, 3).toLowerCase();
-		if(!protocolURl.equals("http")) {
-			url = "http://"+ url;
+		if (!protocolURl.equals("http")) {
+			url = "http://" + url;
 		}
 		// if there is no connection, convert the url from https to http
 		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
