@@ -64,7 +64,7 @@ public class ViewBuilder {
 	}
 
 	private String normalizeUrl(String url) {
-		String protocolURl = url.substring(0, 3).toLowerCase();
+		String protocolURl = url.substring(0, 4).toLowerCase();
 		if (!protocolURl.equals("http")) {
 			url = "http://" + url;
 		}
