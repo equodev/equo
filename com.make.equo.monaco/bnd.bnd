@@ -1,0 +1,11 @@
+Bundle-Version: ${version}.${tstamp}
+Export-Package: \
+    com.make.equo.monaco
+Private-Package: \
+    com.make.equo.monaco.util
+-includeresource: \
+    resources/,\
+    node_modules/=node_modules/
+-buildpath: \
+    osgi.cmpn,\
+    com.make.equo.server.api;version=latest
