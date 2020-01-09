@@ -8,4 +8,5 @@ Private-Package: \
     node_modules/=node_modules/
 -buildpath: \
     osgi.cmpn,\
-    com.make.equo.server.api;version=latest
+    com.make.equo.server.api;version=latest,\
+    com.make.equo.ws.api;version=latest
