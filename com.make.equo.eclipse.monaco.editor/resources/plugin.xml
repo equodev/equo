@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.make.equo.eclipse.monaco.editor">
+	<requires>
+		<import plugin="org.eclipse.core.runtime" />
+		<import plugin="org.eclipse.swt" />
+	</requires>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			class="com.make.equo.eclipse.monaco.editor.MonacoEditorPart"
+			default="true"
+			id="com.make.equo.eclipse.monaco.editor.MonacoEditorPart"
+			name="Monaco Editor" extensions="xml">
+		</editor>
+
+	</extension>
+
+</plugin>
