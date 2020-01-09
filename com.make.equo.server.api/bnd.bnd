@@ -6,8 +6,8 @@ Export-Package: \
 	com.make.equo.server.contribution.builder,\
 	com.make.equo.server.contribution.resolvers
 -buildpath: \
-	org.littleshoot.littleproxy,\
-	org.littleshoot.littleproxy.source,\
+	xyz.rogfam.littleproxy,\
+	xyz.rogfam.littleproxy.source,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	com.google.gson,\

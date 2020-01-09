@@ -6,8 +6,8 @@ Export-Package: \
     com.make.equo.server.provider.filters
 -includeresource: resources/
 -buildpath: \
-	org.littleshoot.littleproxy,\
-	org.littleshoot.littleproxy.source,\
+	xyz.rogfam.littleproxy,\
+	xyz.rogfam.littleproxy.source,\
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
