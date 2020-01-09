@@ -1,0 +1,15 @@
+{
+  "name": "com.make.equo.monaco",
+  "version": "1.0.0",
+  "description": "Monaco Editor for Eclipse",
+  "main": "index.js",
+  "dependencies": {
+    "monaco-editor": "^0.19.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
