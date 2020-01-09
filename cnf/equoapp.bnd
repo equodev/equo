@@ -18,7 +18,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 -runvm: ${vmargs}
 
 -runrequires.equo: \
-    osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.weaving.hook)',\
+    osgi.identity;filter:='(&(osgi.identity=org.eclipse.equinox.weaving.hook)(version>=1.2.200))',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
     osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
@@ -43,6 +43,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.equo.ui.helper.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.media.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.renderers)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.monaco)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.ds)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.swt)',\
@@ -143,6 +144,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.contribution.api;version=snapshot,\
     com.make.equo.contribution.provider;version=snapshot,\
     com.make.equo.server.offline.provider;version=snapshot,\
+    com.make.equo.monaco;version=snapshot,\
     com.squareup.moshi;version='[1.4.0,1.4.1)',\
     com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
