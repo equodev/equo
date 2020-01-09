@@ -8,6 +8,6 @@ Private-Package: \
 	io.netty.all.source,\
 	com.google.guava;version=20.0,\
     com.google.guava.source;version=20.0,\
-	org.littleshoot.littleproxy,\
-	org.littleshoot.littleproxy.source,\
+	xyz.rogfam.littleproxy,\
+	xyz.rogfam.littleproxy.source,\
 	osgi.cmpn
