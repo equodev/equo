@@ -21,4 +21,4 @@ Private-Package: \
     com.make.cef,\
     com.make.cef.linux.x86_64,\
     com.make.cef.osx.x86_64,\
-    com.make.cef.windows.x86_64,\
+    com.make.cef.windows.x86_64

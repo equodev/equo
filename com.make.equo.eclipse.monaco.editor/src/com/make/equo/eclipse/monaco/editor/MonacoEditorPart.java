@@ -1,26 +1,51 @@
 package com.make.equo.eclipse.monaco.editor;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
-import com.make.swtcef.Chromium;
+import com.make.equo.monaco.EquoMonacoEditor;
+import com.make.equo.monaco.EquoMonacoEditorBuilder;
 
 public class MonacoEditorPart extends EditorPart {
 
+	private EquoMonacoEditor editor;
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
+
+		editor.getContents((editorContents) -> {
+			IEditorInput input = getEditorInput();
+			if (input instanceof FileEditorInput) {
+				Display.getDefault().syncExec(() -> {
+					try {
+						((FileEditorInput) input).getFile().setContents(
+								new ByteArrayInputStream(editorContents.getBytes(Charset.forName("UTF-8"))), true,
+								false, monitor);
+					} catch (CoreException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+
+			}
+		});
 
 	}
 
@@ -40,7 +65,7 @@ public class MonacoEditorPart extends EditorPart {
 	@Override
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -67,9 +92,18 @@ public class MonacoEditorPart extends EditorPart {
 					sb.append(str);
 				}
 				String textContent = sb.toString();
-				// con este textContent hay que abrir el editor
-				Chromium browser = new Chromium(parent, parent.getStyle());
-				browser.setUrl("equomonaco");
+
+				try {
+					BundleContext bndContext = FrameworkUtil.getBundle(EquoMonacoEditorBuilder.class)
+							.getBundleContext();
+					ServiceReference<EquoMonacoEditorBuilder> svcReference = bndContext
+							.getServiceReference(EquoMonacoEditorBuilder.class);
+					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
+					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent).create();
+
+				} catch (Exception e) {
+					System.out.println("Couldn't retrieve model injector");
+				}
 			} catch (CoreException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,7 +115,6 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 
 	}
 

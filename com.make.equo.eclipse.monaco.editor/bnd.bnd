@@ -24,6 +24,7 @@ Private-Package: com.make.equo.eclipse.monaco.editor
 	org.eclipse.swt.gtk.linux.x86_64,\
 	org.eclipse.swt.gtk.linux.x86_64.source,\
 	com.make.equo.monaco;version=latest,\
+	com.make.equo.ws.api;version=latest,\
 	com.make.cef,\
 	com.make.cef.linux.x86_64,\
 	com.make.cef.osx.x86_64,\
@@ -35,7 +36,10 @@ Private-Package: com.make.equo.eclipse.monaco.editor
 	org.eclipse.core.resources.source,\
 	org.eclipse.core.commands,\
 	org.eclipse.core.runtime,\
-	org.eclipse.equinox.registry
+	org.eclipse.equinox.registry,\
+	org.eclipse.osgi,\
+	org.eclipse.text,\
+	osgi.cmpn
 -includeresource: resources/
 	
     

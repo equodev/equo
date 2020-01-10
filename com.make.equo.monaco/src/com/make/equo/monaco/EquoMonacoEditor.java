@@ -16,7 +16,7 @@ public class EquoMonacoEditor {
 
 	private Chromium browser;
 	private IEquoEventHandler equoEventHandler;
-	
+
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String language) {
 		this.equoEventHandler = handler;
 		browser = new Chromium(parent, style);
@@ -25,17 +25,16 @@ public class EquoMonacoEditor {
 	}
 
 	private void createEditor(String contents, String language) {
-		equoEventHandler.on("_doCreateEditor",
-				(IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, language));
+		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, language));
 	}
 
 	private void handleCreateEditor(String contents, String language) {
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
 		editorData.put("language", language);
-		equoEventHandler.send("_createEditor", editorData);
+		equoEventHandler.send("_doCreateEditor", editorData);
 	}
-	
+
 	public void getContents(IEquoRunnable<String> runnable) {
 		equoEventHandler.on("_doGetContents", (JsonObject contents) -> {
 			runnable.run(contents.get("contents").getAsString());
