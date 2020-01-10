@@ -21,6 +21,7 @@ public class EquoMonacoEditorContribution {
 		builder //
 				.withBaseHtmlResource(BASE_HTML_FILE) //
 				.withContributionName(EQUO_MONACO_CONTRIBUTION_NAME) //
+				.withPathWithScript("", "handler.js") //
 				.withURLResolver(new EquoGenericURLResolver(EquoMonacoEditorContribution.class.getClassLoader())) //
 				.build();
 	}
