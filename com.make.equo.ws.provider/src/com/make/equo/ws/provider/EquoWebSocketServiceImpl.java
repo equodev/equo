@@ -3,7 +3,6 @@ package com.make.equo.ws.provider;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Handler;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -21,7 +20,7 @@ import com.make.equo.ws.api.actions.IActionHandler;
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
-
+	@SuppressWarnings("rawtypes")
 	private Map<String, IActionHandler> actionHandlers = new HashMap<>();
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
@@ -66,12 +65,8 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 		return equoWebSocketServer.getPort();
 	}
 
-	public EquoWebSocketServer getEquoWebSocketServer() {
-		return equoWebSocketServer;
-	}
-
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)
-	public void setActionHandler(IActionHandler actionHandler) {
+	public void setActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
 		this.actionHandlers.put(actionHandler.getClass().getSimpleName().toLowerCase(), actionHandler);
 	}
 
