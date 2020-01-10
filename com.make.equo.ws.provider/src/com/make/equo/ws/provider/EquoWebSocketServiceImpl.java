@@ -7,22 +7,28 @@ import java.util.Map;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.gson.GsonBuilder;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
 import com.make.equo.ws.api.NamedActionMessage;
+import com.make.equo.ws.api.actions.IActionHandler;
 
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 
+	@SuppressWarnings("rawtypes")
+	private Map<String, IActionHandler> actionHandlers = new HashMap<>();
 	private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
 	private EquoWebSocketServer equoWebSocketServer;
 
 	@Activate
 	public void start() {
 		System.out.println("Initializing Equo websocket server...");
-		equoWebSocketServer = new EquoWebSocketServer(eventHandlers);
+		equoWebSocketServer = new EquoWebSocketServer(eventHandlers, actionHandlers);
 		equoWebSocketServer.start();
 	}
 
@@ -58,4 +64,10 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 			;
 		return equoWebSocketServer.getPort();
 	}
+
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC)
+	public void setActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
+		this.actionHandlers.put(actionHandler.getClass().getSimpleName().toLowerCase(), actionHandler);
+	}
+
 }

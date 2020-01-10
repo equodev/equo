@@ -29,6 +29,11 @@ $(document).ready(function () {
 
 	testDiv.click(function () {
 
+		equo.send("ActionHandlerExample",{"name": "John","address": "FakeStreet 123" });
+
+
+		equo.send("ActionHandlerExampleTwo");
+
 		equo.logInfo("this is a info log.");
 
 		equo.logWarn("this is a warning log.");
