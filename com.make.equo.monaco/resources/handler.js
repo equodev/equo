@@ -4,15 +4,20 @@ var editor;
 
 require(['vs/editor/editor.main'], function () {
     equo.on("_doCreateEditor", values => {
-        editor = monaco.editor.create(document.getElementById('container'), {
-            value: values.text,
-            language: values.language
+        const model = monaco.editor.createModel(
+            values.text,
+            undefined, // language
+            monaco.Uri.file(values.name) // uri
+          )
+          
+          editor = monaco.editor.create(document.getElementById('container'));
+          editor.setModel(model)
+       
         });
-        console.log(editor.getValue());
-    })
+    
     equo.send("_createEditor");
 });
 
 equo.on("_getContents", () => {
-    equo.send("_doGetContents", { contents: editor.getValue() });
+   equo.send("_doGetContents", { contents: editor.getValue() });
 });

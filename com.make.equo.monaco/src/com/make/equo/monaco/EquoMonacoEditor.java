@@ -17,21 +17,21 @@ public class EquoMonacoEditor {
 	private Chromium browser;
 	private IEquoEventHandler equoEventHandler;
 
-	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String language) {
+	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
 		browser = new Chromium(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME);
-		createEditor(contents, language);
+		createEditor(contents, fileName);
 	}
 
-	private void createEditor(String contents, String language) {
-		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, language));
+	private void createEditor(String contents, String fileName) {
+		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, fileName));
 	}
 
-	private void handleCreateEditor(String contents, String language) {
+	private void handleCreateEditor(String contents, String fileName) {
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
-		editorData.put("language", language);
+		editorData.put("name", fileName);
 		equoEventHandler.send("_doCreateEditor", editorData);
 	}
 

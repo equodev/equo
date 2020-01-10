@@ -99,7 +99,8 @@ public class MonacoEditorPart extends EditorPart {
 					ServiceReference<EquoMonacoEditorBuilder> svcReference = bndContext
 							.getServiceReference(EquoMonacoEditorBuilder.class);
 					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
-					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent).create();
+					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
+							.withFileName(fileInput.getURI().toString()).create();
 
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve model injector");

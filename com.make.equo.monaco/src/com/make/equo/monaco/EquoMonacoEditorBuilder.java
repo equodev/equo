@@ -18,13 +18,13 @@ public class EquoMonacoEditorBuilder {
 	private Composite parent;
 	private int style;
 	private String contents;
-	private String language;
+	private String fileName;
 
 	public EquoMonacoEditorBuilder() {
 //		this.id = this.hashCode();
 		this.style = -1;
 		this.contents = "";
-		this.language = "";
+		this.fileName = "";
 	}
 
 	public EquoMonacoEditorBuilder withParent(Composite parent) {
@@ -37,6 +37,11 @@ public class EquoMonacoEditorBuilder {
 		return this;
 	}
 
+	public EquoMonacoEditorBuilder withFileName(String fileName) {
+		this.fileName = fileName;
+		return this;
+	}
+
 	public EquoMonacoEditorBuilder withStyle(int style) {
 		this.style = style;
 		return this;
@@ -46,7 +51,7 @@ public class EquoMonacoEditorBuilder {
 		if (style == -1) {
 			style = parent.getStyle();
 		}
-		return new EquoMonacoEditor(parent, style, equoEventHandler, contents, language);
+		return new EquoMonacoEditor(parent, style, equoEventHandler, contents, fileName);
 	}
 
 //	public static void createEditor(String contents, String language) {
