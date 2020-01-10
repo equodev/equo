@@ -175,4 +175,9 @@ public class OptionalViewBuilder {
 		analyticsService.enableAnalytics();
 		return this;
 	}
+
+	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+		equoServer.withBaseHtml(baseHtmlFile);
+		return this;
+	}
 }

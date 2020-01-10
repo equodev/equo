@@ -17,7 +17,7 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.withSingleView("https://www.maketechnology.io").enableAnalytics()
+			return appBuilder.plainApp("index.html").enableAnalytics()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
 

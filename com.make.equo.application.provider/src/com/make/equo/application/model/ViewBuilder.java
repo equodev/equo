@@ -1,5 +1,7 @@
 package com.make.equo.application.model;
 
+import java.net.URISyntaxException;
+
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
@@ -35,6 +37,12 @@ public class ViewBuilder {
 		addUrlToProxyServer(this.url);
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder;
+	}
+
+	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+		this.url = "plainEquoApp";
+		part.getProperties().put(IConstants.MAIN_URL_KEY, "plainEquoApp");
+		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
 	}
 
 	OptionalViewBuilder configureViewPart(EquoApplicationBuilder equoApplicationBuilder) {
