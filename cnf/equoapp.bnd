@@ -164,11 +164,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
-<<<<<<< HEAD
     org.eclipse.swt.chromium;version='[69.1.0,69.1.1)',\
     org.eclipse.swt.chromium.64b;version='[69.1.0,69.1.1)',\
-=======
->>>>>>> revert changes related to io.netty lib
     io.netty.all;version='[4.0.44,4.0.45)',\
     javax.inject;version='[1.0.0,1.0.1)',\
     jnr.x86asm;version='[1.0.2,1.0.3)',\
@@ -189,14 +186,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     org.eclipse.swt;version='[3.113.0,3.113.1)',\
     org.java-websocket.Java-WebSocket;version='[1.3.6,1.3.7)',\
     org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
-<<<<<<< HEAD
-=======
-    org.objectweb.asm;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.analysis;version='[5.0.3,5.0.4)',\
-    org.objectweb.asm.commons;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.tree;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.util;version='[5.0.3,5.0.4)',\
->>>>>>> revert changes related to io.netty lib
     org.slf4j.api;version='[1.7.10,1.7.11)',\
     org.w3c.css.sac;version='[1.3.1,1.3.2)',\
     com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
