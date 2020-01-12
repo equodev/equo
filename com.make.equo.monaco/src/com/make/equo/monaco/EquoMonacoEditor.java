@@ -4,6 +4,7 @@ import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTIO
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -16,6 +17,7 @@ public class EquoMonacoEditor {
 
 	private Browser browser;
 	private IEquoEventHandler equoEventHandler;
+	private final Semaphore lock = new Semaphore(1);
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
@@ -35,7 +37,31 @@ public class EquoMonacoEditor {
 		equoEventHandler.send("_doCreateEditor", editorData);
 	}
 
-	public void getContents(IEquoRunnable<String> runnable) {
+	public void getContentsSync(IEquoRunnable<String> runnable) {
+		if (lock.tryAcquire()) {
+			equoEventHandler.on("_doGetContents", (JsonObject contents) -> {
+				try {
+					runnable.run(contents.get("contents").getAsString());
+				} finally {
+					synchronized (lock) {
+						lock.notify();
+						lock.release();
+					}
+				}
+			});
+
+			equoEventHandler.send("_getContents");
+			synchronized (lock) {
+				try {
+					lock.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void getContentsAsync(IEquoRunnable<String> runnable) {
 		equoEventHandler.on("_doGetContents", (JsonObject contents) -> {
 			runnable.run(contents.get("contents").getAsString());
 		});

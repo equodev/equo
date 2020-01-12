@@ -1,10 +1,9 @@
 package com.make.equo.eclipse.monaco.editor;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.CoreException;
@@ -30,10 +29,10 @@ public class MonacoEditorPart extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 
-		editor.getContents((editorContents) -> {
+		editor.getContentsSync((editorContents) -> {
 			IEditorInput input = getEditorInput();
 			if (input instanceof FileEditorInput) {
-				Display.getDefault().syncExec(() -> {
+				Display.getDefault().asyncExec(() -> {
 					try {
 						((FileEditorInput) input).getFile().setContents(
 								new ByteArrayInputStream(editorContents.getBytes(Charset.forName("UTF-8"))), true,
@@ -82,16 +81,14 @@ public class MonacoEditorPart extends EditorPart {
 			FileEditorInput fileInput = (FileEditorInput) input;
 			setTitleToolTip(fileInput.getPath().toString());
 
-			try {
-				InputStream contents = fileInput.getFile().getContents();
-				InputStreamReader isReader = new InputStreamReader(contents);
-				BufferedReader reader = new BufferedReader(isReader);
-				StringBuffer sb = new StringBuffer();
-				String str;
-				while ((str = reader.readLine()) != null) {
-					sb.append(str);
+			try (InputStream contents = fileInput.getFile().getContents()) {
+				int singleByte;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				while ((singleByte = contents.read()) != -1) {
+					baos.write(singleByte);;
 				}
-				String textContent = sb.toString();
+				
+				String textContent = new String(baos.toByteArray());
 
 				try {
 					BundleContext bndContext = FrameworkUtil.getBundle(EquoMonacoEditorBuilder.class)
@@ -103,7 +100,7 @@ public class MonacoEditorPart extends EditorPart {
 							.withFileName(fileInput.getURI().toString()).create();
 
 				} catch (Exception e) {
-					System.out.println("Couldn't retrieve model injector");
+					System.out.println("Couldn't retrieve Monaco Editor service");
 				}
 			} catch (CoreException | IOException e) {
 				// TODO Auto-generated catch block
