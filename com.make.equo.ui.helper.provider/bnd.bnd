@@ -4,7 +4,6 @@ Export-Package: \
     com.make.equo.ui.helper.provider.model,\
     com.make.equo.ui.helper.provider.dialogs.util
 -buildpath: \
-    com.make.cef,\
     org.eclipse.osgi,\
     org.eclipse.osgi.source,\
     org.eclipse.swt,\

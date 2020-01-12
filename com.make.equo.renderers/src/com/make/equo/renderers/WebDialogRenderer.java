@@ -13,6 +13,7 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +32,6 @@ import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.MButtonToggle;
 import com.make.equo.ui.helper.provider.model.MWebDialog;
 import com.make.equo.ws.api.IEquoEventHandler;
-import com.make.swtcef.Chromium;
 
 public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 
@@ -143,8 +143,8 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite parent) {
-		Chromium browser = new Chromium(parent, SWT.NONE);
+	public Browser createBrowserComponent(Composite parent) {
+		Browser browser = new Browser(parent, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return browser;
 	}

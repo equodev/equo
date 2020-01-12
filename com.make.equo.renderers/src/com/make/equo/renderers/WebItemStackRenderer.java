@@ -38,6 +38,7 @@ import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,7 +52,6 @@ import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
-import com.make.swtcef.Chromium;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
 
@@ -421,14 +421,14 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite webItemStackRendererComposite) {
-		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
-				new String[] { "ignore-certificate-errors", null },
-				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
-				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
+	public Browser createBrowserComponent(Composite webItemStackRendererComposite) {
+//		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
+//				new String[] { "ignore-certificate-errors", null },
+//				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
+//				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
 		// The browser stays 1 level above other parts
-		Chromium browser = new Chromium(webItemStackRendererComposite, SWT.NONE);
+		Browser browser = new Browser(webItemStackRendererComposite, SWT.NONE);
 //		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
 
 		return browser;

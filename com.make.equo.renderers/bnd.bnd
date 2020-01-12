@@ -27,7 +27,7 @@ Private-Package: com.make.equo.renderers.contributions,\
     com.google.guava.source;version=20.0,\
     com.google.gson,\
     com.google.gson.source,\
-    com.make.cef,\
+    org.eclipse.swt.chromium,\
     org.eclipse.osgi, \
     org.eclipse.osgi.source, \
     osgi.cmpn,\

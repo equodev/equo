@@ -25,6 +25,7 @@ import org.eclipse.e4.ui.workbench.renderers.swt.ToolBarManagerRenderer;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.collect.Lists;
@@ -33,7 +34,6 @@ import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
-import com.make.swtcef.Chromium;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
 
@@ -96,17 +96,17 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public Chromium createBrowserComponent(Composite toolBarParent) {
-		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
-				new String[] { "ignore-certificate-errors", null },
-				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
-				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
+	public Browser createBrowserComponent(Composite toolBarParent) {
+//		Browser.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
+//				new String[] { "ignore-certificate-errors", null },
+//				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
+//				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
 
 		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
 
 		toolBarParent.getHorizontalBar().setVisible(false);
 		toolBarParent.getVerticalBar().setVisible(false);
-		Chromium browser = new Chromium(toolBarParent, SWT.NONE);
+		Browser browser = new Browser(toolBarParent, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, true).hint(2000, 24).applyTo(browser);
 
 		return browser;
