@@ -5,21 +5,21 @@ import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTIO
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.gson.JsonObject;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
-import com.make.swtcef.Chromium;
 
 public class EquoMonacoEditor {
 
-	private Chromium browser;
+	private Browser browser;
 	private IEquoEventHandler equoEventHandler;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
-		browser = new Chromium(parent, style);
+		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME);
 		createEditor(contents, fileName);
 	}

@@ -130,6 +130,14 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Override
 	public Browser createBrowserComponent(Composite toolBarParent) {
+<<<<<<< Upstream, based on origin/master
+=======
+//		Browser.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
+//				new String[] { "ignore-certificate-errors", null },
+//				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
+//				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
+
+>>>>>>> 93f11fa Update to Chromium 69
 		GridLayoutFactory.fillDefaults().applyTo(toolBarParent);
 
 		toolBarParent.getHorizontalBar().setVisible(false);

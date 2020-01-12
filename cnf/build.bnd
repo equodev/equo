@@ -14,7 +14,7 @@
         name = ChromiumCEF; \
         url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/69-64b.1/repository/"; \
         location = ~/.bnd/cache/cefbinaries
-        
+
 -plugin.4.ChromiumDEVTools: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumDEVTools; \
