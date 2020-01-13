@@ -1,8 +1,9 @@
 Bundle-Version: ${version}.${tstamp}
 -buildpath: \
 	com.google.gson,\
-	com.google.guava;version=23.0.0,\
-	com.google.guava.source;version=23.0.0,\
+	com.google.gson.source,\
+	com.google.guava;version=20.0,\
+	com.google.guava.source;version=20.0,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	osgi.annotation,\

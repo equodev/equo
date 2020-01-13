@@ -2,8 +2,8 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.ws.provider
 -includeresource: resources/
 -buildpath: \
-    xyz.rogfam.littleproxy,\
-    xyz.rogfam.littleproxy.source,\
+    org.littleshoot.littleproxy,\
+    org.littleshoot.littleproxy.source,\
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
 	com.google.gson,\

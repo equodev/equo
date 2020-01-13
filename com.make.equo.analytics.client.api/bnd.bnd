@@ -2,4 +2,5 @@ Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.analytics.client.api
 -buildpath: \
 	com.google.gson,\
+	com.google.gson.source,\
 	osgi.cmpn
