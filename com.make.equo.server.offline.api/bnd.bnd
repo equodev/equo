@@ -6,10 +6,10 @@ Export-Package: \
 -buildpath: \
 	io.netty.all,\
 	io.netty.all.source,\
-	com.google.guava;version=23.0,\
-	com.google.guava.source;version=23.0,\
+	com.google.guava;version=20.0,\
+	com.google.guava.source;version=20.0,\
 	org.apache.httpcomponents.httpcore;version=4.4.6,\
 	org.apache.httpcomponents.httpcore.source;version=4.4.6,\
-	xyz.rogfam.littleproxy,\
-	xyz.rogfam.littleproxy.source,\
+	org.littleshoot.littleproxy,\
+	org.littleshoot.littleproxy.source,\
 	osgi.cmpn

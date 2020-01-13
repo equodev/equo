@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import xyz.rogfam.littleproxy.proxy.HttpFiltersAdapter;
+import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
