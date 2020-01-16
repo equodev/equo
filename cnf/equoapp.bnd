@@ -79,14 +79,9 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
     rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory,\
-<<<<<<< Upstream, based on origin/master
     org.eclipse.swt.chromium.remote-debugging-port=8888,\
     swt.chromium.debug=true
 
-=======
-    org.eclipse.swt.chromium.remote-debugging-port=9797
-        
->>>>>>> fcf987c Add devtools debugging port
 -runproperties.app: \
     app_name=${def;appName},\
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
