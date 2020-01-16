@@ -17,19 +17,58 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.plainApp("index.html").enableAnalytics().withCustomScript("js/testAnalytics.js")
-					.withCustomScript("js/testLogging.js")
-					.withMainMenu("File")
-						.addMenuItem("New").onClick(() -> System.out.println("ON_NEW"))
-						.onAbout(() -> System.out.println("ON_ABOUT"))
-						.onPreferences(() -> System.out.println("ON_PREFERENCES"))
-						.onBeforeExit(() -> System.out.println("Bye Bye Equo"))
-					.withMainMenu("Dialog Test")
-						.addMenuItem("Message Dialog").onClick(() -> createInfoDialog())
-						.addMenuItem("Message Dialog with Toggle").onClick(() -> createInfoToggleDialog())
-					.withToolbar()
-						.addToolItem("chat", "Chat").onClick(() -> System.out.println("click en ToolItem"))
-					.start();
+			return appBuilder.plainApp("index.html").enableAnalytics()
+					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
+					.addMenuItem("New").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_NEW");
+
+						}
+					}).onAbout(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_ABOUT");
+
+						}
+					}).onPreferences(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("ON_PREFERENCES");
+
+						}
+					}).onBeforeExit(new Runnable() {
+
+						@Override
+						public void run() {
+							System.out.println("Bye Bye Equo");
+
+						}
+					}).withMainMenu("Dialog Test").addMenuItem("Message Dialog").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								MessageDialog.openInformation(null, "info dialog", "info msg");
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}).addMenuItem("Message Dialog with Toggle").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
+										"soy el toggle del mensaje", true, null, "key");
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}).start();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
