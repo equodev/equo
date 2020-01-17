@@ -24,7 +24,7 @@ plugindir: ${workspace}/cnf/plugins
     ${plugindir}/publisher-0.1.6.jar; \
         url="https://dl.maketechnology.io/bndp2/rls/publisher-0.1.6.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
-        url="http://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
+        url="https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 
 -plugin.5.Release: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
