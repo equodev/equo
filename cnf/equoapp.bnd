@@ -110,10 +110,13 @@ cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
 chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
--runprogramargs: --ignore-certificate-errors\n\
+-runprogramargs: --proxy-server=localhost:9896\n\
+    --ignore-certificate-errors\n\
     --allow-file-access-from-files\n\
     --disable-web-security\n\
-    --enable-widevine-cdm
+    --enable-widevine-cdm\n\
+    --proxy-bypass-list=127.0.0.1
+    
     
 #-runproperties.debug: \
 #    osgi.console= 
