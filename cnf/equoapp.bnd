@@ -11,13 +11,13 @@
 -includeresource: -resources/
 osgi: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 -runfw: ${osgi}
--runee: JavaSE-11
+-runee: JavaSE-1.8
 #-runrepos: Release
 -resolve.effective: resolve
 #-runsystemcapabilities: ${native_capability}
 #-runprogramargs: 
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
--runvm: ${vmargs}
+#-runvm: ${vmargs}
 -runrequires.equo: \
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.weaving.hook)',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
@@ -55,9 +55,16 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.cocoa.*)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.win32.*)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.gtk.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.chromium.cocoa.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.chromium.win32.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.chromium.gtk.*)'
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.gtk.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.gtk.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.gtk.*)'
+
 
 -runproperties.equo: \
     equinox.use.ds=true,\
@@ -77,7 +84,10 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
-    rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
+    rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory,\
+    org.eclipse.swt.chromium.remote-debugging-port=8888,\
+    swt.chromium.debug=true
+
 -runproperties.app: \
     app_name=${def;appName},\
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
@@ -100,14 +110,11 @@ cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
 chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
--runprogramargs: -runvm: -XstartOnFirstThread\n\
-    --proxy-server=localhost:9896\n\
-    --ignore-certificate-errors\n\
+-runprogramargs: --ignore-certificate-errors\n\
     --allow-file-access-from-files\n\
     --disable-web-security\n\
-    --enable-widevine-cdm\n\
-    --proxy-bypass-list=127.0.0.1
-
+    --enable-widevine-cdm
+    
 #-runproperties.debug: \
 #    osgi.console= 
 
