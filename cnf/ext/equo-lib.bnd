@@ -24,11 +24,7 @@ plugindir: ${workspace}/cnf/plugins
     ${plugindir}/publisher-0.1.6.jar; \
         url="https://dl.maketechnology.io/bndp2/rls/publisher-0.1.6.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
-<<<<<<< HEAD
         url="https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
-=======
-        url="http://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
->>>>>>> chromium 69 with java-version-update has been added sucessfully.
 
 -plugin.5.Release: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
