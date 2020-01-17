@@ -11,13 +11,13 @@
 -includeresource: -resources/
 osgi: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 -runfw: ${osgi}
--runee: JavaSE-11
+-runee: JavaSE-1.8
 #-runrepos: Release
 -resolve.effective: resolve
 #-runsystemcapabilities: ${native_capability}
 #-runprogramargs: 
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
--runvm: ${vmargs}
+#-runvm: ${vmargs}
 -runrequires.equo: \
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.weaving.hook)',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
@@ -109,6 +109,13 @@ cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
 chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
+<<<<<<< HEAD
+=======
+-runprogramargs: --ignore-certificate-errors\n\
+    --allow-file-access-from-files\n\
+    --disable-web-security\n\
+    --enable-widevine-cdm
+>>>>>>> test error related to chromium 69
     
 #-runproperties.debug: \
 #    osgi.console= 
