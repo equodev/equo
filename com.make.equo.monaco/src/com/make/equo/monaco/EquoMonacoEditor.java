@@ -2,7 +2,9 @@ package com.make.equo.monaco;
 
 import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTION_NAME;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
@@ -14,15 +16,21 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
-
+	
+	private volatile boolean loaded;
+	
 	private Browser browser;
 	private IEquoEventHandler equoEventHandler;
 	private final Semaphore lock = new Semaphore(1);
+	
+	private List<IEquoRunnable<Void>> onLoadListeners;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME);
+		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
+		loaded = false;
 		createEditor(contents, fileName);
 	}
 
@@ -35,6 +43,18 @@ public class EquoMonacoEditor {
 		editorData.put("text", contents);
 		editorData.put("name", fileName);
 		equoEventHandler.send("_doCreateEditor", editorData);
+		loaded = true;
+		for (IEquoRunnable<Void> onLoadListener : onLoadListeners) {
+			onLoadListener.run(null);
+		}
+	}
+	
+	public void addOnLoadListener(IEquoRunnable<Void> listener) {
+		if (!loaded) {
+			onLoadListeners.add(listener);
+		} else {
+			listener.run(null);
+		}
 	}
 
 	public void getContentsSync(IEquoRunnable<String> runnable) {
@@ -66,6 +86,23 @@ public class EquoMonacoEditor {
 			runnable.run(contents.get("contents").getAsString());
 		});
 		equoEventHandler.send("_getContents");
+	}
+	
+	public void handleAfterSave() {
+		equoEventHandler.send("_didSave");
+	}
+	
+	public void subscribeIsDirty(IEquoRunnable<Boolean> dirtyListener) {
+		equoEventHandler.on("_isDirtyNotification", (JsonObject isDirty) -> {
+			dirtyListener.run(isDirty.get("isDirty").getAsBoolean());
+		});
+		if (loaded) {
+			equoEventHandler.send("_subscribeIsDirty");
+		} else {
+			addOnLoadListener((IEquoRunnable<Void>) runnable -> {
+				equoEventHandler.send("_subscribeIsDirty");
+			});
+		}
 	}
 
 }

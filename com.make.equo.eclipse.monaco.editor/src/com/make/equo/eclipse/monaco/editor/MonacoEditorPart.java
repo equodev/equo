@@ -21,14 +21,21 @@ import org.osgi.framework.ServiceReference;
 
 import com.make.equo.monaco.EquoMonacoEditor;
 import com.make.equo.monaco.EquoMonacoEditorBuilder;
+import com.make.equo.ws.api.IEquoRunnable;
 
 public class MonacoEditorPart extends EditorPart {
+	
+	private volatile boolean isDirty = false;
+	
+	private IEquoRunnable<Boolean> dirtyListener = (isDirty) -> {
+		this.isDirty = isDirty;
+		firePropertyChange(PROP_DIRTY);
+	};
 
 	private EquoMonacoEditor editor;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-
 		editor.getContentsSync((editorContents) -> {
 			IEditorInput input = getEditorInput();
 			if (input instanceof FileEditorInput) {
@@ -37,12 +44,12 @@ public class MonacoEditorPart extends EditorPart {
 						((FileEditorInput) input).getFile().setContents(
 								new ByteArrayInputStream(editorContents.getBytes(Charset.forName("UTF-8"))), true,
 								false, monitor);
+						editor.handleAfterSave();
 					} catch (CoreException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				});
-
 			}
 		});
 
@@ -50,7 +57,6 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -63,14 +69,12 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return true;
+		return isDirty;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class MonacoEditorPart extends EditorPart {
 					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
 					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
 							.withFileName(fileInput.getURI().toString()).create();
-
+					editor.subscribeIsDirty(dirtyListener);
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve Monaco Editor service");
 				}
@@ -113,7 +117,6 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public void setFocus() {
-
 	}
 
 }
