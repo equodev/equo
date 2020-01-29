@@ -36,20 +36,12 @@ public class EquoApplicationBuilder {
 	private String applicationName;
 	private IEquoEventHandler equoEventHandler;
 
-<<<<<<< HEAD
 	@Activate
 	private void start() {
 		System.setProperty("swt.chromium.args",
 				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
 	}
 
-=======
- @Activate
- private void start() {
-	 System.setProperty("swt.chromium.args","--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");	
- }
-	
->>>>>>> chromium property has been added to AppBuilder.
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);
 	}
