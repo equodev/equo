@@ -7,7 +7,7 @@
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "https://equo-chromium-swt.ams3.digitaloceanspaces.com/69-64b/repository/"; \
+        url = "https://equo-chromium-swt.ams3.digitaloceanspaces.com/69.1/repository/"; \
         location = ~/.bnd/cache/cefswt
         
 -plugin.5.ChromiumCEF: \
