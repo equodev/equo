@@ -6,14 +6,10 @@ task compileAspects() {
       
       repositories { mavenCentral() }
       configurations { ajc }
-<<<<<<< HEAD
       dependencies   { 
                        compile("org.aspectj:aspectjrt:1.9.4")
                         ajc 'org.aspectj:aspectjtools:1.9.4'
                        }    
-=======
-      dependencies   { ajc 'org.aspectj:aspectjtools:1.9.4' }    
->>>>>>> test error related to chromium 69
       
       ant.taskdef( 
         resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", 
