@@ -17,11 +17,11 @@ osgi: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701
 #-runsystemcapabilities: ${native_capability}
 #-runprogramargs: 
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
-#-runvm: ${vmargs}
+-runvm: ${vmargs}
 -runrequires.equo: \
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.weaving.hook)',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
-    osgi.identity;filter:='(osgi.identity=com.google.guava)',\
+    osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aspects)',\
@@ -109,13 +109,6 @@ cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
 chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
--runprogramargs: --proxy-server=localhost:9896;\
-    --ignore-certificate-errors;\
-    --allow-file-access-from-files;\
-    --disable-web-security;\
-    --enable-widevine-cdm;\
-    --proxy-bypass-list=127.0.0.1
-    
     
 #-runproperties.debug: \
 #    osgi.console= 
