@@ -7,14 +7,8 @@
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-<<<<<<< HEAD
         url = "https://dl.maketechnology.io/chromium-swt/69.1/repository"; \
         location = ~/.bnd/cache/chromium.swt        
-=======
-        url = "https://equo-chromium-swt.ams3.digitaloceanspaces.com/69.1/repository/"; \
-        location = ~/.bnd/cache/chromium.swt
-        
->>>>>>> several changes related to MR threads
 -plugin.5.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumCEF; \
