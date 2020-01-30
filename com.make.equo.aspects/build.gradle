@@ -6,7 +6,10 @@ task compileAspects() {
       
       repositories { mavenCentral() }
       configurations { ajc }
-      dependencies   { ajc 'org.aspectj:aspectjtools:1.9.4' }    
+      dependencies   { 
+                       compile("org.aspectj:aspectjrt:1.9.4")
+                        ajc 'org.aspectj:aspectjtools:1.9.4'
+                       }    
       
       ant.taskdef( 
         resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", 
