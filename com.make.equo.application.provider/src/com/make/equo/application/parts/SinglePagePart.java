@@ -11,25 +11,25 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.make.equo.application.util.IConstants;
-import com.make.swtcef.Chromium;
+import org.eclipse.swt.chromium.Browser;
 
 public class SinglePagePart {
 
 	@Inject
 	private MPart thisPart;
 
-	private Chromium browser;
+	private Browser browser;
 
 	@Inject
 	public SinglePagePart(Composite parent) {
-	    Chromium.setCommandLine(new String[][] {
-	            new String[] {"proxy-server", "localhost:9896"},
-	            new String[] {"ignore-certificate-errors", null},
-	            new String[] {"allow-file-access-from-files", null},
-	            new String[] {"disable-web-security", null},
-	            new String[] {"enable-widevine-cdm", null},
-	            new String[] {"proxy-bypass-list", "127.0.0.1"}
-	    });
+//	    Chromium.setCommandLine(new String[][] {
+//	            new String[] {"proxy-server", "localhost:9896"},
+//	            new String[] {"ignore-certificate-errors", null},
+//	            new String[] {"allow-file-access-from-files", null},
+//	            new String[] {"disable-web-security", null},
+//	            new String[] {"enable-widevine-cdm", null},
+//	            new String[] {"proxy-bypass-list", "127.0.0.1"}
+//	    });
 	}
 
 	@PostConstruct
@@ -38,7 +38,7 @@ public class SinglePagePart {
 		if (equoAppUrl != null) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(GridLayoutFactory.fillDefaults().create());
-			browser = new Chromium(composite, SWT.NONE);
+			browser = new Browser(composite, SWT.NONE);
 			browser.setUrl(equoAppUrl);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}

@@ -10,6 +10,7 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -34,6 +35,12 @@ public class EquoApplicationBuilder {
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
 	private IEquoEventHandler equoEventHandler;
+
+	@Activate
+	private void start() {
+		System.setProperty("swt.chromium.args",
+				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+	}
 
 	public OptionalViewBuilder withSingleView(String url) {
 		return this.getViewBuilder().withSingleView(url);

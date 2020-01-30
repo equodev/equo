@@ -12,7 +12,7 @@ Export-Package: \
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
-	com.make.cef,\
+    org.eclipse.swt.chromium,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	org.eclipse.core.runtime,\

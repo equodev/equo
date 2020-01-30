@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -34,7 +35,6 @@ import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
-import com.make.swtcef.Chromium;
 
 public interface IEquoRenderer {
 
@@ -44,7 +44,7 @@ public interface IEquoRenderer {
 	 * @param parent
 	 */
 	default void configureAndStartRenderProcess(Composite parent) {
-		Chromium browser = createBrowserComponent(parent);
+		Browser browser = createBrowserComponent(parent);
 
 		String rendererURL = EQUO_RENDERERS_CONTRIBUTION_NAME + "/" + getEquoRendererName();
 
@@ -210,6 +210,6 @@ public interface IEquoRenderer {
 
 	IEquoServer getEquoProxyServer();
 
-	Chromium createBrowserComponent(Composite parent);
+	Browser createBrowserComponent(Composite parent);
 
 }

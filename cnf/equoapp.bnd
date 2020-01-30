@@ -9,7 +9,7 @@
 -buildpath.graphics: ${if;${matches;${tolower;${os.name}};.*win.*};org.eclipse.swt.win32.win32.x86_64;${if;${matches;${tolower;${os.name}};.*mac.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.gtk.linux.x86_64}}
 
 -includeresource: -resources/
-osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
+osgi: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 -runfw: ${osgi}
 -runee: JavaSE-1.8
 #-runrepos: Release
@@ -19,7 +19,7 @@ osgi: org.eclipse.osgi;version='[3.12.50.v20170928-1321,3.12.50.v20170928-1321]'
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 -runvm: ${vmargs}
 -runrequires.equo: \
-    osgi.identity;filter:='(&(osgi.identity=org.eclipse.equinox.weaving.hook)(version>=1.2.200))',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.weaving.hook)',\
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
     osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
@@ -48,17 +48,21 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.ds)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.swt)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.renderers.swt)',\
-    osgi.identity;filter:='(osgi.identity=com.github.jnr.jffi.native)'
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=slf4j.api)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.cocoa.*)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.win32.*)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.gtk.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.windows.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.linux.*)',\
-    osgi.identity;filter:='(osgi.identity=com.make.cef.osx.*)'
-
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.gtk.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.gtk.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.cocoa.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.win32.*)',\
+    osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.gtk.*)'
 
 
 -runproperties.equo: \
@@ -79,7 +83,10 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
-    rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory
+    rendererFactoryUri=bundleclass://com.make.equo.renderers/com.make.equo.renderers.EclipseWebRendererFactory,\
+    org.eclipse.swt.chromium.remote-debugging-port=8888,\
+    swt.chromium.debug=true
+
 -runproperties.app: \
     app_name=${def;appName},\
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
@@ -95,12 +102,14 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 
 os:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};macosx;linux}}
 ws:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};cocoa;gtk}}
-cefos:${if;${matches;${tolower;${os.name}};.*win.*};windows;${if;${matches;${tolower;${os.name}};.*mac.*};osx;linux}}
+chromiumos:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};macosx;linux}}
 swt.fragment: org.eclipse.swt.${ws}.${os}.x86_64
-cef.fragment: com.make.cef.${cefos}.x86_64
-fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}}
+devtools.fragment: com.make.chromium.cef.dev.${ws}.${chromiumos}
+cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
+chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
+fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
-
+    
 #-runproperties.debug: \
 #    osgi.console= 
 
@@ -123,111 +132,113 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)'
     
 -runbundles.equo: \
-    org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)',\
+    org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)',\
     bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
-    org.eclipse.equinox.weaving.aspectj;version='[1.0.400,1.0.401)',\
-    org.eclipse.equinox.weaving.caching;version='[1.1.200,1.1.201)',\
-    com.make.equo.aspects;version='[0.1.0,0.2.0)',\
-    org.aspectj.weaver;version='[1.9.2,1.9.3)',\
-    org.aspectj.runtime;version='[1.9.2,1.9.3)',\
-    com.github.jnr.ffi;version='[2.1.7,2.1.8)',\
-    com.github.jnr.jffi;version='[1.2.14,1.2.15)',\
-    com.github.jnr.jffi.native;version='[1.2.16,1.2.17)',\
     com.google.gson;version='[2.8.2,2.8.3)',\
     com.google.guava;version='[20.0.0,20.0.1)',\
-    com.ibm.icu;version='[58.2.0,58.2.1)',\
-    com.make.cef;version='[1.0.0,1.0.1)',\
-    com.make.equo.application.client;version='[0.1.0,0.2.0)',\
-    com.make.equo.application.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.server.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.server.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.ws.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.ws.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.server.offline.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.server.offline.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.analytics.client.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.analytics.client.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.analytics.internal.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.analytics.internal.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.aer.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.aer.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.logging.client.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.logging.client.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.aer.internal.api;version='[0.1.0,0.2.0)',\
-    com.make.equo.aer.internal.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.contribution.media.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.ui.helper.provider;version='[0.1.0,0.2.0)',\
-    com.make.equo.renderers;version='[0.1.0,0.2.0)',\
+    com.ibm.icu;version='[64.2.0,64.2.1)',\
+    com.make.equo.aer.api;version=snapshot,\
+    com.make.equo.aer.internal.api;version=snapshot,\
+    com.make.equo.aer.internal.provider;version=snapshot,\
+    com.make.equo.aer.provider;version=snapshot,\
+    com.make.equo.analytics.client.api;version=snapshot,\
+    com.make.equo.analytics.client.provider;version=snapshot,\
+    com.make.equo.analytics.internal.api;version=snapshot,\
+    com.make.equo.analytics.internal.provider;version=snapshot,\
+    com.make.equo.application.client;version=snapshot,\
+    com.make.equo.application.provider;version=snapshot,\
+    com.make.equo.aspects;version=snapshot,\
+    com.make.equo.renderers;version=snapshot,\
+    com.make.equo.contribution.media.provider;version=snapshot,\
+    com.make.equo.logging.client.api;version=snapshot,\
+    com.make.equo.logging.client.provider;version=snapshot,\
+    com.make.equo.renderers;version=snapshot,\
+    com.make.equo.server.api;version=snapshot,\
+    com.make.equo.server.offline.api;version=snapshot,\
+    com.make.equo.server.offline.provider;version=snapshot,\
+    com.make.equo.server.provider;version=snapshot,\
+    com.make.equo.ui.helper.provider;version=snapshot,\
+    com.make.equo.ws.api;version=snapshot,\
+    com.make.equo.ws.provider;version=snapshot,\
+    com.squareup.moshi;version='[1.4.0,1.4.1)',\
+    com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
+    com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
+    com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
+    org.eclipse.swt.chromium;version='[69.1.0,69.1.1)',\
+    org.eclipse.swt.chromium.64b;version='[69.1.0,69.1.1)',\
     io.netty.all;version='[4.0.44,4.0.45)',\
     javax.inject;version='[1.0.0,1.0.1)',\
     jnr.x86asm;version='[1.0.2,1.0.3)',\
-    org.apache.batik.css;version='[1.8.0,1.8.1)',\
-    org.apache.batik.util;version='[1.8.0,1.8.1)',\
+    org.apache.batik.constants;version='[1.11.0,1.11.1)',\
+    org.apache.batik.i18n;version='[1.11.0,1.11.1)',\
     org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
     org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
-    org.eclipse.equinox.ds;version='[1.5.0,1.5.2)',\
-    org.apache.felix.scr;version='[2.0.10,2.0.11)',\
-    org.apache.httpcomponents.httpcore;version='[4.4.6,4.4.7)',\
-    org.eclipse.core.commands;version='[3.9.0,3.9.1)',\
-    org.eclipse.core.contenttype;version='[3.6.0,3.6.1)',\
-    org.eclipse.core.databinding;version='[1.6.100,1.6.101)',\
-    org.eclipse.core.databinding.observable;version='[1.6.100,1.6.101)',\
-    org.eclipse.core.databinding.property;version='[1.6.100,1.6.101)',\
-    org.eclipse.core.expressions;version='[3.6.0,3.6.1)',\
-    org.eclipse.core.jobs;version='[3.9.1,3.9.9)',\
-    org.eclipse.core.runtime;version='[3.13.0,3.13.1)',\
-    org.eclipse.e4.core.commands;version='[0.12.100,0.12.101)',\
-    org.eclipse.e4.core.contexts;version='[1.6.0,1.6.1)',\
-    org.eclipse.e4.core.di;version='[1.6.100,1.6.101)',\
-    org.eclipse.e4.core.di.annotations;version='[1.6.0,1.6.1)',\
-    org.eclipse.e4.core.di.extensions;version='[0.15.0,0.15.1)',\
-    org.eclipse.e4.core.di.extensions.supplier;version='[0.15.0,0.15.1)',\
-    org.eclipse.e4.core.services;version='[2.1.0,2.1.1)',\
-    org.eclipse.e4.emf.xpath;version='[0.2.0,0.2.1)',\
-    org.eclipse.e4.ui.bindings;version='[0.12.1,0.12.2)',\
-    org.eclipse.e4.ui.css.core;version='[0.12.101,0.12.102)',\
-    org.eclipse.e4.ui.css.swt;version='[0.13.1,0.13.2)',\
-    org.eclipse.e4.ui.css.swt.theme;version='[0.11.0,0.11.1)',\
-    org.eclipse.e4.ui.di;version='[1.2.100,1.2.101)',\
-    org.eclipse.e4.ui.model.workbench;version='[2.0.1,2.0.2)',\
-    org.eclipse.e4.ui.services;version='[1.3.0,1.3.1)',\
-    org.eclipse.e4.ui.widgets;version='[1.2.0,1.2.1)',\
-    org.eclipse.e4.ui.workbench;version='[1.5.1,1.5.2)',\
-    org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.101,0.14.102)',\
-    org.eclipse.e4.ui.workbench.swt;version='[0.14.101,0.14.102)',\
-    org.eclipse.e4.ui.workbench3;version='[0.14.0,0.14.1)',\
-    org.eclipse.emf.common;version='[2.13.0,2.13.1)',\
-    org.eclipse.emf.ecore;version='[2.13.0,2.13.1)',\
-    org.eclipse.emf.ecore.change;version='[2.11.0,2.11.1)',\
-    org.eclipse.emf.ecore.xmi;version='[2.13.0,2.13.1)',\
+    org.apache.felix.scr;version='[2.1.14,2.1.15)',\
+    org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
+    org.aspectj.runtime;version='[1.9.2,1.9.3)',\
+    org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\
     org.eclipse.emf.emfstore.common;version='[1.9.0,1.9.1)',\
-    org.eclipse.equinox.app;version='[1.3.400,1.3.401)',\
-    org.eclipse.equinox.common;version='[3.9.0,3.9.1)',\
-    org.eclipse.equinox.event;version='[1.4.0,1.4.1)',\
-    org.eclipse.equinox.preferences;version='[3.7.0,3.7.1)',\
-    org.eclipse.equinox.registry;version='[3.7.0,3.7.1)',\
-    org.eclipse.jface;version='[3.13.1,3.13.9)',\
-    org.eclipse.jface.databinding;version='[1.8.100,1.8.101)',\
-    org.eclipse.osgi.services;version='[3.6.0,3.6.1)',\
-    org.eclipse.osgi.util;version='[3.4.0,3.4.1)',\
-    org.eclipse.swt;version='[3.106.1,3.106.9)',\
+    org.eclipse.equinox.ds;version='[1.6.100,1.6.101)',\
+    org.eclipse.equinox.event;version='[1.5.300,1.5.301)',\
+    org.eclipse.jface;version='[3.18.0,3.18.1)',\
+    org.eclipse.osgi.services;version='[3.8.0,3.8.1)',\
+    org.eclipse.osgi.util;version='[3.5.300,3.5.301)',\
+    org.eclipse.swt;version='[3.113.0,3.113.1)',\
     org.java-websocket.Java-WebSocket;version='[1.3.6,1.3.7)',\
     org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
-    org.objectweb.asm;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.analysis;version='[5.0.3,5.0.4)',\
-    org.objectweb.asm.commons;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.tree;version='[5.2.0,5.2.1)',\
-    org.objectweb.asm.util;version='[5.0.3,5.0.4)',\
-    org.slf4j.api;version='[1.7.2,1.7.3)',\
+    org.slf4j.api;version='[1.7.10,1.7.11)',\
     org.w3c.css.sac;version='[1.3.1,1.3.2)',\
-    com.squareup.okhttp3.okhttp;version='[3.9.1,3.9.2)',\
-    com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
-    com.squareup.okio;version='[1.13.0,1.13.1)',\
-    com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
-    com.squareup.moshi;version='[1.4.0,1.4.1)',\
-    com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
-    org.influxdb.java;version='[2.9.0,2.9.1)',\
-    com.make.equo.aspects;version=latest
+    com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
+    com.squareup.okio;version='[1.11.0,1.11.1)',\
+    org.apache.batik.css;version='[1.11.0,1.11.1)',\
+    org.apache.batik.util;version='[1.11.0,1.11.1)',\
+    org.apache.commons.logging;version='[1.2.0,1.2.1)',\
+    org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
+    org.eclipse.core.commands;version='[3.9.600,3.9.601)',\
+    org.eclipse.core.contenttype;version='[3.7.500,3.7.501)',\
+    org.eclipse.core.databinding;version='[1.7.700,1.7.701)',\
+    org.eclipse.core.databinding.observable;version='[1.8.100,1.8.101)',\
+    org.eclipse.core.databinding.property;version='[1.7.200,1.7.201)',\
+    org.eclipse.core.expressions;version='[3.6.600,3.6.601)',\
+    org.eclipse.core.jobs;version='[3.10.600,3.10.601)',\
+    org.eclipse.core.runtime;version='[3.17.0,3.17.1)',\
+    org.eclipse.e4.core.commands;version='[0.12.800,0.12.801)',\
+    org.eclipse.e4.core.contexts;version='[1.8.300,1.8.301)',\
+    org.eclipse.e4.core.di;version='[1.7.500,1.7.501)',\
+    org.eclipse.e4.core.di.annotations;version='[1.6.500,1.6.501)',\
+    org.eclipse.e4.core.di.extensions;version='[0.15.400,0.15.401)',\
+    org.eclipse.e4.core.di.extensions.supplier;version='[0.15.400,0.15.401)',\
+    org.eclipse.e4.core.services;version='[2.2.100,2.2.101)',\
+    org.eclipse.e4.emf.xpath;version='[0.2.500,0.2.501)',\
+    org.eclipse.e4.ui.bindings;version='[0.12.700,0.12.701)',\
+    org.eclipse.e4.ui.css.core;version='[0.12.900,0.12.901)',\
+    org.eclipse.e4.ui.css.swt;version='[0.13.700,0.13.701)',\
+    org.eclipse.e4.ui.css.swt.theme;version='[0.12.500,0.12.501)',\
+    org.eclipse.e4.ui.di;version='[1.2.700,1.2.701)',\
+    org.eclipse.e4.ui.dialogs;version='[1.1.600,1.1.601)',\
+    org.eclipse.e4.ui.model.workbench;version='[2.1.600,2.1.601)',\
+    org.eclipse.e4.ui.services;version='[1.3.700,1.3.701)',\
+    org.eclipse.e4.ui.widgets;version='[1.2.600,1.2.601)',\
+    org.eclipse.e4.ui.workbench;version='[1.11.0,1.11.1)',\
+    org.eclipse.e4.ui.workbench.swt;version='[0.14.800,0.14.801)',\
+    org.eclipse.e4.ui.workbench3;version='[0.15.300,0.15.301)',\
+    org.eclipse.emf.common;version='[2.17.0,2.17.1)',\
+    org.eclipse.emf.ecore;version='[2.20.0,2.20.1)',\
+    org.eclipse.emf.ecore.change;version='[2.14.0,2.14.1)',\
+    org.eclipse.emf.ecore.xmi;version='[2.16.0,2.16.1)',\
+    org.eclipse.equinox.app;version='[1.4.300,1.4.301)',\
+    org.eclipse.equinox.common;version='[3.10.600,3.10.601)',\
+    org.eclipse.equinox.preferences;version='[3.7.600,3.7.601)',\
+    org.eclipse.equinox.registry;version='[3.8.600,3.8.601)',\
+    org.eclipse.jface.databinding;version='[1.9.200,1.9.201)',\
+    org.w3c.dom.events;version='[3.0.0,3.0.1)',\
+    org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
+    org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
+    javax.activation;version='[1.1.0,1.1.1)',\
+    javax.annotation;version='[1.2.0,1.2.1)',\
+    javax.xml.bind;version='[2.2.0,2.2.1)',\
+    javax.xml;version='[1.3.4,1.3.5)',\
+    org.influxdb.java;version='[2.9.0,2.9.1)'
     
 #-runbundles.debug: \    
 #    org.eclipse.equinox.console,\
@@ -240,4 +251,3 @@ app.bundle: ${basename;${dir;${p_sourcepath}}}
     osgi.identity;filter:='(osgi.identity=${app.bundle})'
 #-runbundles: \
 #    ${app.bundle}
-    

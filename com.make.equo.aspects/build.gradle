@@ -1,0 +1,47 @@
+task compileAspects() { 
+  doLast {
+      println("Compiling Aspects")
+      
+      def compileJava = tasks.getByName('compileJava')
+      
+      repositories { mavenCentral() }
+      configurations { ajc }
+      dependencies   { 
+                       compile("org.aspectj:aspectjrt:1.9.4")
+                        ajc 'org.aspectj:aspectjtools:1.9.4'
+                       }    
+      
+      ant.taskdef( 
+        resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", 
+        classpath: configurations.ajc.asPath
+      )
+      
+      ant.iajc(
+        source:    project.sourceCompatibility,
+        target:    project.targetCompatibility,
+        destDir:   compileJava.destinationDir,
+        fork:      "false",
+        classpath: configurations.compile.asPath) 
+      {
+          sourceroots {
+            sourceSets.main.java.srcDirs.each{
+              pathelement(location:it.absolutePath)
+            }
+          }
+          include( name:'**/*.aj' )
+          exclude( name:'**/*.java' )
+      }
+      
+      sourceSets {
+        main {
+          resources { 
+            exclude '**/*.aj'
+          }
+        }
+      }
+  }
+}
+
+processResources {
+  dependsOn compileAspects
+}
