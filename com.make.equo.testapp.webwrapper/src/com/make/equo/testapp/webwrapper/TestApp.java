@@ -1,4 +1,4 @@
-package com.make.equo.testapp;
+package com.make.equo.testapp.webwrapper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,7 +17,7 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.plainApp("index.html").enableAnalytics()
+			return appBuilder.webWrapper("https://www.maketechnology.io").enableAnalytics()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
 

@@ -1,0 +1,14 @@
+-outputmask: ${@bsn}.jar
+-include: ${build}/equoapp.bnd
+#-runrepos: Release
+
+Bundle-Version: ${version}.${tstamp}
+Private-Package: com.make.equo.testapp.webwrapper
+    
+# Application Name
+appName=TestApp
+# Application background color
+bgColor=#0000FF
+# Username and password to connect to the Equo Platform. For example for analytics
+equoUsername='YWRtaW4='
+equoPassword=bHVzaXRhbm8yMDE

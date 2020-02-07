@@ -1,5 +1,6 @@
 package com.make.equo.application.model;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MApplication;
@@ -42,8 +43,12 @@ public class EquoApplicationBuilder {
 				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
 	}
 
-	public OptionalViewBuilder withSingleView(String url) {
+	public OptionalViewBuilder webWrapper(String url) {
 		return this.getViewBuilder().withSingleView(url);
+	}
+
+	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
+		return this.getViewBuilder().withBaseHtml(baseHtmlFile);
 	}
 
 	/**

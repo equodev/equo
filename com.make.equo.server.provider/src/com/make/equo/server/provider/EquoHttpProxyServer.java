@@ -27,10 +27,12 @@ import org.osgi.service.component.annotations.ServiceScope;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
@@ -50,7 +52,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static final List<String> proxiedUrls = new ArrayList<>();
 	private static final Map<String, String> urlsToScripts = new HashMap<String, String>();
 	private static boolean enableOfflineCache = false;
-	private static String limitedConnectionAppBasedPagePath;
+	static String limitedConnectionAppBasedPagePath;
 
 	private static volatile HttpProxyServer proxyServer;
 //	private ScheduledExecutorService internetConnectionChecker;
@@ -268,6 +270,15 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void addScriptToContribution(String script) {
 		String processedScript = generateScriptSentence(script);
 		contributionJsApis.add(processedScript);
+	}
+
+	@Override
+	public void withBaseHtml(String baseHtmlPathWithPrefix) {
+		new EquoContribution(this, new EquoGenericURLResolver(equoApplication.getClass().getClassLoader()), null,
+				baseHtmlPathWithPrefix, "plainequoapp", Lists.newArrayList(), Lists.newArrayList(),
+				Lists.newArrayList(), Maps.newHashMap(), ((originalRequest) -> {
+					return originalRequest;
+				}));
 	}
 
 }
