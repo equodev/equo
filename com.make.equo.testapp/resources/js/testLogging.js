@@ -57,7 +57,7 @@ $(document).ready(function () {
 	});
 	
 	const insertTestBeforeAbout = function () {
-		testSection.insertBefore($( "#about" ));
+		testSection.insertBefore($( "#app" ));
 	};
 
 	insertTestBeforeAbout();

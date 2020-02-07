@@ -39,7 +39,7 @@ public class EquoContribution {
 		this.urlResolver = urlResolver;
 		this.filtersAdapterHandler = filtersAdapterHandler;
 		this.contributedHtmlName = contributedHtmlName;
-		this.contributionName = contributionName;
+		this.contributionName = contributionName.toLowerCase();
 		this.proxiedUris = proxiedUris;
 		this.contributedScripts = contributedScripts;
 		this.excludedResources = excludedResources;

@@ -275,7 +275,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void withBaseHtml(String baseHtmlPathWithPrefix) {
 		new EquoContribution(this, new EquoGenericURLResolver(equoApplication.getClass().getClassLoader()), null,
-				baseHtmlPathWithPrefix, "plainEquoApp", Lists.newArrayList(), Lists.newArrayList(),
+				baseHtmlPathWithPrefix, "plainequoapp", Lists.newArrayList(), Lists.newArrayList(),
 				Lists.newArrayList(), Maps.newHashMap(), ((originalRequest) -> {
 					return originalRequest;
 				}));
