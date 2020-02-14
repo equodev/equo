@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
@@ -18,10 +23,12 @@ public class OptionalViewBuilder {
 	private ViewBuilder viewBuilder;
 
 	private EquoApplicationBuilder equoApplicationBuilder;
-	
+
 	private AnalyticsService analyticsService;
 
 	private MMenu mainMenu;
+
+	private MToolBar mToolbar;
 
 	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService) {
 		this.viewBuilder = viewBuilder;
@@ -36,8 +43,8 @@ public class OptionalViewBuilder {
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
 		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable,
-				userEvent).addGlobalShortcut(keySequence);
+		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable, userEvent)
+				.addGlobalShortcut(keySequence);
 		return this;
 	}
 
@@ -54,13 +61,12 @@ public class OptionalViewBuilder {
 	 * work perfectly on the web, but it will need some changes to be adapted to the
 	 * Desktop. Adding a custom js script allows to perform this kind of task.
 	 * 
-	 * @param scriptPath
-	 *            the path to the Javascript script or a URL. Note that this
-	 *            argument can be either a path which is relative to the source
-	 *            folder where the script is defined or a well formed URL. For
-	 *            example, if a script 'x.js' is defined inside a folder 'y' which
-	 *            is defined inside a source folder 'resources', the path to the
-	 *            script will be 'y/x.js'.
+	 * @param scriptPath the path to the Javascript script or a URL. Note that this
+	 *                   argument can be either a path which is relative to the
+	 *                   source folder where the script is defined or a well formed
+	 *                   URL. For example, if a script 'x.js' is defined inside a
+	 *                   folder 'y' which is defined inside a source folder
+	 *                   'resources', the path to the script will be 'y/x.js'.
 	 * 
 	 * @return this builder
 	 * @throws IOException
@@ -80,18 +86,18 @@ public class OptionalViewBuilder {
 	 * work perfectly on the web, but it will need some changes to be adapted to the
 	 * Desktop. Adding a custom js script allows to perform this kind of task.
 	 * 
-	 * @param scriptPath
-	 *            the path to the Javascript script or a URL. Note that this
-	 *            argument can be a path which is relative to the source folder
-	 *            where the script is defined or a well defined URL. For example, if
-	 *            a script 'x.js' is defined inside a folder 'y' which is defined
-	 *            inside a source folder 'resources', the path to the script will be
-	 *            'y/x.js'.
+	 * @param scriptPath the path to the Javascript script or a URL. Note that this
+	 *                   argument can be a path which is relative to the source
+	 *                   folder where the script is defined or a well defined URL.
+	 *                   For example, if a script 'x.js' is defined inside a folder
+	 *                   'y' which is defined inside a source folder 'resources',
+	 *                   the path to the script will be 'y/x.js'.
 	 * @return this builder
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 * 
-	 *             TODO add support to save scripts per url (To be defined)
+	 *                            TODO add support to save scripts per url (To be
+	 *                            defined)
 	 * 
 	 */
 	private OptionalViewBuilder withCustomScript(String url, String scriptPath) throws URISyntaxException {
@@ -111,7 +117,7 @@ public class OptionalViewBuilder {
 	private void addCustomScriptToProxyServer(String url, String resolvedUrl) {
 		equoServer.addCustomScript(url, resolvedUrl);
 	}
-	
+
 	/**
 	 * Enable an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if
@@ -170,7 +176,7 @@ public class OptionalViewBuilder {
 	public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
-	
+
 	public OptionalViewBuilder enableAnalytics() {
 		analyticsService.enableAnalytics();
 		return this;
@@ -180,4 +186,28 @@ public class OptionalViewBuilder {
 		equoServer.withBaseHtml(baseHtmlFile);
 		return this;
 	}
+
+	public OptionalViewBuilder withToolbar() {
+		MTrimBar trimbar = MBasicFactory.INSTANCE.createTrimBar();
+		MToolBar toolbar = MenuFactoryImpl.eINSTANCE.createToolBar();
+		MHandledToolItem e = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
+		e.setIconURI("save");
+		e.setElementId("org.eclipse.ui.file.save");
+		e.setTooltip("Save");
+		e.setVisible(true);
+
+		toolbar.getChildren().add(e);
+
+		toolbar.setOnTop(true);
+		toolbar.setVisible(true);
+		toolbar.setElementId("com.make.equo.main.toolbar");
+		equoApplicationBuilder.getmWindow().getTrimBars().add(trimbar);
+		equoApplicationBuilder.getmWindow().getTrimBars().get(0).getChildren().add(toolbar);
+		return this;
+	}
+
+	public MToolBar getToolbar() {
+		return mToolbar;
+	}
+
 }

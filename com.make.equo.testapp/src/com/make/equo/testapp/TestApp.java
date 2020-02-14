@@ -17,7 +17,7 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.plainApp("index.html").enableAnalytics()
+			return appBuilder.plainApp("index.html").enableAnalytics().withToolbar()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
 

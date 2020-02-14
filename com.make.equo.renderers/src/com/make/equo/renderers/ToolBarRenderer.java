@@ -19,6 +19,7 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.MUILabel;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBarElement;
 import org.eclipse.e4.ui.workbench.renderers.swt.ToolBarManagerRenderer;
@@ -73,6 +74,29 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		configureAndStartRenderProcess(browserComposite);
 
 		return parentComp;
+	}
+	
+	@Override 
+	public Map<String, Map<String, String>> getModelContributions() {
+		Map<String, Map<String, String>> modelContributions = new HashMap<String, Map<String, String>>();
+
+		List<String> frameworkContributionJSONFileNames = getFrameworkContributionJSONFileNames();
+
+		Map<String, Map<String, String>> frameworkContributions = getContributionsFromFiles("",
+				frameworkContributionJSONFileNames, this.getClass());
+		Map<String, Map<String, String>> applicationContributions = new HashMap<String, Map<String,String>>();
+		for(MToolBarElement e : this.mToolBar.getChildren()) {
+			Map<String, String> commandTooltips = new HashMap<String, String>();
+			commandTooltips.put("icon", ((MHandledToolItem) e).getIconURI());
+			commandTooltips.put("commandId", ((MHandledToolItem) e).getElementId());
+			commandTooltips.put("tooltip", ((MHandledToolItem) e).getTooltip());
+			applicationContributions.put(/*((MHandledToolItem) e).getTooltip()*/"itemNuevo", commandTooltips);
+		}
+		modelContributions.putAll(frameworkContributions);
+		modelContributions.putAll(applicationContributions);
+
+		return modelContributions;
+		
 	}
 
 	@Override

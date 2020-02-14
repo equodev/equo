@@ -1,5 +1,5 @@
 const app = new Vue({
-	el: "#app",
+	el: "#title",
 	data: {
 		title: "Equo plain App"
 	}

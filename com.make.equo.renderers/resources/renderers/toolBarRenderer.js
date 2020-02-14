@@ -63,7 +63,10 @@ $(document).ready(function () {
         }
       </style>`)
     }
-
+    console.log("----->>>>");
+    console.log(app.props.namespace);
+    console.log(app.props.e4Model);
+    console.log(app.props.toolItemsIdsToData);
     equo.getModelContributions(setToolBarContributions);
     equo.getE4Model(createToolbar);
 });
