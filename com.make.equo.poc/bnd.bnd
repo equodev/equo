@@ -1,5 +1,4 @@
 Bundle-Version: ${version}.${tstamp}
--includeresource: resources/
 -buildpath: \
     com.google.gson,\
     org.eclipse.osgi,\
