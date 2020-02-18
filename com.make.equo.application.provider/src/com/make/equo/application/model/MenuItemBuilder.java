@@ -71,6 +71,10 @@ public class MenuItemBuilder {
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
+	
+	public ToolbarBuilder withToolbar() {
+		return new ToolbarBuilder(menuBuilder.getOptionalFieldBuilder(),menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder().getmWindow()).addToolbar();
+	}
 
 	MHandledMenuItem getMenuItem() {
 		return menuItem;

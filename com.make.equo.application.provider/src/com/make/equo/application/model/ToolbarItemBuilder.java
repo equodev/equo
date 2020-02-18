@@ -32,14 +32,13 @@ public class ToolbarItemBuilder {
 	public MHandledToolItem createToolItem() {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
 		newToolItem.setIconURI(this.iconURI);
-		newToolItem.setElementId("org.eclipse.ui.file.save");
+		String itemId = toolbarBuilder.getToolbar().getElementId() + "." + tooltip.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
 		newToolItem.setTooltip(this.tooltip);
 		newToolItem.setVisible(true);
 
 		return newToolItem;
 	}
 	
-
 	public ToolbarItemBuilder onClick(Runnable action) {
 		return onClick(action, null);
 	}
@@ -49,7 +48,27 @@ public class ToolbarItemBuilder {
 		ToolbarItemBuilder toolbarItemBuilder = toolbarItemHandlerBuilder.onClick(action, usrEvent);
 		return toolbarItemBuilder;
 	}
-
+	
+	public ToolbarBuilder addToolbar() {
+		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
+	}
+	
+	public ToolbarBuilder withToolbar() {
+		return new ToolbarBuilder(this.toolbarBuilder.getOptionalFieldBuilder(),this.toolbarBuilder.getParent());
+	}
+	
+	public MenuBuilder withMainMenu(String label) {
+		return new MenuBuilder(toolbarBuilder.getOptionalFieldBuilder()).addMenu(label);
+	}
+	
+	public ToolbarItemBuilder addShortcut(String keySequence) {
+		if (toolbarItemHandlerBuilder != null) {
+			return toolbarItemHandlerBuilder.addShortcut(keySequence);
+		}
+		// log that there is no menu item handler -> no onClick method was called.
+		return this;
+	}
+	
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
@@ -57,6 +76,7 @@ public class ToolbarItemBuilder {
 	public MHandledToolItem getToolItem() {
 		return toolItem;
 	}
+
 	
 	public EquoApplicationBuilder start() {
 		return toolbarBuilder.getOptionalFieldBuilder().start();

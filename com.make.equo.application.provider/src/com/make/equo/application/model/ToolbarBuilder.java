@@ -14,7 +14,6 @@ public class ToolbarBuilder {
 
 	ToolbarBuilder(OptionalViewBuilder optionalFieldBuilder, MTrimmedWindow window) {
 		this.parent = window;
-		this.toolbar = optionalFieldBuilder.getToolbar();
 		this.optionalFieldBuilder = optionalFieldBuilder;
 	}
 
@@ -28,6 +27,7 @@ public class ToolbarBuilder {
 		this.toolbar = createToolbar();
 		return new ToolbarBuilder(this);
 	}
+	
 
 	public MToolBar createToolbar() {
 		MTrimBar trimbar = MBasicFactory.INSTANCE.createTrimBar();
@@ -38,6 +38,10 @@ public class ToolbarBuilder {
 		this.parent.getTrimBars().add(trimbar);
 		this.parent.getTrimBars().get(0).getChildren().add(newToolbar);
 		return newToolbar;
+	}
+	
+	public ToolbarItemBuilder addToolItem(String iconURI, String tooltip) {
+		return new ToolbarItemBuilder(this).addToolItem(iconURI, tooltip);
 	}
 
 	OptionalViewBuilder getOptionalFieldBuilder() {

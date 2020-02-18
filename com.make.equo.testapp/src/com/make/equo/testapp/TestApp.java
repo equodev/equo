@@ -17,7 +17,7 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.plainApp("index.html").enableAnalytics().withToolbar()
+			return appBuilder.plainApp("index.html").enableAnalytics()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
 
@@ -68,7 +68,7 @@ public class TestApp implements IEquoApplication {
 								e.printStackTrace();
 							}
 						}
-					}).start();
+					}).withToolbar().addToolItem("save", "save").start();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

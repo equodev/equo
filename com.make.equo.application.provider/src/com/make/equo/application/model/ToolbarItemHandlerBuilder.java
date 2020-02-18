@@ -38,25 +38,30 @@ public class ToolbarItemHandlerBuilder extends HandlerBuilder {
 
 		return this.toolbarItemBuilder;
 	}
-
-	@Override
-	protected Runnable getRunnable() {
-		return runnable;
-	}
-
+	
 	public ToolbarItemBuilder onClick(Runnable runnable, String userEvent) {
 		this.userEvent = userEvent;
 		onClick(runnable);
 		return this.toolbarItemBuilder;
 	}
 
-//	ToolbarItemBuilder addShortcut(String keySequence) {
-//		new MenuItemShortcutBuilder(this.toolbarItemBuilder, userEvent).addShortcut(keySequence);
-//		EquoApplicationBuilder equoApplicationBuilder = this.toolbarItemBuilder.getMenuBuilder().getOptionalFieldBuilder()
-//				.getEquoApplicationBuilder();
-//		new GlobalShortcutBuilder(equoApplicationBuilder, this.toolbarItemBuilder.getMenuItem().getElementId(),
-//				this.runnable, this.userEvent).addGlobalShortcut(keySequence);
-//		return this.toolbarItemBuilder;
-//	
+	public ToolbarBuilder withToolbar() {
+		return new ToolbarBuilder(toolbarItemBuilder.getToolbarBuilder().getOptionalFieldBuilder(),
+				toolbarItemBuilder.getToolbarBuilder().getParent()).addToolbar();
+	}
+	
+	@Override
+	protected Runnable getRunnable() {
+		return runnable;
+	}
+
+	public ToolbarItemBuilder addShortcut(String keySequence) {
+		new ToolbarItemShortcutBuilder(this.toolbarItemBuilder, userEvent).addShortcut(keySequence);
+		EquoApplicationBuilder equoApplicationBuilder = this.toolbarItemBuilder.getToolbarBuilder()
+				.getOptionalFieldBuilder().getEquoApplicationBuilder();
+		new GlobalShortcutBuilder(equoApplicationBuilder, this.toolbarItemBuilder.getToolItem().getElementId(),
+				this.runnable, this.userEvent).addGlobalShortcut(keySequence);
+		return this.toolbarItemBuilder;
+	}
 
 }
