@@ -33,9 +33,10 @@ public class ToolbarItemBuilder {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
 		newToolItem.setIconURI(this.iconURI);
 		String itemId = toolbarBuilder.getToolbar().getElementId() + "." + tooltip.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
+		newToolItem.setElementId(itemId);
 		newToolItem.setTooltip(this.tooltip);
 		newToolItem.setVisible(true);
-
+		toolbarBuilder.getToolbar().getChildren().add(newToolItem);
 		return newToolItem;
 	}
 	

@@ -68,7 +68,11 @@ public class TestApp implements IEquoApplication {
 								e.printStackTrace();
 							}
 						}
-					}).withToolbar().addToolItem("save", "save").start();
+					}).withToolbar().addToolItem("save", "save").onClick(new Runnable() {
+						public void run() {
+							System.out.println("click en ToolItem");
+						}
+					}).start();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -1,7 +1,14 @@
+-include: ${build}/equoapp.bnd
+#-runrepos: Release
+
 Bundle-Version: ${version}.${tstamp}
--buildpath: \
-    com.google.gson,\
-    org.eclipse.osgi,\
-    org.eclipse.osgi.source,\
-    com.make.equo.server.api;version=latest,\
-    osgi.cmpn
+Private-Package: com.make.equo.poc
+    
+# Application Name
+appName=poc
+# Application background color
+bgColor=#0000FF
+# Username and password to connect to the Equo Platform. For example for analytics
+equoUsername='YWRtaW4='
+equoPassword=bHVzaXRhbm8yMDE4
+    

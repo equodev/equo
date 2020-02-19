@@ -88,7 +88,9 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		for(MToolBarElement e : this.mToolBar.getChildren()) {
 			Map<String, String> commandTooltips = new HashMap<String, String>();
 			commandTooltips.put("icon", ((MHandledToolItem) e).getIconURI());
-			commandTooltips.put("commandId", ((MHandledToolItem) e).getCommand().getElementId());
+			if(((MHandledToolItem) e).getCommand()!=null) {
+				commandTooltips.put("commandId", ((MHandledToolItem) e).getCommand().getElementId());
+			}
 			commandTooltips.put("tooltip", ((MHandledToolItem) e).getTooltip());
 			applicationContributions.put(((MHandledToolItem) e).getTooltip().replace(" ", "_"), commandTooltips);
 		}
