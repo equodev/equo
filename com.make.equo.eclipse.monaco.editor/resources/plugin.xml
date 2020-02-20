@@ -9,7 +9,7 @@
 			class="com.make.equo.eclipse.monaco.editor.MonacoEditorPart"
 			default="true"
 			id="com.make.equo.eclipse.monaco.editor.MonacoEditorPart"
-			name="Monaco Editor" extensions="xml">
+			name="Monaco Editor" extensions="txt,gitignore,json,bowerrc,jshintrc,jscsrc,eslintrc,babelrc,har,abap,cls,azcli,bat,cmd,mligo,clj,cljs,cljc,edn,coffee,c,h,cpp,cc,cxx,hpp,hh,hxx,cs,csx,cake,css,dockerfile,fs,fsi,ml,mli,fsx,fsscript,go,graphql,gql,handlebars,hbs,html,htm,shtml,xhtml,mdoc,jsp,asp,aspx,jshtm,ini,properties,gitconfig,java,jav,js,es6,jsx,kt,less,lua,md,markdown,mdown,mkdn,mkd,mdwn,mdtxt,mdtext,s,dax,msdax,m,pas,p,pp,ligo,pl,php,php4,php5,phtml,ctp,dats,sats,hats,pq,pqm,ps1,psm1,psd1,jade,pug,py,rpy,pyw,cpy,gyp,gypi,r,rhistory,rprofile,rt,cshtml,redis,rst,rb,rbx,rjs,gemspec,pp,rs,rlib,sb,scm,ss,sch,rkt,scss,sh,bash,sol,aes,sql,st,iecst,iecplc,lc3lib,swift,tcl,twig,ts,tsx,vb,xml,dtd,ascx,csproj,config,wxi,wxl,wxs,xaml,svg,svgz,opf,xsl,yaml,yml">
 		</editor>
 
 	</extension>
