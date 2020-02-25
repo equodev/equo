@@ -75,8 +75,8 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 		return parentComp;
 	}
-	
-	@Override 
+
+	@Override
 	public Map<String, Map<String, String>> getModelContributions() {
 		Map<String, Map<String, String>> modelContributions = new HashMap<String, Map<String, String>>();
 
@@ -84,21 +84,23 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 		Map<String, Map<String, String>> frameworkContributions = getContributionsFromFiles("",
 				frameworkContributionJSONFileNames, this.getClass());
-		Map<String, Map<String, String>> applicationContributions = new HashMap<String, Map<String,String>>();
-		for(MToolBarElement e : this.mToolBar.getChildren()) {
-			Map<String, String> commandTooltips = new HashMap<String, String>();
-			commandTooltips.put("icon", ((MHandledToolItem) e).getIconURI());
-			if(((MHandledToolItem) e).getCommand()!=null) {
-				commandTooltips.put("commandId", ((MHandledToolItem) e).getCommand().getElementId());
+		Map<String, Map<String, String>> applicationContributions = new HashMap<String, Map<String, String>>();
+		for (MToolBarElement e : this.mToolBar.getChildren()) {
+			if (e instanceof MHandledToolItem) {
+				Map<String, String> commandTooltips = new HashMap<String, String>();
+				commandTooltips.put("icon", ((MHandledToolItem) e).getIconURI());
+				if (((MHandledToolItem) e).getCommand() != null) {
+					commandTooltips.put("commandId", ((MHandledToolItem) e).getCommand().getElementId());
+				}
+				commandTooltips.put("tooltip", ((MHandledToolItem) e).getTooltip());
+				applicationContributions.put(((MHandledToolItem) e).getTooltip().replace(" ", "_"), commandTooltips);
 			}
-			commandTooltips.put("tooltip", ((MHandledToolItem) e).getTooltip());
-			applicationContributions.put(((MHandledToolItem) e).getTooltip().replace(" ", "_"), commandTooltips);
 		}
 		modelContributions.putAll(frameworkContributions);
 		modelContributions.putAll(applicationContributions);
 
 		return modelContributions;
-		
+
 	}
 
 	@Override
