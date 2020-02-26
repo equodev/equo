@@ -3,8 +3,6 @@ package com.make.equo.server.contribution.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -16,6 +14,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.util.tracker.BundleTracker;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -30,22 +29,17 @@ public class EquoConfigParser {
 
 	private BundleTracker<URL> tracker;
 
-	List<URL> filesRead;
-
 	@Activate
 	void activate(BundleContext context) {
-		filesRead = new ArrayList<URL>();
-
-		tracker = new BundleTracker<URL>(context, Bundle.STARTING, null) {
+		tracker = new BundleTracker<URL>(context, Bundle.ACTIVE, null) {
 
 			@Override
 			public URL addingBundle(Bundle bundle, BundleEvent event) {
-				URL configFile = bundle.getResource(CONFIG_FILE_NAME);
-				if ((configFile != null) && (!filesRead.contains(configFile))) {
+				URL configFile = bundle.getEntry(CONFIG_FILE_NAME);
+				if (configFile != null) {
 					Runnable runnable = () -> {
 						parse(configFile, bundle);
 					};
-					filesRead.add(configFile);
 					Thread thread = new Thread(runnable, "EquoConfigParser");
 					thread.start();
 				}
