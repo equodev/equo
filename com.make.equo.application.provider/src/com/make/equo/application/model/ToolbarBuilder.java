@@ -40,8 +40,8 @@ public class ToolbarBuilder {
 		return newToolbar;
 	}
 	
-	public ToolbarItemBuilder addToolItem(String iconURI, String tooltip) {
-		return new ToolbarItemBuilder(this).addToolItem(iconURI, tooltip);
+	public ToolbarItemBuilder addToolItem(String iconId, String text) {
+		return new ToolbarItemBuilder(this).addToolItem(iconId, text);
 	}
 
 	OptionalViewBuilder getOptionalFieldBuilder() {

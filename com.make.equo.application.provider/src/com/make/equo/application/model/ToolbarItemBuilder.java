@@ -9,8 +9,8 @@ public class ToolbarItemBuilder {
 	private MHandledToolItem toolItem;
 	private ToolbarBuilder toolbarBuilder;
 	private ToolbarItemHandlerBuilder toolbarItemHandlerBuilder;
-	private String iconURI;
-	private String tooltip;
+	private String iconId;
+	private String text;
 
 	ToolbarItemBuilder(ToolbarBuilder toolbarBuilder) {
 		this.toolbarBuilder = toolbarBuilder;
@@ -21,9 +21,9 @@ public class ToolbarItemBuilder {
 		this.toolbarBuilder = toolbarItemBuilder.toolbarBuilder;
 	}
 
-	public ToolbarItemBuilder addToolItem(String iconURI, String tooltip) {
-		this.iconURI = iconURI;
-		this.tooltip = tooltip;
+	public ToolbarItemBuilder addToolItem(String iconId, String text) {
+		this.iconId = iconId;
+		this.text = text;
 		this.toolItem = createToolItem();
 		return new ToolbarItemBuilder(this);
 	}
@@ -31,22 +31,22 @@ public class ToolbarItemBuilder {
 	// hardcoded
 	public MHandledToolItem createToolItem() {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
-		newToolItem.setIconURI(this.iconURI);
-		String itemId = toolbarBuilder.getToolbar().getElementId() + "." + tooltip.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
+		newToolItem.setIconURI(this.iconId);
+		String itemId = toolbarBuilder.getToolbar().getElementId() + "." + text.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
 		newToolItem.setElementId(itemId);
-		newToolItem.setTooltip(this.tooltip);
+		newToolItem.setTooltip(text);
 		newToolItem.setVisible(true);
 		toolbarBuilder.getToolbar().getChildren().add(newToolItem);
 		return newToolItem;
 	}
-	
+
 	public ToolbarItemBuilder onClick(Runnable action) {
 		return onClick(action, null);
 	}
 
-	public ToolbarItemBuilder onClick(Runnable action, String usrEvent) {
+	public ToolbarItemBuilder onClick(Runnable action, String userEvent) {
 		this.toolbarItemHandlerBuilder = new ToolbarItemHandlerBuilder(this);
-		ToolbarItemBuilder toolbarItemBuilder = toolbarItemHandlerBuilder.onClick(action, usrEvent);
+		ToolbarItemBuilder toolbarItemBuilder = toolbarItemHandlerBuilder.onClick(action, userEvent);
 		return toolbarItemBuilder;
 	}
 	

@@ -77,30 +77,23 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 	}
 
 	@Override
-	public Map<String, Map<String, String>> getModelContributions() {
+	public Map<String, Map<String, String>> getContributionsFromJavaModel() {
 		Map<String, Map<String, String>> modelContributions = new HashMap<String, Map<String, String>>();
-
-		List<String> frameworkContributionJSONFileNames = getFrameworkContributionJSONFileNames();
-
-		Map<String, Map<String, String>> frameworkContributions = getContributionsFromFiles("",
-				frameworkContributionJSONFileNames, this.getClass());
-		Map<String, Map<String, String>> applicationContributions = new HashMap<String, Map<String, String>>();
 		for (MToolBarElement e : this.mToolBar.getChildren()) {
 			if (e instanceof MHandledToolItem) {
-				Map<String, String> commandTooltips = new HashMap<String, String>();
-				commandTooltips.put("icon", ((MHandledToolItem) e).getIconURI());
-				if (((MHandledToolItem) e).getCommand() != null) {
-					commandTooltips.put("commandId", ((MHandledToolItem) e).getCommand().getElementId());
+				Map<String, String> toolItemsPayloads = new HashMap<String, String>();
+				MHandledToolItem toolItem = (MHandledToolItem) e;
+				toolItemsPayloads.put("icon", toolItem.getIconURI());
+				if (toolItem.getCommand() != null) {
+					toolItemsPayloads.put("commandId", toolItem.getCommand().getElementId());
+				} else {
+					toolItemsPayloads.put("commandId", UNKNOWN_EQUO_COMMAND);
 				}
-				commandTooltips.put("tooltip", ((MHandledToolItem) e).getTooltip());
-				applicationContributions.put(((MHandledToolItem) e).getTooltip().replace(" ", "_"), commandTooltips);
+				toolItemsPayloads.put("tooltip", toolItem.getTooltip());
+				modelContributions.put(toolItem.getElementId(), toolItemsPayloads);
 			}
 		}
-		modelContributions.putAll(frameworkContributions);
-		modelContributions.putAll(applicationContributions);
-
 		return modelContributions;
-
 	}
 
 	@Override

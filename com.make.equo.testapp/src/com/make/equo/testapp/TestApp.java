@@ -68,7 +68,8 @@ public class TestApp implements IEquoApplication {
 								e.printStackTrace();
 							}
 						}
-					}).withToolbar().addToolItem("save", "save").onClick(new Runnable() {
+					}).withToolbar().addToolItem("chat", "Chat").onClick(new Runnable() {
+						@Override
 						public void run() {
 							System.out.println("click en ToolItem");
 						}
