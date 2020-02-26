@@ -6,13 +6,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -58,7 +68,39 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
+		Shell shell= PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
+		final IEditorInput input= getEditorInput();
+		final IEditorInput newInput;
+		
+		SaveAsDialog dialog= new SaveAsDialog(shell);
 
+		IFile original= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
+		if (original != null)
+			dialog.setOriginalFile(original);
+		else
+			dialog.setOriginalName(input.getName());
+
+		dialog.create();
+		
+		if (dialog.open() == Window.CANCEL) {
+			return;
+		}
+		
+		IPath filePath= dialog.getResult();
+		IWorkspace workspace= ResourcesPlugin.getWorkspace();
+		IFile file= workspace.getRoot().getFile(filePath);
+		newInput= new FileEditorInput(file);
+		try {
+			file.getLocation().toFile().createNewFile();
+			file.getParent().refreshLocal(1, new NullProgressMonitor());
+		} catch (IOException | CoreException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		setInput(newInput);
+		setPartName(file.getName());
+		doSave(new NullProgressMonitor());
 	}
 
 	@Override
