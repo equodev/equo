@@ -2,6 +2,9 @@ package com.make.equo.monaco;
 
 import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTION_NAME;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +50,32 @@ public class EquoMonacoEditor {
 		for (IEquoRunnable<Void> onLoadListener : onLoadListeners) {
 			onLoadListener.run(null);
 		}
+		
+		equoEventHandler.on("_canPaste", (IEquoRunnable<Void>) runnable ->{
+			try {
+				Robot robot = new Robot();
+				// Simulate a key press
+				robot.keyPress(KeyEvent.VK_CONTROL);
+		        robot.keyPress(KeyEvent.VK_V);
+		        robot.keyRelease(KeyEvent.VK_V);
+		        robot.keyRelease(KeyEvent.VK_CONTROL);
+			} catch (AWTException e) {
+				e.printStackTrace();
+			}
+		});
+		
+		equoEventHandler.on("_canSelectAll", (IEquoRunnable<Void>) runnable ->{
+			try {
+				Robot robot = new Robot();
+				// Simulate a key press
+				robot.keyPress(KeyEvent.VK_CONTROL);
+		        robot.keyPress(KeyEvent.VK_A);
+		        robot.keyRelease(KeyEvent.VK_A);
+		        robot.keyRelease(KeyEvent.VK_CONTROL);
+			} catch (AWTException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 	
 	public void addOnLoadListener(IEquoRunnable<Void> listener) {
@@ -102,6 +131,14 @@ public class EquoMonacoEditor {
 	
 	public void find() {
 		equoEventHandler.send("_doFind");
+	}
+	
+	public void paste() {
+		equoEventHandler.send("_doPaste");
+	}
+	
+	public void selectAll() {
+		equoEventHandler.send("_doSelectAll");
 	}
 	
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {

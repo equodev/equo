@@ -199,8 +199,14 @@ public class MonacoEditorPart extends EditorPart {
 		handler = new ActionHandler(selectionProvider, () -> editor.cut());
 		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, handler);
 		
+		handler = new ActionHandler(selectionProvider, () -> editor.paste(), true);
+		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_PASTE, handler);
+		
 		handler = new ActionHandler(selectionProvider, () -> editor.find(), true);
 		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE, handler);
+		
+		handler = new ActionHandler(selectionProvider, () -> editor.selectAll(), true);
+		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_SELECT_ALL, handler);
 	}
 
 	@Override
