@@ -103,13 +103,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
 				return new DefaultContributionRequestFiltersAdapter(originalRequest,
-<<<<<<< Upstream, based on origin/master
 						new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()),
-						Lists.newArrayList(), Lists.newArrayList(), "", "", limitedConnectionGenericPageFilePath);
-=======
-						new EquoHttpProxyServerURLResolver(), new ArrayList<>(), new ArrayList<>(), "", "",
-						limitedConnectionGenericPageFilePath);
->>>>>>> 105191c Removing guava dependency from server.provider
+						new ArrayList<String>(), new ArrayList<String>(), "", "", limitedConnectionGenericPageFilePath);
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);

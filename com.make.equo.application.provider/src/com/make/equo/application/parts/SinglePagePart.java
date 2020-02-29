@@ -38,12 +38,7 @@ public class SinglePagePart {
 		if (equoAppUrl != null) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(GridLayoutFactory.fillDefaults().create());
-<<<<<<< Upstream, based on origin/master
 			browser = new Browser(composite, SWT.NONE);
-=======
-			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-			browser = new Chromium(composite, SWT.NONE);
->>>>>>> 8af1d1e Revert fix for issue #98 to add it to its own MR for better tracking
 			browser.setUrl(equoAppUrl);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}

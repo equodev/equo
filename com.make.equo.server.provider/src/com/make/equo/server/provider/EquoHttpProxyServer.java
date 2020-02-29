@@ -25,8 +25,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ServiceScope;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
@@ -52,7 +50,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static final String URL_CSS_SENTENCE = "<link type=\"text/css\" rel=\"stylesheet\" href=\"urlPath\">";
 	private static final String LOCAL_CSS_SENTENCE = "<link type=\"text/css\" rel=\"stylesheet\" href=\"PATHTOSTRING\">";
 
-	private static final List<String> proxiedUrls = new ArrayList<>();
+	private static final List<String> proxiedUrls = new ArrayList<String>();
 	private static final Map<String, String> urlsToScripts = new HashMap<String, String>();
 	private static final Map<String, String> urlsToStyles = new HashMap<String, String>();
 
@@ -223,7 +221,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 					return createLocalSentence(contribution.getContributionName() + "/" + input, LOCAL_SCRIPT_SENTENCE);
 				}
 			}).collect(Collectors.toList());
-			contributionJsApis.addAll(Lists.newArrayList(result));
+			contributionJsApis.addAll(new ArrayList<String>(result));
 		}
 		List<String> cssFilesNames = contribution.getContributedStyles();
 		if (!cssFilesNames.isEmpty()) {
@@ -236,7 +234,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 					return createLocalSentence(contribution.getContributionName() + "/" + input, LOCAL_CSS_SENTENCE);
 				}
 			}).collect(Collectors.toList());
-			contributionStyles.addAll(Lists.newArrayList(result));
+			contributionStyles.addAll(new ArrayList<String>(result));
 		}
 	}
 
@@ -324,8 +322,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Override
 	public void withBaseHtml(String baseHtmlPathWithPrefix) {
 		new EquoContribution(this, new EquoGenericURLResolver(equoApplication.getClass().getClassLoader()), null,
-				baseHtmlPathWithPrefix, "plainequoapp", Lists.newArrayList(), Lists.newArrayList(),
-				Lists.newArrayList(), Lists.newArrayList(), Maps.newHashMap(), Maps.newHashMap(), ((originalRequest) -> {
+				baseHtmlPathWithPrefix, "plainequoapp", new ArrayList<String>(), new ArrayList<String>(),
+				new ArrayList<String>(), new ArrayList<String>(), new HashMap<String, String>(), new HashMap<String,String>(), ((originalRequest) -> {
 					return originalRequest;
 				}));
 	}
