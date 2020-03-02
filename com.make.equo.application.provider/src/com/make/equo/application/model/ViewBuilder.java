@@ -40,8 +40,8 @@ public class ViewBuilder {
 	}
 
 	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
-		this.url = "plainEquoApp";
-		part.getProperties().put(IConstants.MAIN_URL_KEY, "plainEquoApp");
+		this.url = "http://plainequoapp/";
+		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
 	}
 
