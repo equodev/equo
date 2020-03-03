@@ -25,6 +25,16 @@ import io.netty.handler.codec.http.HttpVersion;
 
 public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 
+	private static final MimetypesFileTypeMap FILE_TYPE_MAP;
+	
+	static {
+		FILE_TYPE_MAP = new MimetypesFileTypeMap();
+		FILE_TYPE_MAP.addMimeTypes("text/css css");
+		FILE_TYPE_MAP.addMimeTypes("application/javascript js");
+		FILE_TYPE_MAP.addMimeTypes("application/json json");
+		
+	}
+	
 	protected ILocalUrlResolver urlResolver;
 	private String localFilePathWithProtocol;
 
@@ -58,9 +68,8 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 			InputStream inputStream = connection.getInputStream();
 			byte[] bytes = ByteStreams.toByteArray(inputStream);
 			ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
-			final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
 			String fileName = resolvedUrl.getFile().substring(1);
-			String contentType = fileTypeMap.getContentType(fileName);
+			String contentType = FILE_TYPE_MAP.getContentType(fileName);
 			inputStream.close();
 			return buildResponse(buffer, contentType);
 		} catch (IOException e) {

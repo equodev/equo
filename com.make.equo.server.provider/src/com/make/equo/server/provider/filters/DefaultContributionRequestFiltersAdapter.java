@@ -17,21 +17,27 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
-public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFiltersAdapter implements IModifiableResponse {
+public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFiltersAdapter
+		implements IModifiableResponse {
 
 	protected IEquoContributionUrlResolver urlResolver;
 	
 	private String customJsScripts;
-	private String contributedFilePath;
+	private String customStyles;
 	private List<String> equoContributionsJsApis;
+	private List<String> equoContributionStyles;
+	private String contributedFilePath;
 
 	public DefaultContributionRequestFiltersAdapter(HttpRequest originalRequest, IEquoContributionUrlResolver urlResolver,
-			List<String> equoContributionsJsApis, String customJsScripts, String contributedFilePath) {
+			List<String> equoContributionsJsApis, List<String> equoContributionsStyles, String customJsScripts,
+			String customStyles, String contributedFilePath) {
 		super(originalRequest);
 		this.urlResolver = urlResolver;
 		this.contributedFilePath = contributedFilePath;
 		this.equoContributionsJsApis = equoContributionsJsApis;
+		this.equoContributionStyles = equoContributionsStyles;
 		this.customJsScripts = customJsScripts;
+		this.customStyles = customStyles;
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 		URL resolvedUrl = urlResolver.resolve(contributedFilePath);
 		return super.buildHttpResponse(resolvedUrl);
 	}
-	
+
 	@Override
 	protected HttpResponse buildResponse(ByteBuf buffer, String defaultContentType) {
 		String contentFile = buffer.toString(Charset.defaultCharset());
@@ -50,7 +56,7 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 
 		String responseToTransform = IModifiableResponse.createStringFromData(data, charset);
 
-		String transformedResponse = addCustomJsScripts(responseToTransform);
+		String transformedResponse = addCustomJsScriptsAndStyles(responseToTransform);
 
 		byte[] bytes = IModifiableResponse.createDataFromString(transformedResponse, charset);
 		ByteBuf transformedContent = Unpooled.buffer(bytes.length);
@@ -59,14 +65,18 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 		return super.buildResponse(transformedContent, "text/html; charset=utf-8");
 	}
 
-	private String addCustomJsScripts(String responseToTransform) {
-		StringBuilder customResponseWithScripts = new StringBuilder(responseToTransform);
-		customResponseWithScripts.append("\n");
+	private String addCustomJsScriptsAndStyles(String responseToTransform) {
+		StringBuilder customResponse = new StringBuilder(responseToTransform);
+		customResponse.append("\n");
 		for (String jsApi : equoContributionsJsApis) {
-			customResponseWithScripts.append(jsApi);
+			customResponse.append(jsApi);
 		}
-		customResponseWithScripts.append(customJsScripts);
-		return customResponseWithScripts.toString();
+		for (String style : equoContributionStyles) {
+			customResponse.append(style);
+		}
+		customResponse.append(customJsScripts);
+		customResponse.append(customStyles);
+		return customResponse.toString();
 	}
 
 	@Override
