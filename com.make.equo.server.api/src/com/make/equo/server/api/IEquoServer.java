@@ -21,23 +21,12 @@ public interface IEquoServer {
 
 	void addStyleToContribution(String style);
 
-	String getLocalScriptProtocol();
-
-	String getBundleScriptProtocol();
-
-	String getLocalStyleProtocol();
-
-	String getBundleStyleProtocol();
-	
 	void enableOfflineCache();
 
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
 
 	void addLimitedConnectionPage(String limitedConnectionPagePath);
 
-	String getLocalFileProtocol();
-
 	boolean isAddressReachable(String appUrl);
 
-	void withBaseHtml(String baseHtmlPathWithPrefix);
 }

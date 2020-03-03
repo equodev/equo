@@ -12,7 +12,7 @@ Export-Package: \
 	org.eclipse.osgi.source,\
 	com.google.gson,\
 	com.google.gson.source,\
-	com.make.equo.aer.api,\
+	com.make.equo.aer.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\

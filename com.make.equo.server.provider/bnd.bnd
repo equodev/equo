@@ -20,4 +20,4 @@ Export-Package: \
 	org.apache.httpcomponents.httpcore,\
 	org.apache.httpcomponents.httpcore.source,\
     com.make.equo.application.provider;version=latest,\
-    com.make.equo.aer.api
+    com.make.equo.aer.api;version=latest

@@ -11,15 +11,11 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
 
-import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
+import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.offline.api.filters.OfflineRequestFiltersAdapter;
-import com.make.equo.server.offline.api.resolvers.ILocalUrlResolver;
-import com.make.equo.server.provider.EquoHttpProxyServer;
-import com.make.equo.server.provider.resolvers.BundleUrlResolver;
-import com.make.equo.server.provider.resolvers.MainAppUrlResolver;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaders.Names;
@@ -31,7 +27,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	private Map<String, EquoContribution> equoContributions;
 	private IEquoOfflineServer equoOfflineServer;
-	private IEquoApplication equoApplication;
 
 	private boolean connectionLimited = false;
 	private boolean isOfflineCacheSupported;
@@ -48,7 +43,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
 			List<String> equoContributionStyles, Map<String, String> urlsToScriptsAsStrings,
-			Map<String, String> urlsToStylesAsStrings, IEquoApplication equoApplication) {
+			Map<String, String> urlsToStylesAsStrings) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
@@ -58,7 +53,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		this.equoContributionStyles = equoContributionStyles;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
 		this.urlsToStylesAsStrings = urlsToStylesAsStrings;
-		this.equoApplication = equoApplication;
 	}
 
 	@Override
@@ -75,7 +69,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				if (contribution.hasCustomFiltersAdapter()) {
 					return contribution.getFiltersAdapter(originalRequest);
 				} else {
-					originalRequest = contribution.getFilter().applyFilter(originalRequest);
+					IHttpRequestFilter filter = contribution.getFilter();
+					if (filter != null) {
+						originalRequest = filter.applyFilter(originalRequest);
+					}
 
 					if (contribution.accepts(originalRequest, uri)) {
 						return new ContributionFileRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
@@ -91,16 +88,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			System.out.println(e.getMessage());
 		}
 
-		if (isLocalFileRequest(originalRequest)) {
-			return new LocalFileRequestFiltersAdapter(originalRequest, getUrlResolver(originalRequest));
-		}
-
 		if (isConnectionLimited()) {
 			if (isOfflineCacheSupported) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
 			} else if (limitedConnectionAppBasedPagePath != null) {
+				// TODO Add default URL resolver and make it possible to change it along with the limited connection page.
 				return new OfflineRequestFiltersAdapter(originalRequest,
-						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
+						null /*getUrlResolver(limitedConnectionAppBasedPagePath)*/, limitedConnectionAppBasedPagePath);
 			} else {
 				return new DefaultContributionRequestFiltersAdapter(originalRequest,
 						new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()),
@@ -135,39 +129,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			return Optional.of(uri.getAuthority());
 		}
 		return Optional.empty();
-	}
-
-	private ILocalUrlResolver getUrlResolver(HttpRequest originalRequest) {
-		String uri = originalRequest.getUri();
-		return getUrlResolver(uri);
-	}
-
-	private ILocalUrlResolver getUrlResolver(String uri) {
-		if (uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)) {
-			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL, equoApplication);
-		}
-		if (uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)) {
-			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL, equoApplication);
-		}
-		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
-			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
-		}
-		if (uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)) {
-			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL, equoApplication);
-		}
-		if (uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL)) {
-			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
-		}
-		return null;
-	}
-
-	private boolean isLocalFileRequest(HttpRequest originalRequest) {
-		String uri = originalRequest.getUri();
-		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
 	}
 
 	private Optional<String> getRequestedUrl(HttpRequest originalRequest) {

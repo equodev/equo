@@ -13,8 +13,11 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.EquoContributionBuilder;
+import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component(service = ViewBuilder.class)
 public class ViewBuilder {
@@ -25,6 +28,9 @@ public class ViewBuilder {
 	private String url;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	private EquoContributionBuilder equoContributionBuilder;
+	
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoServer equoServer;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
@@ -33,19 +39,21 @@ public class ViewBuilder {
 	private OptionalViewBuilder optionalViewBuilder;
 
 	OptionalViewBuilder withSingleView(String url) {
+		equoContributionBuilder.withContributionName("webwrapper");
 		this.url = normalizeUrl(url);
 		addUrlToProxyServer(this.url);
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder;
 	}
 
-	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+		equoContributionBuilder.withContributionName("plainequoapp");
 		this.url = "http://plainequoapp/";
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
 	}
 
-	OptionalViewBuilder configureViewPart(EquoApplicationBuilder equoApplicationBuilder) {
+	OptionalViewBuilder configureViewPart(EquoApplicationBuilder equoApplicationBuilder, IEquoApplication equoApp) {
 		this.equoAppBuilder = equoApplicationBuilder;
 		part = MBasicFactory.INSTANCE.createPart();
 		part.setElementId(IConstants.MAIN_PART_ID);
@@ -62,7 +70,8 @@ public class ViewBuilder {
 
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService);
+		equoContributionBuilder.withURLResolver(new EquoGenericURLResolver(equoApp.getClass().getClassLoader()));
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, equoContributionBuilder);
 
 		return optionalViewBuilder;
 	}
@@ -105,6 +114,7 @@ public class ViewBuilder {
 
 	public EquoApplicationBuilder start() {
 		analyticsService.registerLaunchApp();
+		equoContributionBuilder.build();
 		return this.equoAppBuilder;
 	}
 

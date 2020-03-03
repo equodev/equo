@@ -29,19 +29,12 @@ import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.contribution.EquoContribution;
-import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
-
-	public static final String LOCAL_SCRIPT_APP_PROTOCOL = "main_app_equo_script/";
-	public static final String BUNDLE_SCRIPT_APP_PROTOCOL = "external_bundle_equo_script/";
-	public static final String LOCAL_STYLE_APP_PROTOCOL = "main_app_equo_style/";
-	public static final String BUNDLE_STYLE_APP_PROTOCOL = "external_bundle_equo_style/";
-	public static final String LOCAL_FILE_APP_PROTOCOL = "equo/";
 
 	private static final String URL_PATH = "urlPath";
 	private static final String PATH_TO_STRING_REG = "PATHTOSTRING";
@@ -86,7 +79,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void startServer() {
 		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(equoContributions,
 				equoOfflineServer, isOfflineCacheSupported(), limitedConnectionAppBasedPagePath, proxiedUrls,
-				contributionJsApis, contributionStyles, urlsToScripts, urlsToStyles, equoApplication);
+				contributionJsApis, contributionStyles, urlsToScripts, urlsToStyles);
 
 //		Runnable internetConnectionRunnable = new Runnable() {
 //			@Override
@@ -135,31 +128,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 		} else {
 			equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
 		}
-	}
-
-	@Override
-	public String getLocalScriptProtocol() {
-		return LOCAL_SCRIPT_APP_PROTOCOL;
-	}
-
-	@Override
-	public String getBundleScriptProtocol() {
-		return BUNDLE_SCRIPT_APP_PROTOCOL;
-	}
-
-	@Override
-	public String getLocalStyleProtocol() {
-		return LOCAL_STYLE_APP_PROTOCOL;
-	}
-
-	@Override
-	public String getBundleStyleProtocol() {
-		return BUNDLE_STYLE_APP_PROTOCOL;
-	}
-
-	@Override
-	public String getLocalFileProtocol() {
-		return LOCAL_FILE_APP_PROTOCOL;
 	}
 
 	private boolean isOfflineCacheSupported() {
@@ -317,15 +285,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void addScriptToContribution(String script) {
 		String processedScript = generateSentence(script, URL_SCRIPT_SENTENCE, LOCAL_SCRIPT_SENTENCE);
 		contributionJsApis.add(processedScript);
-	}
-
-	@Override
-	public void withBaseHtml(String baseHtmlPathWithPrefix) {
-		new EquoContribution(this, new EquoGenericURLResolver(equoApplication.getClass().getClassLoader()), null,
-				baseHtmlPathWithPrefix, "plainequoapp", new ArrayList<String>(), new ArrayList<String>(),
-				new ArrayList<String>(), new ArrayList<String>(), new HashMap<String, String>(), new HashMap<String,String>(), ((originalRequest) -> {
-					return originalRequest;
-				}));
 	}
 
 }

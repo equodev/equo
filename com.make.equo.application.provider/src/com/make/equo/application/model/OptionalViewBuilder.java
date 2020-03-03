@@ -1,7 +1,6 @@
 package com.make.equo.application.model;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
@@ -9,24 +8,24 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public class OptionalViewBuilder {
 
 	private IEquoServer equoServer;
-
 	private ViewBuilder viewBuilder;
-
 	private EquoApplicationBuilder equoApplicationBuilder;
-	
 	private AnalyticsService analyticsService;
-
 	private MMenu mainMenu;
+	private EquoContributionBuilder equoContributionBuilder;
 
-	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService) {
+	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService,
+			EquoContributionBuilder equoContributionBuilder) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
 		this.analyticsService = analyticsService;
+		this.equoContributionBuilder = equoContributionBuilder;
 		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
@@ -36,8 +35,8 @@ public class OptionalViewBuilder {
 
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
 		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable,
-				userEvent).addGlobalShortcut(keySequence);
+		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable, userEvent)
+				.addGlobalShortcut(keySequence);
 		return this;
 	}
 
@@ -54,13 +53,12 @@ public class OptionalViewBuilder {
 	 * work perfectly on the web, but it will need some changes to be adapted to the
 	 * Desktop. Adding a custom js script allows to perform this kind of task.
 	 * 
-	 * @param scriptPath
-	 *            the path to the Javascript script or a URL. Note that this
-	 *            argument can be either a path which is relative to the source
-	 *            folder where the script is defined or a well formed URL. For
-	 *            example, if a script 'x.js' is defined inside a folder 'y' which
-	 *            is defined inside a source folder 'resources', the path to the
-	 *            script will be 'y/x.js'.
+	 * @param scriptPath the path to the Javascript script or a URL. Note that this
+	 *                   argument can be either a path which is relative to the
+	 *                   source folder where the script is defined or a well formed
+	 *                   URL. For example, if a script 'x.js' is defined inside a
+	 *                   folder 'y' which is defined inside a source folder
+	 *                   'resources', the path to the script will be 'y/x.js'.
 	 * 
 	 * @return this builder
 	 * @throws IOException
@@ -68,74 +66,15 @@ public class OptionalViewBuilder {
 	 * 
 	 */
 	public OptionalViewBuilder withCustomScript(String scriptPath) throws IOException, URISyntaxException {
-		String url = viewBuilder.getUrl();
-		return withCustomScript(url, scriptPath);
-	}
-
-	/**
-	 * Add a Javascript script that can modify the html content of the given url.
-	 * 
-	 * Uses cases a custom Javascript script include the removal, addition, and
-	 * modification of existing HTML elements. An already existing application can
-	 * work perfectly on the web, but it will need some changes to be adapted to the
-	 * Desktop. Adding a custom js script allows to perform this kind of task.
-	 * 
-	 * @param scriptPath
-	 *            the path to the Javascript script or a URL. Note that this
-	 *            argument can be a path which is relative to the source folder
-	 *            where the script is defined or a well defined URL. For example, if
-	 *            a script 'x.js' is defined inside a folder 'y' which is defined
-	 *            inside a source folder 'resources', the path to the script will be
-	 *            'y/x.js'.
-	 * @return this builder
-	 * @throws IOException
-	 * @throws URISyntaxException
-	 * 
-	 *             TODO add support to save scripts per url (To be defined)
-	 * 
-	 */
-	private OptionalViewBuilder withCustomScript(String url, String scriptPath) throws URISyntaxException {
-		URI scriptUri = new URI(scriptPath);
-		String scriptReference;
-		if (!scriptUri.isAbsolute()) {
-			scriptReference = equoServer.getLocalScriptProtocol() + scriptPath;
-		} else if (scriptUri.getScheme().startsWith("http")) {
-			scriptReference = scriptPath;
-		} else {
-			scriptReference = equoServer.getBundleScriptProtocol() + scriptPath;
-		}
-		addCustomScriptToProxyServer(url, scriptReference);
+		equoContributionBuilder.withScriptFile(scriptPath);
 		return this;
 	}
 
-	private void addCustomScriptToProxyServer(String url, String resolvedUrl) {
-		equoServer.addCustomScript(url, resolvedUrl);
-	}
-	
 	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
-		String url = viewBuilder.getUrl();
-		return withCustomStyle(url, stylePath);
-	}
-
-	private OptionalViewBuilder withCustomStyle(String url, String stylePath) throws URISyntaxException {
-		URI styleUri = new URI(stylePath);
-		String styleReference;
-		if (!styleUri.isAbsolute()) {
-			styleReference = equoServer.getLocalStyleProtocol() + stylePath;
-		} else if (styleUri.getScheme().startsWith("http")) {
-			styleReference = stylePath;
-		} else {
-			styleReference = equoServer.getBundleStyleProtocol() + stylePath;
-		}
-		addCustomStyleToProxyServer(url, styleReference);
+		equoContributionBuilder.withStyleFile(stylePath);
 		return this;
 	}
 
-	private void addCustomStyleToProxyServer(String url, String resolvedUrl) {
-		equoServer.addCustomStyle(url, resolvedUrl);
-	}
-
-	
 	/**
 	 * Enable an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if
@@ -163,14 +102,15 @@ public class OptionalViewBuilder {
 	 * @throws URISyntaxException
 	 */
 	public OptionalViewBuilder addLimitedConnectionPage(String limitedConnectionPagePath) throws URISyntaxException {
-		URI scriptUri = new URI(limitedConnectionPagePath);
-		String limitedConnectionPagePathWithPrefix;
-		if (!scriptUri.isAbsolute()) {
-			limitedConnectionPagePathWithPrefix = equoServer.getLocalFileProtocol() + limitedConnectionPagePath;
-		} else {
-			limitedConnectionPagePathWithPrefix = equoServer.getBundleScriptProtocol() + limitedConnectionPagePath;
-		}
-		equoServer.addLimitedConnectionPage(limitedConnectionPagePathWithPrefix);
+		//	TODO Find a way to resolve this page.
+//		URI scriptUri = new URI(limitedConnectionPagePath);
+//		String limitedConnectionPagePathWithPrefix;
+//		if (!scriptUri.isAbsolute()) {
+//			limitedConnectionPagePathWithPrefix = equoServer.getLocalFileProtocol() + limitedConnectionPagePath;
+//		} else {
+//			limitedConnectionPagePathWithPrefix = equoServer.getBundleScriptProtocol() + limitedConnectionPagePath;
+//		}
+//		equoServer.addLimitedConnectionPage(limitedConnectionPagePathWithPrefix);
 		return this;
 	}
 
@@ -194,14 +134,14 @@ public class OptionalViewBuilder {
 	public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
-	
+
 	public OptionalViewBuilder enableAnalytics() {
 		analyticsService.enableAnalytics();
 		return this;
 	}
 
 	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
-		equoServer.withBaseHtml(baseHtmlFile);
+		equoContributionBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;
 	}
 }

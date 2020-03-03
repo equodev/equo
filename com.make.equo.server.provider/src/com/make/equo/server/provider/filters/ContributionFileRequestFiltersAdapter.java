@@ -1,5 +1,6 @@
 package com.make.equo.server.provider.filters;
 
+import java.net.URI;
 import java.net.URL;
 
 import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
@@ -28,6 +29,14 @@ public class ContributionFileRequestFiltersAdapter extends OfflineRequestFilters
 		String requestUri = originalRequest.getUri();
 		String fileName = requestUri.substring(requestUri.indexOf(contributionName) + contributionName.length(), requestUri.length());
 		URL resolvedUrl = urlResolver.resolve(fileName);
+		if (resolvedUrl == null) {
+			URI requestUriAsUri = URI.create(requestUri);
+			if (requestUriAsUri.getHost().contains(contributionName)) {
+				fileName = fileName.substring(fileName.indexOf(contributionName) + contributionName.length(),
+						fileName.length());
+				resolvedUrl = urlResolver.resolve(fileName);
+			}
+		}
 		return super.buildHttpResponse(resolvedUrl);
 	}
 
