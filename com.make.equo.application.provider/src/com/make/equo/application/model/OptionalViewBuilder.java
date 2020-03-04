@@ -189,28 +189,6 @@ public class OptionalViewBuilder {
 	public ToolbarBuilder withToolbar() {
 		
 		return new ToolbarBuilder(this,equoApplicationBuilder.getmWindow()).addToolbar();
-//		MTrimBar trimbar = MBasicFactory.INSTANCE.createTrimBar();
-//		MToolBar toolbar = MenuFactoryImpl.eINSTANCE.createToolBar();
-//		MHandledToolItem e = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
-//		e.setIconURI("save");
-//		e.setElementId("org.eclipse.ui.file.save");
-//		e.setTooltip("Save");
-//		e.setVisible(true);
-//
-//		toolbar.getChildren().add(e);
-//
-//		toolbar.setOnTop(true);
-//		toolbar.setVisible(true);
-//		toolbar.setElementId("com.make.equo.main.toolbar");
-//		equoApplicationBuilder.getmWindow().getTrimBars().add(trimbar);
-//		equoApplicationBuilder.getmWindow().getTrimBars().get(0).getChildren().add(toolbar);
-//		return this;
-	}
-
-//	public MToolBar getToolbar() {
-//		return toolbar;
-//	}
-	
-	
+	}	
 
 }

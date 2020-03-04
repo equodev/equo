@@ -12,11 +12,10 @@ import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.application.util.IConstants;
 
-public class MenuItemBuilder {
+public class MenuItemBuilder extends ItemBuilder {
 
 	private MHandledMenuItem menuItem;
 	private MenuBuilder menuBuilder;
-	private MenuItemHandlerBuilder menuItemHandlerBuilder;
 
 	MenuItemBuilder(MenuBuilder menuBuilder) {
 		this.menuBuilder = menuBuilder;
@@ -42,39 +41,25 @@ public class MenuItemBuilder {
 		return newMenuItem;
 	}
 
-	public MenuItemBuilder onClick(Runnable runnable) {
-		return onClick(runnable, null);
-	}
 
 	public MenuItemBuilder onClick(Runnable runnable, String userEvent) {
-		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
-		MenuItemBuilder menuItemBuilder = menuItemHandlerBuilder.onClick(runnable, userEvent);
-		return menuItemBuilder;
+		this.setItemHandlerBuilder(new MenuItemHandlerBuilder(this));
+		ItemBuilder menuItemBuilder = getItemHandlerBuilder().onClick(runnable, userEvent);
+		return (MenuItemBuilder)menuItemBuilder;
 	}
 
-	public MenuItemBuilder onClick(String userEvent) {
-		return onClick(null, userEvent);
+	public MenuItemBuilder onClick(Runnable action) {
+		return onClick(action, null);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenu(menuLabel);
 	}
 
-	public MenuBuilder withMainMenu(String menuLabel) {
-		return new MenuBuilder(menuBuilder.getOptionalFieldBuilder()).addMenu(menuLabel);
-	}
-
-	public EquoApplicationBuilder start() {
-		return menuBuilder.getOptionalFieldBuilder().start();
-	}
-
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
 	
-	public ToolbarBuilder withToolbar() {
-		return new ToolbarBuilder(menuBuilder.getOptionalFieldBuilder(),menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder().getmWindow()).addToolbar();
-	}
 
 	MHandledMenuItem getMenuItem() {
 		return menuItem;
@@ -83,15 +68,13 @@ public class MenuItemBuilder {
 	MenuBuilder getMenuBuilder() {
 		return menuBuilder;
 	}
-
-	public MenuItemBuilder addShortcut(String keySequence) {
-		if (menuItemHandlerBuilder != null) {
-			return menuItemHandlerBuilder.addShortcut(keySequence);
-		}
-		// log that there is no menu item handler -> no onClick method was called.
-		return this;
+	
+	@Override
+	public OptionalViewBuilder getOptionalFieldBuilder() {
+		return menuBuilder.getOptionalFieldBuilder();
 	}
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	/**
 	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
 	 * runnable before exiting the application
@@ -183,7 +166,7 @@ public class MenuItemBuilder {
 	
 	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
 		menuItem = createMenuItem(label);
-		return onClick(EnterFullScreenModeRunnable.instance);
+		return (MenuItemBuilder)onClick(EnterFullScreenModeRunnable.instance);
 	}
 
 }

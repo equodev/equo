@@ -1,31 +1,22 @@
 package com.make.equo.application.model;
 
-import java.util.List;
-
 import org.eclipse.e4.ui.model.application.commands.MCommand;
-import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 
-import com.google.common.collect.Lists;
-import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 
-public class MenuItemHandlerBuilder extends HandlerBuilder {
-
-	private MenuItemBuilder menuItemBuilder;
-	private Runnable runnable;
-	private String userEvent;
+public class MenuItemHandlerBuilder extends ItemHandlerBuilder {
 
 	MenuItemHandlerBuilder(MenuItemBuilder menuItemBuilder) {
-		super(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder().getmApplication(),
-				IConstants.COMMAND_ID_PARAMETER, IConstants.PARAMETERIZED_COMMAND_CONTRIBUTION_URI);
-		this.menuItemBuilder = menuItemBuilder;
+		super(menuItemBuilder);
+
 	}
 
-	private MenuItemBuilder onClick(Runnable runnable) {
+	@Override
+	protected MenuItemBuilder onClick(Runnable runnable) {
 		this.runnable = runnable;
-		MHandledMenuItem menuItem = this.menuItemBuilder.getMenuItem();
+		MHandledMenuItem menuItem = getMenuItemBuilder().getMenuItem();
 
 		String id = menuItem.getElementId();
 
@@ -40,38 +31,24 @@ public class MenuItemHandlerBuilder extends HandlerBuilder {
 		MParameter userEventParameter = createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, userEvent);
 		menuItem.getParameters().add(userEventParameter);
 
-		return this.menuItemBuilder;
+		return getMenuItemBuilder();
 	}
 
-	@Override
-	protected List<MCommandParameter> createCommandParameters() {
-		MCommandParameter windowNameCommandParameter = createCommandParameter(
-				IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, "User emitted event", true);
-		return Lists.newArrayList(windowNameCommandParameter);
+	public MenuItemBuilder getMenuItemBuilder() {
+		return (MenuItemBuilder) super.itemBuilder;
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
-		return new MenuBuilder(menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder()).addMenu(menuLabel);
+		return new MenuBuilder(getMenuItemBuilder().getMenuBuilder().getOptionalFieldBuilder()).addMenu(menuLabel);
 	}
 
-	@Override
-	protected Runnable getRunnable() {
-		return runnable;
-	}
-
-	MenuItemBuilder onClick(Runnable runnable, String userEvent) {
-		this.userEvent = userEvent;
-		onClick(runnable);
-		return this.menuItemBuilder;
-	}
-
-	MenuItemBuilder addShortcut(String keySequence) {
-		new MenuItemShortcutBuilder(this.menuItemBuilder, userEvent).addShortcut(keySequence);
-		EquoApplicationBuilder equoApplicationBuilder = this.menuItemBuilder.getMenuBuilder().getOptionalFieldBuilder()
+	public ItemBuilder addShortcut(String keySequence) {
+		new MenuItemShortcutBuilder(getMenuItemBuilder(), userEvent).addShortcut(keySequence);
+		EquoApplicationBuilder equoApplicationBuilder = getMenuItemBuilder().getMenuBuilder().getOptionalFieldBuilder()
 				.getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoApplicationBuilder, this.menuItemBuilder.getMenuItem().getElementId(),
+		new GlobalShortcutBuilder(equoApplicationBuilder, getMenuItemBuilder().getMenuItem().getElementId(),
 				this.runnable, this.userEvent).addGlobalShortcut(keySequence);
-		return this.menuItemBuilder;
+		return getMenuItemBuilder();
 	}
 
 }

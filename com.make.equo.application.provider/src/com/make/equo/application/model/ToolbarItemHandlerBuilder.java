@@ -1,31 +1,25 @@
 package com.make.equo.application.model;
 
-import java.util.List;
-
 import org.eclipse.e4.ui.model.application.commands.MCommand;
-import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 
-import com.google.common.collect.Lists;
-import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 
-public class ToolbarItemHandlerBuilder extends HandlerBuilder {
-
-	private ToolbarItemBuilder toolbarItemBuilder;
-	private Runnable runnable;
-	private String userEvent;
+public class ToolbarItemHandlerBuilder extends ItemHandlerBuilder {
 
 	ToolbarItemHandlerBuilder(ToolbarItemBuilder toolbarItemBuilder) {
-		super(toolbarItemBuilder.getToolbarBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
-				.getmApplication(), IConstants.COMMAND_ID_PARAMETER, IConstants.PARAMETERIZED_COMMAND_CONTRIBUTION_URI);
-		this.toolbarItemBuilder = toolbarItemBuilder;
+		super(toolbarItemBuilder);
 	}
 
-	private ToolbarItemBuilder onClick(Runnable runnable) {
-		this.runnable = runnable;
-		MHandledToolItem toolbarItem = this.toolbarItemBuilder.getToolItem();
+	public ToolbarItemBuilder getToolbarItemBuilder() {
+		return (ToolbarItemBuilder) super.itemBuilder;
+	}
+
+	@Override
+	protected ToolbarItemBuilder onClick(Runnable runnable) {
+		super.runnable = runnable;
+		MHandledToolItem toolbarItem = getToolbarItemBuilder().getToolItem();
 
 		String id = toolbarItem.getElementId();
 
@@ -40,39 +34,22 @@ public class ToolbarItemHandlerBuilder extends HandlerBuilder {
 		MParameter userEventParameter = createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, userEvent);
 		toolbarItem.getParameters().add(userEventParameter);
 
-		return this.toolbarItemBuilder;
-	}
-
-	public ToolbarItemBuilder onClick(Runnable runnable, String userEvent) {
-		this.userEvent = userEvent;
-		onClick(runnable);
-		return this.toolbarItemBuilder;
-	}
-
-	@Override
-	protected List<MCommandParameter> createCommandParameters() {
-		MCommandParameter windowNameCommandParameter = createCommandParameter(
-				IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, "User emitted event", true);
-		return Lists.newArrayList(windowNameCommandParameter);
+		return getToolbarItemBuilder();
 	}
 
 	public ToolbarBuilder withToolbar() {
-		return new ToolbarBuilder(toolbarItemBuilder.getToolbarBuilder().getOptionalFieldBuilder(),
-				toolbarItemBuilder.getToolbarBuilder().getParent()).addToolbar();
+		return new ToolbarBuilder(getToolbarItemBuilder().getToolbarBuilder().getOptionalFieldBuilder(),
+				getToolbarItemBuilder().getToolbarBuilder().getParent()).addToolbar();
 	}
 
 	@Override
-	protected Runnable getRunnable() {
-		return runnable;
-	}
-
 	public ToolbarItemBuilder addShortcut(String keySequence) {
-		new ToolbarItemShortcutBuilder(this.toolbarItemBuilder, userEvent).addShortcut(keySequence);
-		EquoApplicationBuilder equoApplicationBuilder = this.toolbarItemBuilder.getToolbarBuilder()
+		new ToolbarItemShortcutBuilder(getToolbarItemBuilder(), userEvent).addShortcut(keySequence);
+		EquoApplicationBuilder equoApplicationBuilder = getToolbarItemBuilder().getToolbarBuilder()
 				.getOptionalFieldBuilder().getEquoApplicationBuilder();
-		new GlobalShortcutBuilder(equoApplicationBuilder, this.toolbarItemBuilder.getToolItem().getElementId(),
+		new GlobalShortcutBuilder(equoApplicationBuilder, getToolbarItemBuilder().getToolItem().getElementId(),
 				this.runnable, this.userEvent).addGlobalShortcut(keySequence);
-		return this.toolbarItemBuilder;
+		return getToolbarItemBuilder();
 	}
 
 }

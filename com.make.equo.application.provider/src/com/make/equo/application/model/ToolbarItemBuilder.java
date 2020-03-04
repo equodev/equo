@@ -4,11 +4,10 @@ package com.make.equo.application.model;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
-public class ToolbarItemBuilder {
+public class ToolbarItemBuilder extends ItemBuilder {
 
 	private MHandledToolItem toolItem;
 	private ToolbarBuilder toolbarBuilder;
-	private ToolbarItemHandlerBuilder toolbarItemHandlerBuilder;
 	private String iconId;
 	private String text;
 
@@ -28,7 +27,6 @@ public class ToolbarItemBuilder {
 		return new ToolbarItemBuilder(this);
 	}
 
-	// hardcoded
 	public MHandledToolItem createToolItem() {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
 		newToolItem.setIconURI(this.iconId);
@@ -45,31 +43,15 @@ public class ToolbarItemBuilder {
 	}
 
 	public ToolbarItemBuilder onClick(Runnable action, String userEvent) {
-		this.toolbarItemHandlerBuilder = new ToolbarItemHandlerBuilder(this);
-		ToolbarItemBuilder toolbarItemBuilder = toolbarItemHandlerBuilder.onClick(action, userEvent);
-		return toolbarItemBuilder;
+		this.setItemHandlerBuilder(new ToolbarItemHandlerBuilder(this));
+		ItemBuilder toolbarItemBuilder = this.getItemHandlerBuilder().onClick(action, userEvent);
+		return (ToolbarItemBuilder) toolbarItemBuilder;
 	}
 	
 	public ToolbarBuilder addToolbar() {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
 	}
-	
-	public ToolbarBuilder withToolbar() {
-		return new ToolbarBuilder(this.toolbarBuilder.getOptionalFieldBuilder(),this.toolbarBuilder.getParent());
-	}
-	
-	public MenuBuilder withMainMenu(String label) {
-		return new MenuBuilder(toolbarBuilder.getOptionalFieldBuilder()).addMenu(label);
-	}
-	
-	public ToolbarItemBuilder addShortcut(String keySequence) {
-		if (toolbarItemHandlerBuilder != null) {
-			return toolbarItemHandlerBuilder.addShortcut(keySequence);
-		}
-		// log that there is no menu item handler -> no onClick method was called.
-		return this;
-	}
-	
+		
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
@@ -78,9 +60,9 @@ public class ToolbarItemBuilder {
 		return toolItem;
 	}
 
-	
-	public EquoApplicationBuilder start() {
-		return toolbarBuilder.getOptionalFieldBuilder().start();
+	@Override
+	public OptionalViewBuilder getOptionalFieldBuilder() {
+		return this.toolbarBuilder.getOptionalFieldBuilder();
 	}
 
 }

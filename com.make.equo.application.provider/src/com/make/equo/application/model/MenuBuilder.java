@@ -21,6 +21,9 @@ public class MenuBuilder {
 	}
 
 	public MenuBuilder addMenu(String label) {
+		if(parentMenu==null) {
+			parentMenu = optionalFieldBuilder.getEquoApplicationBuilder().getmWindow().getMainMenu();
+		}
 		menu = createMenu(parentMenu, label);
 		return new MenuBuilder(this);
 	}
