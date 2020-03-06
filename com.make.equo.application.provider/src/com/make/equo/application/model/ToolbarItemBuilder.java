@@ -3,6 +3,7 @@ package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import com.make.equo.application.util.IConstants;
 
 public class ToolbarItemBuilder extends ItemBuilder {
 
@@ -44,14 +45,16 @@ public class ToolbarItemBuilder extends ItemBuilder {
 
 	public ToolbarItemBuilder onClick(Runnable action, String userEvent) {
 		this.setItemHandlerBuilder(new ToolbarItemHandlerBuilder(this));
+		this.toolItem.getTransientData().put(IConstants.IS_AN_EQUO_MODEL_ELEMENT, true);
+		this.toolItem.getTransientData().put(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, userEvent);
 		ItemBuilder toolbarItemBuilder = this.getItemHandlerBuilder().onClick(action, userEvent);
 		return (ToolbarItemBuilder) toolbarItemBuilder;
 	}
-	
+
 	public ToolbarBuilder addToolbar() {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
 	}
-		
+
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}

@@ -2,9 +2,9 @@ package com.make.equo.renderers.util;
 
 public interface IRendererConstants {
 
-	//HTML file
+	// HTML file
 	public static final String BASE_HTML_FILE = "baseRenderer.html";
-	
+
 	// Scripts
 	public static final String TOOLBAR_RENDERER_SCRIPT_FILE = "renderers/toolBarRenderer.js";
 
@@ -21,5 +21,9 @@ public interface IRendererConstants {
 
 	// Renderer Contribution
 	public static final String EQUO_RENDERERS_CONTRIBUTION_NAME = "equorenderers";
+
+	public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT = "com.make.equo.websocket.useremittedevent";
+
+	public static final String IS_AN_EQUO_MODEL_ELEMENT = "isAnEquoModelElement";
 
 }
