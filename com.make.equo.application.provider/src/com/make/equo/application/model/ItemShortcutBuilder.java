@@ -6,27 +6,27 @@ import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
-import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 
 import com.make.equo.application.util.IConstants;
 
-public class ToolbarItemShortcutBuilder implements KeyBindingBuilder{
-	
-	private ToolbarItemBuilder toolbarItemBuilder;
+public class ItemShortcutBuilder implements KeyBindingBuilder {
+
+	private ItemBuilder itemBuilder;
 	private String userEvent;
 
-	ToolbarItemShortcutBuilder(ToolbarItemBuilder toolbarItemBuilder, String userEvent) {
-		this.toolbarItemBuilder = toolbarItemBuilder;
+	ItemShortcutBuilder(ItemBuilder itemBuilder, String userEvent) {
+		this.itemBuilder = itemBuilder;
 		this.userEvent = userEvent;
 	}
 
 	void addShortcut(String shortcut) {
 		Optional<MBindingTable> bindingTable = getDefaultBindingTable(
-				toolbarItemBuilder.getToolbarBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder());
+				itemBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder());
 		if (bindingTable.isPresent()) {
 			MBindingTable mBindingTable = bindingTable.get();
-			MHandledToolItem toolItem = toolbarItemBuilder.getToolItem();
+			MHandledItem toolItem = itemBuilder.getItem();
 			MCommand command = toolItem.getCommand();
 
 			MKeyBinding keyBinding = createKeyBinding(command, shortcut);

@@ -14,7 +14,6 @@ import com.make.equo.application.util.IConstants;
 
 public class MenuItemBuilder extends ItemBuilder {
 
-	private MHandledMenuItem menuItem;
 	private MenuBuilder menuBuilder;
 
 	MenuItemBuilder(MenuBuilder menuBuilder) {
@@ -22,12 +21,12 @@ public class MenuItemBuilder extends ItemBuilder {
 	}
 
 	MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
-		this.menuItem = menuItemBuilder.menuItem;
+		this.setItem(menuItemBuilder.getItem());
 		this.menuBuilder = menuItemBuilder.menuBuilder;
 	}
 
 	public MenuItemBuilder addMenuItem(String label) {
-		menuItem = createMenuItem(label);
+		this.setItem(createMenuItem(label));
 		return new MenuItemBuilder(this);
 	}
 
@@ -42,14 +41,8 @@ public class MenuItemBuilder extends ItemBuilder {
 	}
 
 
-	public MenuItemBuilder onClick(Runnable runnable, String userEvent) {
-		this.setItemHandlerBuilder(new MenuItemHandlerBuilder(this));
-		ItemBuilder menuItemBuilder = getItemHandlerBuilder().onClick(runnable, userEvent);
-		return (MenuItemBuilder)menuItemBuilder;
-	}
-
 	public MenuItemBuilder onClick(Runnable action) {
-		return onClick(action, null);
+		return (MenuItemBuilder)onClick(action, null);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {
@@ -62,7 +55,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	
 
 	MHandledMenuItem getMenuItem() {
-		return menuItem;
+		return (MHandledMenuItem) this.getItem();
 	}
 
 	MenuBuilder getMenuBuilder() {
@@ -73,8 +66,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	public OptionalViewBuilder getOptionalFieldBuilder() {
 		return menuBuilder.getOptionalFieldBuilder();
 	}
-
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
 	/**
 	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
 	 * runnable before exiting the application
@@ -87,8 +79,8 @@ public class MenuItemBuilder extends ItemBuilder {
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
@@ -118,8 +110,8 @@ public class MenuItemBuilder extends ItemBuilder {
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.PREFERENCES_COMMAND, runnable);
 		return this;
@@ -147,8 +139,8 @@ public class MenuItemBuilder extends ItemBuilder {
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.ABOUT_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.ABOUT_COMMAND, runnable);
 		return this;
@@ -165,8 +157,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	}
 	
 	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
-		menuItem = createMenuItem(label);
+		this.setItem(createMenuItem(label));
 		return (MenuItemBuilder)onClick(EnterFullScreenModeRunnable.instance);
 	}
-
 }

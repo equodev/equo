@@ -6,7 +6,6 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 public class ToolbarItemBuilder extends ItemBuilder {
 
-	private MHandledToolItem toolItem;
 	private ToolbarBuilder toolbarBuilder;
 	private String iconId;
 	private String text;
@@ -16,14 +15,14 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	}
 
 	ToolbarItemBuilder(ToolbarItemBuilder toolbarItemBuilder) {
-		this.toolItem = toolbarItemBuilder.toolItem;
+		this.setItem(toolbarItemBuilder.getItem());
 		this.toolbarBuilder = toolbarItemBuilder.toolbarBuilder;
 	}
 
 	public ToolbarItemBuilder addToolItem(String iconId, String text) {
 		this.iconId = iconId;
 		this.text = text;
-		this.toolItem = createToolItem();
+		this.setItem(createToolItem());
 		return new ToolbarItemBuilder(this);
 	}
 
@@ -39,13 +38,7 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	}
 
 	public ToolbarItemBuilder onClick(Runnable action) {
-		return onClick(action, null);
-	}
-
-	public ToolbarItemBuilder onClick(Runnable action, String userEvent) {
-		this.setItemHandlerBuilder(new ToolbarItemHandlerBuilder(this));
-		ItemBuilder toolbarItemBuilder = this.getItemHandlerBuilder().onClick(action, userEvent);
-		return (ToolbarItemBuilder) toolbarItemBuilder;
+		return (ToolbarItemBuilder) onClick(action, null);
 	}
 	
 	public ToolbarBuilder addToolbar() {
@@ -57,7 +50,7 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	}
 
 	public MHandledToolItem getToolItem() {
-		return toolItem;
+		return (MHandledToolItem) getItem();
 	}
 
 	@Override
