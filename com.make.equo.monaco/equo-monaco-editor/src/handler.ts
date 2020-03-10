@@ -4,7 +4,7 @@ import {
     MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
-import ReconnectingWebSocket = require('reconnecting-websocket');
+const ReconnectingWebSocket = require('reconnecting-websocket');
 
 let lastSavedVersionId: number;
 let editor: monaco.editor.IStandaloneCodeEditor;
