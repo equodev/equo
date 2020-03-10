@@ -1,12 +1,12 @@
 ## Running the Monaco editor
 
-> Install yarn if needed by following the steps in: https://classic.yarnpkg.com/en/docs/install
+Install yarn if needed by following the steps in: https://classic.yarnpkg.com/en/docs/install
 
-* 1) Go to com.make.equo.monaco
+* 1) Go to com.make.equo.monaco in your equo repository folder
 
 * 2) Open a console there and run the **yarn** command
 
-* 3) In eclipse, go to com.make.equo.eclipse.testapp
+* 3) In eclipse, go to the com.make.equo.eclipse.testapp boundle
 
 * 4) Open the bnd and run it
 
