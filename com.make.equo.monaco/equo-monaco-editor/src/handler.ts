@@ -41,6 +41,68 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; }) => {
         // @ts-ignore
         equo.send("_selection", e.selection);
     });
+    
+    // @ts-ignore
+	equo.on("_doFind", () => {
+		editor.getAction("actions.find").run();
+	});
+	
+	// @ts-ignore
+	equo.on("_getContents", () => {
+		// @ts-ignore
+		equo.send("_doGetContents", { contents: editor.getValue() });
+	});
+
+	function notifyDirty() {
+		// @ts-ignore
+		equo.send("_isDirtyNotification", { isDirty: lastSavedVersionId !== model.getAlternativeVersionId() });
+	}
+	
+	document.onkeydown = keydown;
+
+	function keydown(evt: any) {
+		if (evt.ctrlKey && evt.keyCode == 83) {
+		    // @ts-ignore
+		    equo.send("_doSave");
+		}
+	}
+
+	// @ts-ignore
+	equo.on("_didSave", () => {
+		lastSavedVersionId = model.getAlternativeVersionId();
+		notifyDirty();
+	});
+
+	// @ts-ignore
+	equo.on("_subscribeIsDirty", () => {
+		editor.onDidChangeModelContent(() => {
+		    notifyDirty();
+		});
+	});
+
+	// @ts-ignore
+	equo.on("_doCopy", () => {
+		editor.getAction("editor.action.clipboardCopyAction").run();
+	});
+
+	// @ts-ignore
+	equo.on("_doCut", () => {
+		editor.getAction("editor.action.clipboardCutAction").run();
+	});
+
+	// @ts-ignore
+	equo.on("_doPaste", () => {
+		editor.focus();
+		// @ts-ignore
+		equo.send("_canPaste");
+	});
+
+	// @ts-ignore
+	equo.on("_doSelectAll", () => {
+		editor.focus();
+		// @ts-ignore
+		equo.send("_canSelectAll");
+	});
 });
 
 // @ts-ignore
@@ -97,67 +159,3 @@ function createWebSocket(url: string): WebSocket {
     };
     return new ReconnectingWebSocket(url, [], socketOptions);
 }
-
-document.onkeydown = keydown;
-
-function keydown(evt: any) {
-    if (evt.ctrlKey && evt.keyCode == 83) {
-        // @ts-ignore
-        equo.send("_doSave");
-    }
-}
-
-// @ts-ignore
-equo.on("_getContents", () => {
-    // @ts-ignore
-    equo.send("_doGetContents", { contents: editor.getValue() });
-});
-
-function notifyDirty() {
-    if (lastSavedVersionId !== model.getAlternativeVersionId()) {
-        // @ts-ignore
-        equo.send("_isDirtyNotification", { isDirty: lastSavedVersionId !== model.getAlternativeVersionId() });
-    }
-}
-
-// @ts-ignore
-equo.on("_didSave", () => {
-    lastSavedVersionId = model.getAlternativeVersionId();
-    notifyDirty();
-});
-
-// @ts-ignore
-equo.on("_subscribeIsDirty", () => {
-    editor.onDidChangeModelContent(() => {
-        notifyDirty();
-    });
-});
-
-// @ts-ignore
-equo.on("_doCopy", () => {
-    editor.getAction("editor.action.clipboardCopyAction").run();
-});
-
-// @ts-ignore
-equo.on("_doCut", () => {
-    editor.getAction("editor.action.clipboardCutAction").run();
-});
-
-// @ts-ignore
-equo.on("_doFind", () => {
-    editor.getAction("actions.find").run();
-});
-
-// @ts-ignore
-equo.on("_doPaste", () => {
-    editor.focus();
-    // @ts-ignore
-    equo.send("_canPaste");
-});
-
-// @ts-ignore
-equo.on("_doSelectAll", () => {
-    editor.focus();
-    // @ts-ignore
-    equo.send("_canSelectAll");
-});
