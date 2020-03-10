@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.BundleContext;
@@ -103,6 +104,14 @@ public class MonacoEditorPart extends EditorPart {
 					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
 							.withFileName(fileInput.getURI().toString()).create();
 					editor.subscribeIsDirty(dirtyListener);
+					editor.configSave((v) -> {
+						Display.getDefault().asyncExec( () -> {
+							IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+							try {
+							    handlerService.executeCommand("org.eclipse.ui.file.save", null);
+							} catch (Exception ex) {}
+						});
+					});
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve Monaco Editor service");
 				}

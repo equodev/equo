@@ -92,6 +92,10 @@ public class EquoMonacoEditor {
 		equoEventHandler.send("_didSave");
 	}
 	
+	public void configSave(IEquoRunnable<Void> saveFunction) {
+		equoEventHandler.on("_doSave", saveFunction);
+	}
+	
 	public void subscribeIsDirty(IEquoRunnable<Boolean> dirtyListener) {
 		equoEventHandler.on("_isDirtyNotification", (JsonObject isDirty) -> {
 			dirtyListener.run(isDirty.get("isDirty").getAsBoolean());
