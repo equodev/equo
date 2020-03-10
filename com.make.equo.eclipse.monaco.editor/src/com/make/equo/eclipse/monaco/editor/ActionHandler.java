@@ -10,11 +10,17 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 public class ActionHandler extends AbstractHandler {
 	private boolean enable;
 	private Runnable execution;
+	private boolean alwaysEnable;
 	
 	ActionHandler(ISelectionProvider selectionProvider, Runnable execution){
+		this(selectionProvider, execution, false);
+	}
+	
+	ActionHandler(ISelectionProvider selectionProvider, Runnable execution, boolean alwaysEnable){
 		selectionProvider.addSelectionChangedListener(new MyListener());
 		enable = false;
 		this.execution = execution;
+		this.alwaysEnable = alwaysEnable;
 	}
 	
 	@Override
@@ -25,7 +31,7 @@ public class ActionHandler extends AbstractHandler {
 	
 	@Override
 	public boolean isEnabled() {
-		return enable;
+		return alwaysEnable || enable;
 	}
 
 	private class MyListener implements ISelectionChangedListener {

@@ -100,6 +100,10 @@ public class EquoMonacoEditor {
 		equoEventHandler.send("_doCut");
 	}
 	
+	public void find() {
+		equoEventHandler.send("_doFind");
+	}
+	
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
 		equoEventHandler.on("_selection", (JsonObject contents) -> {
 			selectionFunction.run(contents.get("endColumn").getAsInt() != contents.get("startColumn").getAsInt()
