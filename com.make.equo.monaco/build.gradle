@@ -15,5 +15,5 @@ node {
 }
 
 processResources {
-  dependsOn npm_install
+  dependsOn yarn_install
 }

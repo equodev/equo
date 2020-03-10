@@ -2,3 +2,5 @@
 .gradle/*
 /node_modules
 /node_modules/*
+/equo-monaco-editor/node_modules/*
+/resources/*
