@@ -9,17 +9,22 @@ import java.nio.charset.Charset;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -44,6 +49,8 @@ public class MonacoEditorPart extends EditorPart {
 	};
 
 	private EquoMonacoEditor editor;
+	
+	private ISelectionProvider selectionProvider = new MonacoEditorSelectionProvider();
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -145,15 +152,12 @@ public class MonacoEditorPart extends EditorPart {
 					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
 					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
 							.withFileName(fileInput.getURI().toString()).create();
-					editor.subscribeIsDirty(dirtyListener);
-					editor.configSave((v) -> {
-						Display.getDefault().asyncExec( () -> {
-							IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-							try {
-							    handlerService.executeCommand("org.eclipse.ui.file.save", null);
-							} catch (Exception ex) {}
-						});
-					});
+					
+					editorConfigs();
+					
+					getSite().setSelectionProvider(selectionProvider);
+					
+					createActions();
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve Monaco Editor service");
 				}
@@ -166,8 +170,39 @@ public class MonacoEditorPart extends EditorPart {
 
 	}
 
+	private void editorConfigs() {
+		editor.subscribeIsDirty(dirtyListener);
+		
+		editor.configSave((v) -> {
+			Display.getDefault().asyncExec( () -> {
+				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+				try {
+				    handlerService.executeCommand("org.eclipse.ui.file.save", null);
+				} catch (Exception ex) {}
+			});
+		});
+			
+		editor.configSelection((selection) -> {
+			Display.getDefault().asyncExec( () -> {
+				ISelection iSelection = (selection) ? new TextSelection(0, 1) : new TextSelection(0, -1);
+				getSite().getSelectionProvider().setSelection(iSelection);
+			});
+		});
+	}
+
+	private void createActions() {
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		
+		IHandler handler = new ActionHandler(selectionProvider, () -> editor.copy());
+		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_COPY, handler);
+		
+		handler = new ActionHandler(selectionProvider, () -> editor.cut());
+		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, handler);
+	}
+
 	@Override
 	public void setFocus() {
+		
 	}
 
 }

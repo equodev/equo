@@ -92,6 +92,21 @@ public class EquoMonacoEditor {
 		equoEventHandler.send("_didSave");
 	}
 	
+	public void copy() {
+		equoEventHandler.send("_doCopy");
+	}
+	
+	public void cut() {
+		equoEventHandler.send("_doCut");
+	}
+	
+	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
+		equoEventHandler.on("_selection", (JsonObject contents) -> {
+			selectionFunction.run(contents.get("endColumn").getAsInt() != contents.get("startColumn").getAsInt()
+					|| contents.get("endLineNumber").getAsInt() != contents.get("startLineNumber").getAsInt());
+		});
+	}
+	
 	public void configSave(IEquoRunnable<Void> saveFunction) {
 		equoEventHandler.on("_doSave", saveFunction);
 	}
