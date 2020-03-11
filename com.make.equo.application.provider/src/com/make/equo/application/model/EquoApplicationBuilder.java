@@ -24,8 +24,8 @@ import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
 
-@Component(service = EquoApplicationBuilder.class)
-public class EquoApplicationBuilder {
+@Component(service = IApplicationBuilder.class)
+public class EquoApplicationBuilder implements IApplicationBuilder {
 
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
@@ -47,6 +47,7 @@ public class EquoApplicationBuilder {
 		return this.getViewBuilder().withSingleView(url);
 	}
 
+	@Override
 	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
 		return this.getViewBuilder().withBaseHtml(baseHtmlFile);
 	}

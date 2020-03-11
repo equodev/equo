@@ -9,12 +9,13 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
+import com.make.equo.application.model.IApplicationBuilder;
 
 @Component
 public class TestApp implements IEquoApplication {
 
 	@Override
-	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
+	public IApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
 			return appBuilder.webWrapper("https://www.maketechnology.io").enableAnalytics()

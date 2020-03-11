@@ -103,7 +103,7 @@ public class ViewBuilder {
 		return url;
 	}
 
-	public EquoApplicationBuilder start() {
+	public IApplicationBuilder start() {
 		analyticsService.registerLaunchApp();
 		return this.equoAppBuilder;
 	}
