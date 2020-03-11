@@ -1,6 +1,5 @@
 const path = require('path');
 const lib = path.resolve(__dirname, "../resources");
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const common = {
     entry: {
