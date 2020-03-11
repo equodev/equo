@@ -3,6 +3,7 @@ package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import com.make.equo.application.util.IConstants;
 
 public class ToolbarItemBuilder extends ItemBuilder {
 
@@ -40,11 +41,11 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public ToolbarItemBuilder onClick(Runnable action) {
 		return (ToolbarItemBuilder) onClick(action, null);
 	}
-	
+
 	public ToolbarBuilder addToolbar() {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
 	}
-		
+
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}

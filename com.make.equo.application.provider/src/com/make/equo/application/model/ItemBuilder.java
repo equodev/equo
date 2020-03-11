@@ -2,6 +2,8 @@ package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 
+import com.make.equo.application.util.IConstants;
+
 public abstract class ItemBuilder {
 
 	private ItemHandlerBuilder itemHandlerBuilder;
@@ -24,7 +26,7 @@ public abstract class ItemBuilder {
 		return this;
 	}
 
-	public EquoApplicationBuilder start() {
+	public IApplicationBuilder start() {
 		return this.getOptionalFieldBuilder().start();
 	}
 
@@ -48,8 +50,10 @@ public abstract class ItemBuilder {
 	
 	public ItemBuilder onClick(Runnable runnable, String action) {
 		this.setItemHandlerBuilder(new ItemHandlerBuilder(this));
-		ItemBuilder menuItemBuilder = getItemHandlerBuilder().onClick(runnable, action);
-		return menuItemBuilder;
+		this.getItem().getTransientData().put(IConstants.IS_AN_EQUO_MODEL_ELEMENT, true);
+		this.getItem().getTransientData().put(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, action);
+		ItemBuilder itemBuilder = getItemHandlerBuilder().onClick(runnable, action);
+		return itemBuilder;
 	}
 
 }

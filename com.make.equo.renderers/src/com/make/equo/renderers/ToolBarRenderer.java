@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -33,6 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
+import com.make.equo.renderers.util.IRendererConstants;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 
@@ -88,6 +91,19 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 					toolItemsPayloads.put("commandId", toolItem.getCommand().getElementId());
 				} else {
 					toolItemsPayloads.put("commandId", UNKNOWN_EQUO_COMMAND);
+				}
+				Boolean isAnEquoModelElement = (Boolean) toolItem.getTransientData()
+						.get(IRendererConstants.IS_AN_EQUO_MODEL_ELEMENT);
+				if (isAnEquoModelElement != null) {
+					toolItemsPayloads.put(IRendererConstants.IS_AN_EQUO_MODEL_ELEMENT,
+							isAnEquoModelElement ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+				} else {
+					toolItemsPayloads.put(IRendererConstants.IS_AN_EQUO_MODEL_ELEMENT, Boolean.FALSE.toString());
+				}
+				String userEvent = (String) toolItem.getTransientData()
+						.get(IRendererConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT);
+				if (userEvent != null) {
+					toolItemsPayloads.put("userEvent", userEvent);
 				}
 				toolItemsPayloads.put("tooltip", toolItem.getTooltip());
 				modelContributions.put(toolItem.getElementId(), toolItemsPayloads);
@@ -148,7 +164,25 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 			if (command != null) {
 				sync.asyncExec(() -> {
-					ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, null);
+					JsonElement isModelElementAsJson = payload.get(IRendererConstants.IS_AN_EQUO_MODEL_ELEMENT);
+					boolean isAnEquoModelElement = isModelElementAsJson != null ? isModelElementAsJson.getAsBoolean()
+							: false;
+					Parameterization[] params = null;
+					if (isAnEquoModelElement) {
+						try {
+							JsonElement userEventAsJson = payload
+									.get(IRendererConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT);
+							String userEvent = userEventAsJson != null ? userEventAsJson.getAsString() : null;
+							params = new Parameterization[] {
+									new Parameterization(command.getParameter("commandId"), command.getId()),
+									new Parameterization(
+											command.getParameter(IRendererConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT),
+											userEvent) };
+						} catch (NotDefinedException e) {
+							e.printStackTrace();
+						}
+					}
+					ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, params);
 					EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
 					handlerService.executeHandler(parametrizedCommand);
 				});
