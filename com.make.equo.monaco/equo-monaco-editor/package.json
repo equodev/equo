@@ -17,7 +17,7 @@
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",
-        "clean": "rm -rf lib",
+        "clean": "rimraf ../resources",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
         "copy": "cp src/index.html ../resources/index.html"
