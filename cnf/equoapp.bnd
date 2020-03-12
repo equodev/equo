@@ -129,7 +129,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     ${fragment.and.cocoa}
     
 -runpath.equo: \
-    org.eclipse.equinox.weaving.hook;version='[1.2.200, 1.2.201)'
+    org.eclipse.equinox.weaving.hook;version='[1.2.500, 1.2.501)'
     
 -runbundles.equo: \
     org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)',\
