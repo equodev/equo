@@ -15,9 +15,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.EquoContributionBuilder;
+import com.make.equo.contribution.api.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.server.contribution.EquoContributionBuilder;
-import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
 
 @Component(service = ViewBuilder.class)
 public class ViewBuilder {
@@ -71,13 +71,13 @@ public class ViewBuilder {
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
 		equoContributionBuilder.withURLResolver(new EquoGenericURLResolver(equoApp.getClass().getClassLoader()));
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, equoContributionBuilder);
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, equoContributionBuilder, equoApp);
 
 		return optionalViewBuilder;
 	}
 
 	private void addUrlToProxyServer(String url) {
-		equoServer.addUrl(url);
+		equoContributionBuilder.withProxiedUri(url);
 	}
 
 	private String normalizeUrl(String url) {

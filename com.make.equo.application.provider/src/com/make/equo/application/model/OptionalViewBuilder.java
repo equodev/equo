@@ -6,9 +6,10 @@ import java.net.URISyntaxException;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
+import com.make.equo.contribution.api.EquoContributionBuilder;
 import com.make.equo.server.api.IEquoServer;
-import com.make.equo.server.contribution.EquoContributionBuilder;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 public class OptionalViewBuilder {
@@ -21,7 +22,7 @@ public class OptionalViewBuilder {
 	private EquoContributionBuilder equoContributionBuilder;
 
 	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService,
-			EquoContributionBuilder equoContributionBuilder) {
+			EquoContributionBuilder equoContributionBuilder, IEquoApplication equoApp) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
 		this.analyticsService = analyticsService;
@@ -102,15 +103,7 @@ public class OptionalViewBuilder {
 	 * @throws URISyntaxException
 	 */
 	public OptionalViewBuilder addLimitedConnectionPage(String limitedConnectionPagePath) throws URISyntaxException {
-		//	TODO Find a way to resolve this page.
-//		URI scriptUri = new URI(limitedConnectionPagePath);
-//		String limitedConnectionPagePathWithPrefix;
-//		if (!scriptUri.isAbsolute()) {
-//			limitedConnectionPagePathWithPrefix = equoServer.getLocalFileProtocol() + limitedConnectionPagePath;
-//		} else {
-//			limitedConnectionPagePathWithPrefix = equoServer.getBundleScriptProtocol() + limitedConnectionPagePath;
-//		}
-//		equoServer.addLimitedConnectionPage(limitedConnectionPagePathWithPrefix);
+		equoServer.addLimitedConnectionPage(limitedConnectionPagePath);
 		return this;
 	}
 

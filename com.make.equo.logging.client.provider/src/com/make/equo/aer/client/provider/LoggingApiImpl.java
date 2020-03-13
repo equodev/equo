@@ -17,7 +17,6 @@ public class LoggingApiImpl implements ILoggingApi {
 
 	private static final String LOGGING_EVENT_KEY = "loggingEvent";
 
-
 	private IEquoLoggingService equoLoggingService;
 	private IEquoEventHandler equoEventHandler;
 
@@ -75,19 +74,18 @@ public class LoggingApiImpl implements ILoggingApi {
 			String type = typeJsonElement.getAsString();
 			String message = messageJsonElement.getAsString();
 			JsonObject segmentationJsonObject = payload.getAsJsonObject(SEGMENTATION_KEY);
-			switch(type) {
+			switch (type) {
 			case TYPE_INFO:
-				logInfo(message,segmentationJsonObject);
+				logInfo(message, segmentationJsonObject);
 				break;
 			case TYPE_WARNING:
-				logWarning(message,segmentationJsonObject);
+				logWarning(message, segmentationJsonObject);
 				break;
 			case TYPE_ERROR:
-				logError(message,segmentationJsonObject);
+				logError(message, segmentationJsonObject);
 				break;
 			}
 		}
 	}
-
 
 }

@@ -1,7 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
 Private-Package: \
-	com.make.equo.server.provider,\
-	com.make.equo.server.provider.resolvers
+	com.make.equo.server.provider
 Export-Package: \
     com.make.equo.server.provider.filters
 -includeresource: resources/
@@ -15,9 +14,5 @@ Export-Package: \
 	osgi.cmpn,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
-	javax.inject,\
-	javax.inject.source,\
-	org.apache.httpcomponents.httpcore,\
-	org.apache.httpcomponents.httpcore.source,\
-    com.make.equo.application.provider;version=latest,\
-    com.make.equo.aer.api;version=latest
+    com.make.equo.aer.api;version=latest,\
+    com.make.equo.contribution.api;version=latest

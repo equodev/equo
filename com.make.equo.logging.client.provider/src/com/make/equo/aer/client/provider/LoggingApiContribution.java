@@ -5,8 +5,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.aer.client.api.ILoggingApi;
-import com.make.equo.server.contribution.EquoContributionBuilder;
-import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
+import com.make.equo.contribution.api.EquoContributionBuilder;
+import com.make.equo.contribution.api.resolvers.EquoGenericURLResolver;
 
 @Component
 public class LoggingApiContribution {

@@ -32,7 +32,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
@@ -44,9 +43,6 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 
 	@Inject
 	private static IEquoEventHandler equoEventHandler;
-
-	@Inject
-	private IEquoServer equoProxyServer;
 
 	@Inject
 	private MApplication mApplication;
@@ -73,11 +69,6 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		configureAndStartRenderProcess(browserComposite);
 
 		return parentComp;
-	}
-
-	@Override
-	public IEquoServer getEquoProxyServer() {
-		return equoProxyServer;
 	}
 
 	@Override

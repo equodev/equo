@@ -2,6 +2,7 @@ package com.make.equo.server.provider.filters;
 
 import java.util.List;
 
+import com.make.equo.contribution.api.ResolvedContribution;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IModifiableResponse;
 
@@ -17,13 +18,13 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 	private String customJsScripts;
 	private String customStyles;
 
-	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, List<String> equoContributionsJsApis, List<String> equoContributionStyles,
-			String customJsScripts, String customStyles, boolean isOfflineCacheSupported, IEquoOfflineServer equoOfflineServer) {
+	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, ResolvedContribution globalContribution,
+			boolean isOfflineCacheSupported, IEquoOfflineServer equoOfflineServer) {
 		super(originalRequest, equoOfflineServer, isOfflineCacheSupported);
-		this.equoContributionsJsApis = equoContributionsJsApis;
-		this.equoContributionStyles = equoContributionStyles;
-		this.customJsScripts = customJsScripts;
-		this.customStyles = customStyles;
+		this.equoContributionsJsApis = globalContribution.getScripts();
+		this.equoContributionStyles = globalContribution.getStyles();
+		this.customJsScripts = globalContribution.getCustomScripts(originalRequest.getUri());
+		this.customStyles = globalContribution.getCustomStyles(originalRequest.getUri());
 	}
 
 	@Override

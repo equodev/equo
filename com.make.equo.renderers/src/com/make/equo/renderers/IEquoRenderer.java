@@ -32,7 +32,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 
@@ -207,8 +206,6 @@ public interface IEquoRenderer {
 	 * @return a namespace
 	 */
 	String getNamespace();
-
-	IEquoServer getEquoProxyServer();
 
 	Browser createBrowserComponent(Composite parent);
 

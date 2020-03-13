@@ -1,29 +1,12 @@
 Bundle-Version: ${version}.${tstamp}
-
 Export-Package: \
-	com.make.equo.server.api,\
-	com.make.equo.server.contribution,\
-	com.make.equo.server.contribution.builder,\
-	com.make.equo.server.contribution.resolvers
+	com.make.equo.server.api
 -buildpath: \
 	org.littleshoot.littleproxy,\
 	org.littleshoot.littleproxy.source,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
-	com.google.gson,\
-	com.google.gson.source,\
-	com.make.equo.aer.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
-	osgi.cmpn,\
-	${junit},\
-	org.assertj.core;version=3.9
-
--runbundles.equo: \
-    org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)'
-	
-Private-Package: \
-	com.make.equo.server.contribution.configservice,\
-	com.make.equo.server.contribution.configservice.pojo,\
-	com.make.equo.server.contribution.parser
+	osgi.cmpn
