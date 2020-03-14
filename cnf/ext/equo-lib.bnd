@@ -31,10 +31,5 @@ plugindir: ${workspace}/cnf/plugins
     com.make.bnd.p2release.P2RepoContentProvider; \
         name = Release
 
--plugin.7.WeavingP2Repo: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = "Equinox Weaving"; \
-        url = "https://download.eclipse.org/tools/ajdt/410/dev/update/"
-
 -releaserepo: Release
 #-baselinerepo: Release
