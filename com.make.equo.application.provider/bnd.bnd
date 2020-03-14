@@ -58,6 +58,8 @@ Export-Package: \
 	org.eclipse.equinox.app.source,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.source,\
+	org.eclipse.emf.common,\
+	org.eclipse.emf.common.source,\
 	osgi.cmpn
 Private-Package: \
 	com.make.equo.application.handlers,\
