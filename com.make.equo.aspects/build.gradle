@@ -1,4 +1,10 @@
 task compileAspects() {
+  inputs.files {
+    compileJava.classpath
+  }
+
+  outputs.dir compileJava.destinationDir
+
   doLast {
     println("Compiling Aspects")
 
