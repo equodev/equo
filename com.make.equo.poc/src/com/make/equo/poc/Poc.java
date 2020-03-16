@@ -6,12 +6,11 @@ import java.net.URISyntaxException;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
-import com.make.equo.application.model.IApplicationBuilder;
 
 public class Poc implements IEquoApplication {
 
 	@Override
-	public IApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
+	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
 			return appBuilder.plainApp("index.html").enableAnalytics().withMainMenu("File")

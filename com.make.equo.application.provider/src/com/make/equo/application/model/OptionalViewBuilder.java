@@ -155,7 +155,7 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
-	public IApplicationBuilder start() {
+	public EquoApplicationBuilder start() {
 		return this.viewBuilder.start();
 	}
 

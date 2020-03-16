@@ -1,6 +1,5 @@
 package com.make.equo.application.model;
 
-
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import com.make.equo.application.util.IConstants;
@@ -12,10 +11,12 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	private String text;
 
 	ToolbarItemBuilder(ToolbarBuilder toolbarBuilder) {
+		super(toolbarBuilder.getOptionalFieldBuilder());
 		this.toolbarBuilder = toolbarBuilder;
 	}
 
 	ToolbarItemBuilder(ToolbarItemBuilder toolbarItemBuilder) {
+		super(toolbarItemBuilder.getOptionalFieldBuilder());
 		this.setItem(toolbarItemBuilder.getItem());
 		this.toolbarBuilder = toolbarItemBuilder.toolbarBuilder;
 	}
@@ -30,7 +31,8 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public MHandledToolItem createToolItem() {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
 		newToolItem.setIconURI(this.iconId);
-		String itemId = toolbarBuilder.getToolbar().getElementId() + "." + text.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
+		String itemId = toolbarBuilder.getToolbar().getElementId() + "."
+				+ text.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
 		newToolItem.setElementId(itemId);
 		newToolItem.setTooltip(text);
 		newToolItem.setVisible(true);
@@ -49,14 +51,4 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
-
-	public MHandledToolItem getToolItem() {
-		return (MHandledToolItem) getItem();
-	}
-
-	@Override
-	public OptionalViewBuilder getOptionalFieldBuilder() {
-		return this.toolbarBuilder.getOptionalFieldBuilder();
-	}
-
 }

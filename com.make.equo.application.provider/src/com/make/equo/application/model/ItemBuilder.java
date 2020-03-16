@@ -8,7 +8,12 @@ public abstract class ItemBuilder {
 
 	private ItemHandlerBuilder itemHandlerBuilder;
 	private MHandledItem item;
+	private OptionalViewBuilder viewBuilder;
 
+	public ItemBuilder(OptionalViewBuilder viewBuilder) {
+		this.viewBuilder = viewBuilder;
+	}
+	
 	public MenuBuilder withMainMenu(String menuLabel) {
 		return new MenuBuilder(this.getOptionalFieldBuilder()).addMenu(menuLabel);
 	}
@@ -26,7 +31,7 @@ public abstract class ItemBuilder {
 		return this;
 	}
 
-	public IApplicationBuilder start() {
+	public EquoApplicationBuilder start() {
 		return this.getOptionalFieldBuilder().start();
 	}
 
@@ -46,7 +51,9 @@ public abstract class ItemBuilder {
 		this.item = item;
 	}
 
-	public abstract OptionalViewBuilder getOptionalFieldBuilder();
+	public OptionalViewBuilder getOptionalFieldBuilder() {
+		return this.viewBuilder;
+	}
 	
 	public ItemBuilder onClick(Runnable runnable, String action) {
 		this.setItemHandlerBuilder(new ItemHandlerBuilder(this));

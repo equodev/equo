@@ -17,10 +17,12 @@ public class MenuItemBuilder extends ItemBuilder {
 	private MenuBuilder menuBuilder;
 
 	MenuItemBuilder(MenuBuilder menuBuilder) {
+		super(menuBuilder.getOptionalFieldBuilder());
 		this.menuBuilder = menuBuilder;
 	}
 
 	MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
+		super(menuItemBuilder.getOptionalFieldBuilder());
 		this.setItem(menuItemBuilder.getItem());
 		this.menuBuilder = menuItemBuilder.menuBuilder;
 	}
@@ -40,9 +42,8 @@ public class MenuItemBuilder extends ItemBuilder {
 		return newMenuItem;
 	}
 
-
 	public MenuItemBuilder onClick(Runnable action) {
-		return (MenuItemBuilder)onClick(action, null);
+		return (MenuItemBuilder) onClick(action, null);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {
@@ -52,21 +53,11 @@ public class MenuItemBuilder extends ItemBuilder {
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
-	
-
-	MHandledMenuItem getMenuItem() {
-		return (MHandledMenuItem) this.getItem();
-	}
 
 	MenuBuilder getMenuBuilder() {
 		return menuBuilder;
 	}
-	
-	@Override
-	public OptionalViewBuilder getOptionalFieldBuilder() {
-		return menuBuilder.getOptionalFieldBuilder();
-	}
-	
+
 	/**
 	 * Add Exit menu item only if needed (Not needed in OSx) and executes the
 	 * runnable before exiting the application
@@ -145,7 +136,7 @@ public class MenuItemBuilder extends ItemBuilder {
 		mApplication.getTransientData().put(ICommandConstants.ABOUT_COMMAND, runnable);
 		return this;
 	}
-	
+
 	/**
 	 * Executes the {@code run} method of this runnable when the item is accessed
 	 * 
@@ -155,9 +146,9 @@ public class MenuItemBuilder extends ItemBuilder {
 	public MenuItemBuilder onAbout(Runnable runnable) {
 		return onAbout(IConstants.DEFAULT_ABOUT_LABEL, runnable);
 	}
-	
+
 	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
 		this.setItem(createMenuItem(label));
-		return (MenuItemBuilder)onClick(EnterFullScreenModeRunnable.instance);
+		return (MenuItemBuilder) onClick(EnterFullScreenModeRunnable.instance);
 	}
 }
