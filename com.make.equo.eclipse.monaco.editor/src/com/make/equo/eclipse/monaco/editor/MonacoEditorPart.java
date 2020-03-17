@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -28,6 +30,7 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -49,8 +52,16 @@ public class MonacoEditorPart extends EditorPart {
 	};
 
 	private EquoMonacoEditor editor;
-	
+
 	private ISelectionProvider selectionProvider = new MonacoEditorSelectionProvider();
+
+	private IHandler selectAllHandler;
+	private IHandler copyHandler;
+	private IHandler cutHandler;
+	private IHandler pasteHandler;
+	private IHandler findHandler;
+	
+	private static final Collection<IHandlerActivation> activations = new ArrayList<>();
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -157,7 +168,8 @@ public class MonacoEditorPart extends EditorPart {
 					
 					getSite().setSelectionProvider(selectionProvider);
 					
-					createActions();
+					createHandlers();
+					activateHandlers();
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve Monaco Editor service");
 				}
@@ -177,41 +189,42 @@ public class MonacoEditorPart extends EditorPart {
 			Display.getDefault().asyncExec( () -> {
 				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 				try {
-				    handlerService.executeCommand("org.eclipse.ui.file.save", null);
+				    handlerService.executeCommand(IWorkbenchCommandConstants.FILE_SAVE, null);
 				} catch (Exception ex) {}
 			});
 		});
 			
 		editor.configSelection((selection) -> {
-			Display.getDefault().asyncExec( () -> {
+			Display.getDefault().asyncExec(() -> {
 				ISelection iSelection = (selection) ? new TextSelection(0, 1) : new TextSelection(0, -1);
-				getSite().getSelectionProvider().setSelection(iSelection);
+				selectionProvider.setSelection(iSelection);
 			});
 		});
 	}
 
-	private void createActions() {
+	private void createHandlers() {
+		copyHandler = new ActionHandler(selectionProvider, () -> editor.copy());
+		cutHandler = new ActionHandler(selectionProvider, () -> editor.cut());
+		pasteHandler = new ActionHandler(selectionProvider, () -> editor.paste(), true);
+		findHandler = new ActionHandler(selectionProvider, () -> editor.find(), true);
+		selectAllHandler = new ActionHandler(selectionProvider, () -> editor.selectAll(), true);
+	}
+
+	private void activateHandlers() {
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-		
-		IHandler handler = new ActionHandler(selectionProvider, () -> editor.copy());
-		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_COPY, handler);
-		
-		handler = new ActionHandler(selectionProvider, () -> editor.cut());
-		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, handler);
-		
-		handler = new ActionHandler(selectionProvider, () -> editor.paste(), true);
-		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_PASTE, handler);
-		
-		handler = new ActionHandler(selectionProvider, () -> editor.find(), true);
-		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE, handler);
-		
-		handler = new ActionHandler(selectionProvider, () -> editor.selectAll(), true);
-		handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_SELECT_ALL, handler);
+		handlerService.deactivateHandlers(activations);
+		activations.clear();
+		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_COPY, copyHandler));
+		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, cutHandler));
+		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_PASTE, pasteHandler));
+		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE, findHandler));
+		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_SELECT_ALL, selectAllHandler));
 	}
 
 	@Override
 	public void setFocus() {
-		
+		getSite().setSelectionProvider(selectionProvider);
+		activateHandlers();
 	}
 
 }

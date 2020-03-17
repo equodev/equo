@@ -21,17 +21,19 @@ import com.make.equo.ws.api.IEquoRunnable;
 public class EquoMonacoEditor {
 	
 	private volatile boolean loaded;
-	
+
 	private Browser browser;
 	private IEquoEventHandler equoEventHandler;
 	private final Semaphore lock = new Semaphore(1);
-	
+	private String namespace;
+
 	private List<IEquoRunnable<Void>> onLoadListeners;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
+		namespace = "editor" + Integer.toHexString(fileName.hashCode());
 		browser = new Browser(parent, style);
-		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME);
+		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
 		loaded = false;
 		createEditor(contents, fileName);
@@ -45,13 +47,14 @@ public class EquoMonacoEditor {
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
 		editorData.put("name", fileName);
+		editorData.put("namespace", namespace);
 		equoEventHandler.send("_doCreateEditor", editorData);
 		loaded = true;
 		for (IEquoRunnable<Void> onLoadListener : onLoadListeners) {
 			onLoadListener.run(null);
 		}
 		
-		equoEventHandler.on("_canPaste", (IEquoRunnable<Void>) runnable ->{
+		equoEventHandler.on(namespace + "_canPaste", (IEquoRunnable<Void>) runnable ->{
 			try {
 				Robot robot = new Robot();
 				// Simulate a key press
@@ -64,7 +67,7 @@ public class EquoMonacoEditor {
 			}
 		});
 		
-		equoEventHandler.on("_canSelectAll", (IEquoRunnable<Void>) runnable ->{
+		equoEventHandler.on(namespace + "_canSelectAll", (IEquoRunnable<Void>) runnable ->{
 			try {
 				Robot robot = new Robot();
 				// Simulate a key press
@@ -88,7 +91,7 @@ public class EquoMonacoEditor {
 
 	public void getContentsSync(IEquoRunnable<String> runnable) {
 		if (lock.tryAcquire()) {
-			equoEventHandler.on("_doGetContents", (JsonObject contents) -> {
+			equoEventHandler.on(namespace + "_doGetContents", (JsonObject contents) -> {
 				try {
 					runnable.run(contents.get("contents").getAsString());
 				} finally {
@@ -99,7 +102,7 @@ public class EquoMonacoEditor {
 				}
 			});
 
-			equoEventHandler.send("_getContents");
+			equoEventHandler.send(namespace + "_getContents");
 			synchronized (lock) {
 				try {
 					lock.wait();
@@ -111,56 +114,56 @@ public class EquoMonacoEditor {
 	}
 
 	public void getContentsAsync(IEquoRunnable<String> runnable) {
-		equoEventHandler.on("_doGetContents", (JsonObject contents) -> {
+		equoEventHandler.on(namespace + "_doGetContents", (JsonObject contents) -> {
 			runnable.run(contents.get("contents").getAsString());
 		});
-		equoEventHandler.send("_getContents");
+		equoEventHandler.send(namespace + "_getContents");
 	}
 	
 	public void handleAfterSave() {
-		equoEventHandler.send("_didSave");
+		equoEventHandler.send(namespace + "_didSave");
 	}
 	
 	public void copy() {
-		equoEventHandler.send("_doCopy");
+		equoEventHandler.send(namespace + "_doCopy");
 	}
 	
 	public void cut() {
-		equoEventHandler.send("_doCut");
+		equoEventHandler.send(namespace + "_doCut");
 	}
 	
 	public void find() {
-		equoEventHandler.send("_doFind");
+		equoEventHandler.send(namespace + "_doFind");
 	}
 	
 	public void paste() {
-		equoEventHandler.send("_doPaste");
+		equoEventHandler.send(namespace + "_doPaste");
 	}
 	
 	public void selectAll() {
-		equoEventHandler.send("_doSelectAll");
+		equoEventHandler.send(namespace + "_doSelectAll");
 	}
 	
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
-		equoEventHandler.on("_selection", (JsonObject contents) -> {
+		equoEventHandler.on(namespace + "_selection", (JsonObject contents) -> {
 			selectionFunction.run(contents.get("endColumn").getAsInt() != contents.get("startColumn").getAsInt()
 					|| contents.get("endLineNumber").getAsInt() != contents.get("startLineNumber").getAsInt());
 		});
 	}
 	
 	public void configSave(IEquoRunnable<Void> saveFunction) {
-		equoEventHandler.on("_doSave", saveFunction);
+		equoEventHandler.on(namespace + "_doSave", saveFunction);
 	}
 	
 	public void subscribeIsDirty(IEquoRunnable<Boolean> dirtyListener) {
-		equoEventHandler.on("_isDirtyNotification", (JsonObject isDirty) -> {
+		equoEventHandler.on(namespace + "_isDirtyNotification", (JsonObject isDirty) -> {
 			dirtyListener.run(isDirty.get("isDirty").getAsBoolean());
 		});
 		if (loaded) {
-			equoEventHandler.send("_subscribeIsDirty");
+			equoEventHandler.send(namespace + "_subscribeIsDirty");
 		} else {
 			addOnLoadListener((IEquoRunnable<Void>) runnable -> {
-				equoEventHandler.send("_subscribeIsDirty");
+				equoEventHandler.send(namespace + "_subscribeIsDirty");
 			});
 		}
 	}

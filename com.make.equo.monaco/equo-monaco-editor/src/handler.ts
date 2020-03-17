@@ -9,6 +9,8 @@ const ReconnectingWebSocket = require('reconnecting-websocket');
 let lastSavedVersionId: number;
 let editor: monaco.editor.IStandaloneCodeEditor;
 let model: monaco.editor.ITextModel;
+let namespace: string;
+let wasCreated: boolean = false;
 
 // register Monaco languages
 monaco.languages.register({
@@ -19,90 +21,96 @@ monaco.languages.register({
 });
 
 // @ts-ignore
-equo.on("_doCreateEditor", (values: { text: string; name: string; }) => {
-    model = monaco.editor.createModel(
-        values.text,
-        "json", // language
-        monaco.Uri.file(values.name) // uri
-    );
+equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; }) => {
+	if (!wasCreated){
+		namespace = values.namespace;
 
-    editor = monaco.editor.create(document.getElementById('container')!, {
-        model: model,
-        lightbulb: {
-            enabled: true
-        }
-    });
+		model = monaco.editor.createModel(
+		    values.text,
+		    "json", // language
+		    monaco.Uri.file(values.name) // uri
+		);
 
-    lastSavedVersionId = model.getAlternativeVersionId();
-
-    MonacoServices.install(editor);
-
-    editor.onDidChangeCursorSelection((e: any) => {
-        // @ts-ignore
-        equo.send("_selection", e.selection);
-    });
-    
-    // @ts-ignore
-	equo.on("_doFind", () => {
-		editor.getAction("actions.find").run();
-	});
-	
-	// @ts-ignore
-	equo.on("_getContents", () => {
-		// @ts-ignore
-		equo.send("_doGetContents", { contents: editor.getValue() });
-	});
-
-	function notifyDirty() {
-		// @ts-ignore
-		equo.send("_isDirtyNotification", { isDirty: lastSavedVersionId !== model.getAlternativeVersionId() });
-	}
-	
-	document.onkeydown = keydown;
-
-	function keydown(evt: any) {
-		if (evt.ctrlKey && evt.keyCode == 83) {
-		    // @ts-ignore
-		    equo.send("_doSave");
-		}
-	}
-
-	// @ts-ignore
-	equo.on("_didSave", () => {
-		lastSavedVersionId = model.getAlternativeVersionId();
-		notifyDirty();
-	});
-
-	// @ts-ignore
-	equo.on("_subscribeIsDirty", () => {
-		editor.onDidChangeModelContent(() => {
-		    notifyDirty();
+		editor = monaco.editor.create(document.getElementById('container')!, {
+		    model: model,
+		    lightbulb: {
+		        enabled: true
+		    }
 		});
-	});
 
-	// @ts-ignore
-	equo.on("_doCopy", () => {
-		editor.getAction("editor.action.clipboardCopyAction").run();
-	});
+		lastSavedVersionId = model.getAlternativeVersionId();
 
-	// @ts-ignore
-	equo.on("_doCut", () => {
-		editor.getAction("editor.action.clipboardCutAction").run();
-	});
+		MonacoServices.install(editor);
 
-	// @ts-ignore
-	equo.on("_doPaste", () => {
-		editor.focus();
+		editor.onDidChangeCursorSelection((e: any) => {
+		    // @ts-ignore
+		    equo.send(namespace + "_selection", e.selection);
+		});
+		
 		// @ts-ignore
-		equo.send("_canPaste");
-	});
-
-	// @ts-ignore
-	equo.on("_doSelectAll", () => {
-		editor.focus();
+		equo.on(namespace + "_doFind", () => {
+			editor.getAction("actions.find").run();
+		});
+		
 		// @ts-ignore
-		equo.send("_canSelectAll");
-	});
+		equo.on(namespace + "_getContents", () => {
+			// @ts-ignore
+			equo.send(namespace + "_doGetContents", { contents: editor.getValue() });
+		});
+
+		function notifyDirty() {
+			// @ts-ignore
+			equo.send(namespace + "_isDirtyNotification", { isDirty: lastSavedVersionId !== model.getAlternativeVersionId() });
+		}
+		
+		document.onkeydown = keydown;
+
+		function keydown(evt: any) {
+			if (evt.ctrlKey && evt.keyCode == 83) { //CTRL + S
+				// @ts-ignore
+				equo.send(namespace + "_doSave");
+			}
+		}
+
+		// @ts-ignore
+		equo.on(namespace + "_didSave", () => {
+			lastSavedVersionId = model.getAlternativeVersionId();
+			notifyDirty();
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_subscribeIsDirty", () => {
+			editor.onDidChangeModelContent(() => {
+				notifyDirty();
+			});
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_doCopy", () => {
+			editor.getAction("editor.action.clipboardCopyAction").run();
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_doCut", () => {
+			editor.getAction("editor.action.clipboardCutAction").run();
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_doPaste", () => {
+			editor.focus();
+			// @ts-ignore
+			equo.send(namespace + "_canPaste");
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_doSelectAll", () => {
+			editor.focus();
+			// @ts-ignore
+			equo.send(namespace + "_canSelectAll");
+		});
+
+		wasCreated = true;
+	}
 });
 
 // @ts-ignore
