@@ -12,12 +12,17 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.ServiceTracker;
 
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
+import com.make.equo.builders.tests.util.EquoApp;
 
 public class BuilderMenuTest {
 	
 	@Reference
 	private EquoApplicationBuilder appBuilderReferenced;
+	
+	@Reference
+	private EquoApp app;
 	
 	@Test
 	public void menuSimpleTest() throws URISyntaxException {
