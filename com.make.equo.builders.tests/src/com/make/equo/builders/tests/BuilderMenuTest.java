@@ -2,6 +2,8 @@ package com.make.equo.builders.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URISyntaxException;
+
 import javax.management.InvalidApplicationException;
 
 import org.junit.Test;
@@ -9,25 +11,27 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.ServiceTracker;
-import com.make.equo.application.model.IApplicationBuilder;
+
+import com.make.equo.application.model.EquoApplicationBuilder;
 
 public class BuilderMenuTest {
 	
 	@Reference
-	private IApplicationBuilder appBuilderReferenced;
+	private EquoApplicationBuilder appBuilderReferenced;
 	
 	@Test
-	public void menuSimpleTest() {
-		Bundle bundle = FrameworkUtil.getBundle(IApplicationBuilder.class);
-		IApplicationBuilder builder = getService(IApplicationBuilder.class);
-		assertThat(bundle).isNotNull();
-		assertThat(bundle.getState()).isEqualTo(Bundle.ACTIVE);
-		assertThat(appBuilderReferenced).isNull();
-		//assertThat(true).isEqualTo(true);
+	public void menuSimpleTest() throws URISyntaxException {
+		//Bundle bundle = FrameworkUtil.getBundle(EquoApplicationBuilder.class);
+		EquoApplicationBuilder builder = getService(EquoApplicationBuilder.class);
+		//assertThat(bundle).isNotNull();
+		//assertThat(bundle.getState()).isEqualTo(Bundle.ACTIVE);
+		//assertThat(builder).isNull();
+		builder.plainApp("/").withToolbar().addToolItem("text", "text");
+		assertThat(builder).isNotNull();
 	}
 
 	static <T> T getService(Class<T> clazz) {
-		Bundle bundle = FrameworkUtil.getBundle(BuilderMenuTest.class);
+		Bundle bundle = FrameworkUtil.getBundle(clazz);
 		if (bundle != null) {
 			ServiceTracker<T, T> st = new ServiceTracker<T, T>(bundle.getBundleContext(), clazz, null);
 			st.open();
