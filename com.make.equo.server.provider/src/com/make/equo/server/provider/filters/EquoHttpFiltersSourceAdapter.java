@@ -1,6 +1,7 @@
 package com.make.equo.server.provider.filters;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.impl.ProxyUtils;
 
-import com.google.common.collect.Lists;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.server.contribution.EquoContribution;
 import com.make.equo.server.contribution.resolvers.EquoGenericURLResolver;
@@ -40,19 +40,24 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private List<String> proxiedUrls;
 
 	private List<String> equoContributionsJsApis;
+	private List<String> equoContributionStyles;
 	private Map<String, String> urlsToScriptsAsStrings;
+	private Map<String, String> urlsToStylesAsStrings;
 
 	public EquoHttpFiltersSourceAdapter(Map<String, EquoContribution> equoContributions,
 			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported,
 			String limitedConnectionAppBasedPagePath, List<String> proxiedUrls, List<String> equoContributionsJsApis,
-			Map<String, String> urlsToScriptsAsStrings, IEquoApplication equoApplication) {
+			List<String> equoContributionStyles, Map<String, String> urlsToScriptsAsStrings,
+			Map<String, String> urlsToStylesAsStrings, IEquoApplication equoApplication) {
 		this.equoContributions = equoContributions;
 		this.equoOfflineServer = equoOfflineServer;
 		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.limitedConnectionAppBasedPagePath = limitedConnectionAppBasedPagePath;
 		this.proxiedUrls = proxiedUrls;
 		this.equoContributionsJsApis = equoContributionsJsApis;
+		this.equoContributionStyles = equoContributionStyles;
 		this.urlsToScriptsAsStrings = urlsToScriptsAsStrings;
+		this.urlsToStylesAsStrings = urlsToStylesAsStrings;
 		this.equoApplication = equoApplication;
 	}
 
@@ -78,8 +83,8 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 					}
 
 					return new DefaultContributionRequestFiltersAdapter(originalRequest, contribution.getUrlResolver(),
-							equoContributionsJsApis, getCustomScripts(originalRequest.getUri()),
-							contribution.getContributedResourceName());
+							equoContributionsJsApis, equoContributionStyles, getCustomScripts(originalRequest.getUri()),
+							getCustomStyles(originalRequest.getUri()), contribution.getContributedResourceName());
 				}
 			}
 		} catch (IllegalArgumentException e) {
@@ -97,15 +102,17 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				return new OfflineRequestFiltersAdapter(originalRequest,
 						getUrlResolver(limitedConnectionAppBasedPagePath), limitedConnectionAppBasedPagePath);
 			} else {
-				return new DefaultContributionRequestFiltersAdapter(originalRequest, new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()), Lists.newArrayList(), "",
-						limitedConnectionGenericPageFilePath);
+				return new DefaultContributionRequestFiltersAdapter(originalRequest,
+						new EquoGenericURLResolver(EquoHttpFiltersSourceAdapter.class.getClassLoader()),
+						new ArrayList<String>(), new ArrayList<String>(), "", "", limitedConnectionGenericPageFilePath);
 			}
 		} else {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
 				String appUrl = url.get();
 				return new EquoHttpModifierFiltersAdapter(originalRequest, equoContributionsJsApis,
-						getCustomScripts(appUrl), isOfflineCacheSupported, equoOfflineServer);
+						equoContributionStyles, getCustomScripts(appUrl), getCustomStyles(appUrl),
+						isOfflineCacheSupported, equoOfflineServer);
 			} else {
 				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
 			}
@@ -145,6 +152,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)) {
 			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
 		}
+		if (uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)) {
+			return new MainAppUrlResolver(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL, equoApplication);
+		}
+		if (uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL)) {
+			return new BundleUrlResolver(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
+		}
 		return null;
 	}
 
@@ -152,7 +165,9 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		String uri = originalRequest.getUri();
 		return uri.contains(EquoHttpProxyServer.LOCAL_SCRIPT_APP_PROTOCOL)
 				|| uri.contains(EquoHttpProxyServer.LOCAL_FILE_APP_PROTOCOL)
-				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL);
+				|| uri.contains(EquoHttpProxyServer.BUNDLE_SCRIPT_APP_PROTOCOL)
+				|| uri.contains(EquoHttpProxyServer.LOCAL_STYLE_APP_PROTOCOL)
+				|| uri.contains(EquoHttpProxyServer.BUNDLE_STYLE_APP_PROTOCOL);
 	}
 
 	private Optional<String> getRequestedUrl(HttpRequest originalRequest) {
@@ -184,6 +199,21 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			}
 		}
 		return urlsToScriptsAsStrings.get(key);
+	}
+
+	private String getCustomStyles(String url) {
+		if (urlsToStylesAsStrings.containsKey(url)) {
+			return urlsToScriptsAsStrings.get(url);
+		}
+		if (urlsToStylesAsStrings.containsKey(url + "/")) {
+			return urlsToStylesAsStrings.get(url + "/");
+		}
+		URI uri = URI.create(url);
+		String key = (uri.getScheme() + "://" + uri.getAuthority() + uri.getPath()).toLowerCase();
+		if (!urlsToStylesAsStrings.containsKey(key)) {
+			return "";
+		}
+		return urlsToStylesAsStrings.get(key);
 	}
 
 	@Override

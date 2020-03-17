@@ -25,16 +25,19 @@ public class EquoContribution {
 
 	private final List<String> proxiedUris;
 	private final List<String> contributedScripts;
+	private final List<String> contributedStyles;
 	private final List<String> excludedResources;
 
 	private final Map<String, String> pathsToScripts;
+	private final Map<String, String> pathsToStyles;
 
 	private final IHttpRequestFilter filter;
 
 	public EquoContribution(IEquoServer server, IEquoContributionUrlResolver urlResolver,
 			IFiltersAdapterHandler filtersAdapterHandler, String contributedHtmlName, String contributionName,
-			List<String> proxiedUris, List<String> contributedScripts, List<String> excludedResources,
-			Map<String, String> pathsToScripts, IHttpRequestFilter filter) {
+			List<String> proxiedUris, List<String> contributedScripts, List<String> contributedStyles, 
+			List<String> excludedResources, Map<String, String> pathsToScripts, 
+			Map<String, String> pathsToStyles, IHttpRequestFilter filter) {
 		this.server = server;
 		this.urlResolver = urlResolver;
 		this.filtersAdapterHandler = filtersAdapterHandler;
@@ -42,8 +45,10 @@ public class EquoContribution {
 		this.contributionName = contributionName.toLowerCase();
 		this.proxiedUris = proxiedUris;
 		this.contributedScripts = contributedScripts;
+		this.contributedStyles = contributedStyles;
 		this.excludedResources = excludedResources;
 		this.pathsToScripts = pathsToScripts;
+		this.pathsToStyles = pathsToStyles;
 		this.filter = filter;
 		startContributing();
 	}
@@ -64,12 +69,20 @@ public class EquoContribution {
 		return new ArrayList<String>(contributedScripts);
 	}
 
+	public List<String> getContributedStyles() {
+		return new ArrayList<String>(contributedStyles);
+	}
+
 	public List<String> getExcludedResources() {
 		return new ArrayList<String>(excludedResources);
 	}
 
 	public Map<String, String> getPathsToScripts() {
 		return new HashMap<String, String>(pathsToScripts);
+	}
+
+	public Map<String, String> getPathsToStyles() {
+		return new HashMap<String, String>(pathsToStyles);
 	}
 
 	public IHttpRequestFilter getFilter() {

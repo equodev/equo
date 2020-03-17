@@ -10,6 +10,8 @@ public interface IEquoServer {
 	void startServer();
 
 	void addCustomScript(String url, String scriptUrl);
+	
+	void addCustomStyle(String url, String styleUrl);
 
 	void addUrl(String url);
 	
@@ -17,10 +19,16 @@ public interface IEquoServer {
 	
 	void addScriptToContribution(String script);
 
+	void addStyleToContribution(String style);
+
 	String getLocalScriptProtocol();
 
 	String getBundleScriptProtocol();
 
+	String getLocalStyleProtocol();
+
+	String getBundleStyleProtocol();
+	
 	void enableOfflineCache();
 
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
