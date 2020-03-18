@@ -5,6 +5,7 @@ import {
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
+import * as monaco from 'monaco-editor';
 
 let lastSavedVersionId: number;
 let editor: monaco.editor.IStandaloneCodeEditor;
@@ -27,7 +28,7 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 		model = monaco.editor.createModel(
 		    values.text,
-		    "json", // language
+		    undefined, // language
 		    monaco.Uri.file(values.name) // uri
 		);
 

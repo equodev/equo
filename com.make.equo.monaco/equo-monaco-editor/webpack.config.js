@@ -4,7 +4,7 @@ const lib = path.resolve(__dirname, "../resources");
 const common = {
     entry: {
         "main": path.resolve(lib, "main.js"),
-        "editor.worker": 'monaco-editor-core/esm/vs/editor/editor.worker.js'
+        "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js'
     },
     output: {
         filename: '[name].bundle.js',
@@ -14,7 +14,10 @@ const common = {
         rules: [{
             test: /\.css$/,
             use: ['style-loader', 'css-loader']
-        }]
+        }, {
+		  test: /\.ttf$/,
+		  use: ['file-loader']
+		}]
     },
     target: 'web',
     node: {
@@ -26,7 +29,8 @@ const common = {
     resolve: {
         alias: {
             'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
-        }
+        },
+        extensions: ['.js', '.ttf']
     }
 };
 
