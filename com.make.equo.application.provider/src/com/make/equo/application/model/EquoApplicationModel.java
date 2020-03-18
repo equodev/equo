@@ -1,4 +1,4 @@
-package com.make.equo.application;
+package com.make.equo.application.model;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 
