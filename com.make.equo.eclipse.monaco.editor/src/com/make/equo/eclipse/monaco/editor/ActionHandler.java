@@ -17,19 +17,23 @@ public class ActionHandler extends AbstractHandler {
 	}
 	
 	ActionHandler(ISelectionProvider selectionProvider, Runnable execution, boolean alwaysEnabled){
-		if (!alwaysEnabled)
+		if (!alwaysEnabled && selectionProvider != null)
 			selectionProvider.addSelectionChangedListener(new MyListener());
 		enable = false;
 		this.execution = execution;
 		this.alwaysEnabled = alwaysEnabled;
 	}
-	
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		execution.run();
 		return null;
 	}
-	
+
+	public void setEnabled(Boolean state) {
+		enable = state;
+	}
+
 	@Override
 	public boolean isEnabled() {
 		return alwaysEnabled || enable;

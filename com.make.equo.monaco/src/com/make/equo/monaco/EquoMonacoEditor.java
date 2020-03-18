@@ -119,11 +119,19 @@ public class EquoMonacoEditor {
 		});
 		equoEventHandler.send(namespace + "_getContents");
 	}
-	
+
 	public void handleAfterSave() {
 		equoEventHandler.send(namespace + "_didSave");
 	}
-	
+
+	public void undo() {
+		equoEventHandler.send(namespace + "_undo");
+	}
+
+	public void redo() {
+		equoEventHandler.send(namespace + "_redo");
+	}
+
 	public void copy() {
 		equoEventHandler.send(namespace + "_doCopy");
 	}
@@ -154,16 +162,20 @@ public class EquoMonacoEditor {
 	public void configSave(IEquoRunnable<Void> saveFunction) {
 		equoEventHandler.on(namespace + "_doSave", saveFunction);
 	}
-	
-	public void subscribeIsDirty(IEquoRunnable<Boolean> dirtyListener) {
-		equoEventHandler.on(namespace + "_isDirtyNotification", (JsonObject isDirty) -> {
-			dirtyListener.run(isDirty.get("isDirty").getAsBoolean());
+
+	public void subscribeChanges(IEquoRunnable<Boolean> dirtyListener, IEquoRunnable<Boolean> undoListener,
+			IEquoRunnable<Boolean> redoListener) {
+		equoEventHandler.on(namespace + "_changesNotification", (JsonObject changes) -> {
+			dirtyListener.run(changes.get("isDirty").getAsBoolean());
+			undoListener.run(changes.get("canUndo").getAsBoolean());
+			redoListener.run(changes.get("canRedo").getAsBoolean());
 		});
+
 		if (loaded) {
-			equoEventHandler.send(namespace + "_subscribeIsDirty");
+			equoEventHandler.send(namespace + "_subscribeModelChanges");
 		} else {
 			addOnLoadListener((IEquoRunnable<Void>) runnable -> {
-				equoEventHandler.send(namespace + "_subscribeIsDirty");
+				equoEventHandler.send(namespace + "_subscribeModelChanges");
 			});
 		}
 	}

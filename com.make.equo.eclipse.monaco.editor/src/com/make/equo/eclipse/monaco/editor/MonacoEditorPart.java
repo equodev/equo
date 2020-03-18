@@ -11,7 +11,6 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,12 +22,14 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -55,11 +56,13 @@ public class MonacoEditorPart extends EditorPart {
 
 	private ISelectionProvider selectionProvider = new MonacoEditorSelectionProvider();
 
-	private IHandler selectAllHandler;
-	private IHandler copyHandler;
-	private IHandler cutHandler;
-	private IHandler pasteHandler;
-	private IHandler findHandler;
+	private EditorAction undoAction;
+	private EditorAction redoAction;
+	private ActionHandler selectAllHandler;
+	private ActionHandler copyHandler;
+	private ActionHandler cutHandler;
+	private ActionHandler pasteHandler;
+	private ActionHandler findHandler;
 	
 	private static final Collection<IHandlerActivation> activations = new ArrayList<>();
 
@@ -183,7 +186,13 @@ public class MonacoEditorPart extends EditorPart {
 	}
 
 	private void editorConfigs() {
-		editor.subscribeIsDirty(dirtyListener);
+		IEquoRunnable<Boolean> redoListener = (canRedo) -> {
+			redoAction.setEnabled(canRedo);
+		};
+		IEquoRunnable<Boolean> undoListener = (canUndo) -> {
+			undoAction.setEnabled(canUndo);
+		};
+		editor.subscribeChanges(dirtyListener, undoListener, redoListener);
 		
 		editor.configSave((v) -> {
 			Display.getDefault().asyncExec( () -> {
@@ -203,17 +212,23 @@ public class MonacoEditorPart extends EditorPart {
 	}
 
 	private void createHandlers() {
+		undoAction = new EditorAction(() -> editor.undo());
+		redoAction = new EditorAction(() -> editor.redo());
 		copyHandler = new ActionHandler(selectionProvider, () -> editor.copy());
 		cutHandler = new ActionHandler(selectionProvider, () -> editor.cut());
-		pasteHandler = new ActionHandler(selectionProvider, () -> editor.paste(), true);
-		findHandler = new ActionHandler(selectionProvider, () -> editor.find(), true);
-		selectAllHandler = new ActionHandler(selectionProvider, () -> editor.selectAll(), true);
+		pasteHandler = new ActionHandler(null, () -> editor.paste(), true);
+		findHandler = new ActionHandler(null, () -> editor.find(), true);
+		selectAllHandler = new ActionHandler(null, () -> editor.selectAll(), true);
 	}
 
 	private void activateHandlers() {
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		IActionBars actionBars = getEditorSite().getActionBars();
 		handlerService.deactivateHandlers(activations);
 		activations.clear();
+		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		actionBars.updateActionBars();
 		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_COPY, copyHandler));
 		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, cutHandler));
 		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_PASTE, pasteHandler));

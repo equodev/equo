@@ -58,11 +58,22 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 			equo.send(namespace + "_doGetContents", { contents: editor.getValue() });
 		});
 
-		function notifyDirty() {
+		function notifyChanges() {
 			// @ts-ignore
-			equo.send(namespace + "_isDirtyNotification", { isDirty: lastSavedVersionId !== model.getAlternativeVersionId() });
+			equo.send(namespace + "_changesNotification",
+			 { isDirty: lastSavedVersionId !== model.getAlternativeVersionId(), canRedo: (model as any).canRedo(), canUndo: (model as any).canUndo() });
 		}
-		
+
+		// @ts-ignore
+		equo.on(namespace + "_undo", () => {
+			(model as any).undo();
+		});
+
+		// @ts-ignore
+		equo.on(namespace + "_redo", () => {
+			(model as any).redo();
+		});
+
 		document.onkeydown = keydown;
 
 		function keydown(evt: any) {
@@ -75,13 +86,13 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 		// @ts-ignore
 		equo.on(namespace + "_didSave", () => {
 			lastSavedVersionId = model.getAlternativeVersionId();
-			notifyDirty();
+			notifyChanges();
 		});
 
 		// @ts-ignore
-		equo.on(namespace + "_subscribeIsDirty", () => {
+		equo.on(namespace + "_subscribeModelChanges", () => {
 			editor.onDidChangeModelContent(() => {
-				notifyDirty();
+				notifyChanges();
 			});
 		});
 
