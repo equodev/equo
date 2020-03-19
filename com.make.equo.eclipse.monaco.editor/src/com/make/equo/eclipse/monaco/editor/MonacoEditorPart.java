@@ -5,8 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -31,7 +29,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -44,9 +41,9 @@ import com.make.equo.monaco.EquoMonacoEditorBuilder;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class MonacoEditorPart extends EditorPart {
-	
+
 	private volatile boolean isDirty = false;
-	
+
 	private IEquoRunnable<Boolean> dirtyListener = (isDirty) -> {
 		this.isDirty = isDirty;
 		firePropertyChange(PROP_DIRTY);
@@ -58,13 +55,11 @@ public class MonacoEditorPart extends EditorPart {
 
 	private EditorAction undoAction;
 	private EditorAction redoAction;
-	private ActionHandler selectAllHandler;
-	private ActionHandler copyHandler;
-	private ActionHandler cutHandler;
-	private ActionHandler pasteHandler;
-	private ActionHandler findHandler;
-	
-	private static final Collection<IHandlerActivation> activations = new ArrayList<>();
+	private EditorAction selectAllAction;
+	private EditorAction copyAction;
+	private EditorAction cutAction;
+	private EditorAction pasteAction;
+	private EditorAction findAction;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -89,28 +84,28 @@ public class MonacoEditorPart extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		Shell shell= PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
-		final IEditorInput input= getEditorInput();
+		Shell shell = PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
+		final IEditorInput input = getEditorInput();
 		final IEditorInput newInput;
-		
-		SaveAsDialog dialog= new SaveAsDialog(shell);
 
-		IFile original= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
+		SaveAsDialog dialog = new SaveAsDialog(shell);
+
+		IFile original = (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 		if (original != null)
 			dialog.setOriginalFile(original);
 		else
 			dialog.setOriginalName(input.getName());
 
 		dialog.create();
-		
+
 		if (dialog.open() == Window.CANCEL) {
 			return;
 		}
-		
-		IPath filePath= dialog.getResult();
-		IWorkspace workspace= ResourcesPlugin.getWorkspace();
-		IFile file= workspace.getRoot().getFile(filePath);
-		newInput= new FileEditorInput(file);
+
+		IPath filePath = dialog.getResult();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IFile file = workspace.getRoot().getFile(filePath);
+		newInput = new FileEditorInput(file);
 		try {
 			file.getLocation().toFile().createNewFile();
 			file.getParent().refreshLocal(1, new NullProgressMonitor());
@@ -118,7 +113,7 @@ public class MonacoEditorPart extends EditorPart {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		setInput(newInput);
 		setPartName(file.getName());
 		doSave(new NullProgressMonitor());
@@ -153,9 +148,10 @@ public class MonacoEditorPart extends EditorPart {
 				int singleByte;
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				while ((singleByte = contents.read()) != -1) {
-					baos.write(singleByte);;
+					baos.write(singleByte);
+					;
 				}
-				
+
 				String textContent = new String(baos.toByteArray());
 
 				try {
@@ -166,13 +162,13 @@ public class MonacoEditorPart extends EditorPart {
 					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
 					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
 							.withFileName(fileInput.getURI().toString()).create();
-					
+
 					editorConfigs();
-					
+
 					getSite().setSelectionProvider(selectionProvider);
-					
-					createHandlers();
-					activateHandlers();
+
+					createActions();
+					activateActions();
 				} catch (Exception e) {
 					System.out.println("Couldn't retrieve Monaco Editor service");
 				}
@@ -193,16 +189,17 @@ public class MonacoEditorPart extends EditorPart {
 			undoAction.setEnabled(canUndo);
 		};
 		editor.subscribeChanges(dirtyListener, undoListener, redoListener);
-		
+
 		editor.configSave((v) -> {
-			Display.getDefault().asyncExec( () -> {
+			Display.getDefault().asyncExec(() -> {
 				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 				try {
-				    handlerService.executeCommand(IWorkbenchCommandConstants.FILE_SAVE, null);
-				} catch (Exception ex) {}
+					handlerService.executeCommand(IWorkbenchCommandConstants.FILE_SAVE, null);
+				} catch (Exception ex) {
+				}
 			});
 		});
-			
+
 		editor.configSelection((selection) -> {
 			Display.getDefault().asyncExec(() -> {
 				ISelection iSelection = (selection) ? new TextSelection(0, 1) : new TextSelection(0, -1);
@@ -211,35 +208,35 @@ public class MonacoEditorPart extends EditorPart {
 		});
 	}
 
-	private void createHandlers() {
+	private void createActions() {
 		undoAction = new EditorAction(() -> editor.undo());
 		redoAction = new EditorAction(() -> editor.redo());
-		copyHandler = new ActionHandler(selectionProvider, () -> editor.copy());
-		cutHandler = new ActionHandler(selectionProvider, () -> editor.cut());
-		pasteHandler = new ActionHandler(null, () -> editor.paste(), true);
-		findHandler = new ActionHandler(null, () -> editor.find(), true);
-		selectAllHandler = new ActionHandler(null, () -> editor.selectAll(), true);
+		copyAction = new EditorAction(() -> editor.copy(), selectionProvider);
+		cutAction = new EditorAction(() -> editor.cut(), selectionProvider);
+		pasteAction = new EditorAction(() -> editor.paste());
+		pasteAction.setEnabled(true);
+		findAction = new EditorAction(() -> editor.find());
+		findAction.setEnabled(true);
+		selectAllAction = new EditorAction(() -> editor.selectAll());
+		selectAllAction.setEnabled(true);
 	}
 
-	private void activateHandlers() {
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+	private void activateActions() {
 		IActionBars actionBars = getEditorSite().getActionBars();
-		handlerService.deactivateHandlers(activations);
-		activations.clear();
 		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+		actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
+		actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
+		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), findAction);
 		actionBars.updateActionBars();
-		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_COPY, copyHandler));
-		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_CUT, cutHandler));
-		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_PASTE, pasteHandler));
-		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE, findHandler));
-		activations.add(handlerService.activateHandler(IWorkbenchCommandConstants.EDIT_SELECT_ALL, selectAllHandler));
 	}
 
 	@Override
 	public void setFocus() {
 		getSite().setSelectionProvider(selectionProvider);
-		activateHandlers();
+		activateActions();
 	}
 
 }

@@ -19,7 +19,7 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
-	
+
 	private volatile boolean loaded;
 
 	private Browser browser;
@@ -53,34 +53,34 @@ public class EquoMonacoEditor {
 		for (IEquoRunnable<Void> onLoadListener : onLoadListeners) {
 			onLoadListener.run(null);
 		}
-		
-		equoEventHandler.on(namespace + "_canPaste", (IEquoRunnable<Void>) runnable ->{
+
+		equoEventHandler.on(namespace + "_canPaste", (IEquoRunnable<Void>) runnable -> {
 			try {
 				Robot robot = new Robot();
 				// Simulate a key press
 				robot.keyPress(KeyEvent.VK_CONTROL);
-		        robot.keyPress(KeyEvent.VK_V);
-		        robot.keyRelease(KeyEvent.VK_V);
-		        robot.keyRelease(KeyEvent.VK_CONTROL);
+				robot.keyPress(KeyEvent.VK_V);
+				robot.keyRelease(KeyEvent.VK_V);
+				robot.keyRelease(KeyEvent.VK_CONTROL);
 			} catch (AWTException e) {
 				e.printStackTrace();
 			}
 		});
-		
-		equoEventHandler.on(namespace + "_canSelectAll", (IEquoRunnable<Void>) runnable ->{
+
+		equoEventHandler.on(namespace + "_canSelectAll", (IEquoRunnable<Void>) runnable -> {
 			try {
 				Robot robot = new Robot();
 				// Simulate a key press
 				robot.keyPress(KeyEvent.VK_CONTROL);
-		        robot.keyPress(KeyEvent.VK_A);
-		        robot.keyRelease(KeyEvent.VK_A);
-		        robot.keyRelease(KeyEvent.VK_CONTROL);
+				robot.keyPress(KeyEvent.VK_A);
+				robot.keyRelease(KeyEvent.VK_A);
+				robot.keyRelease(KeyEvent.VK_CONTROL);
 			} catch (AWTException e) {
 				e.printStackTrace();
 			}
 		});
 	}
-	
+
 	public void addOnLoadListener(IEquoRunnable<Void> listener) {
 		if (!loaded) {
 			onLoadListeners.add(listener);
@@ -135,30 +135,32 @@ public class EquoMonacoEditor {
 	public void copy() {
 		equoEventHandler.send(namespace + "_doCopy");
 	}
-	
+
 	public void cut() {
 		equoEventHandler.send(namespace + "_doCut");
 	}
-	
+
 	public void find() {
 		equoEventHandler.send(namespace + "_doFind");
 	}
-	
+
 	public void paste() {
+		browser.setFocus();
 		equoEventHandler.send(namespace + "_doPaste");
 	}
-	
+
 	public void selectAll() {
+		browser.setFocus();
 		equoEventHandler.send(namespace + "_doSelectAll");
 	}
-	
+
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
 		equoEventHandler.on(namespace + "_selection", (JsonObject contents) -> {
 			selectionFunction.run(contents.get("endColumn").getAsInt() != contents.get("startColumn").getAsInt()
 					|| contents.get("endLineNumber").getAsInt() != contents.get("startLineNumber").getAsInt());
 		});
 	}
-	
+
 	public void configSave(IEquoRunnable<Void> saveFunction) {
 		equoEventHandler.on(namespace + "_doSave", saveFunction);
 	}
