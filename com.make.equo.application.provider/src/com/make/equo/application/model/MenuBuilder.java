@@ -7,7 +7,7 @@ public class MenuBuilder {
 
 	private OptionalViewBuilder optionalFieldBuilder;
 	private MMenu parentMenu;
-	private MMenu menu;
+	protected MMenu menu;
 
 	MenuBuilder(OptionalViewBuilder optionalFieldBuilder) {
 		this.parentMenu = optionalFieldBuilder.getMainMenu();

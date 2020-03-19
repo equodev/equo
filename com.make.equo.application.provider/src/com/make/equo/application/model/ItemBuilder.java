@@ -25,7 +25,7 @@ public abstract class ItemBuilder {
 
 	public ItemBuilder addShortcut(String keySequence) {
 		if (getItemHandlerBuilder() != null) {
-			return (MenuItemBuilder) getItemHandlerBuilder().addShortcut(keySequence);
+			return getItemHandlerBuilder().addShortcut(keySequence);
 		}
 		// log that there is no menu item handler -> no onClick method was called.
 		return this;
@@ -43,7 +43,7 @@ public abstract class ItemBuilder {
 		this.itemHandlerBuilder = itemHandlerBuilder;
 	}
 
-	protected MHandledItem getItem() {
+	public MHandledItem getItem() {
 		return this.item;
 	}
 

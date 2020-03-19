@@ -13,18 +13,11 @@ import org.osgi.util.tracker.ServiceTracker;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.builders.tests.util.ModelTestingConfigurator;
 
-public class BuilderShortcutCasesTest {
+public class BuilderShortcutCasesTest extends EquoInjectableTest{
 			
-	@Reference
-	private EquoApplicationBuilder appBuilderReferenced;
-
-	private ModelTestingConfigurator modelTestingConfigurator = new ModelTestingConfigurator();
-
 	@Test
 	public void toolbarSimpleTest() throws URISyntaxException {
-		EquoApplicationBuilder builder = getService(EquoApplicationBuilder.class);
-		modelTestingConfigurator.configure(builder);
-		assertThat(builder.plainApp("/").withToolbar().addToolItem("text", "text").onClick(new Runnable() {
+		assertThat(appBuilder.plainApp("/").withToolbar().addToolItem("text", "text").onClick(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("toolitem event 1");
@@ -34,9 +27,7 @@ public class BuilderShortcutCasesTest {
 
 	@Test
 	public void menuSimpleTest() throws URISyntaxException {
-		EquoApplicationBuilder builder = getService(EquoApplicationBuilder.class);
-		modelTestingConfigurator.configure(builder);
-		assertThat(builder.plainApp("/").withMainMenu("Menu1").addMenuItem("item1").onClick(new Runnable() {
+		assertThat(appBuilder.plainApp("/").withMainMenu("Menu1").addMenuItem("item1").onClick(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("menuitem event 1");
@@ -46,9 +37,7 @@ public class BuilderShortcutCasesTest {
 
 	@Test
 	public void menuAndToolbarTest() throws URISyntaxException {
-		EquoApplicationBuilder builder = getService(EquoApplicationBuilder.class);
-		modelTestingConfigurator.configure(builder);
-		assertThat(builder.plainApp("/").withMainMenu("Menu1").addMenuItem("item1").onClick(new Runnable() {
+		assertThat(appBuilder.plainApp("/").withMainMenu("Menu1").addMenuItem("item1").onClick(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("menuitem event 1");
@@ -63,9 +52,7 @@ public class BuilderShortcutCasesTest {
 	
 	@Test
 	public void toolbarAndMenuTest() throws URISyntaxException {
-		EquoApplicationBuilder builder = getService(EquoApplicationBuilder.class);
-		modelTestingConfigurator.configure(builder);
-		assertThat(builder.plainApp("/").withToolbar().addToolItem("text", "text").onClick(new Runnable() {
+		assertThat(appBuilder.plainApp("/").withToolbar().addToolItem("text", "text").onClick(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("toolitem event 1");
@@ -78,21 +65,6 @@ public class BuilderShortcutCasesTest {
 		}).addShortcut("Alt + M")).isNotNull();
 	}
 
-	static <T> T getService(Class<T> clazz) {
-		Bundle bundle = FrameworkUtil.getBundle(clazz);
-		if (bundle != null) {
-			ServiceTracker<T, T> st = new ServiceTracker<T, T>(bundle.getBundleContext(), clazz, null);
-			st.open();
-			if (st != null) {
-				try {
-					// give the runtime some time to startup
-					return st.waitForService(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-	}
+
 
 }

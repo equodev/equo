@@ -17,6 +17,8 @@ public class ToolbarItemBuilder extends ItemBuilder {
 
 	ToolbarItemBuilder(ToolbarItemBuilder toolbarItemBuilder) {
 		super(toolbarItemBuilder.getOptionalFieldBuilder());
+		this.iconId = toolbarItemBuilder.getIcon();
+		this.text = toolbarItemBuilder.getTooltip();
 		this.setItem(toolbarItemBuilder.getItem());
 		this.toolbarBuilder = toolbarItemBuilder.toolbarBuilder;
 	}
@@ -43,6 +45,10 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public ToolbarItemBuilder onClick(Runnable action) {
 		return (ToolbarItemBuilder) onClick(action, null);
 	}
+	@Override
+	public ToolbarItemBuilder addShortcut(String keySequence) {
+		return (ToolbarItemBuilder)super.addShortcut(keySequence);
+	}
 
 	public ToolbarBuilder addToolbar() {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
@@ -51,4 +57,16 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
+
+	public String getTooltip() {
+		return text;
+	}
+
+	public String getIcon() {
+		return iconId;
+	}
+	
+	
+	
+	
 }

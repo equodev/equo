@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.builders.tests.util.ModelTestingConfigurator;
 
-public class BuilderOnClickCasesTest {
+public class BuilderOnClickCasesTest extends EquoInjectableTest{
 
 	@Inject
 	private EquoApplicationBuilder appBuilder;

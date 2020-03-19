@@ -53,9 +53,10 @@ public class MenuItemBuilder extends ItemBuilder {
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
-
-	MenuBuilder getMenuBuilder() {
-		return menuBuilder;
+	
+	@Override
+	public MenuItemBuilder addShortcut(String keySequence) {
+		return (MenuItemBuilder)super.addShortcut(keySequence);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onBeforeExit(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
 		if (!isMac()) {
@@ -97,7 +98,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onPreferences(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
 		if (!isMac()) {
@@ -126,7 +127,7 @@ public class MenuItemBuilder extends ItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onAbout(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.ABOUT_COMMAND);
 		if (!isMac()) {

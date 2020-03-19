@@ -10,10 +10,10 @@ import org.osgi.framework.FrameworkUtil;
 
 public class EquoRule implements TestRule {
 
-	private BuilderOnClickCasesTest caseTest;
+	private EquoInjectableTest caseTest;
 
-	public EquoRule(BuilderOnClickCasesTest caseTest) {
-		this.caseTest = caseTest;
+	public EquoRule(EquoInjectableTest equoTestingInjector) {
+		this.caseTest = equoTestingInjector;
 	}
 
 	public Statement apply(Statement base, Description description) {
@@ -33,7 +33,7 @@ public class EquoRule implements TestRule {
 		};
 	}
 
-	private void inject(BuilderOnClickCasesTest caseTest) {
+	private void inject(EquoInjectableTest caseTest) {
 		IEclipseContext eclipseContext = EclipseContextFactory
 				.getServiceContext(FrameworkUtil.getBundle(caseTest.getClass()).getBundleContext());
 		ContextInjectionFactory.inject(caseTest, eclipseContext);
