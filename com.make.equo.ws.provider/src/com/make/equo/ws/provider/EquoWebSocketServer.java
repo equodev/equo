@@ -43,10 +43,12 @@ class EquoWebSocketServer extends WebSocketServer {
 		System.out
 				.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo Framework!");
 		this.firstClientConnected = true;
-		for (String messageToSend : messagesToSend) {
-			broadcast(messageToSend);
+		synchronized (messagesToSend) {
+			for (String messageToSend : messagesToSend) {
+				broadcast(messageToSend);
+			}
+			messagesToSend.clear();
 		}
-		messagesToSend.clear();
 	}
 
 	@Override
@@ -110,7 +112,9 @@ class EquoWebSocketServer extends WebSocketServer {
 		if (firstClientConnected) {
 			super.broadcast(messageAsJson);
 		} else {
-			messagesToSend.add(messageAsJson);
+			synchronized (messagesToSend) {
+				messagesToSend.add(messageAsJson);
+			}
 		}
 	}
 

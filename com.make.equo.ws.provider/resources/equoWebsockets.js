@@ -91,7 +91,9 @@ window.equo = window.equo || {};
                     return;
 
                 } else {
-                    openSocket();
+		            try{
+		                openSocket();
+                    }catch(err){}
                     console.log('wait for connection...')
                     waitForSocketConnection(socket, callback);
                 }
