@@ -31,7 +31,7 @@ public class EquoMonacoEditor {
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
 		this.equoEventHandler = handler;
-		namespace = "editor" + Integer.toHexString(fileName.hashCode());
+		namespace = "editor" + Double.toHexString(Math.random());
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
