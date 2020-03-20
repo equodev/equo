@@ -396,7 +396,20 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 		List<MStackElement> children = ((MPartStack) muiElement).getChildren();
 		for (MStackElement e : children) {
-			e4Model.add(createPartTab(e, selected != null && Objects.equals(selected, e)));
+//			if ((e instanceof MPart) || (e instanceof MPlaceholder)) {
+
+			MUIElement ref = null;
+			if (e instanceof MPlaceholder) {
+				MPlaceholder placeholder = (MPlaceholder) e;
+				ref = placeholder.getRef();
+			} else if (e instanceof MPart) {
+				ref = e;
+			}
+			if (ref != null) {
+				MPart mPart = (MPart) ref;
+				e4Model.add(createPartTab(mPart,
+						selected != null && Objects.equals(selected, mPart)));
+			}
 		}
 		return e4Model;
 	}
