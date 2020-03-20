@@ -400,7 +400,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			if (ref != null) {
 				MPart mPart = (MPart) ref;
 				e4Model.add(createPartTab(mPart,
-						selected != null && Objects.equals(selected.getElementId(), mPart.getElementId())));
+						selected != null && Objects.equals(selected, mPart)));
 			}
 		}
 		return e4Model;
