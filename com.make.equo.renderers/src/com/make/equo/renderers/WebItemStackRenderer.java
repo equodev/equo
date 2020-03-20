@@ -528,6 +528,19 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 	@Inject
 	@Optional
+	private void subscribeOnClose(@UIEventTopic(UIEvents.UIElement.TOPIC_TOBERENDERED) Event event) {
+		Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
+		boolean newValue = (Boolean) event.getProperty(UIEvents.EventTags.NEW_VALUE);
+		if (part instanceof MPart && !newValue) {
+			String namespace = partStacksToNamespaces.get(((MPart) part).getParent());
+			Map<String, String> partName = new HashMap<>();
+			partName.put("name", Integer.toString(part.hashCode()));
+			equoEventHandler.send(namespace + "_closeTab", partName);
+		}
+	}
+
+	@Inject
+	@Optional
 	private void subscribeTopicDirtyChanged(@UIEventTopic(UIEvents.Dirtyable.TOPIC_DIRTY) Event event) {
 		Object objElement = event.getProperty(UIEvents.EventTags.ELEMENT);
 
