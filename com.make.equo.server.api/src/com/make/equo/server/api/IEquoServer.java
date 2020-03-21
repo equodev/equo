@@ -14,8 +14,6 @@ public interface IEquoServer {
 
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
 
-	void addLimitedConnectionPage(String limitedConnectionPagePath);
-
 	boolean isAddressReachable(String appUrl);
 
 }

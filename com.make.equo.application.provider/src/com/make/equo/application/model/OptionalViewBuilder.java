@@ -19,14 +19,16 @@ public class OptionalViewBuilder {
 	private EquoApplicationBuilder equoApplicationBuilder;
 	private AnalyticsService analyticsService;
 	private MMenu mainMenu;
-	private EquoContributionBuilder equoContributionBuilder;
+	private EquoContributionBuilder mainAppBuilder;
+	private EquoContributionBuilder offlineSupportBuilder;
 
 	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService,
-			EquoContributionBuilder equoContributionBuilder, IEquoApplication equoApp) {
+			EquoContributionBuilder mainAppBuilder, EquoContributionBuilder offlineSupportBuilder, IEquoApplication equoApp) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
 		this.analyticsService = analyticsService;
-		this.equoContributionBuilder = equoContributionBuilder;
+		this.mainAppBuilder = mainAppBuilder;
+		this.offlineSupportBuilder = offlineSupportBuilder;
 		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
@@ -67,12 +69,12 @@ public class OptionalViewBuilder {
 	 * 
 	 */
 	public OptionalViewBuilder withCustomScript(String scriptPath) throws IOException, URISyntaxException {
-		equoContributionBuilder.withScriptFile(scriptPath);
+		mainAppBuilder.withScriptFile(scriptPath);
 		return this;
 	}
 
 	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
-		equoContributionBuilder.withStyleFile(stylePath);
+		mainAppBuilder.withStyleFile(stylePath);
 		return this;
 	}
 
@@ -103,7 +105,7 @@ public class OptionalViewBuilder {
 	 * @throws URISyntaxException
 	 */
 	public OptionalViewBuilder addLimitedConnectionPage(String limitedConnectionPagePath) throws URISyntaxException {
-		equoServer.addLimitedConnectionPage(limitedConnectionPagePath);
+		offlineSupportBuilder.withBaseHtmlResource(limitedConnectionPagePath);
 		return this;
 	}
 
@@ -134,7 +136,7 @@ public class OptionalViewBuilder {
 	}
 
 	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
-		equoContributionBuilder.withBaseHtmlResource(baseHtmlFile);
+		mainAppBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;
 	}
 }

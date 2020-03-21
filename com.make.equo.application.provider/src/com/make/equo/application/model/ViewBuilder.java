@@ -28,7 +28,10 @@ public class ViewBuilder {
 	private String url;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	private EquoContributionBuilder equoContributionBuilder;
+	private EquoContributionBuilder mainAppBuilder;
+	
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	private EquoContributionBuilder offlineSupportBuilder;
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoServer equoServer;
@@ -39,7 +42,7 @@ public class ViewBuilder {
 	private OptionalViewBuilder optionalViewBuilder;
 
 	OptionalViewBuilder withSingleView(String url) {
-		equoContributionBuilder.withContributionName("webwrapper");
+		mainAppBuilder.withContributionName("webwrapper");
 		this.url = normalizeUrl(url);
 		addUrlToProxyServer(this.url);
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
@@ -47,7 +50,7 @@ public class ViewBuilder {
 	}
 
 	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
-		equoContributionBuilder.withContributionName("plainequoapp");
+		mainAppBuilder.withContributionName("plainequoapp");
 		this.url = "http://plainequoapp/";
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
@@ -70,14 +73,16 @@ public class ViewBuilder {
 
 		equoAppBuilder.getmWindow().getChildren().add(part);
 
-		equoContributionBuilder.withURLResolver(new EquoGenericURLResolver(equoApp.getClass().getClassLoader()));
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, equoContributionBuilder, equoApp);
+		EquoGenericURLResolver equoAppUrlResolver = new EquoGenericURLResolver(equoApp.getClass().getClassLoader());
+		mainAppBuilder.withURLResolver(equoAppUrlResolver);
+		offlineSupportBuilder.withURLResolver(equoAppUrlResolver);
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, mainAppBuilder, offlineSupportBuilder, equoApp);
 
 		return optionalViewBuilder;
 	}
 
 	private void addUrlToProxyServer(String url) {
-		equoContributionBuilder.withProxiedUri(url);
+		mainAppBuilder.withProxiedUri(url);
 	}
 
 	private String normalizeUrl(String url) {
@@ -114,7 +119,7 @@ public class ViewBuilder {
 
 	public EquoApplicationBuilder start() {
 		analyticsService.registerLaunchApp();
-		equoContributionBuilder.build();
+		mainAppBuilder.build();
 		return this.equoAppBuilder;
 	}
 

@@ -1,7 +1,5 @@
 package com.make.equo.server.provider;
 
-import static com.make.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -22,7 +20,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.aer.api.IEquoLoggingService;
-import com.make.equo.contribution.api.EquoContributionBuilder;
 import com.make.equo.contribution.api.handler.IEquoContributionRequestHandler;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
@@ -47,9 +44,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoContributionRequestHandler contributionRequestHandler;
-
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	private EquoContributionBuilder offlineSupportBuilder;
 
 	@Override
 	@Activate
@@ -142,12 +136,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 		} catch (IOException | URISyntaxException e) {
 			return false; // Either timeout or unreachable or failed DNS lookup.
 		}
-	}
-
-	@Override
-	public void addLimitedConnectionPage(String limitedConnectionPagePath) {
-		offlineSupportBuilder.withContributionName(OFFLINE_SUPPORT_CONTRIBUTION_NAME)
-				.withBaseHtmlResource(limitedConnectionPagePath).build();
 	}
 
 }
