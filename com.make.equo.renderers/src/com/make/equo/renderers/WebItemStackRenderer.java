@@ -400,7 +400,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 			if (ref != null) {
 				MPart mPart = (MPart) ref;
 				e4Model.add(createPartTab(mPart,
-						selected != null && Objects.equals(selected.getElementId(), mPart.getElementId())));
+						selected != null && Objects.equals(selected, mPart)));
 			}
 		}
 		return e4Model;
@@ -523,6 +523,19 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 					}
 				}
 			}
+		}
+	}
+
+	@Inject
+	@Optional
+	private void subscribeOnClose(@UIEventTopic(UIEvents.UIElement.TOPIC_TOBERENDERED) Event event) {
+		Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
+		boolean newValue = (Boolean) event.getProperty(UIEvents.EventTags.NEW_VALUE);
+		if (part instanceof MPart && !newValue) {
+			String namespace = partStacksToNamespaces.get(((MPart) part).getParent());
+			Map<String, String> partName = new HashMap<>();
+			partName.put("name", Integer.toString(part.hashCode()));
+			equoEventHandler.send(namespace + "_closeTab", partName);
 		}
 	}
 

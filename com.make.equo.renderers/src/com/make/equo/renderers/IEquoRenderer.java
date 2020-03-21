@@ -79,9 +79,7 @@ public interface IEquoRenderer {
 				});
 		equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
 			List<Map<String, String>> eclipse4Model = getEclipse4Model(namespace);
-			if (!eclipse4Model.isEmpty()) {
-				equoEventHandler.send(namespace + "_model", eclipse4Model);
-			}
+			equoEventHandler.send(namespace + "_model", eclipse4Model);
 		});
 	};
 

@@ -84,7 +84,14 @@ $(document).ready(function () {
                         return;
                     }
                 })
-            })
+            });
+            equo.on(this.namespace + "_closeTab", tab => {
+            	let tabs = this.e4Model;
+            	let tabName = tab.name;
+                this.e4Model = tabs.filter(tab => {
+                    return tab.name !== tabName;
+                });
+            });
         },
         methods: {
             handleClick(tab, event) {
