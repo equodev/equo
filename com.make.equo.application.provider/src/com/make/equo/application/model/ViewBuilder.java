@@ -1,5 +1,7 @@
 package com.make.equo.application.model;
 
+import static com.make.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
+
 import java.net.URISyntaxException;
 
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -75,6 +77,7 @@ public class ViewBuilder {
 
 		EquoGenericURLResolver equoAppUrlResolver = new EquoGenericURLResolver(equoApp.getClass().getClassLoader());
 		mainAppBuilder.withURLResolver(equoAppUrlResolver);
+		offlineSupportBuilder.withContributionName(OFFLINE_SUPPORT_CONTRIBUTION_NAME);
 		offlineSupportBuilder.withURLResolver(equoAppUrlResolver);
 		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, mainAppBuilder, offlineSupportBuilder, equoApp);
 
