@@ -50,7 +50,6 @@ import org.osgi.service.event.Event;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
@@ -72,9 +71,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 	@Inject
 	private IEquoEventHandler equoEventHandler;
-
-	@Inject
-	private IEquoServer equoProxyServer;
 
 	@Inject
 	private IEquoApplication equoApplication;
@@ -413,11 +409,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	@Override
 	public String getNamespace() {
 		return namespace;
-	}
-
-	@Override
-	public IEquoServer getEquoProxyServer() {
-		return equoProxyServer;
 	}
 
 	@Override

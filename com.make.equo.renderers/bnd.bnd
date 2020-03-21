@@ -14,7 +14,7 @@ Private-Package: com.make.equo.renderers.contributions,\
     javax.inject,\
     javax.inject.source,\
     com.make.equo.ws.api;version=latest,\
-    com.make.equo.server.api;version=latest,\
+    com.make.equo.contribution.api;version=latest,\
     com.make.equo.application.provider;version=latest,\
     com.make.equo.ui.helper.provider;version=latest,\
     org.eclipse.swt.cocoa.macosx.x86_64,\
