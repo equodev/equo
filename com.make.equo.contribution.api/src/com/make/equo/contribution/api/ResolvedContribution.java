@@ -1,5 +1,6 @@
 package com.make.equo.contribution.api;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +38,26 @@ public class ResolvedContribution {
 	}
 
 	public String getCustomScripts(String url) {
-		return resourcesOrEmptyString(urlsToScripts.get(url));
+		return getResource(urlsToScripts, url);
 	}
 
 	public String getCustomStyles(String url) {
-		return resourcesOrEmptyString(urlsToStyles.get(url));
+		return getResource(urlsToStyles, url);
+	}
+
+	private String getResource(Map<String, String> map, String url) {
+		if (map.containsKey(url)) {
+			return map.get(url);
+		}
+		if (map.containsKey(url + "/")) {
+			return map.get(url + "/");
+		}
+		URI uri = URI.create(url);
+		String key = (uri.getScheme() + "://" + uri.getAuthority() + uri.getPath()).toLowerCase();
+		if (!map.containsKey(key)) {
+			key = (uri.getAuthority() + uri.getPath()).toLowerCase();
+		}
+		return resourcesOrEmptyString(map.get(key));
 	}
 
 	private String resourcesOrEmptyString(String resources) {
