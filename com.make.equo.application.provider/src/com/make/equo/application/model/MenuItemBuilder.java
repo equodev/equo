@@ -4,6 +4,7 @@ import static com.make.equo.application.util.OSUtils.isMac;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
@@ -28,8 +29,11 @@ public class MenuItemBuilder extends ItemBuilder {
 	}
 
 	public MenuItemBuilder addMenuItem(String label) {
+		MHandledItem actualItem = this.getItem();
 		this.setItem(createMenuItem(label));
-		return new MenuItemBuilder(this);
+		MenuItemBuilder newItemBuilder = new MenuItemBuilder(this);
+		this.setItem(actualItem);
+		return newItemBuilder;
 	}
 
 	private MHandledMenuItem createMenuItem(String label) {

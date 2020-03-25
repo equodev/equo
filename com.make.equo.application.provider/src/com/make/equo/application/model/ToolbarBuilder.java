@@ -48,11 +48,11 @@ public class ToolbarBuilder {
 		return optionalFieldBuilder;
 	}
 
-	public MTrimmedWindow getParent() {
+	MTrimmedWindow getParent() {
 		return parent;
 	}
 
-	public MToolBar getToolbar() {
+	MToolBar getToolbar() {
 		return toolbar;
 	}
 

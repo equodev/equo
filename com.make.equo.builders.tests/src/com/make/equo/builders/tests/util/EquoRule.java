@@ -1,4 +1,4 @@
-package com.make.equo.builders.tests;
+package com.make.equo.builders.tests.util;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
@@ -7,6 +7,8 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.osgi.framework.FrameworkUtil;
+
+import com.make.equo.builders.tests.EquoInjectableTest;
 
 public class EquoRule implements TestRule {
 

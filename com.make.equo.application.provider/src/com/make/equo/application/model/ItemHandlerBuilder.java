@@ -50,7 +50,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
 	}
 
 	
-	public ItemBuilder getItemBuilder() {
+	ItemBuilder getItemBuilder() {
 		return this.itemBuilder;
 	}
 	

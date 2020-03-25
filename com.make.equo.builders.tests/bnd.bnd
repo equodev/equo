@@ -49,6 +49,7 @@ Test-Cases: BuilderMenuTest
     com.make.equo.ws.provider;version=latest,\
     com.make.equo.analytics.internal.provider;version=latest,\
     com.make.equo.application.provider;version=latest,\
+    com.make.equo.renderers;version=latest,\
     com.make.equo.server.api;version='[0.1.6,0.1.7)',\
     com.make.equo.server.offline.api;version='[0.1.6,0.1.7)',\
     com.make.equo.ui.helper.provider;version='[0.1.6,0.1.7)',\
@@ -132,6 +133,8 @@ Test-Cases: BuilderMenuTest
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     org.eclipse.e4.ui.model.workbench,\
-    org.java-websocket.Java-WebSocket
+    org.java-websocket.Java-WebSocket,\
+    org.eclipse.e4.ui.workbench.renderers.swt
+    
 
     #slf4j.api;version='[1.7.2,1.7.3)'

@@ -1,5 +1,6 @@
 package com.make.equo.application.model;
 
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import com.make.equo.application.util.IConstants;
@@ -24,10 +25,17 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	}
 
 	public ToolbarItemBuilder addToolItem(String iconId, String text) {
+		String actualIcon = this.iconId;
+		String actualText = this.text;
+		MHandledItem actualItem = this.getItem();
 		this.iconId = iconId;
 		this.text = text;
 		this.setItem(createToolItem());
-		return new ToolbarItemBuilder(this);
+		ToolbarItemBuilder newItemBuilder = new ToolbarItemBuilder(this);
+		this.iconId = actualIcon;
+		this.text = actualText;
+		this.setItem(actualItem);
+		return newItemBuilder;
 	}
 
 	public MHandledToolItem createToolItem() {
@@ -54,15 +62,15 @@ public class ToolbarItemBuilder extends ItemBuilder {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
 	}
 
-	public ToolbarBuilder getToolbarBuilder() {
+	ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
 
-	public String getTooltip() {
+	String getTooltip() {
 		return text;
 	}
 
-	public String getIcon() {
+	String getIcon() {
 		return iconId;
 	}
 	

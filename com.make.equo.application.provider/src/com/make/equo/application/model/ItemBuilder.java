@@ -43,7 +43,7 @@ public abstract class ItemBuilder {
 		this.itemHandlerBuilder = itemHandlerBuilder;
 	}
 
-	public MHandledItem getItem() {
+	MHandledItem getItem() {
 		return this.item;
 	}
 
@@ -51,7 +51,7 @@ public abstract class ItemBuilder {
 		this.item = item;
 	}
 
-	public OptionalViewBuilder getOptionalFieldBuilder() {
+	OptionalViewBuilder getOptionalFieldBuilder() {
 		return this.viewBuilder;
 	}
 	
