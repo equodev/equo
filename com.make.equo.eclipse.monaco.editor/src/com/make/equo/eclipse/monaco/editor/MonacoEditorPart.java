@@ -17,6 +17,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -213,8 +215,13 @@ public class MonacoEditorPart extends EditorPart {
 		redoAction = new EditorAction(() -> editor.redo());
 		copyAction = new EditorAction(() -> editor.copy(), selectionProvider);
 		cutAction = new EditorAction(() -> editor.cut(), selectionProvider);
-		pasteAction = new EditorAction(() -> editor.paste());
-		pasteAction.setEnabled(true);
+		pasteAction = new EditorAction(() -> editor.paste(), null, () -> {
+			Clipboard clipboard = new Clipboard(Display.getCurrent());
+			TextTransfer textTransfer = TextTransfer.getInstance();
+			String textData = (String) clipboard.getContents(textTransfer);
+			clipboard.dispose();
+			return (textData != null);
+		});
 		findAction = new EditorAction(() -> editor.find());
 		findAction.setEnabled(true);
 		selectAllAction = new EditorAction(() -> editor.selectAll());
