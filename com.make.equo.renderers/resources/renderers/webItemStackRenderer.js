@@ -35,7 +35,7 @@ $(document).ready(function () {
                     if (tabName !== undefined) {
                         this.e4Model.forEach((tab) => {
                             if (tab.isSelected === 'true') {
-                                tab.isSelected === 'false';
+                                tab.isSelected = 'false';
                             }
                             if (tab.name === tabName) {
                                 tab.isSelected = 'true';
@@ -43,6 +43,7 @@ $(document).ready(function () {
                             }
                         });
                     }
+
                 }
             }
         },
@@ -54,7 +55,7 @@ $(document).ready(function () {
                 }
             })
             equo.on(this.namespace + "_addTab", tab => {
-                let tabAlreadyRendered = true;
+                let tabRendered = false;
                 if (this.e4Model.length === 0) {
                     this.e4Model.push(tab);
                     this.callE4Command(tab.name);
@@ -62,11 +63,11 @@ $(document).ready(function () {
                     if (this.selectedTab !== undefined && this.selectedTab !== '') {
                         this.e4Model.forEach(modelElem => {
                             if (modelElem.name === tab.name) {
-                                tabAlreadyRendered = false;
+                                tabRendered = true;
                                 return;
                             }
                         });
-                        if (tabAlreadyRendered) {
+                        if (!tabRendered) {
                             this.e4Model.push(tab);
                             this.callE4Command(tab.name);
                         } else if (tab.name !== this.selectedTab) {
@@ -86,8 +87,8 @@ $(document).ready(function () {
                 })
             });
             equo.on(this.namespace + "_closeTab", tab => {
-            	let tabs = this.e4Model;
-            	let tabName = tab.name;
+                let tabs = this.e4Model;
+                let tabName = tab.name;
                 this.e4Model = tabs.filter(tab => {
                     return tab.name !== tabName;
                 });
@@ -101,12 +102,12 @@ $(document).ready(function () {
                 let tabs = this.e4Model;
 
                 equo.on(this.namespace + '_proceedClose', () => {
-                    if (this.selected !== undefined && this.selected === tabName) {
+                    if (this.selectedTab !== undefined && this.selectedTab === tabName) {
                         tabs.forEach((tab, index) => {
                             if (tab.name === tabName) {
                                 let nextTab = tabs[index + 1] || tabs[index - 1];
                                 if (nextTab) {
-                                    this.callE4Command(nextTab.name);
+                                    this.selectedTab = nextTab;
                                 }
                             }
                         });
@@ -121,15 +122,14 @@ $(document).ready(function () {
                     namespace: this.namespace,
                     close: true
                 });
-
             },
             callE4Command(tabName) {
+                this.selectedTab = tabName;
                 equo.send(this.namespace + '_tabClicked', {
                     partName: tabName,
                     namespace: this.namespace
                 });
 
-                this.selectedTab = tabName;
             }
         },
         style: `
@@ -141,16 +141,18 @@ $(document).ready(function () {
     // Add web stack elements to the html body
     const createWebItemStack = function (namespace, e4Model) {
         console.log('The e4 model is ', e4Model);
+        const filteredE4Model = e4Model.filter(tab => {
+            return tab.toBeRendered == 'true';
+        });
         let webStackApp = Vue.extend(app);
         let component = new webStackApp({
             propsData: {
-                namespace,
-                e4Model
+                namespace: namespace,
+                e4Model: filteredE4Model
             }
         }).$mount()
 
         $('body').append(component.$el)
-
     }
 
     equo.getE4Model(createWebItemStack);

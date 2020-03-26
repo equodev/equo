@@ -304,13 +304,20 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 				}
 			}
 
-			Map<String, String> partModel = createPartTab(part, isSelected);
+			Map<String, String> partModel = createPartTab(element, isSelected);
 			equoEventHandler.send(namespace + "_addTab", partModel);
 		}
 	}
 
-	private Map<String, String> createPartTab(MPart mPart, boolean isSelected) {
+	private Map<String, String> createPartTab(MUIElement element, boolean isSelected) {
 		HashMap<String, String> partTab = new HashMap<String, String>();
+		MPart mPart = null;
+		if (element instanceof MPart) {
+			mPart = (MPart) element;
+		} else if (element instanceof MPlaceholder) {
+			mPart = (MPart) ((MPlaceholder) element).getRef();
+		}
+
 		partTab.put("label", mPart.getLabel());
 		partTab.put("visible", Boolean.toString(mPart.isVisible()));
 		partTab.put("closeable", Boolean.toString(mPart.isCloseable()));
@@ -320,6 +327,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		partTab.put("isSelected", Boolean.toString(isSelected));
 		partTab.put("id", mPart.getElementId());
 		partTab.put("name", Integer.toString(mPart.hashCode()));
+		partTab.put("toBeRendered", Boolean.toString(element.isToBeRendered()));
 		return partTab;
 	}
 
@@ -388,20 +396,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 		List<MStackElement> children = ((MPartStack) muiElement).getChildren();
 		for (MStackElement e : children) {
-//			if ((e instanceof MPart) || (e instanceof MPlaceholder)) {
-
-			MUIElement ref = null;
-			if (e instanceof MPlaceholder) {
-				MPlaceholder placeholder = (MPlaceholder) e;
-				ref = placeholder.getRef();
-			} else if (e instanceof MPart) {
-				ref = e;
-			}
-			if (ref != null) {
-				MPart mPart = (MPart) ref;
-				e4Model.add(createPartTab(mPart,
-						selected != null && Objects.equals(selected, mPart)));
-			}
+			e4Model.add(createPartTab(e, selected != null && Objects.equals(selected, e)));
 		}
 		return e4Model;
 	}
@@ -413,16 +408,8 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 	@Override
 	public Browser createBrowserComponent(Composite webItemStackRendererComposite) {
-//		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
-//				new String[] { "ignore-certificate-errors", null },
-//				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
-//				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
-
 		// The browser stays 1 level above other parts
-		Browser browser = new Browser(webItemStackRendererComposite, SWT.NONE);
-//		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
-
-		return browser;
+		return new Browser(webItemStackRendererComposite, SWT.NONE);
 	}
 
 	@Override
