@@ -1,5 +1,7 @@
 package com.make.equo.server.contribution.configservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
 import org.junit.Ignore;
@@ -10,7 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.make.equo.server.contribution.EquoContribution;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class EquoContributionConfigServiceTest {
 

@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import com.make.equo.application.model.EquoApplicationBuilder;
-import com.make.equo.builders.tests.util.EquoRule;
+import com.make.equo.testing.common.util.EquoRule;
 import com.make.equo.builders.tests.util.ModelTestingConfigurator;
 
-public abstract class EquoInjectableTest {
+public abstract class AbstractBuilderTest {
 
 	@Inject
 	protected EquoApplicationBuilder appBuilder;
@@ -22,10 +22,6 @@ public abstract class EquoInjectableTest {
 	
 	@Rule
 	public EquoRule injector = new EquoRule(this);
-
-	public EquoInjectableTest() {
-		super();
-	}
 
 	@Before
 	public void before() {

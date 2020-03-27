@@ -1,32 +1,13 @@
-Test-Cases: BuilderMenuTest
+-buildpath.test: \
+    osgi.cmpn,\
+    org.eclipse.osgi,\
+    ${junit},\
+    assertj-core;version=3.15.0,\
+    org.eclipse.e4.core.contexts,\
+    javax.inject,\
+    org.eclipse.e4.core.di
 
--buildpath: \
-	osgi.cmpn,\
-	org.eclipse.osgi,\
-	com.make.equo.application.provider;version=latest,\
-	com.make.equo.server.api;version=latest,\
-	com.make.equo.renderers;version=latest,\
-	com.make.equo.ws.api;version=latest,\
-	com.make.equo.ws.provider;version=latest,\
-	com.make.equo.testing.common;version=latest,\
-	org.java-websocket.Java-WebSocket,\
-	org.eclipse.swt.gtk.linux.x86_64,\
-	${junit},\
-	assertj-core;version=3.15.0,\
-	org.eclipse.e4.ui.model.workbench,\
-	org.eclipse.emf.ecore,\
-	org.eclipse.emf.common,\
-	org.eclipse.e4.ui.workbench,\
-	org.eclipse.e4.core.contexts,\
-	org.eclipse.e4.core.contexts.source,\
-	org.eclipse.emf.ecore.xmi,\
-	javax.inject,\
-	org.eclipse.e4.core.di,\
-	org.eclipse.e4.ui.workbench.swt,\
-	org.eclipse.e4.ui.workbench.renderers.swt
-    
-#-runproperties: \
-#tester.trace=true    
+-buildpath.graphics: ${if;${matches;${tolower;${os.name}};.*win.*};org.eclipse.swt.win32.win32.x86_64;${if;${matches;${tolower;${os.name}};.*mac.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.gtk.linux.x86_64}}
 
 -runproperties: \
     equinox.use.ds=true,\
@@ -34,37 +15,44 @@ Test-Cases: BuilderMenuTest
     ds.delayed.keepInstances=true,\
     equinox.scr.dontDisposeInstances=true,\
     osgi.compatibility.bootdelegation=true
-    
-    
--privatepackage: \
-	com.make.equo.builders.tests,\
-	com.make.equo.builders.tests.util,\
-	com.make.equo.builders.mocks
+
 -runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 -runee: JavaSE-1.8
--runrequires: bnd.identity;version='latest';id='com.make.equo.application.provider'
--runbundles: \
+
+
+-runrequires: \
+    bnd.identity;version='latest';id='com.make.equo.server.provider',\
+    bnd.identity;version='latest';id='com.make.equo.ws.provider'
+
+-runblacklist: \
+    bnd.identity;id='org.eclipse.rap.fileupload',\
+    bnd.identity;id='org.eclipse.rap.rwt'
+
+#-runblacklist.graphics:  ${if;${matches;${tolower;${os.name}};.*win.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.gtk.linux.x86_64;${if;${matches;${tolower;${os.name}};.*mac.*};org.eclipse.swt.win32.win32.x86_64;org.eclipse.swt.gtk.linux.x86_64;${if;${matches;${tolower;${os.name}};.*lin.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.win32.win32.x86_64}}}
+
+
+-runbundles.test: \
+    org.assertj.core;version="[3.9.0,4.0.0)",\
+    org.junit; version='[4.12.0,5.0.0)',\
+    org.hamcrest.core;version='[1.3.0,1.3.1)'
+
+-runbundles.equo: \
     ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
     ch.qos.logback.core;version='[1.1.2,1.1.3)',\
     ch.qos.logback.slf4j;version='[1.1.2,1.1.3)',\
-    com.google.gson;version='[2.8.2,2.8.3)',\
+    #com.google.gson;version='[2.8.2,2.8.3)',\
     com.google.guava;version='[20.0.0,20.0.1)',\
     com.ibm.icu;version='[64.2.0,64.2.1)',\
+    com.make.equo.aer.api;version='[0.1.6,0.1.7)',\
     com.make.equo.aer.internal.api;version='[0.1.6,0.1.7)',\
     com.make.equo.analytics.internal.api;version='[0.1.6,0.1.7)',\
-    com.make.equo.server.provider;version=latest,\
-    com.make.equo.aer.api;version=latest,\
-    com.make.equo.aer.provider;version=latest,\
-    com.make.equo.ws.api;version=latest,\
-    com.make.equo.ws.provider;version=latest,\
-    com.make.equo.analytics.internal.provider;version=latest,\
-    com.make.equo.application.provider;version=latest,\
-    com.make.equo.renderers;version=latest,\
-    com.make.equo.testing.common;version=latest,\
+    com.make.equo.application.provider;version='[0.1.6,0.1.7)',\
     com.make.equo.server.api;version='[0.1.6,0.1.7)',\
     com.make.equo.server.offline.api;version='[0.1.6,0.1.7)',\
+    com.make.equo.server.provider;version='[0.1.6,0.1.7)',\
     com.make.equo.ui.helper.provider;version='[0.1.6,0.1.7)',\
     com.make.equo.ws.api;version='[0.1.6,0.1.7)',\
+    com.make.equo.ws.provider;version='[0.1.6,0.1.7)',\
     io.netty.all;version='[4.0.44,4.0.45)',\
     javax.inject;version='[1.0.0,1.0.1)',\
     javax.servlet-api;version='[3.1.0,3.1.1)',\
@@ -122,31 +110,19 @@ Test-Cases: BuilderMenuTest
     org.eclipse.osgi.util;version='[3.5.300,3.5.301)',\
     org.eclipse.swt;version='[3.113.0,3.113.1)',\
     org.eclipse.swt.chromium;version='[69.1.0,69.1.1)',\
-    org.eclipse.swt.gtk.linux.x86_64,\
+    #org.eclipse.swt.cocoa.macosx.x86_64;version='[3.113.0,3.113.1)',\
+    #org.eclipse.swt.win32.win32.x86_64;version='[3.113.0,3.113.1)',\
+    org.java-websocket.Java-WebSocket;version='[1.3.6,1.3.7)',\
     org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
     org.slf4j.api;version='[1.7.10,1.7.11)',\
     org.w3c.css.sac;version='[1.3.1,1.3.2)',\
     org.w3c.dom.events;version='[3.0.0,3.0.1)',\
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
     org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
-    org.assertj.core;version='[3.9.1,3.9.20)',\
-    org.hamcrest.core;version='[1.3.0,1.3.1)',\
-    org.junit; version='[4.12.0,5.0.0)',\
+    slf4j.api;version='[1.7.25,1.7.26)'
+
+-runbundles.console: \
     org.eclipse.equinox.console,\
     org.apache.felix.gogo.command,\
     org.apache.felix.gogo.runtime,\
-    org.apache.felix.gogo.shell,\
-    org.influxdb.java;version='[2.9.0,2.9.1)',\
-    com.squareup.moshi;version='[1.4.0,1.4.1)',\
-    com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
-    com.squareup.okio;version='[1.11.0,1.11.1)',\
-    com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
-    com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
-    com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
-    org.eclipse.e4.ui.model.workbench,\
-    org.java-websocket.Java-WebSocket,\
-    org.eclipse.e4.ui.workbench.renderers.swt,\
-    assertj-core;version='[3.15.0,3.15.10)'
-    
-
-    #slf4j.api;version='[1.7.2,1.7.3)'
+    org.apache.felix.gogo.shell

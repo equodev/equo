@@ -1,4 +1,4 @@
-package com.make.equo.builders.tests.util;
+package com.make.equo.testing.common.util;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
@@ -8,13 +8,13 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.osgi.framework.FrameworkUtil;
 
-import com.make.equo.builders.tests.EquoInjectableTest;
+
 
 public class EquoRule implements TestRule {
 
-	private EquoInjectableTest caseTest;
+	private Object caseTest;
 
-	public EquoRule(EquoInjectableTest equoTestingInjector) {
+	public EquoRule(Object equoTestingInjector) {
 		this.caseTest = equoTestingInjector;
 	}
 
@@ -35,7 +35,7 @@ public class EquoRule implements TestRule {
 		};
 	}
 
-	private void inject(EquoInjectableTest caseTest) {
+	private void inject(Object caseTest) {
 		IEclipseContext eclipseContext = EclipseContextFactory
 				.getServiceContext(FrameworkUtil.getBundle(caseTest.getClass()).getBundleContext());
 		ContextInjectionFactory.inject(caseTest, eclipseContext);
