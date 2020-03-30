@@ -15,7 +15,7 @@ let wasCreated: boolean = false;
 
 // register Monaco languages
 monaco.languages.register({
-    id: 'json',
+    id: 'ownjson',
     extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
     aliases: ['JSON', 'json'],
     mimetypes: ['application/json'],
@@ -28,7 +28,7 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 		model = monaco.editor.createModel(
 		    values.text,
-		    undefined, // language
+		    'ownjson', // language
 		    monaco.Uri.file(values.name) // uri
 		);
 
@@ -42,6 +42,57 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 		lastSavedVersionId = model.getAlternativeVersionId();
 
 		MonacoServices.install(editor);
+
+		// create the web socket
+		const url = createUrl('/sampleServer')
+		const webSocket = createWebSocket(url);
+		// listen when the web socket is opened
+		listen({
+			webSocket,
+			onConnection: connection => {
+				// create and start the language client
+				const languageClient = createLanguageClient(connection);
+				const disposable = languageClient.start();
+				connection.onClose(() => disposable.dispose());
+			}
+		});
+
+		function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
+			return new MonacoLanguageClient({
+				name: "Sample Language Client",
+				clientOptions: {
+					// use a language id as a document selector
+					documentSelector: ['ownjson'],
+					// disable the default error handler
+					errorHandler: {
+						error: () => ErrorAction.Continue,
+						closed: () => CloseAction.DoNotRestart
+					}
+				},
+				// create a language client connection from the JSON RPC connection on demand
+				connectionProvider: {
+					get: (errorHandler, closeHandler) => {
+						return Promise.resolve(createConnection(connection, errorHandler, closeHandler));
+					}
+				}
+			});
+		}
+
+		function createUrl(path: string): string {
+			return normalizeUrl(`ws://127.0.0.1:3000${path}`);
+		}
+
+		function createWebSocket(url: string): WebSocket {
+			const socketOptions = {
+				maxReconnectionDelay: 10000,
+				minReconnectionDelay: 1000,
+				reconnectionDelayGrowFactor: 1.3,
+				connectionTimeout: 10000,
+				maxRetries: Infinity,
+				debug: false
+			};
+			return new ReconnectingWebSocket(url, [], socketOptions);
+		}
 
 		editor.onDidChangeCursorSelection((e: any) => {
 		    // @ts-ignore
@@ -127,55 +178,3 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 // @ts-ignore
 equo.send("_createEditor");
-
-// create the web socket
-const url = createUrl('/sampleServer')
-const webSocket = createWebSocket(url);
-// listen when the web socket is opened
-listen({
-    webSocket,
-    onConnection: connection => {
-        // create and start the language client
-        const languageClient = createLanguageClient(connection);
-        const disposable = languageClient.start();
-        connection.onClose(() => disposable.dispose());
-    }
-});
-
-function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
-    return new MonacoLanguageClient({
-        name: "Sample Language Client",
-        clientOptions: {
-            // use a language id as a document selector
-            documentSelector: ['json'],
-            // disable the default error handler
-            errorHandler: {
-                error: () => ErrorAction.Continue,
-                closed: () => CloseAction.DoNotRestart
-            }
-        },
-        // create a language client connection from the JSON RPC connection on demand
-        connectionProvider: {
-            get: (errorHandler, closeHandler) => {
-                return Promise.resolve(createConnection(connection, errorHandler, closeHandler));
-            }
-        }
-    });
-}
-
-function createUrl(path: string): string {
-    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    return normalizeUrl(`${protocol}://${location.host}${location.pathname}${path}`);
-}
-
-function createWebSocket(url: string): WebSocket {
-    const socketOptions = {
-        maxReconnectionDelay: 10000,
-        minReconnectionDelay: 1000,
-        reconnectionDelayGrowFactor: 1.3,
-        connectionTimeout: 10000,
-        maxRetries: Infinity,
-        debug: false
-    };
-    return new ReconnectingWebSocket(url, [], socketOptions);
-}
