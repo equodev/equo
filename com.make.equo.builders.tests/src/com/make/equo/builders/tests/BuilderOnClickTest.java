@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;

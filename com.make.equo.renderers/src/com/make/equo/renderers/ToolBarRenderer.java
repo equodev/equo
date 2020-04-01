@@ -67,8 +67,7 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		if (!(mUIToolbar instanceof MToolBar) || !(parent instanceof Composite)) {
 			return null;
 		}
-		this.mToolBar = (MToolBar) mUIToolbar;
-		this.namespace = "ToolBar" + Integer.toHexString(mUIToolbar.hashCode());
+		setToolbarContext(mUIToolbar);
 
 		Composite parentComp = (Composite) parent;
 
@@ -77,6 +76,11 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 		configureAndStartRenderProcess(browserComposite);
 
 		return parentComp;
+	}
+
+	public void setToolbarContext(MUIElement mUIToolbar) {
+		this.mToolBar = (MToolBar) mUIToolbar;
+		this.namespace = "ToolBar" + Integer.toHexString(mUIToolbar.hashCode());
 	}
 
 	@Override

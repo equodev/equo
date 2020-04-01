@@ -10,7 +10,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.osgi.service.component.annotations.Reference;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 
 public class ModelTestingConfigurator {

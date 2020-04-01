@@ -1,7 +1,6 @@
 package com.make.equo.builders.mocks;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import org.java_websocket.client.WebSocketClient;
@@ -10,6 +9,8 @@ import org.java_websocket.handshake.ServerHandshake;
 
 public class EmptyClient extends WebSocketClient {
 
+	private String message;
+	
 	public EmptyClient(URI serverUri, Draft draft) {
 		super(serverUri, draft);
 	}
@@ -17,10 +18,19 @@ public class EmptyClient extends WebSocketClient {
 	public EmptyClient(URI serverURI) {
 		super(serverURI);
 	}
+	
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	@Override
 	public void onOpen(ServerHandshake handshakedata) {
-		send(" {\"action\":\"accion del handler\"}");
+		send(message);
 		System.out.println("new connection opened");
 	}
 
