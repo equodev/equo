@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Rule;
 
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.testing.common.util.EquoRule;
 import com.make.equo.builders.tests.util.ModelTestingConfigurator;
@@ -18,6 +19,9 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	protected EquoApplicationBuilder appBuilder;
 	
+	@Inject
+	protected IEquoApplication equoApp; 
+	
 	protected ModelTestingConfigurator modelTestingConfigurator = new ModelTestingConfigurator();
 	
 	@Rule
@@ -25,7 +29,7 @@ public abstract class AbstractBuilderTest {
 
 	@Before
 	public void before() {
-		modelTestingConfigurator.configure(appBuilder);
+		modelTestingConfigurator.configure(appBuilder,equoApp);
 		assertThat(appBuilder).isNotNull();
 	}
 	

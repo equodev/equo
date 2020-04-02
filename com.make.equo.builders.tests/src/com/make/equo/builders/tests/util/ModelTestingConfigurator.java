@@ -1,5 +1,6 @@
 package com.make.equo.builders.tests.util;
 
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
 import com.make.equo.application.model.EquoApplicationModel;
@@ -13,8 +14,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 
 public class ModelTestingConfigurator {
-
-
 
 	private MApplication getModelApplication() {
 		ResourceSet resourceSet = new ResourceSetImpl();
@@ -30,12 +29,12 @@ public class ModelTestingConfigurator {
 		return app;
 	}
 
-	public void configure(EquoApplicationBuilder equoApplicationBuilder) {
+	public void configure(EquoApplicationBuilder equoApplicationBuilder, IEquoApplication equoApp) {
 		MApplication mainApplication = getModelApplication();
 		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
 		equoApplicationModel.setMainApplication(mainApplication);
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
-				equoApplicationModel, equoApplicationBuilder);
+				equoApplicationModel, equoApplicationBuilder, equoApp);
 		equoApplicationBuilderConfigurator.configure();
 	}
 	

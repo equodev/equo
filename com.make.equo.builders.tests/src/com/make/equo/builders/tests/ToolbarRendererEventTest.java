@@ -53,16 +53,7 @@ public class ToolbarRendererEventTest extends AbstractBuilderTest {
 
 	private EclipseWebRendererFactory rendererFactory;
 	
-	@Before
-	public void before() {
-		modelTestingConfigurator.configure(appBuilder);
-		assertThat(appBuilder).isNotNull();
-		Assertions.setAllowExtractingPrivateFields(true);
-		
-	}
-	
 	private IEclipseContext eclipseContext;
-	
 	
 	@SuppressWarnings("unchecked")
 	@Test

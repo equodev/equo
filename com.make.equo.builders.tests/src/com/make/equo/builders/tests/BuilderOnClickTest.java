@@ -20,16 +20,6 @@ import com.make.equo.builders.tests.util.ModelTestingConfigurator;
 public class BuilderOnClickTest extends AbstractBuilderTest {
 
 
-
-	@Before
-	public void before() {
-		modelTestingConfigurator.configure(appBuilder);
-		assertThat(appBuilder).isNotNull();
-		Assertions.setAllowExtractingPrivateFields(true);
-	}
-
-	private ModelTestingConfigurator modelTestingConfigurator = new ModelTestingConfigurator();
-
 	@Test
 	public void should_Create_Toolbar_With_An_ItemEvent()
 			throws URISyntaxException, NoSuchFieldException, IllegalAccessException {

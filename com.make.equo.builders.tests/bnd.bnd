@@ -46,6 +46,8 @@
 	com.make.equo.ui.helper.provider;version='[0.1.6,0.1.7)',\
 	com.make.equo.ws.api;version='[0.1.6,0.1.7)',\
 	com.make.equo.renderers; version=latest,\
+	com.make.equo.contribution.api;version=latest,\
+	com.make.equo.contribution.provider;version=latest,\
 	com.make.equo.testing.common;version=latest,\
 	io.netty.all;version='[4.0.44,4.0.45)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
