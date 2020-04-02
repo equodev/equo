@@ -25,7 +25,7 @@ public class LifeCycleManager {
 		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
 		equoApplicationModel.setMainApplication(mainApplication);
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
-				equoApplicationModel, equoApplicationBuilder);
+				equoApplicationModel, equoApplicationBuilder, equoApp);
 		equoApplicationBuilderConfigurator.configure();
 		equoApp.buildApp(equoApplicationBuilder);
 

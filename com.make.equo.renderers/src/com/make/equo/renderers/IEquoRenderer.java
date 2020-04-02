@@ -33,7 +33,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 
@@ -81,9 +80,7 @@ public interface IEquoRenderer {
 				});
 		equoEventHandler.on(namespace + "_getModel", (StringPayloadEquoRunnable stringPayloadEquoRunnable) -> {
 			List<Map<String, String>> eclipse4Model = getEclipse4Model(namespace);
-			if (!eclipse4Model.isEmpty()) {
-				equoEventHandler.send(namespace + "_model", eclipse4Model);
-			}
+			equoEventHandler.send(namespace + "_model", eclipse4Model);
 		});
 	};
 
@@ -214,8 +211,6 @@ public interface IEquoRenderer {
 	 * @return a namespace
 	 */
 	String getNamespace();
-
-	IEquoServer getEquoProxyServer();
 
 	Browser createBrowserComponent(Composite parent);
 

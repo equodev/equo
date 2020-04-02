@@ -18,6 +18,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
+import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
@@ -58,7 +59,7 @@ public class EquoApplicationBuilder{
 	 * @param modelService
 	 * @return
 	 */
-	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel) {
+	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel, IEquoApplication equoApp) {
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
@@ -73,7 +74,7 @@ public class EquoApplicationBuilder{
 
 		if (!isAnEclipseBasedApp()) {
 			configureEquoApp(appId);
-			return this.viewBuilder.configureViewPart(this);
+			return this.viewBuilder.configureViewPart(this, equoApp);
 		}
 		return null;
 	}

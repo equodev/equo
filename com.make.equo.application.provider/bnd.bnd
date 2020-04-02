@@ -8,6 +8,7 @@ Export-Package: \
     com.make.equo.aer.api;version=latest,\
     com.make.equo.aer.internal.api;version=latest,\
     com.make.equo.ui.helper.provider;version=latest,\
+    com.make.equo.contribution.api;version=latest,\
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
@@ -28,14 +29,10 @@ Export-Package: \
 	org.eclipse.e4.ui.workbench.source,\
 	org.eclipse.e4.ui.di,\
 	org.eclipse.e4.ui.di.source,\
-	org.eclipse.e4.core.di.extensions,\
-	org.eclipse.e4.core.di.extensions.source,\
 	org.eclipse.e4.core.contexts,\
 	org.eclipse.e4.core.contexts.source,\
 	org.eclipse.e4.ui.model.workbench,\
 	org.eclipse.e4.ui.model.workbench.source,\
-	org.eclipse.e4.ui.services,\
-	org.eclipse.e4.ui.services.source,\
 	javax.inject,\
 	javax.inject.source,\
 	org.eclipse.e4.ui.workbench.swt,\
@@ -45,12 +42,6 @@ Export-Package: \
 	org.eclipse.e4.core.commands,\
 	org.eclipse.e4.core.commands.source,\
 	org.eclipse.equinox.common,\
-	org.eclipse.equinox.event,\
-	org.eclipse.equinox.event.source,\
-	org.eclipse.ui,\
-	org.eclipse.ui.source,\
-	org.java-websocket.Java-WebSocket,\
-	org.java-websocket.Java-WebSocket.source,\
 	com.google.gson,\
 	com.google.gson.source,\
 	org.eclipse.swt.cocoa.macosx.x86_64,\

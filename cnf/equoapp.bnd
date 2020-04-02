@@ -25,6 +25,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.aspects)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.api)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.server.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.ws.api)',\
@@ -153,6 +155,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.logging.client.api;version=snapshot,\
     com.make.equo.logging.client.provider;version=snapshot,\
     com.make.equo.renderers;version=snapshot,\
+    com.make.equo.contribution.api;version=snapshot,\
+    com.make.equo.contribution.provider;version=snapshot,\
     com.make.equo.server.api;version=snapshot,\
     com.make.equo.server.offline.api;version=snapshot,\
     com.make.equo.server.offline.provider;version=snapshot,\

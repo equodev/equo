@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.MButtonToggle;
@@ -46,9 +45,6 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 
 	@Inject
 	private IEquoEventHandler equoEventHandler;
-
-	@Inject
-	private IEquoServer equoProxyServer;
 
 	private Shell realParentShell;
 
@@ -130,11 +126,6 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 	@Override
 	public String getModelContributionPath() {
 		return "contributions/dialogs/";
-	}
-
-	@Override
-	public IEquoServer getEquoProxyServer() {
-		return equoProxyServer;
 	}
 
 	@Override

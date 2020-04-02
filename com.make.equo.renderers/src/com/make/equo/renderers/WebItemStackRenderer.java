@@ -50,7 +50,6 @@ import org.osgi.service.event.Event;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
-import com.make.equo.server.api.IEquoServer;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRenderer {
@@ -72,9 +71,6 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 	@Inject
 	private IEquoEventHandler equoEventHandler;
-
-	@Inject
-	private IEquoServer equoProxyServer;
 
 	@Inject
 	private IEquoApplication equoApplication;
@@ -308,13 +304,20 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 				}
 			}
 
-			Map<String, String> partModel = createPartTab(part, isSelected);
+			Map<String, String> partModel = createPartTab(element, isSelected);
 			equoEventHandler.send(namespace + "_addTab", partModel);
 		}
 	}
 
-	private Map<String, String> createPartTab(MPart mPart, boolean isSelected) {
+	private Map<String, String> createPartTab(MUIElement element, boolean isSelected) {
 		HashMap<String, String> partTab = new HashMap<String, String>();
+		MPart mPart = null;
+		if (element instanceof MPart) {
+			mPart = (MPart) element;
+		} else if (element instanceof MPlaceholder) {
+			mPart = (MPart) ((MPlaceholder) element).getRef();
+		}
+
 		partTab.put("label", mPart.getLabel());
 		partTab.put("visible", Boolean.toString(mPart.isVisible()));
 		partTab.put("closeable", Boolean.toString(mPart.isCloseable()));
@@ -324,6 +327,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 		partTab.put("isSelected", Boolean.toString(isSelected));
 		partTab.put("id", mPart.getElementId());
 		partTab.put("name", Integer.toString(mPart.hashCode()));
+		partTab.put("toBeRendered", Boolean.toString(element.isToBeRendered()));
 		return partTab;
 	}
 
@@ -392,20 +396,7 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 
 		List<MStackElement> children = ((MPartStack) muiElement).getChildren();
 		for (MStackElement e : children) {
-//			if ((e instanceof MPart) || (e instanceof MPlaceholder)) {
-
-			MUIElement ref = null;
-			if (e instanceof MPlaceholder) {
-				MPlaceholder placeholder = (MPlaceholder) e;
-				ref = placeholder.getRef();
-			} else if (e instanceof MPart) {
-				ref = e;
-			}
-			if (ref != null) {
-				MPart mPart = (MPart) ref;
-				e4Model.add(createPartTab(mPart,
-						selected != null && Objects.equals(selected.getElementId(), mPart.getElementId())));
-			}
+			e4Model.add(createPartTab(e, selected != null && Objects.equals(selected, e)));
 		}
 		return e4Model;
 	}
@@ -416,22 +407,9 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 	}
 
 	@Override
-	public IEquoServer getEquoProxyServer() {
-		return equoProxyServer;
-	}
-
-	@Override
 	public Browser createBrowserComponent(Composite webItemStackRendererComposite) {
-//		Chromium.setCommandLine(new String[][] { new String[] { "proxy-server", "localhost:9896" },
-//				new String[] { "ignore-certificate-errors", null },
-//				new String[] { "allow-file-access-from-files", null }, new String[] { "disable-web-security", null },
-//				new String[] { "enable-widevine-cdm", null }, new String[] { "proxy-bypass-list", "127.0.0.1" } });
-
 		// The browser stays 1 level above other parts
-		Browser browser = new Browser(webItemStackRendererComposite, SWT.NONE);
-//		GridDataFactory.fillDefaults().grab(true, false).hint(200, 50).applyTo(browser);
-
-		return browser;
+		return new Browser(webItemStackRendererComposite, SWT.NONE);
 	}
 
 	@Override
@@ -532,6 +510,19 @@ public class WebItemStackRenderer extends LazyStackRenderer implements IEquoRend
 					}
 				}
 			}
+		}
+	}
+
+	@Inject
+	@Optional
+	private void subscribeOnClose(@UIEventTopic(UIEvents.UIElement.TOPIC_TOBERENDERED) Event event) {
+		Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
+		boolean newValue = (Boolean) event.getProperty(UIEvents.EventTags.NEW_VALUE);
+		if (part instanceof MPart && !newValue) {
+			String namespace = partStacksToNamespaces.get(((MPart) part).getParent());
+			Map<String, String> partName = new HashMap<>();
+			partName.put("name", Integer.toString(part.hashCode()));
+			equoEventHandler.send(namespace + "_closeTab", partName);
 		}
 	}
 

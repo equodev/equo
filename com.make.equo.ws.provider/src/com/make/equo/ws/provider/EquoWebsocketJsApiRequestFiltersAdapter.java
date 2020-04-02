@@ -14,7 +14,7 @@ import javax.activation.MimetypesFileTypeMap;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.google.common.io.ByteStreams;
-import com.make.equo.server.contribution.resolvers.IEquoContributionUrlResolver;
+import com.make.equo.contribution.api.resolvers.IEquoContributionUrlResolver;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
