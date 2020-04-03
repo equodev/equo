@@ -161,10 +161,6 @@ public class EquoMonacoEditor {
 		});
 	}
 
-	public void configSave(IEquoRunnable<Void> saveFunction) {
-		equoEventHandler.on(namespace + "_doSave", saveFunction);
-	}
-
 	public void subscribeChanges(IEquoRunnable<Boolean> dirtyListener, IEquoRunnable<Boolean> undoListener,
 			IEquoRunnable<Boolean> redoListener) {
 		equoEventHandler.on(namespace + "_changesNotification", (JsonObject changes) -> {

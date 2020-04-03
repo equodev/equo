@@ -26,12 +26,10 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.BundleContext;
@@ -191,16 +189,6 @@ public class MonacoEditorPart extends EditorPart {
 			undoAction.setEnabled(canUndo);
 		};
 		editor.subscribeChanges(dirtyListener, undoListener, redoListener);
-
-		editor.configSave((v) -> {
-			Display.getDefault().asyncExec(() -> {
-				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-				try {
-					handlerService.executeCommand(IWorkbenchCommandConstants.FILE_SAVE, null);
-				} catch (Exception ex) {
-				}
-			});
-		});
 
 		editor.configSelection((selection) -> {
 			Display.getDefault().asyncExec(() -> {

@@ -126,15 +126,6 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 			(model as any).redo();
 		});
 
-		document.onkeydown = keydown;
-
-		function keydown(evt: any) {
-			if (evt.ctrlKey && evt.keyCode == 83) { //CTRL + S
-				// @ts-ignore
-				equo.send(namespace + "_doSave");
-			}
-		}
-
 		// @ts-ignore
 		equo.on(namespace + "_didSave", () => {
 			lastSavedVersionId = model.getAlternativeVersionId();
