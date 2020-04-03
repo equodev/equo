@@ -15,20 +15,18 @@ let wasCreated: boolean = false;
 
 // register Monaco languages
 monaco.languages.register({
-    id: 'ownjson',
-    extensions: ['.json', '.bowerrc', '.jshintrc', '.jscsrc', '.eslintrc', '.babelrc'],
-    aliases: ['JSON', 'json'],
-    mimetypes: ['application/json'],
+    id: 'userdefinedlanguage'
 });
 
 // @ts-ignore
-equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; }) => {
+equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
 	if (!wasCreated){
 		namespace = values.namespace;
 
+		let language = (values.lspPath == null) ? undefined: 'userdefinedlanguage'
 		model = monaco.editor.createModel(
 		    values.text,
-		    'ownjson', // language
+		    language,
 		    monaco.Uri.file(values.name) // uri
 		);
 
@@ -41,28 +39,30 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 		lastSavedVersionId = model.getAlternativeVersionId();
 
-		MonacoServices.install(editor);
+		if (values.lspPath != null){
+			MonacoServices.install(editor);
 
-		// create the web socket
-		const url = createUrl('/sampleServer')
-		const webSocket = createWebSocket(url);
-		// listen when the web socket is opened
-		listen({
-			webSocket,
-			onConnection: connection => {
-				// create and start the language client
-				const languageClient = createLanguageClient(connection);
-				const disposable = languageClient.start();
-				connection.onClose(() => disposable.dispose());
-			}
-		});
+			// create the web socket
+			const url = normalizeUrl(values.lspPath)
+			const webSocket = createWebSocket(url);
+			// listen when the web socket is opened
+			listen({
+				webSocket,
+				onConnection: connection => {
+					// create and start the language client
+					const languageClient = createLanguageClient(connection);
+					const disposable = languageClient.start();
+					connection.onClose(() => disposable.dispose());
+				}
+			});
+		}
 
 		function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
 			return new MonacoLanguageClient({
 				name: "Sample Language Client",
 				clientOptions: {
 					// use a language id as a document selector
-					documentSelector: ['ownjson'],
+					documentSelector: ['userdefinedlanguage'],
 					// disable the default error handler
 					errorHandler: {
 						error: () => ErrorAction.Continue,
@@ -76,10 +76,6 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 					}
 				}
 			});
-		}
-
-		function createUrl(path: string): string {
-			return normalizeUrl(`ws://127.0.0.1:3000${path}`);
 		}
 
 		function createWebSocket(url: string): WebSocket {

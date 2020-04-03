@@ -6,6 +6,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class EquoMonacoEditor {
 	private IEquoEventHandler equoEventHandler;
 	private final Semaphore lock = new Semaphore(1);
 	private String namespace;
+	private static Map<String, String> lspServers = new HashMap<>();
 
 	private List<IEquoRunnable<Void>> onLoadListeners;
 
@@ -43,11 +45,21 @@ public class EquoMonacoEditor {
 		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, fileName));
 	}
 
+	private String getLspServerForFile(String fileName) {
+		String extension = "";
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+			extension = fileName.substring(i + 1);
+		}
+		return lspServers.getOrDefault(extension, null);
+	}
+
 	private void handleCreateEditor(String contents, String fileName) {
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
 		editorData.put("name", fileName);
 		editorData.put("namespace", namespace);
+		editorData.put("lspPath", getLspServerForFile(fileName));
 		equoEventHandler.send("_doCreateEditor", editorData);
 		loaded = true;
 		for (IEquoRunnable<Void> onLoadListener : onLoadListeners) {
@@ -175,6 +187,22 @@ public class EquoMonacoEditor {
 			addOnLoadListener((IEquoRunnable<Void>) runnable -> {
 				equoEventHandler.send(namespace + "_subscribeModelChanges");
 			});
+		}
+	}
+	
+	/**
+	 * Add a lsp server to be used for the editors on the files with the given
+	 * extensions
+	 * 
+	 * @param fullServerPath The full path to the lsp server. Example:
+	 *                       ws://127.0.0.1:3000/lspServer
+	 * @param extensions     A collection of extensions for what the editor will use
+	 *                       the given lsp server. The extensions must not have the
+	 *                       initial dot. Example: ["php", "php4"]
+	 */
+	public static void addLspServer(String fullServerPath, Collection<String> extensions) {
+		for (String extension: extensions) {
+			lspServers.put(extension, fullServerPath);
 		}
 	}
 
