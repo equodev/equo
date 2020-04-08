@@ -8,39 +8,28 @@ import com.make.equo.application.util.IConstants;
 public class ToolbarItemBuilder extends ItemBuilder {
 
 	private ToolbarBuilder toolbarBuilder;
-	private String iconId;
-	private String text;
 
 	ToolbarItemBuilder(ToolbarBuilder toolbarBuilder) {
 		super(toolbarBuilder.getOptionalFieldBuilder());
 		this.toolbarBuilder = toolbarBuilder;
 	}
 
-	ToolbarItemBuilder(ToolbarItemBuilder toolbarItemBuilder) {
-		super(toolbarItemBuilder.getOptionalFieldBuilder());
-		this.iconId = toolbarItemBuilder.getIcon();
-		this.text = toolbarItemBuilder.getTooltip();
-		this.setItem(toolbarItemBuilder.getItem());
-		this.toolbarBuilder = toolbarItemBuilder.toolbarBuilder;
+	public ToolbarItemBuilder(OptionalViewBuilder optionalFieldBuilder, MHandledItem item,
+			ToolbarBuilder toolbarBuilder) {
+		super(optionalFieldBuilder);
+		this.setItem(item);
+		this.toolbarBuilder = toolbarBuilder;
 	}
 
 	public ToolbarItemBuilder addToolItem(String iconId, String text) {
-		String actualIcon = this.iconId;
-		String actualText = this.text;
-		MHandledItem actualItem = this.getItem();
-		this.iconId = iconId;
-		this.text = text;
-		this.setItem(createToolItem());
-		ToolbarItemBuilder newItemBuilder = new ToolbarItemBuilder(this);
-		this.iconId = actualIcon;
-		this.text = actualText;
-		this.setItem(actualItem);
-		return newItemBuilder;
+
+		return new ToolbarItemBuilder(this.getOptionalFieldBuilder(), createToolItem(iconId, text),
+				this.toolbarBuilder);
 	}
 
-	public MHandledToolItem createToolItem() {
+	private MHandledToolItem createToolItem(String iconId, String text) {
 		MHandledToolItem newToolItem = MenuFactoryImpl.eINSTANCE.createHandledToolItem();
-		newToolItem.setIconURI(this.iconId);
+		newToolItem.setIconURI(iconId);
 		String itemId = toolbarBuilder.getToolbar().getElementId() + "."
 				+ text.replace(" ", "_").replaceAll("\\s+", "").toLowerCase();
 		newToolItem.setElementId(itemId);
@@ -53,9 +42,10 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	public ToolbarItemBuilder onClick(Runnable action) {
 		return (ToolbarItemBuilder) onClick(action, null);
 	}
+
 	@Override
 	public ToolbarItemBuilder addShortcut(String keySequence) {
-		return (ToolbarItemBuilder)super.addShortcut(keySequence);
+		return (ToolbarItemBuilder) super.addShortcut(keySequence);
 	}
 
 	public ToolbarBuilder addToolbar() {
@@ -65,16 +55,4 @@ public class ToolbarItemBuilder extends ItemBuilder {
 	ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
-
-	String getTooltip() {
-		return text;
-	}
-
-	String getIcon() {
-		return iconId;
-	}
-	
-	
-	
-	
 }

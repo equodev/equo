@@ -27,9 +27,8 @@ public class ToolbarBuilder {
 		this.toolbar = createToolbar();
 		return new ToolbarBuilder(this);
 	}
-	
 
-	public MToolBar createToolbar() {
+	private MToolBar createToolbar() {
 		MTrimBar trimbar = MBasicFactory.INSTANCE.createTrimBar();
 		MToolBar newToolbar = MenuFactoryImpl.eINSTANCE.createToolBar();
 		newToolbar.setOnTop(true);
@@ -39,7 +38,7 @@ public class ToolbarBuilder {
 		this.parent.getTrimBars().get(0).getChildren().add(newToolbar);
 		return newToolbar;
 	}
-	
+
 	public ToolbarItemBuilder addToolItem(String iconId, String text) {
 		return new ToolbarItemBuilder(this).addToolItem(iconId, text);
 	}
@@ -55,7 +54,5 @@ public class ToolbarBuilder {
 	MToolBar getToolbar() {
 		return toolbar;
 	}
-
-	// faltan configuraciones especiales de la toolbar, posicion por ejemplo
 
 }

@@ -22,18 +22,14 @@ public class MenuItemBuilder extends ItemBuilder {
 		this.menuBuilder = menuBuilder;
 	}
 
-	MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
-		super(menuItemBuilder.getOptionalFieldBuilder());
-		this.setItem(menuItemBuilder.getItem());
-		this.menuBuilder = menuItemBuilder.menuBuilder;
+	MenuItemBuilder(OptionalViewBuilder optionalViewBuilder, MHandledItem item, MenuBuilder menuBuilder) {
+		super(optionalViewBuilder);
+		this.setItem(item);
+		this.menuBuilder = menuBuilder;
 	}
 
 	public MenuItemBuilder addMenuItem(String label) {
-		MHandledItem actualItem = this.getItem();
-		this.setItem(createMenuItem(label));
-		MenuItemBuilder newItemBuilder = new MenuItemBuilder(this);
-		this.setItem(actualItem);
-		return newItemBuilder;
+		return new MenuItemBuilder(this.getOptionalFieldBuilder(),createMenuItem(label),menuBuilder);
 	}
 
 	private MHandledMenuItem createMenuItem(String label) {

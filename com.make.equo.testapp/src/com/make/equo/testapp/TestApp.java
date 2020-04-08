@@ -18,24 +18,30 @@ public class TestApp implements IEquoApplication {
 		try {
 
 			return appBuilder.plainApp("index.html").enableAnalytics().withCustomScript("js/testAnalytics.js")
-					.withCustomScript("js/testLogging.js").withMainMenu("File").addMenuItem("New")
-					.onClick(() -> System.out.println("ON_NEW")).onAbout(() -> System.out.println("ON_ABOUT"))
-					.onPreferences(() -> System.out.println("ON_PREFERENCES"))
-					.onBeforeExit(() -> System.out.println("Bye Bye Equo")).withMainMenu("Dialog Test")
-					.addMenuItem("Message Dialog").onClick(() -> {
-						try {
-							MessageDialog.openInformation(null, "info dialog", "info msg");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}).addMenuItem("Message Dialog with Toggle").onClick(() -> {
-						try {
-							MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
-									"soy el toggle del mensaje", true, null, "key");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}).withToolbar().addToolItem("chat", "Chat").onClick(() -> System.out.println("click en ToolItem"))
+					.withCustomScript("js/testLogging.js")
+					.withMainMenu("File")
+						.addMenuItem("New").onClick(() -> System.out.println("ON_NEW"))
+						.onAbout(() -> System.out.println("ON_ABOUT"))
+						.onPreferences(() -> System.out.println("ON_PREFERENCES"))
+						.onBeforeExit(() -> System.out.println("Bye Bye Equo"))
+					.withMainMenu("Dialog Test")
+						.addMenuItem("Message Dialog").onClick(() -> {
+								try {
+									MessageDialog.openInformation(null, "info dialog", "info msg");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							})
+						.addMenuItem("Message Dialog with Toggle").onClick(() -> {
+								try {
+									MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
+											"soy el toggle del mensaje", true, null, "key");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							})
+					.withToolbar()
+						.addToolItem("chat", "Chat").onClick(() -> System.out.println("click en ToolItem"))
 					.start();
 
 		} catch (IOException e) {
