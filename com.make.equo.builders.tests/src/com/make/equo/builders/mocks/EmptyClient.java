@@ -24,8 +24,9 @@ public class EmptyClient extends WebSocketClient {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public EmptyClient singleMessage(String message) {
 		this.message = message;
+		return this;
 	}
 
 	@Override

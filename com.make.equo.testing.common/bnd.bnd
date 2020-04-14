@@ -1,7 +1,15 @@
+-include ${build}/../com.make.equo.testing.common/testing.bnd
+
 Export-Package: com.make.equo.testing.common.util
 
 -buildpath: \
-    org.eclipse.e4.core.contexts;version='[1.8.300,1.8.301)',\
-    ${junit},\
-    org.eclipse.osgi;version='[3.15.100,3.15.101)',\
-    org.eclipse.e4.core.di;version='[1.7.500,1.7.501)'
+    com.make.equo.renderers,\
+    org.eclipse.e4.ui.workbench,\
+    org.eclipse.e4.ui.workbench.swt,\
+    org.eclipse.e4.ui.model.workbench,\
+    org.eclipse.e4.ui.di,\
+    org.eclipse.e4.core.services,\
+    org.eclipse.e4.core.commands,\
+    org.eclipse.core.commands,\
+    org.mockito.mockito-all,\
+    

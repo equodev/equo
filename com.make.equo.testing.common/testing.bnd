@@ -5,7 +5,7 @@
     assertj-core;version=3.15.0,\
     org.eclipse.e4.core.contexts,\
     javax.inject,\
-    org.eclipse.e4.core.di
+    org.eclipse.e4.core.di,\
 
 -runproperties: \
     osgi.console=

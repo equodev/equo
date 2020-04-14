@@ -52,7 +52,8 @@ public class ToolbarItemBuilder extends ItemBuilder {
 		return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
 	}
 
-	ToolbarBuilder getToolbarBuilder() {
+	//TODO: java doc must specify that this method is for internal use only.
+	public ToolbarBuilder getToolbarBuilder() {
 		return toolbarBuilder;
 	}
 }
