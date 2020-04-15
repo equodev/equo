@@ -13,17 +13,17 @@ let model: monaco.editor.ITextModel;
 let namespace: string;
 let wasCreated: boolean = false;
 
-// register Monaco languages
-monaco.languages.register({
-    id: 'userdefinedlanguage'
-});
-
 // @ts-ignore
-equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
+equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string}) => {
 	if (!wasCreated){
 		namespace = values.namespace;
 
-		let language = (values.lspPath == null) ? undefined: 'userdefinedlanguage'
+		let l = getLanguageOfFile(values.name);
+		let language = '';
+		if (l) {
+			monaco.languages.register(l);
+			language = l.id;
+		}
 		model = monaco.editor.createModel(
 		    values.text,
 		    language,
@@ -39,11 +39,11 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 		lastSavedVersionId = model.getAlternativeVersionId();
 
-		if (values.lspPath != null){
+		if (language != null){
 			MonacoServices.install(editor);
 
 			// create the web socket
-			const url = normalizeUrl(values.lspPath)
+			const url = createUrl(language)
 			const webSocket = createWebSocket(url);
 			// listen when the web socket is opened
 			listen({
@@ -57,12 +57,31 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 			});
 		}
 
+		function createUrl(path: string): string {
+			return normalizeUrl(`ws://127.0.0.1:3000/${path}`);
+		}
+
+		function getLanguageOfFile(name: string) {
+			let ext = '.' + name.split('.').pop();
+			let languages = monaco.languages.getLanguages();
+			for (let l of languages) {
+				if (l.extensions) {
+					for (let e of l.extensions) {
+						if (e === ext) {
+							return l;
+						}
+					}
+				}
+			}
+			return undefined;
+		}
+
 		function createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
 			return new MonacoLanguageClient({
 				name: "Sample Language Client",
 				clientOptions: {
 					// use a language id as a document selector
-					documentSelector: ['userdefinedlanguage'],
+					documentSelector: [language],
 					// disable the default error handler
 					errorHandler: {
 						error: () => ErrorAction.Continue,

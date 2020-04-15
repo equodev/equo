@@ -1,5 +1,6 @@
 const path = require('path');
 const lib = path.resolve(__dirname, "../resources");
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const common = {
     entry: {
@@ -31,7 +32,12 @@ const common = {
             'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
         },
         extensions: ['.js', '.ttf']
-    }
+    },
+    plugins: [
+        new MonacoWebpackPlugin({
+            languages: ['javascript','typescript','css','html','json']
+          })
+    ]
 };
 
 module.exports = common;

@@ -6,7 +6,6 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,21 +188,4 @@ public class EquoMonacoEditor {
 			});
 		}
 	}
-	
-	/**
-	 * Add a lsp server to be used for the editors on the files with the given
-	 * extensions
-	 * 
-	 * @param fullServerPath The full path to the lsp server. Example:
-	 *                       ws://127.0.0.1:3000/lspServer
-	 * @param extensions     A collection of extensions for what the editor will use
-	 *                       the given lsp server. The extensions must not have the
-	 *                       initial dot. Example: ["php", "php4"]
-	 */
-	public static void addLspServer(String fullServerPath, Collection<String> extensions) {
-		for (String extension: extensions) {
-			lspServers.put(extension, fullServerPath);
-		}
-	}
-
 }
