@@ -11,11 +11,19 @@ public class EmptyClient extends WebSocketClient {
 
 	private String message;
 	
+	public static EmptyClient create(URI uri) {
+		return new EmptyClient(uri);
+	}
+	
+	public static EmptyClient create(URI serverUri, Draft draft) {
+		return new EmptyClient(serverUri, draft);
+	}
+	
 	public EmptyClient(URI serverUri, Draft draft) {
 		super(serverUri, draft);
 	}
 
-	public EmptyClient(URI serverURI) {
+	private EmptyClient(URI serverURI) {
 		super(serverURI);
 	}
 	

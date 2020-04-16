@@ -15,6 +15,8 @@ import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 
 public class ModelTestingConfigurator {
 
+	MApplication mainApplication;
+	
 	private MApplication getModelApplication() {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		ApplicationPackageImpl.init();
@@ -30,14 +32,16 @@ public class ModelTestingConfigurator {
 	}
 
 	public void configure(EquoApplicationBuilder equoApplicationBuilder, IEquoApplication equoApp) {
-		MApplication mainApplication = getModelApplication();
+		mainApplication = getModelApplication();
 		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
 		equoApplicationModel.setMainApplication(mainApplication);
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
 				equoApplicationModel, equoApplicationBuilder, equoApp);
 		equoApplicationBuilderConfigurator.configure();
 	}
-	
-	
 
+	public MApplication getMainApplication() {
+		return mainApplication;
+	}
+	
 }

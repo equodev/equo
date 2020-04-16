@@ -25,21 +25,8 @@ public class TestApp implements IEquoApplication {
 						.onPreferences(() -> System.out.println("ON_PREFERENCES"))
 						.onBeforeExit(() -> System.out.println("Bye Bye Equo"))
 					.withMainMenu("Dialog Test")
-						.addMenuItem("Message Dialog").onClick(() -> {
-								try {
-									MessageDialog.openInformation(null, "info dialog", "info msg");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							})
-						.addMenuItem("Message Dialog with Toggle").onClick(() -> {
-								try {
-									MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
-											"soy el toggle del mensaje", true, null, "key");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							})
+						.addMenuItem("Message Dialog").onClick(() -> createInfoDialog())
+						.addMenuItem("Message Dialog with Toggle").onClick(() -> createInfoToggleDialog())
 					.withToolbar()
 						.addToolItem("chat", "Chat").onClick(() -> System.out.println("click en ToolItem"))
 					.start();
@@ -52,6 +39,23 @@ public class TestApp implements IEquoApplication {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private void createInfoToggleDialog() {
+		try {
+			MessageDialogWithToggle.openYesNoQuestion(null, "mensaje en dialogo", "soy el mensaje",
+					"soy el toggle del mensaje", true, null, "key");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createInfoDialog() {
+		try {
+			MessageDialog.openInformation(null, "info dialog", "info msg");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

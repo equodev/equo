@@ -14,8 +14,7 @@
 	org.eclipse.emf.ecore.xmi,\
 	org.java-websocket.Java-WebSocket,\
 	org.mockito.mockito-all,\
-	org.easygson:easygson,\
-	com.google.gson
+	org.awaitility,\
 	
 -privatepackage: \
 	com.make.equo.builders.mocks,\
@@ -45,5 +44,6 @@
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     org.mockito.mockito-all;version='[1.10.19,1.10.20)',\
     org.eclipse.swt.gtk.linux.x86_64,\
-    org.easygson:easygson
+    org.awaitility,\
+    org.hamcrest,\
 	
