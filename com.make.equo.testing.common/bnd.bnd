@@ -12,4 +12,5 @@ Export-Package: com.make.equo.testing.common.util
     org.eclipse.e4.core.commands,\
     org.eclipse.core.commands,\
     org.mockito.mockito-all,\
+    org.eclipse.e4.ui.workbench.renderers.swt
     
