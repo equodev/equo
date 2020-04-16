@@ -22,6 +22,8 @@ build:
   script:
     - gradle check
   artifacts:
+    reports:
+      junit: "*/generated/test-reports/test/*.xml"
     paths:
       - cnf/equoapp.bnd
       - cnf/equobuild.bnd
@@ -31,17 +33,13 @@ build:
     - master
 
 release:
-  stage: build
+  extends: build
   script:
     - gradle jar
     - gradle release
     - gradle publish
-  artifacts:
-    paths:
-      - cnf/equoapp.bnd
-      - cnf/equobuild.bnd
-      - cnf/release
-    expire_in: 12w
+  except:
+    - branches
   only:
     - master
 
