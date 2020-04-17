@@ -1,6 +1,6 @@
 package com.make.equo.application.model;
 
-import com.make.equo.application.EquoApplicationModel;
+
 import com.make.equo.application.api.IEquoApplication;
 
 public class EquoApplicationBuilderConfigurator {
