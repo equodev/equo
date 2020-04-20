@@ -2,6 +2,7 @@ Bundle-Version: ${version}.${tstamp}
 Export-Package: \
     com.make.equo.monaco
 Private-Package: \
+    com.make.equo.monaco.lsp,\
     com.make.equo.monaco.util
 -includeresource: \
     resources/,\

@@ -15,10 +15,12 @@ import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.gson.JsonObject;
+import com.make.equo.monaco.lsp.LspProxy;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
+	private static LspProxy lspProxy = new LspProxy();
 
 	private volatile boolean loaded;
 
@@ -54,6 +56,7 @@ public class EquoMonacoEditor {
 	}
 
 	private void handleCreateEditor(String contents, String fileName) {
+		new Thread(() -> lspProxy.startServer()).start();
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
 		editorData.put("name", fileName);
@@ -188,4 +191,32 @@ public class EquoMonacoEditor {
 			});
 		}
 	}
+	
+	/**
+	 * Add a lsp server to be used for the editors on the files with the given
+	 * extensions
+	 * 
+	 * @param fullServerPath The full path to the lsp server. Example:
+	 *                       ws://127.0.0.1:3000/lspServer
+	 * @param extensions     A collection of extensions for what the editor will use
+	 *                       the given lsp server. The extensions must not have the
+	 *                       initial dot. Example: ["php", "php4"]
+	 */
+	public static void addLspWsServer(String fullServerPath, Collection<String> extensions) {
+		for (String extension: extensions) {
+			lspServers.put(extension, fullServerPath);
+		}
+	}
+
+	public static void addLspServer(Collection<String> excecutionParameters, Collection<String> extensions) {
+		lspProxy.addServer("testeomio", excecutionParameters);
+		for (String extension : extensions) {
+			lspServers.put(extension, "ws://127.0.0.1:3000/testeomio");
+		}
+	}
+	
+	public void dispose() {
+		lspProxy.stopServer();
+	}
+
 }

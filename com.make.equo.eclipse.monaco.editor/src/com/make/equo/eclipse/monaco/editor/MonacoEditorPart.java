@@ -234,4 +234,10 @@ public class MonacoEditorPart extends EditorPart {
 		activateActions();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		editor.dispose();
+	}
+
 }
