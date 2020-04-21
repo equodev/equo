@@ -12,6 +12,8 @@ Private-Package: \
     com.make.equo.server.api;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.google.gson,\
+    org.eclipse.equinox.common,\
+    org.eclipse.osgi,\
     org.eclipse.swt,\
     org.eclipse.swt.cocoa.macosx.x86_64,\
     org.eclipse.swt.cocoa.macosx.x86_64.source,\
