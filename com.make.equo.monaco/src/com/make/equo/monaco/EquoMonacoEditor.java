@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -193,7 +194,7 @@ public class EquoMonacoEditor {
 	}
 	
 	/**
-	 * Add a lsp server to be used for the editors on the files with the given
+	 * Add a lsp websocket server to be used for the editors on the files with the given
 	 * extensions
 	 * 
 	 * @param fullServerPath The full path to the lsp server. Example:
@@ -208,10 +209,23 @@ public class EquoMonacoEditor {
 		}
 	}
 
+	/**
+	 * Add a lsp server to be used for the editors on the files with the given
+	 * extensions
+	 * 
+	 * @param excecutionParameters The parameters needed to start the lsp server
+	 *                             through stdio. Example: ["html-languageserver",
+	 *                             "--stdio"]
+	 * @param extensions           A collection of extensions for what the editor
+	 *                             will use the given lsp server. The extensions
+	 *                             must not have the initial dot. Example: ["php",
+	 *                             "php4"]
+	 */
 	public static void addLspServer(Collection<String> excecutionParameters, Collection<String> extensions) {
-		lspProxy.addServer("testeomio", excecutionParameters);
+		String nameForServer = extensions.stream().map(s -> s.replace(" ",  "")).collect(Collectors.joining());
+		lspProxy.addServer(nameForServer, excecutionParameters);
 		for (String extension : extensions) {
-			lspServers.put(extension, "ws://127.0.0.1:3000/testeomio");
+			lspServers.put(extension, "ws://127.0.0.1:" + lspProxy.getPort() + "/" + nameForServer);
 		}
 	}
 	

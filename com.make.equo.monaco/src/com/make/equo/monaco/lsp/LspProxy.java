@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -24,6 +25,8 @@ import org.eclipse.core.runtime.FileLocator;
 import org.osgi.framework.FrameworkUtil;
 
 public class LspProxy {
+	private int proxyPort;
+	private ServerSocket socketPortReserve;
 	private String serversFile = null;
 	private String proxyFile = null;
 	private boolean serverOn = false;
@@ -36,12 +39,17 @@ public class LspProxy {
 		try {
 			bundle = FileLocator.getBundleFile(FrameworkUtil.getBundle(this.getClass()));
 			proxyFile = extractServerFile(bundle.toString());
+			proxyPort = reservePortForProxy(0);
 			File fileForServer = File.createTempFile("serversLsp", ".yml");
 			fileForServer.deleteOnExit();
 			serversFile = fileForServer.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public int getPort() {
+		return proxyPort;
 	}
 
 	private String formatServerName(String name) {
@@ -85,12 +93,24 @@ public class LspProxy {
 		return new File(tempDir.toString(), "server.js").toString();
 	}
 
+	private int reservePortForProxy(int port) {
+		try {
+			socketPortReserve = new ServerSocket(port);
+			socketPortReserve.setReuseAddress(true);
+			return socketPortReserve.getLocalPort();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return (int) (Math.random() * 10000 + 40000);
+	}
+
 	public synchronized void startServer() {
 		saveServersInFile();
 		if (!serverOn) {
 			try {
-				ProcessBuilder processBuilder = new ProcessBuilder("node", proxyFile, "--port", "3000",
-						"--languageServers", serversFile);
+				socketPortReserve.close();
+				ProcessBuilder processBuilder = new ProcessBuilder("node", proxyFile, "--port",
+						new Integer(getPort()).toString(), "--languageServers", serversFile);
 				process = processBuilder.start();
 			} catch (IOException e) {
 				process = null;
@@ -139,8 +159,14 @@ public class LspProxy {
 		if (serverOn && --instancesUsingServer == 0) {
 			if (process != null) {
 				process.destroy();
+				try {
+					process.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				process = null;
 			}
+			reservePortForProxy(getPort());
 			serverOn = false;
 		}
 	}

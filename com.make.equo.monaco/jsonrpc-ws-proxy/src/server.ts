@@ -20,7 +20,7 @@ function checkFileExistence(){
   if (!fs.existsSync(argv.languageServers)) {
       process.exit(1);
   }
-  setInterval(function(){checkFileExistence();}, 5000);
+  setInterval(function(){checkFileExistence();}, 20000);
 }
 checkFileExistence();
 
