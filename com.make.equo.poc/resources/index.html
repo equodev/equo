@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app">
+     <v-app>
+    <v-app-bar app color="primary">
+      <v-tooltip v-for="item in toolitems"  :key="item.tooltip"   bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn text dark v-on="on">
+                   <i :class="item.icon"></i>
+                  </v-btn>
+                </template>
+                <span>{{item.tooltip}}</span>
+      </v-tooltip>
+      <v-spacer></v-spacer>
+        <v-img src="https://www.equoplatform.com/assets/img/white_logo_navbar.png"  aspect-ratio=15 contain> </v-img>
+      <v-btn dark text>
+       <i class="fas fa-times"></i>
+    </v-btn>
+    </v-app-bar>
+
+  </v-app>
+      
+    </div>
+    <!-- built files will be auto injected -->
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://kit.fontawesome.com/366ea275f3.js" crossorigin="anonymous"></script>
+    <!--script type="module" src="app/src/main.js"></script-->
+    <script type="module">
+    
+      new Vue({
+            el: "#app",
+            vuetify: new Vuetify(),
+            data: {
+              title: "Equo plain App",
+              toolitems: [
+              { icon: 'fas fa-search fa-2x', tooltip: 'Search' },
+              { icon: 'fas fa-copy fa-2x', tooltip: 'Copy' },
+              { icon: 'fas fa-save fa-2x', tooltip: 'Save' },
+              { icon: 'fas fa-play fa-2x', tooltip: 'Run' },
+              { icon: 'fas fa-bug fa-2x', tooltip: 'Debug' }
+              ]
+            }
+        })
+    </script>
+  </body>
+</html>
