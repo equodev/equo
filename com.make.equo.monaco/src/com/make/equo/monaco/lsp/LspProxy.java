@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.osgi.framework.FrameworkUtil;
 
 public class LspProxy {
+	private static final String SERVER_FILE = "server.js";
 	private int proxyPort;
 	private ServerSocket socketPortReserve;
 	private String serversFile = null;
@@ -38,7 +39,10 @@ public class LspProxy {
 		File bundle;
 		try {
 			bundle = FileLocator.getBundleFile(FrameworkUtil.getBundle(this.getClass()));
-			proxyFile = extractServerFile(bundle.toString());
+			if (bundle.isDirectory())
+				proxyFile = new File(bundle, SERVER_FILE).toString();
+			else
+				proxyFile = extractServerFile(bundle.toString());
 			proxyPort = reservePortForProxy(0);
 			File fileForServer = File.createTempFile("serversLsp", ".yml");
 			fileForServer.deleteOnExit();
@@ -67,14 +71,18 @@ public class LspProxy {
 		Enumeration<JarEntry> enumEntries = jar.entries();
 		while (enumEntries.hasMoreElements()) {
 			JarEntry file = (JarEntry) enumEntries.nextElement();
-			File f = new java.io.File(tempDir + java.io.File.separator + file.getName());
-			if (file.isDirectory()) { // if its a directory, create it
+			String name = file.getName();
+			if (!name.contains("node_modules") && !name.equals(SERVER_FILE)) // Only unpack the needed files
+				continue;
+			File f = new java.io.File(tempDir + java.io.File.separator + name);
+			if (file.isDirectory()) { // if it's a directory, create it
 				f.mkdir();
 				continue;
 			}
 			f.getParentFile().mkdirs();
 			f.createNewFile();
 			InputStream in = new BufferedInputStream(jar.getInputStream(file));
+			@SuppressWarnings("resource")
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(f));
 			byte[] buffer = new byte[2048];
 			for (;;) {
@@ -90,7 +98,7 @@ public class LspProxy {
 		}
 		jar.close();
 		markForDelete(tempDir.toFile());
-		return new File(tempDir.toString(), "server.js").toString();
+		return new File(tempDir.toString(), SERVER_FILE).toString();
 	}
 
 	private int reservePortForProxy(int port) {
