@@ -65,6 +65,14 @@ public class LspProxy {
 		return this;
 	}
 
+	/**
+	 * Extracts the ws proxy file along with the node modules from the jar into a
+	 * temp directory
+	 * 
+	 * @param jarFile The jar file from which extract the ws proxy
+	 * 
+	 * @return the String for the path of the ws proxy file
+	 */
 	public static String extractServerFile(String jarFile) throws IOException {
 		Path tempDir = Files.createTempDirectory("lspserver");
 		JarFile jar = new JarFile(jarFile);
@@ -101,6 +109,14 @@ public class LspProxy {
 		return new File(tempDir.toString(), SERVER_FILE).toString();
 	}
 
+	/**
+	 * Reserves a port to be used later by the ws proxy. It mantains a socket listen
+	 * on that port until the proxy it's started
+	 * 
+	 * @param port The port to be reserved. Use 0 to reserve a random port
+	 * 
+	 * @return the port reserved
+	 */
 	private int reservePortForProxy(int port) {
 		try {
 			socketPortReserve = new ServerSocket(port);

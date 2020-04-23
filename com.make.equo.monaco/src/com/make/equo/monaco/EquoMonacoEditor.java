@@ -192,10 +192,10 @@ public class EquoMonacoEditor {
 			});
 		}
 	}
-	
+
 	/**
-	 * Add a lsp websocket server to be used for the editors on the files with the given
-	 * extensions
+	 * Add a lsp websocket server to be used for the editors on the files with the
+	 * given extensions
 	 * 
 	 * @param fullServerPath The full path to the lsp server. Example:
 	 *                       ws://127.0.0.1:3000/lspServer
@@ -204,7 +204,7 @@ public class EquoMonacoEditor {
 	 *                       initial dot. Example: ["php", "php4"]
 	 */
 	public static void addLspWsServer(String fullServerPath, Collection<String> extensions) {
-		for (String extension: extensions) {
+		for (String extension : extensions) {
 			lspServers.put(extension, fullServerPath);
 		}
 	}
@@ -222,13 +222,11 @@ public class EquoMonacoEditor {
 	 *                             "php4"]
 	 */
 	public static void addLspServer(Collection<String> excecutionParameters, Collection<String> extensions) {
-		String nameForServer = extensions.stream().map(s -> s.replace(" ",  "")).collect(Collectors.joining());
+		String nameForServer = extensions.stream().map(s -> s.replace(" ", "")).collect(Collectors.joining());
 		lspProxy.addServer(nameForServer, excecutionParameters);
-		for (String extension : extensions) {
-			lspServers.put(extension, "ws://127.0.0.1:" + lspProxy.getPort() + "/" + nameForServer);
-		}
+		addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + nameForServer, extensions);
 	}
-	
+
 	public void dispose() {
 		lspProxy.stopServer();
 	}
