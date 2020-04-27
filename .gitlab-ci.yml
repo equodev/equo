@@ -38,8 +38,5 @@ release:
     - gradle jar
     - gradle release
     - gradle publish
-  except:
-    - branches
   only:
     - master
-
