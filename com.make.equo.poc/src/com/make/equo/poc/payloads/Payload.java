@@ -1,15 +1,15 @@
 package com.make.equo.poc.payloads;
 
-public class SearchPayload {
+public class Payload {
 	
-	String search;
+	String payload;
 
 	public String getSearch() {
-		return search;
+		return payload;
 	}
 
 	public void setSearch(String search) {
-		this.search = search;
+		this.payload = search;
 	}
 	
 	
