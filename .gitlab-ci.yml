@@ -17,10 +17,7 @@ cache:
 before_script:
   - export HOME=$CI_PROJECT_DIR
 
-build:
-  stage: build
-  script:
-    - gradle check
+.all:
   artifacts:
     reports:
       junit: "*/generated/test-reports/test/*.xml"
@@ -29,11 +26,18 @@ build:
       - cnf/equobuild.bnd
       - cnf/release
     expire_in: 12w
+
+build:
+  extends: .all
+  stage: build
+  script:
+    - gradle check
   except:
     - master
 
 release:
-  extends: build
+  extends: .all
+  stage: build
   script:
     - gradle jar
     - gradle release
