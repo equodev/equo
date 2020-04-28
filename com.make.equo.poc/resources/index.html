@@ -18,18 +18,17 @@
     </noscript>
     <div id="app">
 	    <v-app>
-			    <v-app-bar app color="primary">
-			      <v-tooltip v-for="item in toolitems"  :key="item.tooltip"   bottom>
+			    <v-app-bar height="35" app color="primary">
+			      <v-tooltip  v-for="item in toolitems"  :key="item.tooltip"   bottom>
 			                <template v-slot:activator="{ on }">
-			                  <v-btn v-on:click="clickEvent(item.eventHandler)" text dark v-on="on">
+			                  <v-btn v-on:click="clickEvent(item.eventHandler)" icon text dark v-on="on">
 			                   <i :class="item.icon"></i>
 			                  </v-btn>
 			                </template>
 			                <span>{{item.tooltip}}</span>
 			      </v-tooltip>
 			      <v-spacer></v-spacer>
-			        <v-img src="https://www.equoplatform.com/assets/img/white_logo_navbar.png"  height=60 contain> </v-img>
-			      <v-btn dark text>
+			      <v-btn icon dark text>
 			       <i class="fas fa-times"></i>
 			    </v-btn>
 			    </v-app-bar>
