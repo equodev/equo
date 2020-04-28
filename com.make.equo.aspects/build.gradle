@@ -22,7 +22,7 @@ task compileAspects() {
     }
 
     ant.taskdef(
-      resource:"org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+      resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
       classpath: configurations.ajcTask.asPath
     )
 
