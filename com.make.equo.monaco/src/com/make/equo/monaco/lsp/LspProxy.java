@@ -39,10 +39,11 @@ public class LspProxy {
 		File bundle;
 		try {
 			bundle = FileLocator.getBundleFile(FrameworkUtil.getBundle(this.getClass()));
-			if (bundle.isDirectory())
+			if (bundle.isDirectory()) {
 				proxyFile = new File(bundle, SERVER_FILE).toString();
-			else
+			} else {
 				proxyFile = extractServerFile(bundle.toString());
+			}
 			proxyPort = reservePortForProxy(0);
 			File fileForServer = File.createTempFile("serversLsp", ".yml");
 			fileForServer.deleteOnExit();
@@ -69,7 +70,7 @@ public class LspProxy {
 	 * Extracts the ws proxy file along with the node modules from the jar into a
 	 * temp directory
 	 * 
-	 * @param jarFile The jar file from which extract the ws proxy
+	 * @param jarFile The jar file from which to extract the ws proxy
 	 * 
 	 * @return the String for the path of the ws proxy file
 	 */
@@ -80,8 +81,9 @@ public class LspProxy {
 		while (enumEntries.hasMoreElements()) {
 			JarEntry file = (JarEntry) enumEntries.nextElement();
 			String name = file.getName();
-			if (!name.contains("node_modules") && !name.equals(SERVER_FILE)) // Only unpack the needed files
+			if (!name.contains("node_modules") && !name.equals(SERVER_FILE)) { // Only unpack the needed files
 				continue;
+			}
 			File f = new java.io.File(tempDir + java.io.File.separator + name);
 			if (file.isDirectory()) { // if it's a directory, create it
 				f.mkdir();
@@ -111,7 +113,7 @@ public class LspProxy {
 
 	/**
 	 * Reserves a port to be used later by the ws proxy. It mantains a socket listen
-	 * on that port until the proxy it's started
+	 * on that port until the proxy is started
 	 * 
 	 * @param port The port to be reserved. Use 0 to reserve a random port
 	 * 
@@ -134,7 +136,7 @@ public class LspProxy {
 			try {
 				socketPortReserve.close();
 				ProcessBuilder processBuilder = new ProcessBuilder("node", proxyFile, "--port",
-						new Integer(getPort()).toString(), "--languageServers", serversFile);
+						Integer.valueOf(getPort()).toString(), "--languageServers", serversFile);
 				process = processBuilder.start();
 			} catch (IOException e) {
 				process = null;

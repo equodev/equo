@@ -13,11 +13,6 @@ public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
-		// EquoMonacoEditor.addLspWsServer("ws://127.0.0.1:3000/sampleServer",
-		// Collections.singleton("json"));
-		EquoMonacoEditor.addLspServer(Arrays.asList("node",
-				"'/home/leandro/Descargas/jsonrpc-ws-proxy/yaml-language-server/out/server/src/server.js'", "--stdio"),
-				Collections.singleton("json"));
 		return null;
 	}
 

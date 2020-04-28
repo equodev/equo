@@ -194,7 +194,7 @@ public class EquoMonacoEditor {
 	}
 
 	/**
-	 * Add a lsp websocket server to be used for the editors on the files with the
+	 * Add a lsp websocket server to be used by the editors on the files with the
 	 * given extensions
 	 * 
 	 * @param fullServerPath The full path to the lsp server. Example:
@@ -210,7 +210,7 @@ public class EquoMonacoEditor {
 	}
 
 	/**
-	 * Add a lsp server to be used for the editors on the files with the given
+	 * Add a lsp server to be used by the editors on the files with the given
 	 * extensions
 	 * 
 	 * @param excecutionParameters The parameters needed to start the lsp server
