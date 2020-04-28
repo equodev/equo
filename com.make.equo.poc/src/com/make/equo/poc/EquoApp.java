@@ -13,7 +13,7 @@ public class EquoApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.plainApp("index.html")
+			return appBuilder.plainApp("dist/index.html")
 					.start();
 
 		} catch (URISyntaxException e) {
