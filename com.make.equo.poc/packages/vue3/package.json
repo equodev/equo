@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prepare": "yarn run clean && yarn run build && yarn run copy",
     "clean": "rimraf ../../resources",
     "copy":  "cp -avr dist ../../resources",
 

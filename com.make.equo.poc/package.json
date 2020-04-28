@@ -1,13 +1,15 @@
 {
   "private": true,
   "workspaces": [
-    "packages/vue3"
+    "packages/*"
   ],
   "dependencies": {
     "lerna": "^3.20.2"
   },
   "scripts": {
-    "prepare": "lerna run prepare"
+    "prepare": "yarn run clean && lerna run build && yarn run copy",
+    "clean": "rimraf resources",
+    "copy":  "cp -avr packages/*/dist resources"
   },
   "name": "com.make.equo.poc"
 }
