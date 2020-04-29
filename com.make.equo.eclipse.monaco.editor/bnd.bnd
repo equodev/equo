@@ -42,6 +42,3 @@ Private-Package: com.make.equo.eclipse.monaco.editor
 	org.eclipse.text,\
 	osgi.cmpn
 -includeresource: resources/
-	
-    
-    
