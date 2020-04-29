@@ -1,7 +1,7 @@
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import {
-    MonacoLanguageClient, CloseAction, ErrorAction,
-    MonacoServices, createConnection
+	MonacoLanguageClient, CloseAction, ErrorAction,
+	MonacoServices, createConnection
 } from 'monaco-languageclient';
 import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
@@ -12,11 +12,10 @@ let editor: monaco.editor.IStandaloneCodeEditor;
 let model: monaco.editor.ITextModel;
 let namespace: string;
 let wasCreated: boolean = false;
-let equo : any;
+let equo: any;
 
-
-equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null}) => {
-	if (!wasCreated){
+equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
+	if (!wasCreated) {
 		namespace = values.namespace;
 
 		let l = getLanguageOfFile(values.name);
@@ -31,21 +30,21 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 			});
 		}
 		model = monaco.editor.createModel(
-		    values.text,
-		    language,
-		    monaco.Uri.file(values.name) // uri
+			values.text,
+			language,
+			monaco.Uri.file(values.name) // uri
 		);
 
 		editor = monaco.editor.create(document.getElementById('container')!, {
-		    model: model,
-		    lightbulb: {
-		        enabled: true
-		    }
+			model: model,
+			lightbulb: {
+				enabled: true
+			}
 		});
 
 		lastSavedVersionId = model.getAlternativeVersionId();
 
-		if (values.lspPath != null){
+		if (values.lspPath != null) {
 			MonacoServices.install(editor);
 
 			// create the web socket
@@ -112,71 +111,66 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 		}
 
 		editor.onDidChangeCursorSelection((e: any) => {
-		    
-		    equo.send(namespace + "_selection", e.selection);
+			equo.send(namespace + "_selection", e.selection);
 		});
-		
-		
+
+
 		equo.on(namespace + "_doFind", () => {
 			editor.getAction("actions.find").run();
 		});
-		
-		
+
+
 		equo.on(namespace + "_getContents", () => {
-			
 			equo.send(namespace + "_doGetContents", { contents: editor.getValue() });
 		});
 
 		function notifyChanges() {
-			
 			equo.send(namespace + "_changesNotification",
-			 { isDirty: lastSavedVersionId !== model.getAlternativeVersionId(), canRedo: (model as any).canRedo(), canUndo: (model as any).canUndo() });
+				{ isDirty: lastSavedVersionId !== model.getAlternativeVersionId(), canRedo: (model as any).canRedo(), canUndo: (model as any).canUndo() });
 		}
 
-		
+
 		equo.on(namespace + "_undo", () => {
 			(model as any).undo();
 		});
 
-		
+
 		equo.on(namespace + "_redo", () => {
 			(model as any).redo();
 		});
 
-		
+
 		equo.on(namespace + "_didSave", () => {
 			lastSavedVersionId = model.getAlternativeVersionId();
 			notifyChanges();
 		});
 
-		
+
 		equo.on(namespace + "_subscribeModelChanges", () => {
 			editor.onDidChangeModelContent(() => {
 				notifyChanges();
 			});
 		});
 
-		
+
 		equo.on(namespace + "_doCopy", () => {
 			editor.getAction("editor.action.clipboardCopyAction").run();
 		});
 
-		
+
 		equo.on(namespace + "_doCut", () => {
 			editor.getAction("editor.action.clipboardCutAction").run();
 		});
 
-		
+
 		equo.on(namespace + "_doPaste", () => {
 			editor.focus();
-			
 			equo.send(namespace + "_canPaste");
 		});
 
-		
+
 		equo.on(namespace + "_doSelectAll", () => {
 			editor.focus();
-			
 			equo.send(namespace + "_canSelectAll");
 		});
 
