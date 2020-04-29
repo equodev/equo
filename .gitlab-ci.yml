@@ -20,7 +20,9 @@ before_script:
 .all:
   artifacts:
     reports:
-      junit: "*/generated/test-reports/test/*.xml"
+       junit: 
+          - "*/generated/test-reports/test/TEST-*.xml"
+          - "*/generated/test-reports/testOSGi/TEST-*.xml"
     paths:
       - cnf/equoapp.bnd
       - cnf/equobuild.bnd
@@ -31,6 +33,7 @@ build:
   extends: .all
   stage: build
   script:
+    - gradle jar
     - gradle check
   except:
     - master
