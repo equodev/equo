@@ -3,7 +3,7 @@
 Export-Package: com.make.equo.testing.common.util
 
 -buildpath: \
-    com.make.equo.renderers,\
+    com.make.equo.renderers;version=latest,\
     org.eclipse.e4.ui.workbench,\
     org.eclipse.e4.ui.workbench.swt,\
     org.eclipse.e4.ui.model.workbench,\
