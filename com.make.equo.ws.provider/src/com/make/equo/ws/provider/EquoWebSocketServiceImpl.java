@@ -66,9 +66,14 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 		return equoWebSocketServer.getPort();
 	}
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public void setActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
 		this.actionHandlers.put(actionHandler.getClass().getSimpleName().toLowerCase(), actionHandler);
 	}
+	
+	public void unsetActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
+		this.actionHandlers.clear();
+	}
+	
 
 }

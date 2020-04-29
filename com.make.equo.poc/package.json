@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "project/*"
   ],
   "dependencies": {
     "lerna": "^3.20.2"
@@ -9,7 +9,7 @@
   "scripts": {
     "prepare": "yarn run clean && lerna run build && yarn run copy",
     "clean": "rimraf resources",
-    "copy":  "cp -avr packages/*/dist resources"
+    "copy":  "cp -avr project/*/dist resources"
   },
   "name": "com.make.equo.poc"
 }
