@@ -12,8 +12,9 @@ let editor: monaco.editor.IStandaloneCodeEditor;
 let model: monaco.editor.ITextModel;
 let namespace: string;
 let wasCreated: boolean = false;
+let equo : any;
 
-// @ts-ignore
+
 equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null}) => {
 	if (!wasCreated){
 		namespace = values.namespace;
@@ -111,71 +112,71 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 		}
 
 		editor.onDidChangeCursorSelection((e: any) => {
-		    // @ts-ignore
+		    
 		    equo.send(namespace + "_selection", e.selection);
 		});
 		
-		// @ts-ignore
+		
 		equo.on(namespace + "_doFind", () => {
 			editor.getAction("actions.find").run();
 		});
 		
-		// @ts-ignore
+		
 		equo.on(namespace + "_getContents", () => {
-			// @ts-ignore
+			
 			equo.send(namespace + "_doGetContents", { contents: editor.getValue() });
 		});
 
 		function notifyChanges() {
-			// @ts-ignore
+			
 			equo.send(namespace + "_changesNotification",
 			 { isDirty: lastSavedVersionId !== model.getAlternativeVersionId(), canRedo: (model as any).canRedo(), canUndo: (model as any).canUndo() });
 		}
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_undo", () => {
 			(model as any).undo();
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_redo", () => {
 			(model as any).redo();
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_didSave", () => {
 			lastSavedVersionId = model.getAlternativeVersionId();
 			notifyChanges();
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_subscribeModelChanges", () => {
 			editor.onDidChangeModelContent(() => {
 				notifyChanges();
 			});
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_doCopy", () => {
 			editor.getAction("editor.action.clipboardCopyAction").run();
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_doCut", () => {
 			editor.getAction("editor.action.clipboardCutAction").run();
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_doPaste", () => {
 			editor.focus();
-			// @ts-ignore
+			
 			equo.send(namespace + "_canPaste");
 		});
 
-		// @ts-ignore
+		
 		equo.on(namespace + "_doSelectAll", () => {
 			editor.focus();
-			// @ts-ignore
+			
 			equo.send(namespace + "_canSelectAll");
 		});
 
@@ -183,5 +184,5 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 	}
 });
 
-// @ts-ignore
+
 equo.send("_createEditor");
