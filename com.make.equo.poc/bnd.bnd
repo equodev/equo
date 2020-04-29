@@ -13,7 +13,6 @@ bgColor=#0000FF
 equoUsername='YWRtaW4='
 equoPassword=bHVzaXRhbm8yMDE4
 
-
 -privatepackage: \
 	com.make.equo.poc.eventhandlers,\
 	com.make.equo.poc.payloads
