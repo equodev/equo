@@ -14,7 +14,7 @@ let namespace: string;
 let wasCreated: boolean = false;
 
 // @ts-ignore
-equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string}) => {
+equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null}) => {
 	if (!wasCreated){
 		namespace = values.namespace;
 
@@ -23,6 +23,11 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 		if (l) {
 			monaco.languages.register(l);
 			language = l.id;
+		} else {
+			language = 'userdefinedlanguage'
+			monaco.languages.register({
+				id: language
+			});
 		}
 		model = monaco.editor.createModel(
 		    values.text,
@@ -39,11 +44,11 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 
 		lastSavedVersionId = model.getAlternativeVersionId();
 
-		if (language != null){
+		if (values.lspPath != null){
 			MonacoServices.install(editor);
 
 			// create the web socket
-			const url = createUrl(language)
+			const url = normalizeUrl(values.lspPath)
 			const webSocket = createWebSocket(url);
 			// listen when the web socket is opened
 			listen({
@@ -55,10 +60,6 @@ equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: str
 					connection.onClose(() => disposable.dispose());
 				}
 			});
-		}
-
-		function createUrl(path: string): string {
-			return normalizeUrl(`ws://127.0.0.1:3000/${path}`);
 		}
 
 		function getLanguageOfFile(name: string) {
