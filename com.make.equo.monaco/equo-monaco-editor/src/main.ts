@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 require('monaco-editor');
 import '../node_modules/monaco-editor/min/vs/editor/editor.main.css'
+import { EquoMonaco } from './handler';
 (self as any).MonacoEnvironment = { 
     getWorkerUrl: function (moduleId:string, label:string) {
       if (label === 'json') return './json.worker.js';
@@ -13,4 +14,4 @@ import '../node_modules/monaco-editor/min/vs/editor/editor.main.css'
       return './editor.worker.js';
     }
 };
-require('./handler');
+EquoMonaco.create(document.getElementById('container')!);
