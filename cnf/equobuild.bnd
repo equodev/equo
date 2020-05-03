@@ -3,19 +3,19 @@ javac.target:           1.8
 javac.compliance:       1.8
 javac.debug:            on
 
-#-plugin.1.Equo: \
-#    aQute.bnd.repository.osgi.OSGiRepository; \
-#        name = Equo; \
-#        locations = "https://dl.maketechnology.io/framework/rls/repo/index.xml.gz"; \
-#        poll.time = -1; \
-#        cache = ~/.bnd/cache/equo
-
 -plugin.1.Equo: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = Equo; \
-        locations = "file:///home/make2019/equo-framework-master/ws/git/cnf/release/index.xml.gz"; \
+        locations = "https://dl.maketechnology.io/framework/rls/repo/index.xml.gz"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
+
+#-plugin.1.Equo: \
+#    aQute.bnd.repository.osgi.OSGiRepository; \
+#        name = Equo; \
+#        locations = "file:///home/make2019/equo-framework-master/ws/git/cnf/release/index.xml.gz"; \
+#        poll.time = -1; \
+#        cache = ~/.bnd/cache/equo
 
 
 
