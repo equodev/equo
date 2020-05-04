@@ -23,7 +23,7 @@ public class MenuItemSeparatorBuilder {
 		return new MenuBuilder(this.menuBuilder).addMenu(menuLabel);
 	} 
 	
-	public ItemBuilder addMenuItem(String menuItemLabel) {
+	public MenuItemBuilder addMenuItem(String menuItemLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenuItem(menuItemLabel);
 	}
 
