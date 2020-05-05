@@ -1,6 +1,6 @@
 {
     "name": "@equo/equo-monaco-editor",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Monaco Editor for Eclipse",
     "license": "UNLICENSED",
     "publishConfig": {
@@ -8,9 +8,11 @@
         "registry": "http://localhost:4873"
     },
     "dependencies": {
+        "cpx": "^1.5.0",
         "css-loader": "^3.4.2",
         "file-loader": "^5.0.2",
         "monaco-editor": "^0.20.0",
+        "monaco-editor-webpack-plugin": "^1.9.0",
         "monaco-languageclient": "^0.11.0",
         "normalize-url": "^5.0.0",
         "reconnecting-websocket": "^3.2.2",
@@ -18,15 +20,15 @@
         "typescript": "^3.8.3",
         "vscode-ws-jsonrpc": "^0.1.1",
         "webpack": "^4.42.0",
-        "webpack-cli": "^3.3.11",
-        "monaco-editor-webpack-plugin": "^1.9.0",
-        "cpx": "^1.5.0"
+        "webpack-cli": "^3.3.11"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",
         "clean": "rimraf ../resources",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
-        "copy": "cpx src/index.html ../resources/"
+        "copy": "cpx src/index.html ../resources/",
+        "prepublishOnly": "yarn run dist:amd",
+        "dist:amd": "tsc --outDir dist/amd --module amd"
     }
 }
