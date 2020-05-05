@@ -2,9 +2,15 @@ equo {
     channel = "rls"
 }
 
-task uploadEquoApp(type: com.make.equo.UploadFileTask) {
+task generateEquoAppForUpdate(type: Copy){
+    from 'cnf/equoapp.bnd'
+    into '/tmp/auxequoapp'
+    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/rls/${version}/") }
+}
+
+task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
     key "${equo.channel}/${version}/equoapp.bnd"
-    file file('cnf/equoapp.bnd')
+    file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
 task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
