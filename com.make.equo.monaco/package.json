@@ -8,6 +8,7 @@
     "lerna": "^3.20.2"
   },
   "scripts": {
-    "prepare": "lerna run prepare"
+    "prepare": "lerna run prepare",
+    "publish": "lerna publish"
   }
 }
