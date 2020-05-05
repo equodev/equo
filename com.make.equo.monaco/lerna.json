@@ -3,8 +3,13 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
+    "version": {
+      "gitTagVersion": false,
+      "push": false
+    },
     "publish": {
-      "registry": "http://localhost:4873"
+      "registry": "http://localhost:4873",
+      "gitReset": false
     }
   }
 }
