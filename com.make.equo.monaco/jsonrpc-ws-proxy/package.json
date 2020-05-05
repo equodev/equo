@@ -31,5 +31,6 @@
     "rimraf": "^2.6.3",
     "typescript": "^3.5.1"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "private": true
 }
