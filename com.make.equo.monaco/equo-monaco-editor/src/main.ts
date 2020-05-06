@@ -3,7 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 require('monaco-editor');
-import '../node_modules/monaco-editor/min/vs/editor/editor.main.css'
+import '../../node_modules/monaco-editor/min/vs/editor/editor.main.css'
 import { EquoMonaco } from './handler';
 (self as any).MonacoEnvironment = { 
     getWorkerUrl: function (moduleId:string, label:string) {

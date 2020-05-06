@@ -16,7 +16,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "rootDir": "src",
-    "outDir": "../resources",
+    "outDir": "lib",
     "baseUrl": ".",
     "skipLibCheck": true
   },

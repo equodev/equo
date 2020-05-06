@@ -27,7 +27,7 @@
         "clean": "rimraf ../resources",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
-        "copy": "cpx src/index.html ../resources/",
+        "copy": "cpx src/index.html ../resources/ && cp -avr lib/* ../resources/",
         "prepublishOnly": "yarn run dist:amd",
         "dist:amd": "tsc --outDir dist/amd --module amd"
     }
