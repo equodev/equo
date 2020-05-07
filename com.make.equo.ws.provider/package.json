@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "workspaces": [
+    "equo-websocket"
+  ],
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  },
+  "scripts": {
+    "prepare": "lerna run prepare",
+    "publish": "lerna publish"
+  }
+}

@@ -30,7 +30,7 @@ class EquoWebSocketServer extends WebSocketServer {
 
 	public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers,
 			@SuppressWarnings("rawtypes") Map<String, IActionHandler> actionHandlers) {
-		super(new InetSocketAddress(0));
+		super(new InetSocketAddress(45454));
 		this.actions = actionHandlers;
 		this.eventHandlers = eventHandlers;
 		this.gsonParser = new Gson();
