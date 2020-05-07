@@ -6,6 +6,7 @@ import {
 import normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 import * as monaco from 'monaco-editor';
+import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
 
 export class EquoMonacoEditor {
 
@@ -14,14 +15,15 @@ export class EquoMonacoEditor {
 	private model!: monaco.editor.ITextModel;
 	private namespace: string | undefined;
 	private wasCreated: boolean = false;
-	private equo: any;
+	private webSocket: EquoWebSocket;
 
 	constructor() {
-		this.equo = (window as any).equo;
+		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
+		this.webSocket = equoWebSocketService.service;
 	}
 
 	public create(element: HTMLElement): void {
-		this.equo.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
+		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
 
@@ -111,7 +113,7 @@ export class EquoMonacoEditor {
 			}
 		});
 
-		this.equo.send("_createEditor");
+		this.webSocket.send("_createEditor");
 	}
 
 	private getLanguageOfFile(name: string): monaco.languages.ILanguageExtensionPoint | undefined {
@@ -131,65 +133,64 @@ export class EquoMonacoEditor {
 
 	private bindEquoFunctions(): void {
 		this.editor.onDidChangeCursorSelection((e: any) => {
-			this.equo.send(this.namespace + "_selection", e.selection);
+			this.webSocket.send(this.namespace + "_selection", e.selection);
 		});
 
 
-		this.equo.on(this.namespace + "_doFind", () => {
+		this.webSocket.on(this.namespace + "_doFind", () => {
 			this.editor.getAction("actions.find").run();
 		});
 
 
-		this.equo.on(this.namespace + "_getContents", () => {
-			this.equo.send(this.namespace + "_doGetContents", { contents: this.editor.getValue() });
+		this.webSocket.on(this.namespace + "_getContents", () => {
+			this.webSocket.send(this.namespace + "_doGetContents", { contents: this.editor.getValue() });
 		});
 
-		this.equo.on(this.namespace + "_undo", () => {
+		this.webSocket.on(this.namespace + "_undo", () => {
 			(this.model as any).undo();
 		});
 
-
-		this.equo.on(this.namespace + "_redo", () => {
+		this.webSocket.on(this.namespace + "_redo", () => {
 			(this.model as any).redo();
 		});
 
-		this.equo.on(this.namespace + "_didSave", () => {
+		this.webSocket.on(this.namespace + "_didSave", () => {
 			this.lastSavedVersionId = this.model.getAlternativeVersionId();
 			this.notifyChanges();
 		});
 
 
-		this.equo.on(this.namespace + "_subscribeModelChanges", () => {
+		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
 			this.editor.onDidChangeModelContent(() => {
 				this.notifyChanges();
 			});
 		});
 
 
-		this.equo.on(this.namespace + "_doCopy", () => {
+		this.webSocket.on(this.namespace + "_doCopy", () => {
 			this.editor.getAction("editor.action.clipboardCopyAction").run();
 		});
 
 
-		this.equo.on(this.namespace + "_doCut", () => {
+		this.webSocket.on(this.namespace + "_doCut", () => {
 			this.editor.getAction("editor.action.clipboardCutAction").run();
 		});
 
 
-		this.equo.on(this.namespace + "_doPaste", () => {
+		this.webSocket.on(this.namespace + "_doPaste", () => {
 			this.editor.focus();
-			this.equo.send(this.namespace + "_canPaste");
+			this.webSocket.send(this.namespace + "_canPaste");
 		});
 
 
-		this.equo.on(this.namespace + "_doSelectAll", () => {
+		this.webSocket.on(this.namespace + "_doSelectAll", () => {
 			this.editor.focus();
-			this.equo.send(this.namespace + "_canSelectAll");
+			this.webSocket.send(this.namespace + "_canSelectAll");
 		});
 	}
 
 	private notifyChanges(): void {
-		this.equo.send(this.namespace + "_changesNotification",
+		this.webSocket.send(this.namespace + "_changesNotification",
 			{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
 	}
 }
