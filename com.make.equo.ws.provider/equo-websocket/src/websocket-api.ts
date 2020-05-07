@@ -100,6 +100,6 @@ export namespace EquoWebSocketService {
     };
     export function get(): EquoWebSocketService {
         EquoService.install(EquoWebSocketService);
-        return EquoService.get(EquoWebSocketService.name) as EquoWebSocketService;
+        return EquoService.get(WebsocketServiceName) as EquoWebSocketService;
     }
 }
