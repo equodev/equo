@@ -1,24 +1,21 @@
-export interface EquoService<T> {
-    name: string;
-    service: T;
+export interface EquoService {
+    symbol: symbol;
 }
 
 export namespace EquoService {
     const global = window as any;
-    export type Provider = (name: string) => EquoService<any>;
-    export const get: Provider = (name: string) => {
-        const symbol = Symbol(name);
-        const globalService = global[symbol];
+    export type Provider = (symbol: symbol) => EquoService;
+    export const get: Provider = (symbol: symbol) => {
+        const globalService: EquoService = global[symbol];
         if (!globalService) {
             throw new Error(name + ' has not been installed');
         }
         return globalService;
     }
-    export function install(service: EquoService<any>): void {
-        const symbol = Symbol(service.name);
-        if (global[symbol]) {
+    export function install(service: EquoService): void {
+        if (global[service.symbol]) {
             return;
         }
-        global[symbol] = service;
+        global[service.symbol] = service;
     }
 }
