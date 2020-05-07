@@ -51,18 +51,18 @@ export class EquoWebSocket extends WebSocket {
     // hiding the implementation of the method within the 
     // function() block
 
-    private sendToWebSocketServer(action: any, browserParams?: any): void {
+    private sendToWebSocketServer(actionId: any, browserParams?: any): void {
         // Wait until the state of the socket is not ready and send the message when it is...
         this.waitForSocketConnection(this, () => {
-            this.send(JSON.stringify({
-                action: action,
+            super.send(JSON.stringify({
+                action: actionId,
                 params: browserParams
             }));
         });
     };
 
     // Make the function wait until the connection is made...
-    private waitForSocketConnection(socket: EquoWebSocket, callback: Function) {
+    private waitForSocketConnection(socket: EquoWebSocket, callback: Function): void {
         setTimeout(
             () => {
                 if (socket.readyState === socket.OPEN) {
@@ -72,7 +72,7 @@ export class EquoWebSocket extends WebSocket {
                     }
                     return;
                 } else {
-                    this.waitForSocketConnection(socket, callback);
+                    socket.waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
     };
@@ -87,19 +87,30 @@ export class EquoWebSocket extends WebSocket {
 
 }
 
-export interface EquoWebSocketService extends EquoService<EquoWebSocket> {
-    name: string,
+export interface EquoWebSocketService extends EquoService {
+    symbol: symbol,
     service: EquoWebSocket
 }
 
 export namespace EquoWebSocketService {
-    const WebsocketServiceName: string = 'equo-websocket';
-    const EquoWebSocketService: EquoWebSocketService = {
-        name: WebsocketServiceName,
-        service: new EquoWebSocket()
-    };
+    const WebsocketServiceSymbol: symbol = Symbol('equo-websocket');
+    export function create() {
+        return {
+            symbol: WebsocketServiceSymbol,
+            service: new EquoWebSocket()
+        };
+    }
     export function get(): EquoWebSocketService {
-        EquoService.install(EquoWebSocketService);
-        return EquoService.get(WebsocketServiceName) as EquoWebSocketService;
+        var webSocketService!: EquoWebSocketService;
+        try {
+            webSocketService= EquoService.get(WebsocketServiceSymbol) as EquoWebSocketService;
+        }
+        catch (e) {
+            if (!webSocketService) {
+                webSocketService = create();
+                EquoService.install(webSocketService);
+            }
+        }
+        return webSocketService;
     }
 }
