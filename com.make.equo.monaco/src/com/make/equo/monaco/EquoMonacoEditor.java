@@ -22,33 +22,38 @@ import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
+
 	private static LspProxy lspProxy = new LspProxy();
+	private static Map<String, String> lspServers = new HashMap<>();
 
 	private volatile boolean loaded;
 
-	private Browser browser;
-	private IEquoEventHandler equoEventHandler;
 	private final Semaphore lock = new Semaphore(1);
-	private String namespace;
-	private static Map<String, String> lspServers = new HashMap<>();
 
+	private Browser browser;
+	private String namespace;
 	private List<IEquoRunnable<Void>> onLoadListeners;
 
-	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler, String contents, String fileName) {
+	protected IEquoEventHandler equoEventHandler;
+
+	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler) {
+		this();
 		this.equoEventHandler = handler;
-		namespace = "editor" + Double.toHexString(Math.random());
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
-		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
-		loaded = false;
-		createEditor(contents, fileName);
 	}
 
-	private void createEditor(String contents, String fileName) {
+	public EquoMonacoEditor() {
+		namespace = "editor" + Double.toHexString(Math.random());
+		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
+		loaded = false;
+	}
+
+	protected void createEditor(String contents, String fileName) {
 		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, fileName));
 	}
 
-	private String getLspServerForFile(String fileName) {
+	protected String getLspServerForFile(String fileName) {
 		String extension = "";
 		int i = fileName.lastIndexOf('.');
 		if (i > 0) {
@@ -57,7 +62,7 @@ public class EquoMonacoEditor {
 		return lspServers.getOrDefault(extension, null);
 	}
 
-	private void handleCreateEditor(String contents, String fileName) {
+	protected void handleCreateEditor(String contents, String fileName) {
 		new Thread(() -> lspProxy.startServer()).start();
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);
