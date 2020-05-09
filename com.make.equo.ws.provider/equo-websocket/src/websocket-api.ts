@@ -103,9 +103,8 @@ export namespace EquoWebSocketService {
     export function get(): EquoWebSocketService {
         var webSocketService!: EquoWebSocketService;
         try {
-            webSocketService= EquoService.get(WebsocketServiceSymbol) as EquoWebSocketService;
-        }
-        catch (e) {
+            webSocketService = EquoService.get(WebsocketServiceSymbol) as EquoWebSocketService;
+        } catch (e) {
             if (!webSocketService) {
                 webSocketService = create();
                 EquoService.install(webSocketService);
