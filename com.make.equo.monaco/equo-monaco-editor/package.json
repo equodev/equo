@@ -30,7 +30,7 @@
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",
-        "clean": "rimraf ../resources",
+        "clean": "rimraf ../resources && rimraf lib",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
         "copy": "cpx src/index.html ../resources/ && cp -avr lib/* ../resources/",
