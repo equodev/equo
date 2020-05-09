@@ -7,41 +7,39 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.ws.api.IEquoEventHandler;
 
-@Component(service = EquoMonacoEditorBuilder.class, scope = ServiceScope.PROTOTYPE)
-public class EquoMonacoEditorBuilder {
+@Component(service = EquoMonacoEditorWidgetBuilder.class, scope = ServiceScope.PROTOTYPE)
+public class EquoMonacoEditorWidgetBuilder {
 
 	@Reference
 	private IEquoEventHandler equoEventHandler;
 
-//	private int id;
 	private Composite parent;
 	private int style;
 	private String contents;
 	private String fileName;
 
-	public EquoMonacoEditorBuilder() {
-//		this.id = this.hashCode();
+	public EquoMonacoEditorWidgetBuilder() {
 		this.style = -1;
 		this.contents = "";
 		this.fileName = "";
 	}
 
-	public EquoMonacoEditorBuilder withParent(Composite parent) {
+	public EquoMonacoEditorWidgetBuilder withParent(Composite parent) {
 		this.parent = parent;
 		return this;
 	}
 
-	public EquoMonacoEditorBuilder withContents(String contents) {
+	public EquoMonacoEditorWidgetBuilder withContents(String contents) {
 		this.contents = contents;
 		return this;
 	}
 
-	public EquoMonacoEditorBuilder withFileName(String fileName) {
+	public EquoMonacoEditorWidgetBuilder withFileName(String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
 
-	public EquoMonacoEditorBuilder withStyle(int style) {
+	public EquoMonacoEditorWidgetBuilder withStyle(int style) {
 		this.style = style;
 		return this;
 	}
@@ -50,7 +48,9 @@ public class EquoMonacoEditorBuilder {
 		if (style == -1) {
 			style = parent.getStyle();
 		}
-		return new EquoMonacoEditor(parent, style, equoEventHandler, contents, fileName);
+		EquoMonacoEditor editor = new EquoMonacoEditor(parent, style, equoEventHandler);
+		editor.createEditor(contents, fileName);
+		return editor;
 	}
 
 }

@@ -37,7 +37,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import com.make.equo.monaco.EquoMonacoEditor;
-import com.make.equo.monaco.EquoMonacoEditorBuilder;
+import com.make.equo.monaco.EquoMonacoEditorWidgetBuilder;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class MonacoEditorPart extends EditorPart {
@@ -155,11 +155,11 @@ public class MonacoEditorPart extends EditorPart {
 				String textContent = new String(baos.toByteArray());
 
 				try {
-					BundleContext bndContext = FrameworkUtil.getBundle(EquoMonacoEditorBuilder.class)
+					BundleContext bndContext = FrameworkUtil.getBundle(EquoMonacoEditorWidgetBuilder.class)
 							.getBundleContext();
-					ServiceReference<EquoMonacoEditorBuilder> svcReference = bndContext
-							.getServiceReference(EquoMonacoEditorBuilder.class);
-					EquoMonacoEditorBuilder builder = bndContext.getService(svcReference);
+					ServiceReference<EquoMonacoEditorWidgetBuilder> svcReference = bndContext
+							.getServiceReference(EquoMonacoEditorWidgetBuilder.class);
+					EquoMonacoEditorWidgetBuilder builder = bndContext.getService(svcReference);
 					editor = builder.withParent(parent).withStyle(parent.getStyle()).withContents(textContent)
 							.withFileName(fileInput.getURI().toString()).create();
 
