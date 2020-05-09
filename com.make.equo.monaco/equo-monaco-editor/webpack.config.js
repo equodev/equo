@@ -1,15 +1,15 @@
 const path = require('path');
 const lib = path.resolve(__dirname, "lib");
+const resources = path.resolve(__dirname, "../resources/");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const common = {
     entry: {
         "main": path.resolve(lib, "main.js"),
-        "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js'
     },
     output: {
         filename: '[name].bundle.js',
-        path: lib
+        path: resources
     },
     module: {
         rules: [{
@@ -34,9 +34,7 @@ const common = {
         extensions: ['.js', '.ttf']
     },
     plugins: [
-        new MonacoWebpackPlugin({
-            languages: ['javascript','typescript','css','html','json']
-          })
+        new MonacoWebpackPlugin()
     ]
 };
 
