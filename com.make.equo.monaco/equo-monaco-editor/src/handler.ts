@@ -13,7 +13,7 @@ export class EquoMonacoEditor {
 	private lastSavedVersionId!: number;
 	private editor!: monaco.editor.IStandaloneCodeEditor;
 	private model!: monaco.editor.ITextModel;
-	private namespace: string | undefined;
+	private namespace!: string;
 	private wasCreated: boolean = false;
 	private webSocket: EquoWebSocket;
 
@@ -23,7 +23,7 @@ export class EquoMonacoEditor {
 	}
 
 	public create(element: HTMLElement): void {
-		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath: string | null }) => {
+		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
 
@@ -57,7 +57,7 @@ export class EquoMonacoEditor {
 
 				this.bindEquoFunctions();
 
-				if (values.lspPath != null) {
+				if (values.lspPath) {
 					MonacoServices.install(this.editor);
 
 					// create the web socket
