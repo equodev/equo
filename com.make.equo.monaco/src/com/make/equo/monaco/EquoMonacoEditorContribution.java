@@ -15,7 +15,7 @@ public class EquoMonacoEditorContribution {
 
 	@Reference
 	private EquoContributionBuilder builder;
-	
+
 	@Activate
 	protected void activate() {
 		builder //
