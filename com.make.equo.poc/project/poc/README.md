@@ -1,4 +1,4 @@
-# vue3
+# vuetree
 
 ## Project setup
 ```
