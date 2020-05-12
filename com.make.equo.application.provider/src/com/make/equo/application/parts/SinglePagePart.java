@@ -4,13 +4,26 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 
+import com.make.equo.application.handlers.filesystem.*;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.IEquoContributionManager;
+import com.make.equo.contribution.api.handler.ParameterizedHandler;
+
 import org.eclipse.swt.chromium.Browser;
 
 public class SinglePagePart {
@@ -41,6 +54,30 @@ public class SinglePagePart {
 			browser = new Browser(composite, SWT.NONE);
 			browser.setUrl(equoAppUrl);
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+			makeDefaultHandlers();
+		}
+	}
+
+	private void makeDefaultHandlers() {
+		IEclipseContext eclipseContext = thisPart.getContext();
+		ECommandService commandService = eclipseContext.get(ECommandService.class);
+		EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
+
+		ParameterizedHandler[] handlers = { new OpenFileHandler(), new OpenFolderHandler(), new DeleteFileHandler(),
+				new SaveFileHandler(), new FileInfoHandler(), new RenameFileHandler(), new MoveFileHandler() };
+
+		for (ParameterizedHandler handler : handlers) {
+			handler.registerCommand(handlerService, commandService);
+		}
+		
+		BundleContext bndContext = FrameworkUtil.getBundle(IEquoContributionManager.class)
+				.getBundleContext();
+		ServiceReference<IEquoContributionManager> svcReference = bndContext
+				.getServiceReference(IEquoContributionManager.class);
+		IEquoContributionManager manager = bndContext.getService(svcReference);
+
+		for (ParameterizedHandler handler : manager.getparameterizedHandlers()) {
+			handler.registerCommand(handlerService, commandService);
 		}
 	}
 
