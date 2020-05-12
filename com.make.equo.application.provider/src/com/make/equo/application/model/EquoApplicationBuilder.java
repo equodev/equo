@@ -1,8 +1,16 @@
 package com.make.equo.application.model;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
@@ -11,6 +19,7 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -18,6 +27,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
@@ -74,9 +85,54 @@ public class EquoApplicationBuilder{
 
 		if (!isAnEclipseBasedApp()) {
 			configureEquoApp(appId);
+			configApi();
 			return this.viewBuilder.configureViewPart(this, equoApp);
 		}
 		return null;
+	}
+
+	private void configApi() {
+		equoEventHandler.on("_executeEclipseCommand", (JsonObject payload) -> {
+			JsonElement commandAsJson = payload.get("commandId");
+			String commandId = commandAsJson.getAsString();
+
+			IEclipseContext eclipseContext = mApplication.getContext();
+			ECommandService commandService = eclipseContext.get(ECommandService.class);
+			Command command = commandService.getCommand(commandId);
+
+			if (command != null) {
+				Display.getDefault().asyncExec(() -> {
+					Parameterization[] params = null;
+					JsonElement responseId = payload.get(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID);
+					if (responseId != null) {
+						String[] parameters = { IConstants.EQUO_WEBSOCKET_PARAMS_FILE_PATH,
+								IConstants.EQUO_WEBSOCKET_PARAMS_CONTENT };
+						List<Parameterization> listParameters = new ArrayList<>();
+						try {
+							listParameters.add(new Parameterization(
+									command.getParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID),
+									responseId.getAsString()));
+							for (String idParameter : parameters) {
+								JsonElement element = payload.get(idParameter);
+								if (element != null && !element.isJsonNull()) {
+									listParameters.add(new Parameterization(command.getParameter(idParameter),
+											element.getAsString()));
+								}
+							}
+
+							params = new Parameterization[listParameters.size()];
+							listParameters.toArray(params);
+						} catch (NotDefinedException e) {
+							params = null;
+							e.printStackTrace();
+						}
+					}
+					ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, params);
+					EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
+					handlerService.executeHandler(parametrizedCommand);
+				});
+			}
+		});
 	}
 
 	private void configureEquoApp(String appId) {
