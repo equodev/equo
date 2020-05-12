@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.contribution.api.handler.IFiltersAdapterHandler;
+import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.contribution.api.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
@@ -28,6 +29,7 @@ public class EquoContributionBuilder {
 
 	private IEquoContributionUrlResolver urlResolver;
 	private IFiltersAdapterHandler filtersAdapterHandler;
+	private List<ParameterizedHandler> parameterizedHandlers;
 
 	private String contributedHtmlName;
 	private String contributionName;
@@ -47,6 +49,7 @@ public class EquoContributionBuilder {
 		this.contributedScripts = new ArrayList<String>();
 		this.contributedStyles = new ArrayList<String>();
 		this.excludedResources = new ArrayList<String>();
+		this.parameterizedHandlers = new ArrayList<ParameterizedHandler>();
 		this.pathsToScripts = new HashMap<String, String>();
 		this.pathsToStyles = new HashMap<String, String>();
 		this.filter = ((originalRequest) -> {
@@ -218,14 +221,26 @@ public class EquoContributionBuilder {
 	}
 
 	/**
+	 * Adds a handler to the contribution. These handlers are global and can be used
+	 * by other contributions of the framework.
+	 * 
+	 * @param handler
+	 * @return this
+	 */
+	public EquoContributionBuilder withParameterizedHandler(ParameterizedHandler handler) {
+		this.parameterizedHandlers.add(handler);
+		return this;
+	}
+
+	/**
 	 * Builds the contribution defined by this builder.
 	 * 
 	 * @return an EquoContribution instance.
 	 */
 	public EquoContribution build() {
-		return new EquoContribution(manager, urlResolver, filtersAdapterHandler, contributedHtmlName, contributionName,
-				proxiedUris, contributedScripts, contributedStyles, excludedResources, pathsToScripts, pathsToStyles,
-				filter);
+		return new EquoContribution(manager, urlResolver, filtersAdapterHandler, parameterizedHandlers,
+				contributedHtmlName, contributionName, proxiedUris, contributedScripts, contributedStyles,
+				excludedResources, pathsToScripts, pathsToStyles, filter);
 	}
 
 }
