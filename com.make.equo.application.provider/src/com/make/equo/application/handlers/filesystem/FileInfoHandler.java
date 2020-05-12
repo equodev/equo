@@ -33,24 +33,31 @@ public class FileInfoHandler extends ParameterizedHandler {
 		}
 
 		File file = new File(path);
-		response.put("exists", file.exists());
-		response.put("read", file.canRead());
-		response.put("write", file.canWrite());
-		response.put("execute", file.canExecute());
-		response.put("isDirectory", file.isDirectory());
+		if (!file.exists()) {
+			response.put("err", 2);
+			return response;
+		}
+
+		response = getItem(path);
 		if (file.isDirectory()) {
-			Map<String, List<String>> children = new HashMap<>();
-			List<String> files = new ArrayList<>();
-			List<String> directories = new ArrayList<>();
+			List<Object> children = new ArrayList<>();
 			for (File f : file.listFiles()) {
-				if (f.isDirectory())
-					directories.add(f.getName());
-				else
-					files.add(f.getName());
+				children.add(getItem(f.getPath()));
 			}
-			children.put("files", files);
-			children.put("directories", directories);
 			response.put("children", children);
+		}
+		return response;
+	}
+
+	private static Map<String, Object> getItem(String path) {
+		Map<String, Object> response = new HashMap<>();
+		File file = new File(path);
+		response.put("title", file.getName());
+		if (!file.isDirectory()) {
+			response.put("isLeaf", true);
+			Map<String, Object> data = new HashMap<>();
+			data.put("path", path);
+			response.put("data", data);
 		}
 		return response;
 	}
