@@ -10,6 +10,9 @@
 -runproperties: \
     osgi.console=
 
+-javaagent: true
+
+-runvm.coverage: -javaagent:"${repo;org.jacoco:org.jacoco.agent:jar:runtime;0.8.5}=destfile=generated/jacoco/test.exec"
 
 -runblacklist: \
     bnd.identity;id='org.eclipse.rap.fileupload'
