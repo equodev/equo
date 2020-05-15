@@ -91,7 +91,11 @@ window.equo = window.equo || {};
     };
 
     equo.saveFile = function (filePath, content, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.saveAs", filePath, content);
+        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.save", filePath, content);
+    };
+
+    equo.saveFileAs = function (content, callback) {
+        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.saveAs", null, content);
     };
 
     equo.renameFile = function (filePath, newName, callback) {
@@ -102,12 +106,12 @@ window.equo = window.equo || {};
         equo.executeCommandWithCallback(callback, "org.eclipse.ui.edit.move", filePath, directoryDest);
     };
 
-    equo.newFile = function () {
-        equo.sendToWebSocketServer("_executeEclipseCommand", { commandId: "org.eclipse.ui.file.new" });
-    };
-
     equo.openFile = function (callback) {
         equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.open");
+    };
+
+    equo.readFile = function (filePath, callback) {
+        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.read", filePath);
     };
 
     equo.deleteFile = function (filePath, callback) {
@@ -118,7 +122,7 @@ window.equo = window.equo || {};
         equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.properties", filePath);
     };
 
-    equo.openProject = function (callback) {
+    equo.openFolder = function (callback) {
         equo.executeCommandWithCallback(callback, "org.eclipse.ui.project.openProject");
     };
 

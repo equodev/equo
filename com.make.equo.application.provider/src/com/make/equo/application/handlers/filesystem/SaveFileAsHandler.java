@@ -10,18 +10,19 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 
 import com.make.equo.application.handlers.CommandParameter;
 import com.make.equo.application.util.IConstants;
-import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 
-public class OpenFileHandler extends ParameterizedHandler {
+public class SaveFileAsHandler extends SaveFileHandler {
 	@Execute
-	public void execute(@Named(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID) String idResponse, Shell shell,
+	public void execute(@Named(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID) String idResponse,
+			@Named(IConstants.EQUO_WEBSOCKET_PARAMS_CONTENT) String content, Shell shell,
 			IEquoEventHandler eventHandler) {
-		FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-		dialog.setText("Open file");
+		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+		dialog.setText("Save file");
 		String result = dialog.open();
 		if (result == null) {
 			Map<String, Object> response = new HashMap<>();
@@ -29,23 +30,19 @@ public class OpenFileHandler extends ParameterizedHandler {
 			eventHandler.send(idResponse, response);
 			return;
 		}
-		Map<String, Object> response = ReadFileHandler.readFile(result);
+		Map<String, Object> response = writeFile(result, content);
 		eventHandler.send(idResponse, response);
 	}
 
 	@Override
 	protected String getCommandId() {
-		return "org.eclipse.ui.file.open";
-	}
-
-	@Override
-	protected String getCategoryName() {
-		return "someCategory";
+		return IWorkbenchCommandConstants.FILE_SAVE_AS;
 	}
 
 	@Override
 	protected IParameter[] getParameters() {
-		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id") };
+		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id"),
+				new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_CONTENT, "Content") };
 		return parameters;
 	}
 }

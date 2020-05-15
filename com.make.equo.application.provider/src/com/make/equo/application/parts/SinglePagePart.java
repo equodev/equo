@@ -15,9 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.application.handlers.filesystem.*;
 import com.make.equo.application.util.IConstants;
@@ -64,12 +61,13 @@ public class SinglePagePart {
 		EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
 
 		ParameterizedHandler[] handlers = { new OpenFileHandler(), new OpenFolderHandler(), new DeleteFileHandler(),
-				new SaveFileHandler(), new FileInfoHandler(), new RenameFileHandler(), new MoveFileHandler() };
+				new SaveFileHandler(), new SaveFileAsHandler(), new FileInfoHandler(), new RenameFileHandler(),
+				new MoveFileHandler(), new ReadFileHandler() };
 
 		for (ParameterizedHandler handler : handlers) {
 			handler.registerCommand(handlerService, commandService);
 		}
-		
+
 		BundleContext bndContext = FrameworkUtil.getBundle(IEquoContributionManager.class)
 				.getBundleContext();
 		ServiceReference<IEquoContributionManager> svcReference = bndContext
