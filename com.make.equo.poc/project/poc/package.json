@@ -46,6 +46,7 @@
     },
     "rules": {}
   },
+  "eslintIgnore": ["sl-vue-tree.js"],
   "browserslist": [
     "> 1%",
     "last 2 versions",
