@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 
-public class ModelTestingConfigurator {
+public class ModelConfigurator {
 
 	MApplication mainApplication;
 	
