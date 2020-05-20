@@ -55,10 +55,10 @@ public class FileInfoHandler extends ParameterizedHandler {
 		response.put("title", file.getName());
 		if (!file.isDirectory()) {
 			response.put("isLeaf", true);
-			Map<String, Object> data = new HashMap<>();
-			data.put("path", path);
-			response.put("data", data);
 		}
+		Map<String, Object> data = new HashMap<>();
+		data.put("path", path);
+		response.put("data", data);
 		return response;
 	}
 
