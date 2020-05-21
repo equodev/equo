@@ -1,11 +1,18 @@
 package com.make.equo.monaco;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.make.equo.ws.api.IEquoEventHandler;
-import com.make.equo.ws.api.IEquoRunnable;
 
 @Component
 public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
@@ -16,7 +23,20 @@ public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
 
 	@Activate
 	public void activate() {
-		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor("", ""));
+		equoEventHandler.on("_createEditor", (JsonObject payload) -> {
+			JsonElement jsonFilePath = payload.get("filePath");
+			if (jsonFilePath != null) {
+				String file = jsonFilePath.getAsString();
+				Path filePath = FileSystems.getDefault().getPath(file);
+				String content = "";
+				try {
+					content = Files.lines(filePath).collect(Collectors.joining("\n"));
+				} catch (IOException e) {
+				}
+				handleCreateEditor(content, file);
+			}
+			handleCreateEditor("", "");
+		});
 	}
 
 	@Reference

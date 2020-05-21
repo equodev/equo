@@ -22,7 +22,7 @@ export class EquoMonacoEditor {
 		this.webSocket = equoWebSocketService.service;
 	}
 
-	public create(element: HTMLElement): void {
+	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
@@ -113,7 +113,7 @@ export class EquoMonacoEditor {
 			}
 		});
 
-		this.webSocket.send("_createEditor");
+		this.webSocket.send("_createEditor", {filePath: filePath});
 	}
 
 	private getLanguageOfFile(name: string): monaco.languages.ILanguageExtensionPoint | undefined {
@@ -196,7 +196,7 @@ export class EquoMonacoEditor {
 }
 
 export namespace EquoMonaco {
-	export function create(element: HTMLElement): void {
-		return new EquoMonacoEditor().create(element);
+	export function create(element: HTMLElement, filePath?: string): void {
+		return new EquoMonacoEditor().create(element, filePath);
 	}
 }
