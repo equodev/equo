@@ -1,4 +1,4 @@
-package com.make.equo.application.handlers;
+package com.make.equo.contribution.api.handler;
 
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.IParameterValues;

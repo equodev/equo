@@ -11,8 +11,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import com.make.equo.application.handlers.CommandParameter;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.handler.CommandParameter;
 import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 

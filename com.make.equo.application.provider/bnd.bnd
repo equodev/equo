@@ -1,6 +1,7 @@
 Bundle-Version: ${version}.${tstamp}
 Export-Package: \
 	com.make.equo.application.api,\
+    com.make.equo.application.util,\
 	com.make.equo.application.model,\
 	org.osgi.service.component.annotations
 -includeresource: resources/
@@ -68,5 +69,4 @@ Private-Package: \
 	com.make.equo.application.impl,\
 	com.make.equo.application.model,\
 	com.make.equo.application.parts,\
-	com.make.equo.application.util,\
 	com.make.equo.application

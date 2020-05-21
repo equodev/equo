@@ -9,8 +9,8 @@ import javax.inject.Named;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.e4.core.di.annotations.Execute;
 
-import com.make.equo.application.handlers.CommandParameter;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.handler.CommandParameter;
 import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 

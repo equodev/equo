@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 
-import com.make.equo.application.handlers.CommandParameter;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.handler.CommandParameter;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class SaveFileAsHandler extends SaveFileHandler {
