@@ -50,7 +50,7 @@ public class EquoMonacoEditor {
 	}
 
 	protected void createEditor(String contents, String fileName) {
-		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, fileName));
+		equoEventHandler.on("_createEditor", (JsonObject payload) -> handleCreateEditor(contents, fileName));
 	}
 
 	protected String getLspServerForFile(String fileName) {
