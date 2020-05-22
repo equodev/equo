@@ -126,8 +126,8 @@ window.equo = window.equo || {};
         equo.executeCommandWithCallback(callback, "org.eclipse.ui.project.openProject");
     };
 
-    equo.newEditor = function () {
-        equo.sendToWebSocketServer("_executeEclipseCommand", { commandId: "org.eclipse.ui.window.newEditor" });
+    equo.save = function (callback) {
+        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.save");
     };
 
     // Make the function wait until the connection is made...
