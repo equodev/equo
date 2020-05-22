@@ -34,12 +34,12 @@ public class OpenFileHandler extends ParameterizedHandler {
 	}
 
 	@Override
-	protected String getCommandId() {
+	public String getCommandId() {
 		return "org.eclipse.ui.file.open";
 	}
 
 	@Override
-	protected IParameter[] getParameters() {
+	public IParameter[] getParameters() {
 		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id") };
 		return parameters;
 	}

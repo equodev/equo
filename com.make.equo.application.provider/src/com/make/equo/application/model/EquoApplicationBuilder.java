@@ -2,9 +2,11 @@ package com.make.equo.application.model;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
@@ -14,12 +16,16 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -31,16 +37,27 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
+import com.make.equo.application.handlers.filesystem.DeleteFileHandler;
+import com.make.equo.application.handlers.filesystem.FileInfoHandler;
+import com.make.equo.application.handlers.filesystem.MoveFileHandler;
+import com.make.equo.application.handlers.filesystem.OpenFileHandler;
+import com.make.equo.application.handlers.filesystem.OpenFolderHandler;
+import com.make.equo.application.handlers.filesystem.ReadFileHandler;
+import com.make.equo.application.handlers.filesystem.RenameFileHandler;
+import com.make.equo.application.handlers.filesystem.SaveFileAsHandler;
+import com.make.equo.application.handlers.filesystem.SaveFileHandler;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.contribution.api.IEquoContributionManager;
+import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component(service = EquoApplicationBuilder.class)
-public class EquoApplicationBuilder{
+public class EquoApplicationBuilder {
 
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
-	public static MApplication mApplication;
+	private MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private ViewBuilder viewBuilder;
@@ -85,13 +102,12 @@ public class EquoApplicationBuilder{
 
 		if (!isAnEclipseBasedApp()) {
 			configureEquoApp(appId);
-			configApi();
 			return this.viewBuilder.configureViewPart(this, equoApp);
 		}
 		return null;
 	}
 
-	private void configApi() {
+	private void listenForCommands() {
 		equoEventHandler.on("_executeEclipseCommand", (JsonObject payload) -> {
 			JsonElement commandAsJson = payload.get("commandId");
 			String commandId = commandAsJson.getAsString();
@@ -135,6 +151,24 @@ public class EquoApplicationBuilder{
 		});
 	}
 
+	private void registerGenericCommands() {
+		ParameterizedHandler[] defaultHandlers = { new OpenFileHandler(), new OpenFolderHandler(),
+				new DeleteFileHandler(), new SaveFileHandler(), new SaveFileAsHandler(), new FileInfoHandler(),
+				new RenameFileHandler(), new MoveFileHandler(), new ReadFileHandler() };
+
+		BundleContext bndContext = FrameworkUtil.getBundle(IEquoContributionManager.class).getBundleContext();
+		ServiceReference<IEquoContributionManager> svcReference = bndContext
+				.getServiceReference(IEquoContributionManager.class);
+		IEquoContributionManager manager = bndContext.getService(svcReference);
+
+		List<ParameterizedHandler> allHandlers = manager.getparameterizedHandlers();
+		allHandlers.addAll(Arrays.asList(defaultHandlers));
+		for (ParameterizedHandler handler : allHandlers) {
+			createGenericCommand(mApplication, handler.getCommandId(), handler.getContributionUri(),
+					handler.getParameters(), handler.getShortcut());
+		}
+	}
+
 	private void configureEquoApp(String appId) {
 		MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
 		mainMenu.setElementId(appId + "." + "mainmenu");
@@ -146,9 +180,10 @@ public class EquoApplicationBuilder{
 		mainWindowBindingTable.setBindingContext(getmApplication().getBindingContexts().get(0));
 		mainWindowBindingTable.setElementId(IConstants.DEFAULT_BINDING_TABLE);
 
-		addAppLevelCommands(getmApplication());
-
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
+
+		addAppLevelCommands(getmApplication());
+		listenForCommands();
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
@@ -161,6 +196,7 @@ public class EquoApplicationBuilder{
 		// if (action.equals(EXECUTE_ACTION_ID)) {
 		// TODO call user application code with the class passed as param
 
+		registerGenericCommands();
 		createOpenBrowserAsWindowCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_WINDOW,
 				IConstants.OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI);
 		createOpenBrowserAsSidePartCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_SIDE_PART,
@@ -170,6 +206,28 @@ public class EquoApplicationBuilder{
 
 		equoEventHandler.on("updateBrowser", new ParameterizedCommandRunnable(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
 				getmApplication().getContext()));
+	}
+
+	private void createGenericCommand(MApplication mApplication, String commandId, String commandContributionUri,
+			IParameter[] parameters, String shortcut) {
+		HandlerBuilder handlerBuilder = new HandlerBuilder(mApplication, commandId, commandContributionUri) {
+			@Override
+			protected Runnable getRunnable() {
+				return null;
+			}
+
+			@Override
+			protected List<MCommandParameter> createCommandParameters() {
+				List<MCommandParameter> list = new ArrayList<>();
+				for (IParameter parameter : parameters) {
+					list.add(createCommandParameter(parameter.getId(), parameter.getName(), parameter.isOptional()));
+				}
+				return list;
+			}
+
+		};
+		MCommand newCommand = handlerBuilder.createCommandAndHandler(commandId);
+		new GlobalShortcutBuilder(this).addGlobalShortcutToExistingCommand(newCommand, shortcut);
 	}
 
 	private void createUpdateBrowserCommand(MApplication mApplication, String commandId,

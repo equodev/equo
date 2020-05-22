@@ -83,7 +83,7 @@ window.equo = window.equo || {};
         let responseId = (Math.random() + 1).toString(36).substring(7);
         equo.on(responseId, callback);
         equo.sendToWebSocketServer("_executeEclipseCommand", {
-            commandId: commandId,
+            commandId: commandId + ".command",
             responseId: responseId,
             filePath: filePath,
             content: content

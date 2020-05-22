@@ -35,12 +35,12 @@ public class SaveFileAsHandler extends SaveFileHandler {
 	}
 
 	@Override
-	protected String getCommandId() {
+	public String getCommandId() {
 		return IWorkbenchCommandConstants.FILE_SAVE_AS;
 	}
 
 	@Override
-	protected IParameter[] getParameters() {
+	public IParameter[] getParameters() {
 		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id"),
 				new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_CONTENT, "Content") };
 		return parameters;
