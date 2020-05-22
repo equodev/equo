@@ -3,18 +3,25 @@
         <div class=tree-title><p>{{title}}</p></div>
         <div class="tree-root">{{path}}</div>
         <sl-vue-tree
+            ref= "sltree"
             class="tree-model"
             :value="nodes"
             :allowMultiselect="false"
             @nodeclick="nodeClick"
             @nodedblclick="node2Click"
             @nodecontextmenu="nodeContextMenu"
+            @toggle="toggle"
             @externaldrop.prevent="onExternalDropHandler">
         <template slot="title" slot-scope="{ node }">
           <span class="item-icon">
             <font-awesome-icon icon="folder" v-if="!node.isLeaf"></font-awesome-icon>
-            <font-awesome-icon :icon="[ 'fab', 'vuejs' ]" v-else-if="node.data.path==='VUE'"></font-awesome-icon> 
-            <font-awesome-icon icon="file" v-else-if="node.isLeaf" ></font-awesome-icon>
+            <template v-for="extIcon in extensionicons"  
+              >
+              <font-awesome-icon :style="{color : extIcon.color}"  :key="extIcon.extension" v-if="getExtension(node.title)===extIcon.extension" :icon="extIcon.icon">
+              </font-awesome-icon> 
+            </template>
+            
+            <font-awesome-icon icon="file" v-if="node.isLeaf && getExtension(node.title)===undefined" ></font-awesome-icon>
             {{ node.title }}
           </span>
           
@@ -29,36 +36,31 @@
       <aside class="menu contextmenu" 
               ref="contextmenu" 
               v-show="contextMenuIsVisible">
-        <div @click="open">Open </div>
-        <div @click="cut">Cut <span>Ctrl + X</span></div>
-        <div @click="copy">Copy <span>Ctrl + C </span></div>
-        <div @click="remove">Delete <span> Del </span></div>
-        <div @click="rename">Rename</div>
+        <div v-for="option in menuoptions"  :key="option.title"
+              v-on:click="selectOption(option.eventHandler)">
+          {{option.title}} <span>{{option.shortcut}}</span> 
+         </div>
       </aside> 
     </div>
 </template>
 
 <script>
-import vuetify from 'vuetify'
 import SlVueTree from './slTree/sl-vue-tree.js'
 import './slTree/sl-vue-tree-dark.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-import { faChevronDown, faChevronRight, faFile, faFolder } from '@fortawesome/free-solid-svg-icons'
-import { faJs, faVuejs,faCss3 } from '@fortawesome/free-brands-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
 
 library.add(
-    faChevronRight,
-    faChevronDown,
-    faFile,
-    faFolder,
-    faJs,
-    faVuejs,
-    faCss3
+    fab,
+    fas,
+    far
 )
 
+
 export default {
-    vuetify,
     name: 'equo-treeview',
     props:{
       title: {
@@ -72,6 +74,14 @@ export default {
       path: {
         type: String,
         default: "/"
+      },
+      menuoptions:{
+        type: Array,
+        default(){return []}
+      },
+      extensionicons:{
+        type: Array,
+        default(){return []}
       }
     },
     components: { SlVueTree, FontAwesomeIcon},
@@ -83,6 +93,7 @@ export default {
     data(){ return {
                     contextMenuIsVisible: false,
                     nodeInspected : null,
+                    color: "green"
             }
     },
    methods: {
@@ -90,39 +101,63 @@ export default {
        if (!this.isInWhiteList(event.target)) this.contextMenuIsVisible = false;
      },
      isInWhiteList() { return false; },
-     nodeClick(){
-       console.log(this.maxWidth)
+     nodeClick(node, event){
+       console.log("Click",node.path, event);
      },
-     node2Click(){
-       console.log("2click")
+     node2Click(node, event){
+       console.log("2Click", node, event)
      },
+     getNode(nodes,path){
+        if (path.length === 1) return nodes[path[0]];
+        return this.getNode(nodes[path[0]].children, path.slice(1));
+     },
+     
+     toggle(node){
+        var originalTree = this.nodes;
+        var treeData = originalTree.slice(0);
+        var expandedNode = this.getNode(treeData,node.path);
+        expandedNode.isExpanded=!expandedNode.isExpanded; 
+        if(!expandedNode.data.wasExpandedBefore){
+          /*eslint-disable*/
+          equo.fileInfo(node.data.path,function(response){
+              expandedNode.data.wasExpandedBefore = true;
+              if (!response.err){
+                for(let i =0;i < response.children.length;i++){
+                  if(!response.children[i].isLeaf){
+                    response.children[i].isExpanded = false;
+                    response.children[i].data.wasExpandedBefore = false;
+                    response.children[i].children = [];
+                  }
+                  expandedNode.children.splice(expandedNode.children.length - 1,0,response.children[i])
+                }
+                originalTree.splice(0,originalTree.length);
+                Array.prototype.push.apply(originalTree,treeData);               
+              }
+            });
+            /*eslint-enable*/
+        }
+     },
+
      nodeContextMenu(node, event){
+       if(this.menuoptions.length!== 0){
         this.contextMenuIsVisible = true;
         const $contextMenu = this.$refs.contextmenu;
         $contextMenu.style.left = event.clientX + 'px';
         $contextMenu.style.top = event.clientY + 'px';
-        //console.log(node);
         this.nodeInspected = node;
+       }
+       else{
+         console.error("ContextMenu have to be at least one element defined in the Tree Component");
+       }
      },
-     open(){
-        console.log(this.nodeInspected);
-        this.node = null;
+     selectOption(event){
+       event();
+       this.nodeInspected = null;
      },
-     copy(){
-        console.log(this.nodeInspected);
-        this.node = null;     
-     },
-     cut(){
-        console.log(this.nodeInspected);
-        this.node = null;  
-     },
-     remove(){
-        console.log(this.nodeInspected);
-        this.node = null;  
-     },
-     rename(){
-        console.log(this.nodeInspected);
-        this.node = null;  
+     getExtension(file){
+       let re = /(?:\.([^.]+))?$/;
+       let ext = re.exec(file)[1];
+       return(ext);
      }
   },
 }
@@ -136,9 +171,8 @@ export default {
     }
 
   .tree-container{
-      width: 25%;
+      width: 100%;
       height: 100%;
-      overflow-y: auto;
   }
 
   .tree-title{
@@ -150,6 +184,7 @@ export default {
     background-color: rgb(9, 22, 29);
     color: white;
     font-weight: bolder;
+    overflow: hidden;
   }
 
   .tree-root{
@@ -162,6 +197,7 @@ export default {
     font-weight: bold;
     border-bottom: 2px solid black ;
     font-family: Circular-Std;
+    overflow: hidden;
   }
 
   .tree-model{
@@ -199,5 +235,10 @@ export default {
         float: right;
         padding-right: 5%;
   }
+
+  .sl-vue-tree-selected > .sl-vue-tree-node-item > .sl-vue-tree-title > .item-icon > svg{
+    background-color: #13242d;
+    color: rgb(255, 255, 255,0.5)
+}
 
 </style>
