@@ -84,4 +84,6 @@ public interface IConstants {
 
 	public static final String MAC_OSX = "mac";
 
+	public static final String IS_AN_EQUO_MODEL_ELEMENT = "isAnEquoModelElement";
+
 }

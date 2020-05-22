@@ -26,6 +26,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -97,13 +98,19 @@ public interface IEquoRenderer {
 
 		Map<String, Map<String, String>> frameworkContributions = getContributionsFromFiles("",
 				frameworkContributionJSONFileNames, this.getClass());
-		Map<String, Map<String, String>> applicationContributions = getContributionsFromFiles(
+		Map<String, Map<String, String>> applicationContributionsFromJsonFiles = getContributionsFromFiles(
 				getModelContributionPath(), applicationContributionJSONFileNames, getEquoApplication().getClass());
+		Map<String, Map<String, String>> applicationContributionsFromJavaModel = getContributionsFromJavaModel();
 
 		modelContributions.putAll(frameworkContributions);
-		modelContributions.putAll(applicationContributions);
+		modelContributions.putAll(applicationContributionsFromJsonFiles);
+		modelContributions.putAll(applicationContributionsFromJavaModel);
 
 		return modelContributions;
+	}
+
+	default Map<String, Map<String, String>> getContributionsFromJavaModel() {
+		return Maps.newHashMap();
 	}
 
 	/**

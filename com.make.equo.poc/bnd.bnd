@@ -1,0 +1,18 @@
+-outputmask: ${@bsn}.jar
+-include: ${build}/equoapp.bnd
+#-runrepos: Release
+
+Bundle-Version: ${version}.${tstamp}
+Private-Package: com.make.equo.poc
+    
+# Application Name
+appName=EquoApp
+# Application background color
+bgColor=#0000FF
+# Username and password to connect to the Equo Platform. For example for analytics
+equoUsername='YWRtaW4='
+equoPassword=bHVzaXRhbm8yMDE4
+
+-privatepackage: \
+	com.make.equo.poc.eventhandlers,\
+	com.make.equo.poc.payloads

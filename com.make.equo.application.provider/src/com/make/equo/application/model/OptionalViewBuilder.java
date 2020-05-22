@@ -3,7 +3,13 @@ package com.make.equo.application.model;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
@@ -17,6 +23,7 @@ public class OptionalViewBuilder {
 	private IEquoServer equoServer;
 	private ViewBuilder viewBuilder;
 	private EquoApplicationBuilder equoApplicationBuilder;
+
 	private AnalyticsService analyticsService;
 	private MMenu mainMenu;
 	private EquoContributionBuilder mainAppBuilder;
@@ -72,6 +79,7 @@ public class OptionalViewBuilder {
 		mainAppBuilder.withScriptFile(scriptPath);
 		return this;
 	}
+
 
 	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
 		mainAppBuilder.withStyleFile(stylePath);
@@ -139,4 +147,9 @@ public class OptionalViewBuilder {
 		mainAppBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;
 	}
+
+	public ToolbarBuilder withToolbar() {
+		return new ToolbarBuilder(this,equoApplicationBuilder.getmWindow()).addToolbar();
+	}	
+
 }

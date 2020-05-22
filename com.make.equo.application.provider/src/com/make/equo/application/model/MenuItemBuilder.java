@@ -4,6 +4,7 @@ import static com.make.equo.application.util.OSUtils.isMac;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
@@ -12,24 +13,23 @@ import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.application.util.IConstants;
 
-public class MenuItemBuilder {
+public class MenuItemBuilder extends ItemBuilder {
 
-	private MHandledMenuItem menuItem;
 	private MenuBuilder menuBuilder;
-	private MenuItemHandlerBuilder menuItemHandlerBuilder;
 
 	MenuItemBuilder(MenuBuilder menuBuilder) {
+		super(menuBuilder.getOptionalFieldBuilder());
 		this.menuBuilder = menuBuilder;
 	}
 
-	MenuItemBuilder(MenuItemBuilder menuItemBuilder) {
-		this.menuItem = menuItemBuilder.menuItem;
-		this.menuBuilder = menuItemBuilder.menuBuilder;
+	MenuItemBuilder(OptionalViewBuilder optionalViewBuilder, MHandledItem item, MenuBuilder menuBuilder) {
+		super(optionalViewBuilder);
+		this.setItem(item);
+		this.menuBuilder = menuBuilder;
 	}
 
 	public MenuItemBuilder addMenuItem(String label) {
-		menuItem = createMenuItem(label);
-		return new MenuItemBuilder(this);
+		return new MenuItemBuilder(this.getOptionalFieldBuilder(),createMenuItem(label),menuBuilder);
 	}
 
 	private MHandledMenuItem createMenuItem(String label) {
@@ -46,46 +46,25 @@ public class MenuItemBuilder {
 		return onClick(runnable, null);
 	}
 
-	public MenuItemBuilder onClick(Runnable runnable, String userEvent) {
-		menuItemHandlerBuilder = new MenuItemHandlerBuilder(this);
-		MenuItemBuilder menuItemBuilder = menuItemHandlerBuilder.onClick(runnable, userEvent);
-		return menuItemBuilder;
+	public MenuItemBuilder onClick(Runnable runnable, String action) {
+		return (MenuItemBuilder) super.onClick(runnable, action);
 	}
 
-	public MenuItemBuilder onClick(String userEvent) {
-		return onClick(null, userEvent);
+	public MenuItemBuilder onClick(String action) {
+		return onClick(null, action);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {
 		return new MenuBuilder(this.menuBuilder).addMenu(menuLabel);
 	}
 
-	public MenuBuilder withMainMenu(String menuLabel) {
-		return new MenuBuilder(menuBuilder.getOptionalFieldBuilder()).addMenu(menuLabel);
-	}
-
-	public EquoApplicationBuilder start() {
-		return menuBuilder.getOptionalFieldBuilder().start();
-	}
-
 	public MenuItemSeparatorBuilder addMenuSeparator() {
 		return new MenuItemSeparatorBuilder(this.menuBuilder).addMenuItemSeparator();
 	}
-
-	MHandledMenuItem getMenuItem() {
-		return menuItem;
-	}
-
-	MenuBuilder getMenuBuilder() {
-		return menuBuilder;
-	}
-
+	
+	@Override
 	public MenuItemBuilder addShortcut(String keySequence) {
-		if (menuItemHandlerBuilder != null) {
-			return menuItemHandlerBuilder.addShortcut(keySequence);
-		}
-		// log that there is no menu item handler -> no onClick method was called.
-		return this;
+		return (MenuItemBuilder)super.addShortcut(keySequence);
 	}
 
 	/**
@@ -96,12 +75,12 @@ public class MenuItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onBeforeExit(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.EXIT_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.EXIT_COMMAND, runnable);
 		return this;
@@ -127,12 +106,12 @@ public class MenuItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onPreferences(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.PREFERENCES_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.PREFERENCES_COMMAND, runnable);
 		return this;
@@ -156,17 +135,17 @@ public class MenuItemBuilder {
 	 * @return
 	 */
 	public MenuItemBuilder onAbout(String label, Runnable runnable) {
-		MApplication mApplication = this.getMenuBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder()
+		MApplication mApplication = this.menuBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder()
 				.getmApplication();
 		MCommand command = mApplication.getCommand(ICommandConstants.ABOUT_COMMAND);
 		if (!isMac()) {
-			menuItem = createMenuItem(label);
-			menuItem.setCommand(command);
+			setItem(createMenuItem(label));
+			this.getItem().setCommand(command);
 		}
 		mApplication.getTransientData().put(ICommandConstants.ABOUT_COMMAND, runnable);
 		return this;
 	}
-	
+
 	/**
 	 * Executes the {@code run} method of this runnable when the item is accessed
 	 * 
@@ -176,10 +155,9 @@ public class MenuItemBuilder {
 	public MenuItemBuilder onAbout(Runnable runnable) {
 		return onAbout(IConstants.DEFAULT_ABOUT_LABEL, runnable);
 	}
-	
-	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
-		menuItem = createMenuItem(label);
-		return onClick(EnterFullScreenModeRunnable.instance);
-	}
 
+	public MenuItemBuilder addFullScreenModeMenuItem(String label) {
+		this.setItem(createMenuItem(label));
+		return (MenuItemBuilder) onClick(EnterFullScreenModeRunnable.instance);
+	}
 }

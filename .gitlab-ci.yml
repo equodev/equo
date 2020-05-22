@@ -1,7 +1,8 @@
-image: registry.gitlab.com/maketechnology/equo/docker/gradle:jdk8-alpine
+image: registry.gitlab.com/maketechnology/equo/docker/gradle:adoptopenjdk8-alpine
 
 stages:
   - build
+  - deploy
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
@@ -17,31 +18,52 @@ cache:
 before_script:
   - export HOME=$CI_PROJECT_DIR
 
-build:
-  stage: build
-  script:
-    - gradle check
+.all:
   artifacts:
+    reports:
+       junit: 
+          - "*/generated/test-reports/test/TEST-*.xml"
+          - "*/generated/test-reports/testOSGi/TEST-*.xml"
     paths:
       - cnf/equoapp.bnd
       - cnf/equobuild.bnd
       - cnf/release
+      - build/reports/jacoco/
     expire_in: 12w
-  except:
-    - master
+    
+.print_converage: &print_converage
+- awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
 
-release:
+build:
+  extends: .all
   stage: build
   script:
     - gradle jar
-    - gradle release
-    - gradle publish
-  artifacts:
-    paths:
-      - cnf/equoapp.bnd
-      - cnf/equobuild.bnd
-      - cnf/release
-    expire_in: 12w
-  only:
+    - gradle check jacocoRootReport
+    - *print_converage
+  except:
     - master
 
+
+release:
+  extends: .all
+  stage: build
+  script:
+    - gradle jar
+    - gradle check jacocoRootReport -PreportHtml=true
+    - *print_converage
+    - gradle release
+    - gradle publish
+  only:
+    - master
+    
+pages:
+  stage: deploy
+  script:
+    - cp -R $CI_PROJECT_DIR/build/reports/jacoco/jacocoRootReport/html/ public/
+    - ls -R public/
+  artifacts:
+    paths:
+    - public
+  only:
+    - master

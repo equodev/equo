@@ -10,6 +10,7 @@ import com.make.equo.aer.internal.api.IEquoCrashReporter;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
+import com.make.equo.application.model.EquoApplicationModel;
 import com.make.equo.ui.helper.provider.model.ModelElementInjector;
 
 public class LifeCycleManager {

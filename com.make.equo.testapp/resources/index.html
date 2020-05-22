@@ -6,29 +6,10 @@
     <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
   </head>
   <body>
-    <div id="app">{{title}}</div>
-    <div class="row" id="tree">
-       <div class="tree-container">
-         <sl-vue-tree v-model="nodes">
-             <template slot="title" slot-scope="{ node }">
-               <span class="item-icon">
-                 <i class="fa fa-file" v-if="node.isLeaf"></i>
-                 <i class="fa fa-folder" v-if="!node.isLeaf"></i>
-               </span>
-             {{ node.title }}
-           </template>
-           <template slot="toggle" slot-scope="{ node }">
-             <span v-if="!node.isLeaf">
-               <i v-if="node.isExpanded" class="fa fa-chevron-down"></i>
-               <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>
-             </span>
-           </template>
-         </sl-vue-tree> 
-        </div>
-        <div class="editor">
-          <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-        </div>
-    </div>
+  	<div id="title">
+  		{{title}}
+  	</div>
+    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vue-material@beta"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>

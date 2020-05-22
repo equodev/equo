@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 public aspect DialogHelp {
 
-    Hashtable<MessageDialog,com.make.equo.ui.helper.provider.dialogs.MessageDialog> dialogos = new Hashtable();
+    Hashtable<MessageDialog, com.make.equo.ui.helper.provider.dialogs.MessageDialog> dialogos = new Hashtable<>();
     
     com.make.equo.ui.helper.provider.dialogs.MessageDialog dialog;
 

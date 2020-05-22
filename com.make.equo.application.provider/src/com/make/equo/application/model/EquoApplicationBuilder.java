@@ -18,7 +18,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
-import com.make.equo.application.EquoApplicationModel;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
@@ -26,7 +25,7 @@ import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component(service = EquoApplicationBuilder.class)
-public class EquoApplicationBuilder {
+public class EquoApplicationBuilder{
 
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 

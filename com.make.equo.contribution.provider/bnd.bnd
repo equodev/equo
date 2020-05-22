@@ -16,7 +16,7 @@ Export-Package: \
     io.netty.all.source,\
     osgi.cmpn,\
     ${junit},\
-    org.assertj.core;version=3.9
+    assertj-core;version=3.15
 Private-Package: \
     com.make.equo.contribution.provider.filter,\
     com.make.equo.contribution.provider.cache

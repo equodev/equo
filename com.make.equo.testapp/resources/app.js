@@ -1,6 +1,5 @@
 const app = new Vue({
-	el: "#app",
-	components: {SlVueTree},
+	el: "#title",
 	data: {
 		title: "Equo plain App",
 		nodes: [

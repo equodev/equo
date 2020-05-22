@@ -5,7 +5,7 @@ $(document).ready(function () {
       <div class="app">
             <span v-for="item in e4Model">
                 <span v-if="toolItemsIdsToData[item.id] !== null && toolItemsIdsToData[item.id] !== undefined && toolItemsIdsToData[item.id] !== 'undefined'">
-                    <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData[item.id].commandId)">
+                    <md-button class="md-icon-button md-primary" @click="callE4Command(item.id, toolItemsIdsToData[item.id].commandId, toolItemsIdsToData[item.id].userEvent, toolItemsIdsToData[item.id].isAnEquoModelElement)">
                         <md-icon>{{toolItemsIdsToData[item.id].icon}}</md-icon>
                         <md-tooltip>{{toolItemsIdsToData[item.id].tooltip}}</md-tooltip>
                     </md-button>
@@ -27,10 +27,12 @@ $(document).ready(function () {
         },
         mounted() {},
         methods: {
-            callE4Command(toolBarElementId, commandId) {
+            callE4Command(toolBarElementId, commandId, userEvent, isAnEquoModelElement) {
                 equo.send(this.namespace + '_itemClicked', {
                     toolBarElementId,
-                    commandId
+                    commandId,
+                    userEvent,
+                    isAnEquoModelElement
                 });
             }
         },
@@ -63,7 +65,6 @@ $(document).ready(function () {
         }
       </style>`)
     }
-
     equo.getModelContributions(setToolBarContributions);
     equo.getE4Model(createToolbar);
 });
