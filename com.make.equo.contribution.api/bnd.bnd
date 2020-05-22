@@ -12,6 +12,12 @@ Export-Package: \
     org.eclipse.core.commands,\
     org.eclipse.core.commands.source,\
     org.eclipse.e4.core.commands,\
+    org.eclipse.e4.ui.model.workbench,\
+    org.eclipse.e4.ui.model.workbench.source,\
+    org.eclipse.emf.ecore,\
+    org.eclipse.emf.ecore.source,\
+    org.eclipse.emf.common,\
+    org.eclipse.emf.common.source,\
     org.eclipse.e4.core.commands.source,\
     com.google.gson,\
     com.google.gson.source,\

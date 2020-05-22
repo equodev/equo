@@ -40,7 +40,7 @@ public class EquoApplicationBuilder{
 
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
-	private MApplication mApplication;
+	public static MApplication mApplication;
 	private MTrimmedWindow mWindow;
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private ViewBuilder viewBuilder;

@@ -11,17 +11,17 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import com.make.equo.application.handlers.filesystem.*;
+import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.contribution.api.IEquoContributionManager;
 import com.make.equo.contribution.api.handler.ParameterizedHandler;
-
-import org.eclipse.swt.chromium.Browser;
 
 public class SinglePagePart {
 
@@ -65,7 +65,7 @@ public class SinglePagePart {
 				new MoveFileHandler(), new ReadFileHandler() };
 
 		for (ParameterizedHandler handler : handlers) {
-			handler.registerCommand(handlerService, commandService);
+			handler.registerCommand(handlerService, commandService, EquoApplicationBuilder.mApplication);
 		}
 
 		BundleContext bndContext = FrameworkUtil.getBundle(IEquoContributionManager.class)
@@ -75,7 +75,7 @@ public class SinglePagePart {
 		IEquoContributionManager manager = bndContext.getService(svcReference);
 
 		for (ParameterizedHandler handler : manager.getparameterizedHandlers()) {
-			handler.registerCommand(handlerService, commandService);
+			handler.registerCommand(handlerService, commandService, EquoApplicationBuilder.mApplication);
 		}
 	}
 
