@@ -79,7 +79,7 @@ window.equo = window.equo || {};
         userEventCallbacks[userEvent] = callback;
     };
 
-    equo.executeCommandWithCallback = function (callback, commandId, filePath = null, content = null) {
+    equo.executeCommand = function (callback, commandId, filePath = null, content = null) {
         let responseId = (Math.random() + 1).toString(36).substring(7);
         equo.on(responseId, callback);
         equo.sendToWebSocketServer("_executeEclipseCommand", {
@@ -88,46 +88,6 @@ window.equo = window.equo || {};
             filePath: filePath,
             content: content
         });
-    };
-
-    equo.saveFile = function (filePath, content, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.save", filePath, content);
-    };
-
-    equo.saveFileAs = function (content, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.saveAs", null, content);
-    };
-
-    equo.renameFile = function (filePath, newName, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.edit.rename", filePath, newName);
-    };
-
-    equo.moveFile = function (filePath, directoryDest, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.edit.move", filePath, directoryDest);
-    };
-
-    equo.openFile = function (callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.open");
-    };
-
-    equo.readFile = function (filePath, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.read", filePath);
-    };
-
-    equo.deleteFile = function (filePath, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.delete", filePath);
-    };
-
-    equo.fileInfo = function (filePath, callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.properties", filePath);
-    };
-
-    equo.openFolder = function (callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.project.openProject");
-    };
-
-    equo.save = function (callback) {
-        equo.executeCommandWithCallback(callback, "org.eclipse.ui.file.save");
     };
 
     // Make the function wait until the connection is made...
