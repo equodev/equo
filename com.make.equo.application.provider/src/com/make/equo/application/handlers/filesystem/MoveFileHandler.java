@@ -48,11 +48,6 @@ public class MoveFileHandler extends ParameterizedHandler {
 	}
 
 	@Override
-	protected String getCategoryName() {
-		return "someCategory";
-	}
-
-	@Override
 	protected IParameter[] getParameters() {
 		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id"),
 				new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_FILE_PATH, "File Path"),

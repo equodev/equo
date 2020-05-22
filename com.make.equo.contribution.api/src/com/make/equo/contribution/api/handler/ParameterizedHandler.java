@@ -27,8 +27,6 @@ import com.make.equo.contribution.api.IEquoContributionManager;
 public abstract class ParameterizedHandler {
 	protected abstract String getCommandId();
 
-	protected abstract String getCategoryName();
-
 	protected abstract IParameter[] getParameters();
 
 	protected String getShortcut() {
