@@ -1,0 +1,5 @@
+-privatepackage: com.make.equo.widgets.shell
+
+-buildpath: \
+    osgi.annotation,\
+    osgi.cmpn

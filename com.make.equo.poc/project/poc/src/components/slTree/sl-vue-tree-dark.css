@@ -32,6 +32,7 @@
     color:#0275d8;
 }
 
+
 .sl-vue-tree-selected:hover > .sl-vue-tree-node-item{
     background-color: #13242d;
     color: #0275d8;

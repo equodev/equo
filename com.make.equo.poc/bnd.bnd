@@ -16,3 +16,6 @@ equoPassword=bHVzaXRhbm8yMDE4
 -privatepackage: \
 	com.make.equo.poc.eventhandlers,\
 	com.make.equo.poc.payloads
+
+-runbundles.poc: \
+    com.make.equo.widgets.shell 
