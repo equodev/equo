@@ -14,3 +14,5 @@ cnf/cache
 cnf/*/
 !cnf/ext
 *.prefs
+littleproxy_cert
+littleproxy_keystore.jks

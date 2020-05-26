@@ -46,7 +46,8 @@ public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
 			}
 		});
 
-		builder.withParameterizedHandler(new SaveFileEditorHandler(this)).build();
+		builder.withParameterizedHandler(new SaveFileEditorHandler(this))
+				.withParameterizedHandler(new FindHandler(this)).build();
 	}
 
 	@Reference
