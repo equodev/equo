@@ -13,7 +13,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/websocket": "^0.1.2",
+        "@equo/websocket": "^0.1.1",
         "cpx": "^1.5.0",
         "css-loader": "^3.4.2",
         "file-loader": "^5.0.2",

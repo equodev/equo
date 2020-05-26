@@ -20,8 +20,9 @@ import com.make.equo.ws.api.IEquoEventHandler;
 public class SaveFileEditorHandler extends ParameterizedHandler {
 	private EquoMonacoEditor editor;
 
-	public SaveFileEditorHandler(EquoMonacoEditor editor) {
+	public SaveFileEditorHandler setEditor(EquoMonacoEditor editor) {
 		this.editor = editor;
+		return this;
 	}
 
 	@Execute
@@ -47,17 +48,12 @@ public class SaveFileEditorHandler extends ParameterizedHandler {
 	}
 
 	@Override
-	protected String getCommandId() {
+	public String getCommandId() {
 		return IWorkbenchCommandConstants.FILE_SAVE;
 	}
 
 	@Override
-	protected String getCategoryName() {
-		return "someCategory";
-	}
-
-	@Override
-	protected IParameter[] getParameters() {
+	public IParameter[] getParameters() {
 		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id") };
 		return parameters;
 	}

@@ -9,8 +9,9 @@ import com.make.equo.contribution.api.handler.ParameterizedHandler;
 public class FindHandler extends ParameterizedHandler {
 	private EquoMonacoEditor editor;
 
-	public FindHandler(EquoMonacoEditor editor) {
+	public FindHandler setEditor(EquoMonacoEditor editor) {
 		this.editor = editor;
+		return this;
 	}
 
 	@Execute
@@ -19,17 +20,12 @@ public class FindHandler extends ParameterizedHandler {
 	}
 
 	@Override
-	protected String getCommandId() {
+	public String getCommandId() {
 		return IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE;
 	}
 
 	@Override
-	protected String getCategoryName() {
-		return "someCategory";
-	}
-
-	@Override
-	protected IParameter[] getParameters() {
+	public IParameter[] getParameters() {
 		return null;
 	}
 
