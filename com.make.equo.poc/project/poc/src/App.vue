@@ -117,15 +117,20 @@ export default {
         equo.openFolder(function(response){
           if (!response.err){
             for(let i = 0; i < response.children.length;i++){
-              if(!response.children[i].isLeaf){
+              response.children[i].data = {path: response.children[i].path};
+              if(response.children[i].isDirectory){
                 response.children[i].isExpanded = false;
                 response.children[i].data.wasExpandedBefore = false;
                 response.children[i].children = [];
               }
+              response.children[i].isLeaf = !response.children[i].isDirectory;
+              response.children[i].title = response.children[i].name;
             }
+            response.isLeaf = !response.isDirectory;
+            response.title = response.name;
             treeData.nodes.splice(0,treeData.nodes.length);
             Array.prototype.push.apply(treeData.nodes,response.children);
-            treeData.path = response.data.path;
+            treeData.path = response.path;
           }
         });
       }

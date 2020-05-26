@@ -123,11 +123,14 @@ export default {
               expandedNode.data.wasExpandedBefore = true;
               if (!response.err){
                 for(let i =0;i < response.children.length;i++){
-                  if(!response.children[i].isLeaf){
+                  response.children[i].data = {path: response.children[i].path};
+                  if(response.children[i].isDirectory){
                     response.children[i].isExpanded = false;
                     response.children[i].data.wasExpandedBefore = false;
                     response.children[i].children = [];
                   }
+                  response.children[i].isLeaf = !response.children[i].isDirectory;
+                  response.children[i].title = response.children[i].name;
                   expandedNode.children.splice(expandedNode.children.length - 1,0,response.children[i])
                 }
                 originalTree.splice(0,originalTree.length);
