@@ -10,6 +10,10 @@ window.equo = window.equo || {};
         equo.executeCommand(callback, "org.eclipse.ui.file.saveAs", null, content);
     };
 
+    equo.newFolder = function (path, callback) {
+        equo.executeCommand(callback, "org.eclipse.ui.file.newFolder", path);
+    };
+
     equo.renameFile = function (filePath, newName, callback) {
         equo.executeCommand(callback, "org.eclipse.ui.edit.rename", filePath, newName);
     };

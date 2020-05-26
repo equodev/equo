@@ -37,15 +37,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
-import com.make.equo.application.handlers.filesystem.DeleteFileHandler;
-import com.make.equo.application.handlers.filesystem.FileInfoHandler;
-import com.make.equo.application.handlers.filesystem.MoveFileHandler;
-import com.make.equo.application.handlers.filesystem.OpenFileHandler;
-import com.make.equo.application.handlers.filesystem.OpenFolderHandler;
-import com.make.equo.application.handlers.filesystem.ReadFileHandler;
-import com.make.equo.application.handlers.filesystem.RenameFileHandler;
-import com.make.equo.application.handlers.filesystem.SaveFileAsHandler;
-import com.make.equo.application.handlers.filesystem.SaveFileHandler;
+import com.make.equo.application.handlers.filesystem.*;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.contribution.api.IEquoContributionManager;
@@ -154,15 +146,16 @@ public class EquoApplicationBuilder {
 	private void registerGenericCommands() {
 		ParameterizedHandler[] defaultHandlers = { new OpenFileHandler(), new OpenFolderHandler(),
 				new DeleteFileHandler(), new SaveFileHandler(), new SaveFileAsHandler(), new FileInfoHandler(),
-				new RenameFileHandler(), new MoveFileHandler(), new ReadFileHandler() };
+				new RenameFileHandler(), new MoveFileHandler(), new ReadFileHandler(), new NewFolderHandler() };
 
 		BundleContext bndContext = FrameworkUtil.getBundle(IEquoContributionManager.class).getBundleContext();
 		ServiceReference<IEquoContributionManager> svcReference = bndContext
 				.getServiceReference(IEquoContributionManager.class);
 		IEquoContributionManager manager = bndContext.getService(svcReference);
 
-		List<ParameterizedHandler> allHandlers = manager.getparameterizedHandlers();
+		List<ParameterizedHandler> allHandlers = new ArrayList<>();
 		allHandlers.addAll(Arrays.asList(defaultHandlers));
+		allHandlers.addAll(manager.getparameterizedHandlers());
 		for (ParameterizedHandler handler : allHandlers) {
 			createGenericCommand(mApplication, handler.getCommandId(), handler.getContributionUri(),
 					handler.getParameters(), handler.getShortcut());
@@ -219,8 +212,11 @@ public class EquoApplicationBuilder {
 			@Override
 			protected List<MCommandParameter> createCommandParameters() {
 				List<MCommandParameter> list = new ArrayList<>();
-				for (IParameter parameter : parameters) {
-					list.add(createCommandParameter(parameter.getId(), parameter.getName(), parameter.isOptional()));
+				if (parameters != null) {
+					for (IParameter parameter : parameters) {
+						list.add(
+								createCommandParameter(parameter.getId(), parameter.getName(), parameter.isOptional()));
+					}
 				}
 				return list;
 			}
