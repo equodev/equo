@@ -3,9 +3,9 @@
     <equo-toolbar>
       <!-- equo-toolitem icon use FontAwesome to its definition. take a look at www.fontawesome.com/icons to choose a icon -->
       <equo-toolitem tooltip="Open Folder" icon='folder-open' :eventHandler="this.openFolder"/>
-      <equo-toolitem tooltip="Search" icon='search' :eventHandler="this.openFolder"/>
+      <equo-toolitem tooltip="Search" icon='search' :eventHandler="this.find"/>
       <equo-toolitem tooltip="Copy" icon='copy' :eventHandler="this.openFolder"/>
-      <equo-toolitem tooltip="Save" icon='save' :eventHandler="this.openFolder"/>
+      <equo-toolitem tooltip="Save" icon='save' :eventHandler="this.save"/>
       <equo-toolitem tooltip="Run" icon='play' :eventHandler="this.openFolder"/>
       <equo-toolitem tooltip="Debug" icon='bug' :eventHandler="this.openFolder"/>  
     </equo-toolbar>
@@ -135,6 +135,14 @@ export default {
             Array.prototype.push.apply(treeData.nodes,response.children);
             treeData.path = response.path;
           }
+        });
+      },
+      find(){
+        equo.find();
+      },
+      save(){
+        equo.save(function(response){
+          console.log(JSON.stringify(response));
         });
       }
     }

@@ -192,7 +192,7 @@ export default {
   }
 
   .tree-root{
-    height: 35px;
+    min-height: 35px;
     background-color: rgb(27, 37, 43);
     color: whitesmoke;
     padding-top: 3px;
