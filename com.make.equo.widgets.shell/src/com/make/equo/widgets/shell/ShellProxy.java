@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 
 
 @Component
@@ -15,6 +16,12 @@ public class ShellProxy {
 	public void start() {
 		new Thread(() -> this.startServer()).start();
 		System.out.println("shell-server started");
+	}
+	
+	@Deactivate
+	public void finish() {
+		this.stopServer();
+		System.out.println("shell-server stopped");
 	}
 	
 	public synchronized void startServer() {
