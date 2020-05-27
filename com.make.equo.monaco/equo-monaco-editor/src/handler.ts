@@ -11,8 +11,8 @@ import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
 export class EquoMonacoEditor {
 
 	private lastSavedVersionId!: number;
-	private editor!: monaco.editor.IStandaloneCodeEditor;
-	private model!: monaco.editor.ITextModel;
+	private static editor: monaco.editor.IStandaloneCodeEditor;
+	private static model: monaco.editor.ITextModel;
 	private namespace!: string;
 	private wasCreated: boolean = false;
 	private webSocket: EquoWebSocket;
@@ -27,6 +27,10 @@ export class EquoMonacoEditor {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
 
+				if (EquoMonacoEditor.model){
+					EquoMonacoEditor.model.dispose();
+				}
+
 				let l = this.getLanguageOfFile(values.name);
 				let language = '';
 
@@ -40,25 +44,26 @@ export class EquoMonacoEditor {
 					});
 				}
 
-				this.model = monaco.editor.createModel(
+				EquoMonacoEditor.model = monaco.editor.createModel(
 					values.text,
 					language,
 					monaco.Uri.file(values.name) // uri
 				);
 
-				this.editor = monaco.editor.create(element, {
-					model: this.model,
+				EquoMonacoEditor.editor = monaco.editor.create(element, {
+					model: EquoMonacoEditor.model,
 					lightbulb: {
 						enabled: true
-					}
+					},
+					automaticLayout: true
 				});
 
-				this.lastSavedVersionId = this.model.getAlternativeVersionId();
+				this.lastSavedVersionId = EquoMonacoEditor.model.getAlternativeVersionId();
 
 				this.bindEquoFunctions();
 
 				if (values.lspPath) {
-					MonacoServices.install(this.editor);
+					MonacoServices.install(EquoMonacoEditor.editor);
 
 					// create the web socket
 					const url = normalizeUrl(values.lspPath)
@@ -132,66 +137,66 @@ export class EquoMonacoEditor {
 	}
 
 	private bindEquoFunctions(): void {
-		this.editor.onDidChangeCursorSelection((e: any) => {
+		EquoMonacoEditor.editor.onDidChangeCursorSelection((e: any) => {
 			this.webSocket.send(this.namespace + "_selection", e.selection);
 		});
 
 
 		this.webSocket.on(this.namespace + "_doFind", () => {
-			this.editor.getAction("actions.find").run();
+			EquoMonacoEditor.editor.getAction("actions.find").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_getContents", () => {
-			this.webSocket.send(this.namespace + "_doGetContents", { contents: this.editor.getValue() });
+			this.webSocket.send(this.namespace + "_doGetContents", { contents: EquoMonacoEditor.editor.getValue() });
 		});
 
 		this.webSocket.on(this.namespace + "_undo", () => {
-			(this.model as any).undo();
+			(EquoMonacoEditor.model as any).undo();
 		});
 
 		this.webSocket.on(this.namespace + "_redo", () => {
-			(this.model as any).redo();
+			(EquoMonacoEditor.model as any).redo();
 		});
 
 		this.webSocket.on(this.namespace + "_didSave", () => {
-			this.lastSavedVersionId = this.model.getAlternativeVersionId();
+			this.lastSavedVersionId = EquoMonacoEditor.model.getAlternativeVersionId();
 			this.notifyChanges();
 		});
 
 
 		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
-			this.editor.onDidChangeModelContent(() => {
+			EquoMonacoEditor.editor.onDidChangeModelContent(() => {
 				this.notifyChanges();
 			});
 		});
 
 
 		this.webSocket.on(this.namespace + "_doCopy", () => {
-			this.editor.getAction("editor.action.clipboardCopyAction").run();
+			EquoMonacoEditor.editor.getAction("editor.action.clipboardCopyAction").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_doCut", () => {
-			this.editor.getAction("editor.action.clipboardCutAction").run();
+			EquoMonacoEditor.editor.getAction("editor.action.clipboardCutAction").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_doPaste", () => {
-			this.editor.focus();
+			EquoMonacoEditor.editor.focus();
 			this.webSocket.send(this.namespace + "_canPaste");
 		});
 
 
 		this.webSocket.on(this.namespace + "_doSelectAll", () => {
-			this.editor.focus();
+			EquoMonacoEditor.editor.focus();
 			this.webSocket.send(this.namespace + "_canSelectAll");
 		});
 	}
 
 	private notifyChanges(): void {
 		this.webSocket.send(this.namespace + "_changesNotification",
-			{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
+			{ isDirty: this.lastSavedVersionId !== EquoMonacoEditor.model.getAlternativeVersionId(), canRedo: (EquoMonacoEditor.model as any).canRedo(), canUndo: (EquoMonacoEditor.model as any).canUndo() });
 	}
 }
 
