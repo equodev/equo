@@ -7,10 +7,10 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import com.make.equo.contribution.api.handler.ParameterizedHandler;
 
 public class FindHandler extends ParameterizedHandler {
-	private EquoMonacoEditor editor;
+	private static EquoMonacoEditor editor;
 
 	public FindHandler setEditor(EquoMonacoEditor editor) {
-		this.editor = editor;
+		FindHandler.editor = editor;
 		return this;
 	}
 
@@ -27,6 +27,11 @@ public class FindHandler extends ParameterizedHandler {
 	@Override
 	public IParameter[] getParameters() {
 		return null;
+	}
+
+	@Override
+	public String getShortcut() {
+		return "M1+F";
 	}
 
 }

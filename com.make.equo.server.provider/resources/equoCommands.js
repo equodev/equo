@@ -46,4 +46,8 @@ window.equo = window.equo || {};
         equo.executeCommand(callback, "org.eclipse.ui.file.save");
     };
 
+    equo.find = function () {
+        equo.sendToWebSocketServer("_executeEclipseCommand", { commandId: "org.eclipse.ui.edit.findReplace.command" });
+    };
+
 }(equo));

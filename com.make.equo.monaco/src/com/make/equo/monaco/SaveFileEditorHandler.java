@@ -18,33 +18,47 @@ import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class SaveFileEditorHandler extends ParameterizedHandler {
-	private EquoMonacoEditor editor;
+	private static EquoMonacoEditor editor;
 
 	public SaveFileEditorHandler setEditor(EquoMonacoEditor editor) {
-		this.editor = editor;
+		SaveFileEditorHandler.editor = editor;
 		return this;
+	}
+
+	@Execute
+	public void execute() {
+		String path = editor.getFilePath();
+		if (path != "") {
+			editor.getContentsAsync(content -> {
+				saveFile(path, content);
+			});
+		}
 	}
 
 	@Execute
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID) String idResponse,
 			IEquoEventHandler eventHandler) {
 		String path = editor.getFilePath();
-
 		if (path != "") {
 			editor.getContentsAsync(content -> {
-				Map<String, Object> response = new HashMap<>();
-				PrintWriter writer;
-				try {
-					writer = new PrintWriter(new File(path));
-					writer.print(content);
-					writer.close();
-					response.put("ok", "ok");
-				} catch (FileNotFoundException e) {
-					response.put("err", 1);
-				}
+				Map<String, Object> response = saveFile(path, content);
 				eventHandler.send(idResponse, response);
 			});
 		}
+	}
+
+	protected Map<String, Object> saveFile(String path, String content) {
+		Map<String, Object> response = new HashMap<>();
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new File(path));
+			writer.print(content);
+			writer.close();
+			response.put("ok", "ok");
+		} catch (FileNotFoundException e) {
+			response.put("err", 1);
+		}
+		return response;
 	}
 
 	@Override
@@ -56,6 +70,11 @@ public class SaveFileEditorHandler extends ParameterizedHandler {
 	public IParameter[] getParameters() {
 		IParameter[] parameters = { new CommandParameter(IConstants.EQUO_WEBSOCKET_PARAMS_RESPONSE_ID, "Response Id") };
 		return parameters;
+	}
+
+	@Override
+	public String getShortcut() {
+		return "M1+S";
 	}
 
 }
