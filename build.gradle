@@ -2,18 +2,29 @@ equo {
     channel = "rls"
 }
 
-task uploadEquoApp(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/equoapp-${version}.bnd"
-    file file('cnf/equoapp.bnd')
+task generateEquoAppForUpdate(type: Copy){
+    from 'cnf/equoapp.bnd'
+    into '/tmp/auxequoapp'
+    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/rls/${version}/") }
+}
+
+task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
+    key "${equo.channel}/${version}/equoapp.bnd"
+    file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
 task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/equobuild-${version}.bnd"
+    key "${equo.channel}/${version}/equobuild.bnd"
     file file('cnf/equobuild.bnd')
 }
 
+task uploadEquoCore(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/${version}/ext/equocore.bnd"
+    file file('cnf/ext/equocore.bnd')
+}
+
 task uploadEquoCi(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/equoci-${version}.yml"
+    key "${equo.channel}/${version}/equoci.yml"
     file file('cnf/equoci.yml')
 }
 
@@ -37,16 +48,72 @@ task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadMetadata]) {
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadMetadata]) {
 }
 
 task wrapper(type: Wrapper) {
   jarFile = rootProject.file('.gradle-wrapper/gradle-wrapper.jar')
 }
 
+allprojects {
+
+    apply plugin: "java"
+    apply plugin: "jacoco"
+    
+    
+    repositories {
+        jcenter()
+    }
+    
+    jacoco {
+        toolVersion = '0.8.5'
+    }
+      
+}
+
+
+def enabledHtml = hasProperty('reportHtml') ? reportHtml : "false"
+
 /* Additional configuration for the Bnd projects */
 subprojects {
+	
+  	
   if (plugins.hasPlugin('biz.aQute.bnd')) {
     // additional configuration for Bnd projects
   }
+  
+  //jacoco configuration for every subproyect
+  jacocoTestReport {
+        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+        classDirectories =  files(sourceSets.main.output)
+        reports {
+            html.enabled = false
+            xml.enabled = false
+            csv.enabled = false
+        }
+    }
+    
 }
+
+
+//taks to build jacoco report with results of all subprojects
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = subprojects.test
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = Boolean.valueOf(enabledHtml)
+        xml.enabled = false
+        csv.enabled = true
+    }
+    onlyIf = {
+        true
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
+}
+

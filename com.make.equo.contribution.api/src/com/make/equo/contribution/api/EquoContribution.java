@@ -9,6 +9,7 @@ import java.util.Map;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.make.equo.contribution.api.handler.IFiltersAdapterHandler;
+import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.contribution.api.resolvers.IEquoContributionUrlResolver;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
@@ -19,6 +20,7 @@ public class EquoContribution {
 	private final IEquoContributionManager manager;
 	private final IEquoContributionUrlResolver urlResolver;
 	private final IFiltersAdapterHandler filtersAdapterHandler;
+	private final List<ParameterizedHandler> parameterizedHandlers;
 
 	private final String contributedHtmlName;
 	private final String contributionName;
@@ -34,13 +36,14 @@ public class EquoContribution {
 	private final IHttpRequestFilter filter;
 
 	public EquoContribution(IEquoContributionManager manager, IEquoContributionUrlResolver urlResolver,
-			IFiltersAdapterHandler filtersAdapterHandler, String contributedHtmlName, String contributionName,
+			IFiltersAdapterHandler filtersAdapterHandler, List<ParameterizedHandler> parameterizedHandlers, String contributedHtmlName, String contributionName,
 			List<String> proxiedUris, List<String> contributedScripts, List<String> contributedStyles,
 			List<String> excludedResources, Map<String, String> pathsToScripts, Map<String, String> pathsToStyles,
 			IHttpRequestFilter filter) {
 		this.manager = manager;
 		this.urlResolver = urlResolver;
 		this.filtersAdapterHandler = filtersAdapterHandler;
+		this.parameterizedHandlers = parameterizedHandlers;
 		this.contributedHtmlName = contributedHtmlName;
 		this.contributionName = contributionName.toLowerCase();
 		this.proxiedUris = proxiedUris;
@@ -59,6 +62,10 @@ public class EquoContribution {
 
 	public String getContributionName() {
 		return contributionName;
+	}
+
+	public List<ParameterizedHandler> getParameterizedHandlers() {
+		return new ArrayList<ParameterizedHandler>(parameterizedHandlers);
 	}
 
 	public List<String> getProxiedUris() {

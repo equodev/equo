@@ -1,6 +1,7 @@
 Bundle-Version: ${version}.${tstamp}
 Export-Package: \
 	com.make.equo.application.api,\
+    com.make.equo.application.util,\
 	com.make.equo.application.model,\
 	org.osgi.service.component.annotations
 -includeresource: resources/
@@ -13,6 +14,7 @@ Export-Package: \
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
+    org.eclipse.ui.workbench,\
     org.eclipse.swt.chromium,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
@@ -63,8 +65,8 @@ Export-Package: \
 	osgi.cmpn
 Private-Package: \
 	com.make.equo.application.handlers,\
+	com.make.equo.application.handlers.filesystem,\
 	com.make.equo.application.impl,\
 	com.make.equo.application.model,\
 	com.make.equo.application.parts,\
-	com.make.equo.application.util,\
 	com.make.equo.application

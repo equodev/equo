@@ -8,10 +8,10 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 import com.make.equo.application.util.IConstants;
-import org.eclipse.swt.chromium.Browser;
 
 public class SinglePagePart {
 
