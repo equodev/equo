@@ -1,3 +1,5 @@
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 module.exports = {
   "transpileDependencies": [
     "vuetify"
@@ -11,6 +13,14 @@ module.exports = {
       .end();
   },
    configureWebpack: {
-    devtool: 'source-map'
+    devtool: 'source-map',
+    resolve: {
+      alias: {
+        'vscode': require.resolve('monaco-languageclient/lib/vscode-compatibility')
+      },
+    },
+    plugins: [
+      new MonacoWebpackPlugin()
+    ]
   }
 }
