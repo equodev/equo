@@ -33,6 +33,11 @@ public class EquoMonacoEditor {
 	private Browser browser;
 	private String namespace;
 	private List<IEquoRunnable<Void>> onLoadListeners;
+	protected String filePath = "";
+
+	public String getFilePath() {
+		return filePath;
+	}
 
 	protected IEquoEventHandler equoEventHandler;
 
