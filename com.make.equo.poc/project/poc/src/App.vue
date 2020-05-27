@@ -13,7 +13,7 @@
     <div class="contentDiv">
       <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" /></div>
       <div  class="editorShellDiv">
-        <div class="editor">Editor Slot</div>
+        <div id="editor" class="editor"></div>
         <equo-shell class="shellDiv"/>
     </div>
     </div>
@@ -26,6 +26,7 @@ import EquoToolbar from './components/Toolbar.vue'
 import EquoToolitem from './components/Toolitem.vue'
 import EquoShell from './components/shell/Shell.vue'
 import vuetify from './plugins/vuetify'
+import { EquoMonaco } from '@equo/equo-monaco-editor'
 
 export default {
   name: 'App',
@@ -102,7 +103,9 @@ export default {
                     //items de la toolbar
 
               contextMenuOptions:[
-                      {title: "Open",eventHandler:function(){console.log("Opening...")}},
+                      {title: "Open",eventHandler:function(path){
+                        EquoMonaco.create(document.getElementById('editor'), path);
+                      }},
                       {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(){console.log("Cutting...")}},
                       {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(){console.log("Copying...")}},
                       {title: "Remove", shortcut: "Supr",eventHandler:function(){console.log("Removing...")}},
@@ -150,6 +153,7 @@ export default {
     .editor{
       height: calc(100% - 270px - 35px);
       background-color: cornflowerblue;
+      overflow: hidden;
     }
 
     .contentDiv{

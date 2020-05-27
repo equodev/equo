@@ -37,7 +37,7 @@
               ref="contextmenu" 
               v-show="contextMenuIsVisible">
         <div v-for="option in menuoptions"  :key="option.title"
-              v-on:click="selectOption(option.eventHandler)">
+              @click="selectOption(option.eventHandler)">
           {{option.title}} <span>{{option.shortcut}}</span> 
          </div>
       </aside> 
@@ -154,7 +154,8 @@ export default {
        }
      },
      selectOption(event){
-       event();
+       const path = this.nodeInspected.data.path;
+       event(path);
        this.nodeInspected = null;
      },
      getExtension(file){
