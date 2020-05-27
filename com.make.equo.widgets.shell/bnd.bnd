@@ -1,5 +1,12 @@
 -privatepackage: com.make.equo.widgets.shell
 
 -buildpath: \
-    osgi.annotation,\
-    osgi.cmpn
+	osgi.annotation,\
+	osgi.cmpn,\
+	org.eclipse.osgi,\
+	org.eclipse.core.runtime,\
+	org.eclipse.equinox.common
+	
+-includeresource: \
+    resources/
+	
