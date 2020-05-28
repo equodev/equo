@@ -22,12 +22,13 @@
  import './../../../../../node_modules/xterm/css/xterm.css'
  import {EquoTerminal} from './terminal.class.js' 
 
-var socket = new WebSocket("ws://127.0.0.1:3000");
+var socket = new WebSocket("ws://127.0.0.1:40000");
+
+var shellPort = 0;
 
 socket.addEventListener('open', function () {
     let msg = JSON.stringify({
-                action : "addShell",
-                port: 3001 
+                action : "addShell"
         })
     socket.send(msg,function (event) {
         console.log("callback de creacion de shell ",event);
@@ -35,7 +36,15 @@ socket.addEventListener('open', function () {
 });
 
 socket.addEventListener('message', function (event) {
-    console.log('svr msg: ', event.data);
+    //console.log('svr msg: ', event.data);
+    try {
+        var msg = JSON.parse(event.data);
+        if(msg.action === "addShell"){
+        shellPort = msg.port;
+    }
+    } catch (error) { //response is not an Object, just a String
+    }
+
 });
 
 export default {
@@ -51,9 +60,9 @@ export default {
                 role: "client",
                 parentId: parentId,
                 host: "127.0.0.1",
-                port: 3001
+                port: shellPort
         });
-         }, 50);
+         }, 250);
     },
     destroyed: function(){
         let msg = JSON.stringify({

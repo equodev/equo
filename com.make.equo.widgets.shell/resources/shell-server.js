@@ -10,20 +10,25 @@ function getShell(port, shells){
 	}
 	return null;
 }
+
 const WebsocketServer = require("ws").Server;
 const createShell = require('./shell-model');
 
 var shells = [];
 
-var server = new WebsocketServer({ port: 3000 });
-
+var server = new WebsocketServer({ port: 40000 });
+console.log(server._server.address().port);
 server.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
- 	//var msg = message.json();
  		var msg = JSON.parse(message);
- 		console.log("action: ",msg.action);
   		if(msg.action === 'addShell'){
-  			shells.push(createShell(msg.port));
+  			let newShell = createShell();
+  			shells.push(newShell);
+
+  			let response = {};
+  			response.action = "addShell";
+  			response.port = newShell.getPort();
+  			ws.send(JSON.stringify(response));
   		}
   		if(msg.action === 'closeShell'){
   			const port = msg.params.port;

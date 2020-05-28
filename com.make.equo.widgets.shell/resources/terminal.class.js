@@ -103,7 +103,7 @@ class Terminal {
             this.onresize = () => {};
             this.ondisconnected = () => {};
             this.getPort = () => {
-                return opts.port
+                return this.wss._server.address().port
             };
 
             try {
@@ -122,7 +122,7 @@ class Terminal {
                 this.onclosed(code, signal);
             });
             this.wss = new this.Websocket({
-                port: opts.port || 3000,
+                port: 0,
                 clientTracking: true,
                 verifyClient: () => {
                     if (this.wss.clients.length >= 1) {

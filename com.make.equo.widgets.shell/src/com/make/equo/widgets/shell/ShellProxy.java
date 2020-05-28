@@ -61,6 +61,7 @@ public class ShellProxy {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	private String extractServerFiles() throws IOException, FileNotFoundException {
 		Path tempDir = Files.createTempDirectory(TEMP_SERVER_DIRNAME);
 		JarFile jar = new JarFile(serverPath);
