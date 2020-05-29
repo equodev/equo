@@ -58,7 +58,7 @@ export class EquoTerminal {
             });
 
             let sockHost = opts.host || "127.0.0.1";
-            let sockPort = opts.port || 3001;
+            let sockPort = opts.port || 3000;
 
             this.socket = new WebSocket("ws://"+sockHost+":"+sockPort);
             this.xTerm.loadAddon(new AttachAddon(this.socket));
@@ -101,6 +101,3 @@ export class EquoTerminal {
         } 
     }
 }
-// module.exports = {
-//     Terminal
-// };

@@ -48,52 +48,7 @@
 
 class Terminal {
     constructor(opts) {
-        if (opts.role === "client") {
-            if (!opts.parentId) throw "Missing options";
-
-            this.xTerm = require("xterm");
-            this.xTerm.loadAddon('attach');
-            this.xTerm.loadAddon('fit');
-
-            this.sendSizeToServer = () => {
-                let cols = this.term.cols.toString();
-                let rows = this.term.rows.toString();
-                while (cols.length < 3) {
-                    cols = "0"+cols;
-                }
-                while (rows.length < 3) {
-                    rows = "0"+rows;
-                }
-                this.socket.send("ESCAPED|-- RESIZE:"+cols+";"+rows);
-            };
-
-            this.term = new this.xTerm({
-                cols: 80,
-                rows: 24
-            });
-            this.term.open(document.getElementById(opts.parentId), true);
-
-            let sockHost = opts.host || "127.0.0.1";
-            let sockPort = opts.port || 3000;
-
-            this.socket = new WebSocket("ws://"+sockHost+":"+sockPort);
-            this.socket.onopen = () => {
-                this.term.attach(this.socket);
-            };
-            this.socket.onerror = (e) => {throw e};
-
-            this.fit = () => {
-                this.term.fit();
-                setTimeout(() => {
-                    this.sendSizeToServer();
-                }, 50);
-            }
-
-            this.resize = (cols, rows) => {
-                this.term.resize(cols, rows);
-                this.sendSizeToServer();
-            }
-        } else if (opts.role === "server") { ///////------------------------------------------------------------------------
+         if (opts.role === "server") { ///////------------------------------------------------------------------------
 
             this.Pty = require("node-pty");
             this.Websocket = require("ws").Server;
