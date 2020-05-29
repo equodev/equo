@@ -11,8 +11,8 @@ import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
 export class EquoMonacoEditor {
 
 	private lastSavedVersionId!: number;
-	private static editor: monaco.editor.IStandaloneCodeEditor;
-	private static model: monaco.editor.ITextModel;
+	private editor!: monaco.editor.IStandaloneCodeEditor;
+	private model!: monaco.editor.ITextModel;
 	private namespace!: string;
 	private wasCreated: boolean = false;
 	private webSocket: EquoWebSocket;
@@ -22,14 +22,19 @@ export class EquoMonacoEditor {
 		this.webSocket = equoWebSocketService.service;
 	}
 
+
+	public getEditor(): monaco.editor.IStandaloneCodeEditor {
+		return this.editor;
+	}
+
+	public dispose(): void {
+		this.model.dispose();
+	}
+
 	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
-
-				if (EquoMonacoEditor.model){
-					EquoMonacoEditor.model.dispose();
-				}
 
 				let l = this.getLanguageOfFile(values.name);
 				let language = '';
@@ -44,26 +49,26 @@ export class EquoMonacoEditor {
 					});
 				}
 
-				EquoMonacoEditor.model = monaco.editor.createModel(
+				this.model = monaco.editor.createModel(
 					values.text,
 					language,
 					monaco.Uri.file(values.name) // uri
 				);
 
-				EquoMonacoEditor.editor = monaco.editor.create(element, {
-					model: EquoMonacoEditor.model,
+				this.editor = monaco.editor.create(element, {
+					model: this.model,
 					lightbulb: {
 						enabled: true
 					},
 					automaticLayout: true
 				});
 
-				this.lastSavedVersionId = EquoMonacoEditor.model.getAlternativeVersionId();
+				this.lastSavedVersionId = this.model.getAlternativeVersionId();
 
 				this.bindEquoFunctions();
 
 				if (values.lspPath) {
-					MonacoServices.install(EquoMonacoEditor.editor);
+					MonacoServices.install(this.editor);
 
 					// create the web socket
 					const url = normalizeUrl(values.lspPath)
@@ -137,71 +142,73 @@ export class EquoMonacoEditor {
 	}
 
 	private bindEquoFunctions(): void {
-		EquoMonacoEditor.editor.onDidChangeCursorSelection((e: any) => {
+		this.editor.onDidChangeCursorSelection((e: any) => {
 			this.webSocket.send(this.namespace + "_selection", e.selection);
 		});
 
 
 		this.webSocket.on(this.namespace + "_doFind", () => {
-			EquoMonacoEditor.editor.getAction("actions.find").run();
+			this.editor.getAction("actions.find").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_getContents", () => {
-			this.webSocket.send(this.namespace + "_doGetContents", { contents: EquoMonacoEditor.editor.getValue() });
+			this.webSocket.send(this.namespace + "_doGetContents", { contents: this.editor.getValue() });
 		});
 
 		this.webSocket.on(this.namespace + "_undo", () => {
-			(EquoMonacoEditor.model as any).undo();
+			(this.model as any).undo();
 		});
 
 		this.webSocket.on(this.namespace + "_redo", () => {
-			(EquoMonacoEditor.model as any).redo();
+			(this.model as any).redo();
 		});
 
 		this.webSocket.on(this.namespace + "_didSave", () => {
-			this.lastSavedVersionId = EquoMonacoEditor.model.getAlternativeVersionId();
+			this.lastSavedVersionId = this.model.getAlternativeVersionId();
 			this.notifyChanges();
 		});
 
 
 		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
-			EquoMonacoEditor.editor.onDidChangeModelContent(() => {
+			this.editor.onDidChangeModelContent(() => {
 				this.notifyChanges();
 			});
 		});
 
 
 		this.webSocket.on(this.namespace + "_doCopy", () => {
-			EquoMonacoEditor.editor.getAction("editor.action.clipboardCopyAction").run();
+			this.editor.getAction("editor.action.clipboardCopyAction").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_doCut", () => {
-			EquoMonacoEditor.editor.getAction("editor.action.clipboardCutAction").run();
+			this.editor.getAction("editor.action.clipboardCutAction").run();
 		});
 
 
 		this.webSocket.on(this.namespace + "_doPaste", () => {
-			EquoMonacoEditor.editor.focus();
+			this.editor.focus();
 			this.webSocket.send(this.namespace + "_canPaste");
 		});
 
 
 		this.webSocket.on(this.namespace + "_doSelectAll", () => {
-			EquoMonacoEditor.editor.focus();
+			this.editor.focus();
 			this.webSocket.send(this.namespace + "_canSelectAll");
 		});
 	}
 
 	private notifyChanges(): void {
 		this.webSocket.send(this.namespace + "_changesNotification",
-			{ isDirty: this.lastSavedVersionId !== EquoMonacoEditor.model.getAlternativeVersionId(), canRedo: (EquoMonacoEditor.model as any).canRedo(), canUndo: (EquoMonacoEditor.model as any).canUndo() });
+			{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
 	}
 }
 
 export namespace EquoMonaco {
-	export function create(element: HTMLElement, filePath?: string): void {
-		return new EquoMonacoEditor().create(element, filePath);
+	export function create(element: HTMLElement, filePath?: string): EquoMonacoEditor {
+		let monacoEditor = new EquoMonacoEditor();
+		monacoEditor.create(element, filePath);
+		return monacoEditor;
 	}
 }
