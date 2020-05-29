@@ -103,14 +103,17 @@ export default {
                     //items de la toolbar
 
               contextMenuOptions:[
-                      {title: "Open",eventHandler:function(path){
-                        EquoMonaco.create(document.getElementById('editor'), path);
+                      {title: "Open",eventHandler:function(path, tree){
+                        if (tree.editor)
+                          tree.editor.dispose();
+                        tree.editor = EquoMonaco.create(document.getElementById('editor'), path);
                       }},
                       {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(){console.log("Cutting...")}},
                       {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(){console.log("Copying...")}},
                       {title: "Remove", shortcut: "Supr",eventHandler:function(){console.log("Removing...")}},
                       {title: "Rename",eventHandler:function(){console.log("Renaming...")}}
-              ]
+              ],
+              editor: undefined
               }
     },
     /* eslint-disable */
