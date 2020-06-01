@@ -17,6 +17,7 @@ import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.gson.JsonObject;
+import com.make.equo.monaco.handlers.EditorHandler;
 import com.make.equo.monaco.lsp.LspProxy;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
@@ -42,16 +43,22 @@ public class EquoMonacoEditor {
 	protected IEquoEventHandler equoEventHandler;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler) {
-		this();
-		this.equoEventHandler = handler;
+		this(handler);
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 	}
 
-	public EquoMonacoEditor() {
+	public EquoMonacoEditor(IEquoEventHandler handler) {
+		this.equoEventHandler = handler;
 		namespace = "editor" + Double.toHexString(Math.random());
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
 		loaded = false;
+		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
+	}
+
+	public void initialize(String contents, String fileName, String filePath) {
+		this.filePath = filePath;
+		handleCreateEditor(contents, fileName);
 	}
 
 	protected void createEditor(String contents, String fileName) {
@@ -68,6 +75,7 @@ public class EquoMonacoEditor {
 	}
 
 	protected void handleCreateEditor(String contents, String fileName) {
+		EditorHandler.setActiveEditor(this);
 		new Thread(() -> lspProxy.startServer()).start();
 		Map<String, String> editorData = new HashMap<String, String>();
 		editorData.put("text", contents);

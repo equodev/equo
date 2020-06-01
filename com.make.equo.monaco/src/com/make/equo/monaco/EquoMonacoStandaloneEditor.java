@@ -14,13 +14,17 @@ import org.osgi.service.component.annotations.Reference;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.contribution.api.EquoContributionBuilder;
+import com.make.equo.monaco.handlers.FindHandler;
+import com.make.equo.monaco.handlers.SaveFileEditorHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component
-public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
+public class EquoMonacoStandaloneEditor {
 
 	@Reference
 	private EquoContributionBuilder builder;
+	
+	private IEquoEventHandler equoEventHandler;
 
 	public EquoMonacoStandaloneEditor() {
 		super();
@@ -37,17 +41,16 @@ public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
 				String content = "";
 				try {
 					content = Files.lines(filePath).collect(Collectors.joining("\n"));
-					this.filePath = fileString;
-					handleCreateEditor(content, file.getName());
+					new EquoMonacoEditor(equoEventHandler).initialize(content, file.getName(), fileString);
 				} catch (IOException e) {
 				}
 			} else {
-				handleCreateEditor("", "");
+				new EquoMonacoEditor(equoEventHandler).initialize("", "", "");
 			}
 		});
 
-		builder.withParameterizedHandler(new SaveFileEditorHandler().setEditor(this))
-				.withParameterizedHandler(new FindHandler().setEditor(this)).build();
+		builder.withParameterizedHandler(new SaveFileEditorHandler())
+				.withParameterizedHandler(new FindHandler()).build();
 	}
 
 	@Reference

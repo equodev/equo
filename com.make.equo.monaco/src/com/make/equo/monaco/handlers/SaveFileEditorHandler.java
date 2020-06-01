@@ -1,4 +1,4 @@
-package com.make.equo.monaco;
+package com.make.equo.monaco.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,17 +14,9 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 
 import com.make.equo.application.util.IConstants;
 import com.make.equo.contribution.api.handler.CommandParameter;
-import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
 
-public class SaveFileEditorHandler extends ParameterizedHandler {
-	private static EquoMonacoEditor editor;
-
-	public SaveFileEditorHandler setEditor(EquoMonacoEditor editor) {
-		SaveFileEditorHandler.editor = editor;
-		return this;
-	}
-
+public class SaveFileEditorHandler extends EditorHandler {
 	@Execute
 	public void execute() {
 		String path = editor.getFilePath();

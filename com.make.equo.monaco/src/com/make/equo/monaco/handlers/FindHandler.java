@@ -1,19 +1,10 @@
-package com.make.equo.monaco;
+package com.make.equo.monaco.handlers;
 
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 
-import com.make.equo.contribution.api.handler.ParameterizedHandler;
-
-public class FindHandler extends ParameterizedHandler {
-	private static EquoMonacoEditor editor;
-
-	public FindHandler setEditor(EquoMonacoEditor editor) {
-		FindHandler.editor = editor;
-		return this;
-	}
-
+public class FindHandler extends EditorHandler {
 	@Execute
 	public void execute() {
 		editor.find();
