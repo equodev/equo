@@ -16,6 +16,8 @@ export class EquoMonacoEditor {
 	private namespace!: string;
 	private wasCreated: boolean = false;
 	private webSocket: EquoWebSocket;
+	private languageClient!: MonacoLanguageClient;
+	private lspws!: WebSocket;
 
 	constructor() {
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
@@ -28,7 +30,14 @@ export class EquoMonacoEditor {
 	}
 
 	public dispose(): void {
+		if (this.lspws){
+			this.lspws.close();
+			delete this.lspws;
+		}
+		if (this.languageClient)
+			this.languageClient.stop();
 		this.model.dispose();
+		this.editor.dispose();
 		this.webSocket.send(this.namespace + "_disposeEditor");
 	}
 
@@ -72,15 +81,16 @@ export class EquoMonacoEditor {
 					MonacoServices.install(this.editor);
 
 					// create the web socket
-					const url = normalizeUrl(values.lspPath)
-					const webSocket = createWebSocket(url);
+					var url = normalizeUrl(values.lspPath)
+					this.lspws = createWebSocket(url);
+					var webSocket = this.lspws;
 					// listen when the web socket is opened
 					listen({
 						webSocket,
 						onConnection: connection => {
 							// create and start the language client
-							const languageClient = createLanguageClient(connection);
-							const disposable = languageClient.start();
+							this.languageClient = createLanguageClient(connection);
+							var disposable = this.languageClient.start();
 							connection.onClose(() => disposable.dispose());
 						}
 					});
