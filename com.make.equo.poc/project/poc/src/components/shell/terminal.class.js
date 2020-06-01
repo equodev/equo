@@ -46,15 +46,23 @@
     
 ******************************************************************* */
 
-export class Terminal {
+export class EquoTerminal {
     constructor (opts) {
         if (opts.role === "client") {
             if (!opts.parentId) throw "Missing options";
-            this.xTerm = require("xterm");
-            this.xTerm = new Terminal();
-            console.log(this.xTerm.loadAddon)
-            this.xTerm.loadAddon('attach');
-            this.xTerm.loadAddon('fit');
+            const FitAddon = require('xterm-addon-fit').FitAddon;
+            const AttachAddon = require('xterm-addon-attach').AttachAddon;
+            const Terminal = require('xterm').Terminal;
+            this.xTerm = new Terminal({
+                rows:15
+            });
+
+            let sockHost = opts.host || "127.0.0.1";
+            let sockPort = opts.port || 3000;
+
+            this.socket = new WebSocket("ws://"+sockHost+":"+sockPort);
+            this.xTerm.loadAddon(new AttachAddon(this.socket));
+            this.xTerm.loadAddon(new FitAddon());
 
             this.sendSizeToServer = () => {
                 let cols = this.term.cols.toString();
@@ -68,96 +76,28 @@ export class Terminal {
                 this.socket.send("ESCAPED|-- RESIZE:"+cols+";"+rows);
             };
 
-            this.term = new this.xTerm({
-                cols: 80,
-                rows: 24
-            });
-            this.term.open(document.getElementById(opts.parentId), true);
+            // this.term = new Terminal({
+            //     cols: 80,
+            //     rows: 24
+            // });
+            this.xTerm.open(document.getElementById(opts.parentId), true);
+            this.xTerm.write(' ')
 
-            let sockHost = opts.host || "127.0.0.1";
-            let sockPort = opts.port || 3000;
-
-            this.socket = new WebSocket("ws://"+sockHost+":"+sockPort);
             this.socket.onopen = () => {
-                this.term.attach(this.socket);
             };
             this.socket.onerror = (e) => {throw e};
 
             this.fit = () => {
-                this.term.fit();
+                this.xTerm.fit();
                 setTimeout(() => {
                     this.sendSizeToServer();
                 }, 50);
             }
 
             this.resize = (cols, rows) => {
-                this.term.resize(cols, rows);
+                this.xTerm.resize(cols, rows);
                 this.sendSizeToServer();
             }
-        } else if (opts.role === "server") {
-
-            this.Pty = require("node-pty");
-            this.Websocket = require("ws").Server;
-
-            this.onclosed = () => {};
-            this.onopened = () => {};
-            this.onresize = () => {};
-            this.ondisconnected = () => {};
-
-            this.tty = this.Pty.spawn(opts.shell || "bash", [], {
-                name: 'xterm-color',
-                cols: 80,
-                rows: 24,
-                cwd: process.env.PWD,
-                env: process.env
-            });
-
-            this.tty.on('exit', (code, signal) => {
-                this.onclosed(code, signal);
-            });
-            this.wss = new this.Websocket({
-                port: opts.port || 3000,
-                clientTracking: true,
-                verifyClient: () => {
-                    if (this.wss.clients.length >= 1) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            });
-            this.wss.on('connection', (ws) => {
-                this.onopened();
-                ws.on('message', (msg) => {
-                    if (msg.startsWith("ESCAPED|-- ")) {
-                        if (msg.startsWith("ESCAPED|-- RESIZE:")) {
-                            msg = msg.substr(18);
-                            let cols = msg.slice(0, -4);
-                            let rows = msg.substr(4);
-                            this.tty.resize(Number(cols), Number(rows));
-                            this.onresized(cols, rows);
-                        }
-                    } else {
-                        this.tty.write(msg);
-                    }
-                });
-                this.tty.on('data', (data) => {
-                    try {
-                        ws.send(data);
-                    } catch (e) {
-                        // Websocket closed
-                    }
-                });
-            });
-            this.wss.on('close', () => {
-                this.ondisconnected();
-            });
-        } else {
-            throw "Unknow purpose";
-        }
+        } 
     }
 }
-
-// module.exports = {
-//     Terminal
-// };
