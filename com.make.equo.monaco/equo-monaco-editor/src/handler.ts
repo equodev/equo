@@ -31,8 +31,8 @@ export class EquoMonacoEditor {
 
 	public dispose(): void {
 		if (this.lspws){
-			this.lspws.close();
-			delete this.lspws;
+			//@ts-ignore
+			this.lspws.close(1000, '', {keepClosed: true, fastClose: true, delay: 0});
 		}
 		if (this.languageClient)
 			this.languageClient.stop();
