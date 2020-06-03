@@ -17,4 +17,11 @@ gradle.rootProject {
     }
 }
 
+buildCache {
+    local {
+        directory = new File(rootDir, 'build-cache')
+        enabled = true
+    }
+}
+
 apply plugin: "com.make.equo"
