@@ -2,10 +2,13 @@ image: registry.gitlab.com/maketechnology/equo/docker/gradle:adoptopenjdk8-alpin
 
 stages:
   - build
+  - test
+  - report
   - deploy
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
+  gradle_opt: "--build-cache --no-daemon"
 
 # HOME is to cwd so bnd will download to ~/.bnd and ~/.m2 with ~=HOME
 cache:
@@ -28,7 +31,11 @@ before_script:
       - cnf/equoapp.bnd
       - cnf/equobuild.bnd
       - cnf/release
-      - build/reports/jacoco/
+      - cnf/cache
+      - cnf/build
+      - build
+      - build-cache
+      - com.make.equo*/generated
     expire_in: 12w
     
 .print_converage: &print_converage
@@ -38,12 +45,42 @@ build:
   extends: .all
   stage: build
   script:
-    - gradle jar
-    - gradle check jacocoRootReport
-    - *print_converage
+    - gradle $gradle_opt assemble
   except:
     - master
 
+test: 
+  extends: .all
+  stage: test
+  script:
+    - gradle $gradle_opt test
+  except:
+    - master
+    
+test.integration: 
+  extends: .all
+  image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
+  stage: test
+  before_script:
+    - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
+    - export DISPLAY=:1
+  script:
+    - ./gradlew $gradle_opt testOSGi
+  except:
+    - master
+    
+    
+coverage.report:
+  extends: .all
+  stage: report
+  script:
+    - gradle $gradle_opt jacocoRootReport
+    - *print_converage
+  except:
+    - master
+   
+
+ 
 
 release:
   extends: .all

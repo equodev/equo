@@ -36,7 +36,6 @@ public class ToolbarRendererEventTest extends AbstractBuilderTest {
 	
 	private Boolean executed;
 	
-	@Ignore
 	@Test
 	public void toolbarRenderer_Should_Store_ClickEventHandler_in_WSocket_EventsHash() throws Exception {
 		
