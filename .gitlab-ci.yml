@@ -4,7 +4,7 @@ stages:
   - build
   - test
   - report
-  - deploy
+  - release
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
@@ -35,7 +35,8 @@ before_script:
       - cnf/build
       - build
       - build-cache
-      - com.make.equo*/generated
+      - com.make.equo*/generated/*.jar
+      - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
     
 .print_converage: &print_converage
@@ -46,16 +47,12 @@ build:
   stage: build
   script:
     - gradle $gradle_opt assemble
-  except:
-    - master
 
 test: 
   extends: .all
   stage: test
   script:
     - gradle $gradle_opt test
-  except:
-    - master
     
 test.integration: 
   extends: .all
@@ -66,9 +63,6 @@ test.integration:
     - export DISPLAY=:1
   script:
     - ./gradlew $gradle_opt testOSGi
-  except:
-    - master
-    
     
 coverage.report:
   extends: .all
@@ -79,23 +73,26 @@ coverage.report:
   except:
     - master
    
-
- 
-
+full.coverage.report:
+  extends: .all
+  stage: report
+  script:
+    - gradle $gradle_opt jacocoRootReport -PreportHtml=true
+    - *print_converage
+  only:
+    - master
+    
 release:
   extends: .all
-  stage: build
+  stage: release
   script:
-    - gradle jar
-    - gradle check jacocoRootReport -PreportHtml=true
-    - *print_converage
-    - gradle release
-    - gradle publish
+    - gradle $gradle_opt release
+    - gradle $gradle_opt publish
   only:
     - master
     
 pages:
-  stage: deploy
+  stage: release
   script:
     - cp -R $CI_PROJECT_DIR/build/reports/jacoco/jacocoRootReport/html/ public/
     - ls -R public/
