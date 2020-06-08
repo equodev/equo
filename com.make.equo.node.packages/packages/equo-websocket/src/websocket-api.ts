@@ -1,11 +1,11 @@
-import { EquoService } from './services'
+import { EquoService } from '@equo/service-manager'
 
 export class EquoWebSocket extends WebSocket {
 
     private userEventCallbacks: any = {};
 
-    constructor() {
-        super('ws://127.0.0.1:45454');
+    constructor(port: number) {
+        super(`ws://127.0.0.1:${port}`);
     }
 
     /**
@@ -87,29 +87,15 @@ export class EquoWebSocket extends WebSocket {
 
 }
 
-export interface EquoWebSocketService extends EquoService {
-    symbol: symbol,
-    service: EquoWebSocket
-}
-
 export namespace EquoWebSocketService {
-    const WebsocketServiceSymbol: symbol = Symbol('equo-websocket');
-    export function create() {
+    const WebsocketServiceId: string = 'equo-websocket';
+    export function create(): EquoService<EquoWebSocket> {
         return {
-            symbol: WebsocketServiceSymbol,
-            service: new EquoWebSocket()
+            id: WebsocketServiceId,
+            service: new EquoWebSocket(45454)
         };
     }
-    export function get(): EquoWebSocketService {
-        var webSocketService!: EquoWebSocketService;
-        try {
-            webSocketService = EquoService.get(WebsocketServiceSymbol) as EquoWebSocketService;
-        } catch (e) {
-            if (!webSocketService) {
-                webSocketService = create();
-                EquoService.install(webSocketService);
-            }
-        }
-        return webSocketService;
+    export function get(): EquoWebSocket {
+        return EquoService.get<EquoWebSocket>(WebsocketServiceId, create);;
     }
 }

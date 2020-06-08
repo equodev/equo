@@ -1,5 +1,5 @@
 {
-    "name": "@equo/websocket",
+    "name": "@equo/service-manager",
     "version": "0.1.0",
     "description": "Websocket API for usage within the Equo Framework",
     "license": "UNLICENSED",
@@ -12,9 +12,6 @@
     "files": [
         "/lib"
     ],
-    "dependencies": {
-        "@equo/service-manager": "^0.1.0"
-    },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",
         "clean": "rimraf lib",
