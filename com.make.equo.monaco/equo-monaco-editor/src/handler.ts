@@ -222,4 +222,16 @@ export namespace EquoMonaco {
 		monacoEditor.create(element, filePath);
 		return monacoEditor;
 	}
+
+	export function addLspServer(executionParameters: Array<string>, extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_addLspServer", {executionParameters: executionParameters, extensions: extensions});
+	}
+
+	export function removeLspServer(extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_removeLspServer", {extensions: extensions});
+	}
+
+	export function addLspWsServer(fullServerPath: string, extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_addLspWsServer", {fullServerPath: fullServerPath, extensions: extensions});
+	}
 }

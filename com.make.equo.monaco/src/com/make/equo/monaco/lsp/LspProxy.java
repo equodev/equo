@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
@@ -33,7 +34,7 @@ public class LspProxy {
 	private boolean serverOn = false;
 	private Process process = null;
 	private int instancesUsingServer = 0;
-	private Map<String, Collection<String>> servers = new HashMap<>();
+	private Map<String, List<String>> servers = new HashMap<>();
 
 	public LspProxy() {
 		File bundle;
@@ -61,8 +62,17 @@ public class LspProxy {
 		return name.replace(" ", "");
 	}
 
-	public LspProxy addServer(String name, Collection<String> excecutionParameters) {
+	public LspProxy addServer(String name, List<String> excecutionParameters) {
 		servers.put(formatServerName(name), excecutionParameters);
+		saveServersInFile();
+		return this;
+	}
+
+	public LspProxy removeServer(Collection<String> names) {
+		for (String name : names) {
+			servers.remove(name);
+		}
+		saveServersInFile();
 		return this;
 	}
 
@@ -131,7 +141,6 @@ public class LspProxy {
 	}
 
 	public synchronized void startServer() {
-		saveServersInFile();
 		if (!serverOn) {
 			try {
 				socketPortReserve.close();
@@ -151,7 +160,7 @@ public class LspProxy {
 	private void saveServersInFile() {
 		StringBuilder content = new StringBuilder();
 		content.append("langservers:\n");
-		for (Entry<String, Collection<String>> server : servers.entrySet()) {
+		for (Entry<String, List<String>> server : servers.entrySet()) {
 			content.append("    ");
 			content.append(server.getKey());
 			content.append(":\n");

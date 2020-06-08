@@ -63,6 +63,18 @@ function toSocket(webSocket: ws): rpc.IWebSocket {
 wss.on('connection', (client : ws, request : http.IncomingMessage) => {
   let langServer : string[];
 
+  try {
+    let parsed = yaml.safeLoad(fs.readFileSync(argv.languageServers), 'utf8');
+    if (!parsed.langservers) {
+      console.log('Your langservers file is not a valid format, see README.md');
+      process.exit(1);
+    }
+    languageServers = parsed.langservers;
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+
   Object.keys(languageServers).forEach((key) => {
     if (request.url === '/' + key) {
       langServer = languageServers[key];

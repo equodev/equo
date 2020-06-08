@@ -7,11 +7,11 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -230,7 +230,7 @@ public class EquoMonacoEditor {
 	 * Add a lsp server to be used by the editors on the files with the given
 	 * extensions
 	 * 
-	 * @param excecutionParameters The parameters needed to start the lsp server
+	 * @param executionParameters The parameters needed to start the lsp server
 	 *                             through stdio. Example: ["html-languageserver",
 	 *                             "--stdio"]
 	 * @param extensions           A collection of extensions for what the editor
@@ -238,10 +238,26 @@ public class EquoMonacoEditor {
 	 *                             must not have the initial dot. Example: ["php",
 	 *                             "php4"]
 	 */
-	public static void addLspServer(Collection<String> excecutionParameters, Collection<String> extensions) {
-		String nameForServer = extensions.stream().map(s -> s.replace(" ", "")).collect(Collectors.joining());
-		lspProxy.addServer(nameForServer, excecutionParameters);
-		addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + nameForServer, extensions);
+	public static void addLspServer(List<String> executionParameters, Collection<String> extensions) {
+		for (String extension : extensions) {
+			lspProxy.addServer(extension, executionParameters);
+			addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + extension, Collections.singleton(extension));
+		}
+	}
+	
+	
+	/**
+	 * Remove a lsp server assigned to the given extensions
+	 * 
+	 * @param extensions A collection of the file extensions for which the
+	 *                   previously assigned lsp will be removed The extensions must
+	 *                   not have the initial dot. Example: ["php", "php4"]
+	 */
+	public static void removeLspServer(Collection<String> extensions) {
+		lspProxy.removeServer(extensions);
+		for (String extension : extensions) {
+			lspServers.remove(extension);
+		}
 	}
 
 	public void dispose() {
