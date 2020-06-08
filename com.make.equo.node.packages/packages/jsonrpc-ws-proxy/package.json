@@ -1,6 +1,6 @@
 {
   "name": "jsonrpc-ws-proxy",
-  "version": "0.0.5",
+  "version": "0.0.9",
   "author": "Wylie Conlon <wylieconlon@gmail.com>",
   "description": "Creates a web socket proxy for any number of language server processes",
   "keywords": [

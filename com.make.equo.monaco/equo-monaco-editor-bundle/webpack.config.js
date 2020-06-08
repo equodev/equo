@@ -5,7 +5,7 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const common = {
     entry: {
-        "main": path.resolve(lib, "main.js"),
+        "index": path.resolve(lib, "index.js"),
     },
     output: {
         filename: '[name].bundle.js',
