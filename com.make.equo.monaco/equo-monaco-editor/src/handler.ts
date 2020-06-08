@@ -29,6 +29,7 @@ export class EquoMonacoEditor {
 
 	public dispose(): void {
 		this.model.dispose();
+		this.webSocket.send(this.namespace + "_disposeEditor");
 	}
 
 	public create(element: HTMLElement, filePath?: string): void {

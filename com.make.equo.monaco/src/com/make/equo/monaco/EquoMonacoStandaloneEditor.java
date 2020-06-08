@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component
-public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
+public class EquoMonacoStandaloneEditor {
 
 	public EquoMonacoStandaloneEditor() {
 		super();
@@ -33,12 +33,11 @@ public class EquoMonacoStandaloneEditor extends EquoMonacoEditor {
 				String content = "";
 				try {
 					content = Files.lines(filePath).collect(Collectors.joining("\n"));
-					this.filePath = fileString;
-					handleCreateEditor(content, file.getName());
+					new EquoMonacoEditor(equoEventHandler).initialize(content, file.getName(), fileString);
 				} catch (IOException e) {
 				}
 			} else {
-				handleCreateEditor("", "");
+				new EquoMonacoEditor(equoEventHandler).initialize("", "", "");
 			}
 		});
 	}

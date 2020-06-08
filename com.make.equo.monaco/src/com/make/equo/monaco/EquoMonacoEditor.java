@@ -42,16 +42,22 @@ public class EquoMonacoEditor {
 	protected IEquoEventHandler equoEventHandler;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler) {
-		this();
-		this.equoEventHandler = handler;
+		this(handler);
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 	}
 
-	public EquoMonacoEditor() {
+	public EquoMonacoEditor(IEquoEventHandler handler) {
+		this.equoEventHandler = handler;
 		namespace = "editor" + Double.toHexString(Math.random());
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
 		loaded = false;
+		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
+	}
+
+	public void initialize(String contents, String fileName, String filePath) {
+		this.filePath = filePath;
+		handleCreateEditor(contents, fileName);
 	}
 
 	protected void createEditor(String contents, String fileName) {
