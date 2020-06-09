@@ -1,0 +1,25 @@
+{
+    "name": "@equo/framework",
+    "version": "0.1.0",
+    "description": "Equo Framework Javascript API",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted",
+        "registry": "http://dev.registry.equoplatform.com"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "dependencies": {
+        "@equo/service-manager": "^0.1.0",
+        "@equo/websocket": "^0.1.0"
+    },
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    }
+}
