@@ -3,6 +3,7 @@ Bundle-Version: ${version}.${tstamp}
 -buildpath: \
     com.google.gson,\
     com.make.equo.ws.api;version=latest,\
+    com.make.equo.filesystem.api;version=latest,\
     com.make.equo.contribution.api;version=latest,\
     osgi.cmpn
 Private-Package: \
