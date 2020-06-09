@@ -5,6 +5,9 @@ import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTIO
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,7 +55,12 @@ public class EquoMonacoEditor {
 		namespace = "editor" + Double.toHexString(Math.random());
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
 		loaded = false;
+		registerActions();
+	}
+
+	private void registerActions() {
 		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
+		equoEventHandler.on(namespace + "_doSave", (IEquoRunnable<Void>) runnable -> save());
 	}
 
 	public void initialize(String contents, String fileName, String filePath) {
@@ -186,6 +194,21 @@ public class EquoMonacoEditor {
 		equoEventHandler.send(namespace + "_doSelectAll");
 	}
 
+	public void save() {
+		if (filePath == null || filePath.trim().equals(""))
+			return;
+		getContentsAsync(content -> {
+			PrintWriter writer;
+			try {
+				writer = new PrintWriter(new File(filePath));
+				writer.print(content);
+				writer.close();
+				handleAfterSave();
+			} catch (FileNotFoundException e) {
+			}
+		});
+	}
+
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
 		equoEventHandler.on(namespace + "_selection", (JsonObject contents) -> {
 			selectionFunction.run(contents.get("endColumn").getAsInt() != contents.get("startColumn").getAsInt()
@@ -231,12 +254,11 @@ public class EquoMonacoEditor {
 	 * extensions
 	 * 
 	 * @param executionParameters The parameters needed to start the lsp server
-	 *                             through stdio. Example: ["html-languageserver",
-	 *                             "--stdio"]
-	 * @param extensions           A collection of extensions for what the editor
-	 *                             will use the given lsp server. The extensions
-	 *                             must not have the initial dot. Example: ["php",
-	 *                             "php4"]
+	 *                            through stdio. Example: ["html-languageserver",
+	 *                            "--stdio"]
+	 * @param extensions          A collection of extensions for what the editor
+	 *                            will use the given lsp server. The extensions must
+	 *                            not have the initial dot. Example: ["php", "php4"]
 	 */
 	public static void addLspServer(List<String> executionParameters, Collection<String> extensions) {
 		for (String extension : extensions) {
@@ -244,8 +266,7 @@ public class EquoMonacoEditor {
 			addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + extension, Collections.singleton(extension));
 		}
 	}
-	
-	
+
 	/**
 	 * Remove a lsp server assigned to the given extensions
 	 * 

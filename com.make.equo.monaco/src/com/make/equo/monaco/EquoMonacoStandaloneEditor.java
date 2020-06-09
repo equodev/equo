@@ -72,6 +72,9 @@ public class EquoMonacoStandaloneEditor {
 					content = Files.lines(filePath).collect(Collectors.joining("\n"));
 					new EquoMonacoEditor(equoEventHandler).initialize(content, file.getName(), fileString);
 				} catch (IOException e) {
+					if (!file.exists()) {
+						new EquoMonacoEditor(equoEventHandler).initialize("", file.getName(), fileString);
+					}
 				}
 			} else {
 				new EquoMonacoEditor(equoEventHandler).initialize("", "", "");

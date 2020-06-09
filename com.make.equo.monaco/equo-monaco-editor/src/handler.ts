@@ -41,6 +41,10 @@ export class EquoMonacoEditor {
 		this.webSocket.send(this.namespace + "_disposeEditor");
 	}
 
+	public save(): void {
+		this.webSocket.send(this.namespace + "_doSave");
+	}
+
 	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
@@ -74,7 +78,10 @@ export class EquoMonacoEditor {
 				});
 
 				this.lastSavedVersionId = this.model.getAlternativeVersionId();
-
+				let thisEditor = this;
+				this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(){
+					thisEditor.save();
+				});
 				this.bindEquoFunctions();
 
 				if (values.lspPath) {
