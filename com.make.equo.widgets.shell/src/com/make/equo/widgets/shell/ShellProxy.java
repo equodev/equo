@@ -50,7 +50,17 @@ public class ShellProxy {
 		if (!serverOn) {
 			try {
 				String serverAbsolutePath = extractServerFiles();
-				ProcessBuilder processBuilder = new ProcessBuilder("node", serverAbsolutePath);
+				ProcessBuilder processBuilder;
+				String so = System.getProperty("os.name").toLowerCase();
+				if(so.equals("linux") || so.equals("mac")) {
+					processBuilder = new ProcessBuilder("bash", "-c", "cd "+ serverAbsolutePath + " ; yarn install");
+				}else {
+					processBuilder = new ProcessBuilder("cmd.exe", "/c", "cd "+ serverAbsolutePath + " ; yarn install");
+				}
+				
+				process = processBuilder.start();
+				while(process.isAlive());
+				processBuilder = new ProcessBuilder("node", serverAbsolutePath + '/'  + SHELL_SERVER_FILENAME);
 				process = processBuilder.start();
 			} catch (IOException e) {
 				process = null;
@@ -69,6 +79,9 @@ public class ShellProxy {
 		while (enumEntries.hasMoreElements()) {
 			JarEntry file = (JarEntry) enumEntries.nextElement();
 			File f = new java.io.File(tempDir + java.io.File.separator + file.getName());
+			if(f.getAbsolutePath().contains("node_modules")) {
+				continue;
+			}
 			if (file.isDirectory()) { 
 				f.mkdir();
 				continue;
@@ -92,7 +105,7 @@ public class ShellProxy {
 		}
 		jar.close();
 		markForDelete(tempDir.toFile());
-		return new File(tempDir.toString(), SHELL_SERVER_FILENAME).toString();
+		return new File(tempDir.toString()).toString();
 
 	}
 

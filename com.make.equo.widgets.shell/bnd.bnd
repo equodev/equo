@@ -1,3 +1,5 @@
+Bundle-Version: ${version}.${tstamp}
+
 -privatepackage: com.make.equo.widgets.shell
 
 -buildpath: \
