@@ -1,36 +1,31 @@
 package com.make.equo.filesystem.provider.handlers;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.io.File;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.api.IEquoFileSystem;
+import com.make.equo.filesystem.provider.responses.ContentResponse;
+import com.make.equo.filesystem.provider.responses.ErrResponse;
 
 public class ReadFileHandler extends FileSystemHandler {
 	@Override
-	protected Map<String, Object> execute(JsonObject payload) {
-		Map<String, Object> response = readFile(getPathParam(payload));
+	protected Object execute(JsonObject payload) {
+		File file = new File(getPathParam(payload));
+		return readFile(file, equoFileSystem);
+	}
+
+	protected static Object readFile(File file, IEquoFileSystem equoFileSystem) {
+		String content = equoFileSystem.readFile(file);
+		if (content == null) {
+			return new ErrResponse();
+		}
+		ContentResponse response = new ContentResponse();
+		response.setContent(content);
 		return response;
 	}
 
 	@Override
 	protected String getCommandName() {
 		return "_ReadFile";
-	}
-
-	public static Map<String, Object> readFile(String path) {
-		Map<String, Object> response = new HashMap<>();
-		Path filePath = FileSystems.getDefault().getPath(path);
-		try {
-			String content = Files.lines(filePath).collect(Collectors.joining("\n"));
-			response.put("content", content);
-		} catch (IOException e) {
-			response.put("err", 1);
-		}
-		return response;
 	}
 }

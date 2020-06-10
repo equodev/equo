@@ -1,20 +1,24 @@
 package com.make.equo.filesystem.provider.handlers;
 
-import java.util.Map;
+import org.osgi.service.component.annotations.Reference;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.filesystem.provider.util.ICommandConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public abstract class FileSystemHandler {
-	protected abstract Map<String, Object> execute(JsonObject payload);
+	@Reference
+	protected IEquoFileSystem equoFileSystem;
+
+	protected abstract Object execute(JsonObject payload);
 
 	protected abstract String getCommandName();
 
 	public void register(IEquoEventHandler eventHandler) {
 		eventHandler.on(getCommandName(), (JsonObject payload) -> {
 			String idResponse = payload.get(ICommandConstants.PARAM_RESPONSE_ID).getAsString();
-			Map<String, Object> response = execute(payload);
+			Object response = execute(payload);
 			eventHandler.send(idResponse, response);
 		});
 	}

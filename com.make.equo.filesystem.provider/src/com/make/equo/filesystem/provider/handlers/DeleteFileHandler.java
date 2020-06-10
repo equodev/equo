@@ -1,10 +1,10 @@
 package com.make.equo.filesystem.provider.handlers;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.provider.responses.ErrResponse;
+import com.make.equo.filesystem.provider.responses.OkResponse;
 
 public class DeleteFileHandler extends FileSystemHandler {
 	@Override
@@ -13,14 +13,10 @@ public class DeleteFileHandler extends FileSystemHandler {
 	}
 
 	@Override
-	protected Map<String, Object> execute(JsonObject payload) {
-		Map<String, Object> response = new HashMap<>();
-		boolean result = new File(getPathParam(payload)).delete();
-		if (result)
-			response.put("ok", "ok");
-		else
-			response.put("err", 1);
-		return response;
+	protected Object execute(JsonObject payload) {
+		if (new File(getPathParam(payload)).delete())
+			return new OkResponse();
+		return new ErrResponse();
 	}
 
 }

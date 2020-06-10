@@ -1,17 +1,20 @@
 package com.make.equo.filesystem.provider.handlers;
 
 import java.io.File;
-import java.util.Map;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.provider.responses.ErrResponse;
+import com.make.equo.filesystem.provider.responses.OkResponse;
 
 public class RenameFileHandler extends FileSystemHandler {
 	@Override
-	protected Map<String, Object> execute(JsonObject payload) {
-		File oldFile = new File(getPathParam(payload));
-		File fileDest = new File(oldFile.getParentFile(), getNewPathParam(payload));
-		Map<String, Object> response = MoveFileHandler.moveFile(oldFile, fileDest);
-		return response;
+	protected Object execute(JsonObject payload) {
+		File actualFile = new File(getPathParam(payload));
+		String newName = getNewPathParam(payload);
+		if (equoFileSystem.renameFile(actualFile, newName)) {
+			return new OkResponse();
+		}
+		return new ErrResponse();
 	}
 
 	@Override

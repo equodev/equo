@@ -9,4 +9,5 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: \
     com.make.equo.filesystem.provider,\
     com.make.equo.filesystem.provider.handlers,\
+    com.make.equo.filesystem.provider.responses,\
     com.make.equo.filesystem.provider.util

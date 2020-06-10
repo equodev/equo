@@ -1,21 +1,18 @@
 package com.make.equo.filesystem.provider.handlers;
 
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Display;
+import java.io.File;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.provider.responses.ErrResponse;
 
 public class OpenFolderHandler extends FileSystemHandler {
 	@Override
-	protected Map<String, Object> execute(JsonObject payload) {
-		DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getShells()[0], SWT.OPEN);
-		dialog.setText("Open Folder");
-		String result = dialog.open();
-		Map<String, Object> response = FileInfoHandler.fileInfo(result);
-		return response;
+	protected Object execute(JsonObject payload) {
+		File folder = equoFileSystem.openFolder();
+		if (folder == null) {
+			return new ErrResponse();
+		}
+		return equoFileSystem.fileInfo(folder);
 	}
 
 	@Override

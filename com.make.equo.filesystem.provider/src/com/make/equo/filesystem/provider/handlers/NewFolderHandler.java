@@ -1,22 +1,19 @@
 package com.make.equo.filesystem.provider.handlers;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.provider.responses.ErrResponse;
+import com.make.equo.filesystem.provider.responses.OkResponse;
 
 public class NewFolderHandler extends FileSystemHandler {
 	@Override
-	protected Map<String, Object> execute(JsonObject payload) {
-		Map<String, Object> response = new HashMap<>();
+	protected Object execute(JsonObject payload) {
 		File newFolder = new File(getPathParam(payload));
-		if (newFolder.mkdirs()) {
-			response.put("ok", "ok");
-		} else {
-			response.put("err", 1);
+		if (equoFileSystem.newFolder(newFolder)) {
+			return new OkResponse();
 		}
-		return response;
+		return new ErrResponse();
 	}
 
 	@Override
