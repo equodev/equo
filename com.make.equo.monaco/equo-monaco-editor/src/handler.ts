@@ -18,6 +18,9 @@ export class EquoMonacoEditor {
 	private webSocket: EquoWebSocket;
 	private languageClient!: MonacoLanguageClient;
 	private lspws!: WebSocket;
+	private filePath!: string;
+	private fileName!: string;
+	private filePathChangedCallback!: Function;
 
 	constructor() {
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
@@ -27,6 +30,14 @@ export class EquoMonacoEditor {
 
 	public getEditor(): monaco.editor.IStandaloneCodeEditor {
 		return this.editor;
+	}
+
+	public getFilePath(): string{
+		return this.filePath;
+	}
+
+	public getFileName(): string{
+		return this.fileName;
 	}
 
 	public dispose(): void {
@@ -41,14 +52,23 @@ export class EquoMonacoEditor {
 		this.webSocket.send(this.namespace + "_disposeEditor");
 	}
 
+	public saveAs(): void {
+		this.webSocket.send(this.namespace + "_doSaveAs");
+	}
+
 	public save(): void {
 		this.webSocket.send(this.namespace + "_doSave");
+	}
+
+	public setFilePathChangedListener(callback: Function){
+		this.filePathChangedCallback = callback;
 	}
 
 	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
+				this.fileName = name;
 
 				let l = this.getLanguageOfFile(values.name);
 				let language = '';
@@ -141,6 +161,8 @@ export class EquoMonacoEditor {
 			}
 		});
 
+		if (filePath)
+			this.filePath = filePath;
 		this.webSocket.send("_createEditor", {filePath: filePath});
 	}
 
@@ -164,6 +186,12 @@ export class EquoMonacoEditor {
 			this.webSocket.send(this.namespace + "_selection", e.selection);
 		});
 
+		this.webSocket.on(this.namespace + "_filePathChanged", (values: { path: string; name: string}) => {
+			this.filePath = values.path;
+			this.fileName = values.name;
+			if (this.filePathChangedCallback)
+				this.filePathChangedCallback(this.filePath, this.fileName);
+		});
 
 		this.webSocket.on(this.namespace + "_doFind", () => {
 			this.editor.getAction("actions.find").run();

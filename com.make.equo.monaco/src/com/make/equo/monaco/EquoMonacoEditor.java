@@ -6,8 +6,6 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,13 +16,16 @@ import java.util.concurrent.Semaphore;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.monaco.lsp.LspProxy;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
+	protected IEquoFileSystem equoFileSystem;
 
 	private static LspProxy lspProxy = new LspProxy();
 	private static Map<String, String> lspServers = new HashMap<>();
@@ -49,6 +50,11 @@ public class EquoMonacoEditor {
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 	}
+	
+	public EquoMonacoEditor(IEquoEventHandler handler, IEquoFileSystem equoFileSystem) {
+		this(handler);
+		this.equoFileSystem = equoFileSystem;
+	}
 
 	public EquoMonacoEditor(IEquoEventHandler handler) {
 		this.equoEventHandler = handler;
@@ -60,6 +66,7 @@ public class EquoMonacoEditor {
 
 	private void registerActions() {
 		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
+		equoEventHandler.on(namespace + "_doSaveAs", (IEquoRunnable<Void>) runnable -> saveAs());
 		equoEventHandler.on(namespace + "_doSave", (IEquoRunnable<Void>) runnable -> save());
 	}
 
@@ -164,6 +171,13 @@ public class EquoMonacoEditor {
 		equoEventHandler.send(namespace + "_didSave");
 	}
 
+	public void notifyFilePathChanged() {
+		Map<String, String> payload = new HashMap<>();
+		payload.put("filePath", filePath);
+		payload.put("fileName", new File(filePath).getName());
+		equoEventHandler.send(namespace + "_filePathChanged", payload);
+	}
+
 	public void undo() {
 		equoEventHandler.send(namespace + "_undo");
 	}
@@ -194,19 +208,30 @@ public class EquoMonacoEditor {
 		equoEventHandler.send(namespace + "_doSelectAll");
 	}
 
-	public void save() {
-		if (filePath == null || filePath.trim().equals(""))
-			return;
+	public void saveAs() {
 		getContentsAsync(content -> {
-			PrintWriter writer;
-			try {
-				writer = new PrintWriter(new File(filePath));
-				writer.print(content);
-				writer.close();
-				handleAfterSave();
-			} catch (FileNotFoundException e) {
-			}
+			Display.getDefault().asyncExec(() -> {
+				File file = equoFileSystem.saveFileAs(content);
+				if (file != null) {
+					filePath = file.getAbsolutePath();
+					handleAfterSave();
+				}
+			});
 		});
+	}
+
+	public void save() {
+		if (filePath == null || filePath.trim().equals("")) {
+			saveAs();
+		} else {
+			getContentsAsync(content -> {
+				Display.getDefault().asyncExec(() -> {
+					if (equoFileSystem.saveFile(new File(filePath), content)) {
+						handleAfterSave();
+					}
+				});
+			});
+		}
 	}
 
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {

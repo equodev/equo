@@ -16,12 +16,16 @@ import org.osgi.service.component.annotations.Reference;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component
 public class EquoMonacoStandaloneEditor {
 
 	private IEquoEventHandler equoEventHandler;
+
+	@Reference
+	private IEquoFileSystem equoFileSystem;
 
 	public EquoMonacoStandaloneEditor() {
 		super();
@@ -70,14 +74,14 @@ public class EquoMonacoStandaloneEditor {
 				String content = "";
 				try {
 					content = Files.lines(filePath).collect(Collectors.joining("\n"));
-					new EquoMonacoEditor(equoEventHandler).initialize(content, file.getName(), fileString);
+					new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize(content, file.getName(), fileString);
 				} catch (IOException e) {
 					if (!file.exists()) {
-						new EquoMonacoEditor(equoEventHandler).initialize("", file.getName(), fileString);
+						new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize("", file.getName(), fileString);
 					}
 				}
 			} else {
-				new EquoMonacoEditor(equoEventHandler).initialize("", "", "");
+				new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize("", "", "");
 			}
 		});
 	}
