@@ -6,6 +6,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.make.equo.contribution.api.EquoContributionBuilder;
 import com.make.equo.contribution.api.resolvers.EquoGenericURLResolver;
+import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.filesystem.provider.handlers.*;
 import com.make.equo.ws.api.IEquoEventHandler;
 
@@ -19,6 +20,9 @@ public class EquoFileSystemContribution {
 	@Reference
 	IEquoEventHandler equoEventHandler;
 
+	@Reference
+	IEquoFileSystem equoFileSystem;
+
 	@Activate
 	protected void activate() {
 		registerHandlers();
@@ -28,16 +32,16 @@ public class EquoFileSystemContribution {
 	}
 
 	private void registerHandlers() {
-		new FileInfoHandler().register(equoEventHandler);
-		new DeleteFileHandler().register(equoEventHandler);
-		new MoveFileHandler().register(equoEventHandler);
-		new NewFolderHandler().register(equoEventHandler);
-		new OpenFileHandler().register(equoEventHandler);
-		new OpenFolderHandler().register(equoEventHandler);
-		new ReadFileHandler().register(equoEventHandler);
-		new RenameFileHandler().register(equoEventHandler);
-		new SaveFileAsHandler().register(equoEventHandler);
-		new SaveFileHandler().register(equoEventHandler);
+		new FileInfoHandler().register(equoFileSystem, equoEventHandler);
+		new DeleteFileHandler().register(equoFileSystem, equoEventHandler);
+		new MoveFileHandler().register(equoFileSystem, equoEventHandler);
+		new NewFolderHandler().register(equoFileSystem, equoEventHandler);
+		new OpenFileHandler().register(equoFileSystem, equoEventHandler);
+		new OpenFolderHandler().register(equoFileSystem, equoEventHandler);
+		new ReadFileHandler().register(equoFileSystem, equoEventHandler);
+		new RenameFileHandler().register(equoFileSystem, equoEventHandler);
+		new SaveFileAsHandler().register(equoFileSystem, equoEventHandler);
+		new SaveFileHandler().register(equoFileSystem, equoEventHandler);
 	}
 
 	@Reference
