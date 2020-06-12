@@ -13,6 +13,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.make.equo.application.model.ToolbarBuilder;

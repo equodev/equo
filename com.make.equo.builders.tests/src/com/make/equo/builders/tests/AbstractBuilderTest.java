@@ -23,7 +23,7 @@ import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.MenuItemBuilder;
 import com.make.equo.application.model.ToolbarItemBuilder;
 import com.make.equo.testing.common.util.EquoRule;
-import com.make.equo.builders.tests.util.ModelTestingConfigurator;
+import com.make.equo.builders.tests.util.ModelConfigurator;
 
 public abstract class AbstractBuilderTest {
 
@@ -33,7 +33,7 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	protected IEquoApplication equoApp; 
 	
-	protected ModelTestingConfigurator modelTestingConfigurator = new ModelTestingConfigurator();
+	protected ModelConfigurator modelTestingConfigurator = new ModelConfigurator();
 	
 	@Rule
 	public EquoRule injector = new EquoRule(this);

@@ -1,3 +1,5 @@
+Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
+
 -include ${build}/../com.make.equo.testing.common/testing.bnd
 
 -buildpath: \
@@ -43,7 +45,6 @@
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     org.mockito.mockito-all;version='[1.10.19,1.10.20)',\
-    org.eclipse.swt.gtk.linux.x86_64,\
     org.awaitility,\
     org.hamcrest,\
 	
