@@ -57,6 +57,11 @@ public class FileInfo {
 		return isDirectory;
 	}
 
+	/**
+	 * 
+	 * @return A non-recursive collection of childrens. To know the childrens of
+	 *         your childrens, you will have to obtain a new FileInfo for them
+	 */
 	public Collection<FileInfo> getChildren() {
 		return children;
 	}
