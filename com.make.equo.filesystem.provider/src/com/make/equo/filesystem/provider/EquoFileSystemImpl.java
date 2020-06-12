@@ -47,19 +47,19 @@ public class EquoFileSystemImpl implements IEquoFileSystem {
 
 	@Override
 	public FileInfo fileInfo(File file) {
-		FileInfo response = getItem(file);
+		FileInfoBuilder response = getItem(file);
 		if (file.isDirectory()) {
 			List<FileInfo> children = new ArrayList<>();
 			for (File f : file.listFiles()) {
-				children.add(getItem(f));
+				children.add(getItem(f).build());
 			}
 			response.setChildren(children);
 		}
-		return response;
+		return response.build();
 	}
 
-	private static FileInfo getItem(File file) {
-		FileInfo response = new FileInfo();
+	private static FileInfoBuilder getItem(File file) {
+		FileInfoBuilder response = new FileInfoBuilder();
 		response.setCanExecute(file.canExecute());
 		response.setCanRead(file.canRead());
 		response.setCanWrite(file.canWrite());

@@ -1,6 +1,7 @@
 package com.make.equo.filesystem.api;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class FileInfo {
 	private boolean exists;
@@ -10,69 +11,53 @@ public class FileInfo {
 	private boolean canWrite;
 	private boolean canExecute;
 	private boolean isDirectory;
-	private Collection<FileInfo> children = null;
+	private Collection<FileInfo> children;
 
-	public boolean isExists() {
-		return exists;
+	public FileInfo(boolean exists, String path, String name, boolean canRead, boolean canWrite, boolean canExecute,
+			boolean isDirectory, Collection<FileInfo> children) {
+		this.exists = exists;
+		this.path = path;
+		this.name = name;
+		this.canRead = canRead;
+		this.canWrite = canWrite;
+		this.canExecute = canExecute;
+		this.isDirectory = isDirectory;
+		if (children == null) {
+			this.children = Collections.emptyList();
+		} else {
+			this.children = children;
+		}
 	}
 
-	public void setExists(boolean exists) {
-		this.exists = exists;
+	public boolean exists() {
+		return exists;
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isCanRead() {
+	public boolean canRead() {
 		return canRead;
 	}
 
-	public void setCanRead(boolean canRead) {
-		this.canRead = canRead;
-	}
-
-	public boolean isCanWrite() {
+	public boolean canWrite() {
 		return canWrite;
 	}
 
-	public void setCanWrite(boolean canWrite) {
-		this.canWrite = canWrite;
-	}
-
-	public boolean isCanExecute() {
+	public boolean canExecute() {
 		return canExecute;
-	}
-
-	public void setCanExecute(boolean canExecute) {
-		this.canExecute = canExecute;
 	}
 
 	public boolean isDirectory() {
 		return isDirectory;
 	}
 
-	public void setDirectory(boolean isDirectory) {
-		this.isDirectory = isDirectory;
-	}
-
 	public Collection<FileInfo> getChildren() {
 		return children;
-	}
-
-	public void setChildren(Collection<FileInfo> children) {
-		this.children = children;
 	}
 }
