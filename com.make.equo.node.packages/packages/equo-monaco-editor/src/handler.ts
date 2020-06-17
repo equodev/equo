@@ -3,7 +3,7 @@ import {
 	MonacoLanguageClient, CloseAction, ErrorAction,
 	MonacoServices, createConnection
 } from 'monaco-languageclient';
-import normalizeUrl = require('normalize-url');
+const normalizeUrl = require('normalize-url');
 const ReconnectingWebSocket = require('reconnecting-websocket');
 import * as monaco from 'monaco-editor';
 import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
