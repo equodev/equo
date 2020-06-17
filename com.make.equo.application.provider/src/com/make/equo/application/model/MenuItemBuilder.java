@@ -42,8 +42,16 @@ public class MenuItemBuilder extends ItemBuilder {
 		return newMenuItem;
 	}
 
-	public MenuItemBuilder onClick(Runnable action) {
-		return (MenuItemBuilder) onClick(action, null);
+	public MenuItemBuilder onClick(Runnable runnable) {
+		return onClick(runnable, null);
+	}
+
+	public MenuItemBuilder onClick(Runnable runnable, String action) {
+		return (MenuItemBuilder) super.onClick(runnable, action);
+	}
+
+	public MenuItemBuilder onClick(String action) {
+		return onClick(null, action);
 	}
 
 	public MenuBuilder addMenu(String menuLabel) {
