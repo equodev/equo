@@ -50,6 +50,7 @@ public class EquoMonacoEditor {
 	protected String filePath = "";
 	private boolean dispose = false;
 	private String fileName ="";
+	private WatchService watchService;
 
 	public String getFilePath() {
 		return filePath;
@@ -239,6 +240,7 @@ public class EquoMonacoEditor {
 				if (file != null) {
 					filePath = file.getAbsolutePath();
 					handleAfterSave();
+					registerFileToListen();
 				}
 			});
 		});
@@ -258,16 +260,20 @@ public class EquoMonacoEditor {
 		}
 	}
 	
-	public void listenChangesPath() {
-		WatchService watchService = null;
-		Path path = Paths.get(filePath);
-		boolean poll = true;
+	public void registerFileToListen() {
+		fileName = Paths.get(filePath).getFileName().toString();
+		Path path = Paths.get(Paths.get(filePath).getParent().toString());
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 			path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void listenChangesPath() {
+		registerFileToListen();
+		boolean poll = true;
 		
 		while (poll && !dispose) {
 			WatchKey key = null;

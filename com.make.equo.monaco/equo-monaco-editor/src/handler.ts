@@ -28,7 +28,7 @@ export class EquoMonacoEditor {
 		this.elemdiv.addEventListener("click", (e:Event) => this.reload());
 		this.elemdiv.style.background = "#DD944F";
 		this.elemdiv.style.textAlign = "center";
-		this.filePathChangedCallback = this.defaultForChangeFile;
+		this.filePathChangedCallback = this.actionForFileChange;
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
 		this.webSocket = equoWebSocketService.service;
 	}
@@ -186,7 +186,7 @@ export class EquoMonacoEditor {
 		this.elemdiv = element;
 	}
 
-	public defaultForChangeFile(): void{
+	public actionForFileChange(): void{
 		if (this.lastSavedVersionId === this.model.getAlternativeVersionId()){
 			this.reload();
 			return;
