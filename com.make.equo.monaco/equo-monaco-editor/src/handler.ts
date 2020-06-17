@@ -21,6 +21,7 @@ export class EquoMonacoEditor {
 	private filePath!: string;
 	private fileName!: string;
 	private filePathChangedCallback!: Function;
+	private notifyChangeCallback!: Function;
 	private elemdiv: HTMLElement;
 
 	constructor() {
@@ -29,6 +30,7 @@ export class EquoMonacoEditor {
 		this.elemdiv.style.background = "#DD944F";
 		this.elemdiv.style.textAlign = "center";
 		this.filePathChangedCallback = this.actionForFileChange;
+		this.notifyChangeCallback = () => {};
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
 		this.webSocket = equoWebSocketService.service;
 	}
@@ -74,6 +76,10 @@ export class EquoMonacoEditor {
 		this.filePathChangedCallback = callback;
 	}
 
+	public setActionDirtyState(callback: Function){
+		this.notifyChangeCallback = callback;
+	}
+
 	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
@@ -109,7 +115,7 @@ export class EquoMonacoEditor {
 					automaticLayout: true
 				});
 
-				this.lastSavedVersionId = this.model.getAlternativeVersionId();
+				this.clearDirtyState();
 				let thisEditor = this;
 				this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(){
 					thisEditor.save();
@@ -178,6 +184,14 @@ export class EquoMonacoEditor {
 		this.webSocket.send("_createEditor", {filePath: filePath});
 	}
 
+	public isDirty ():boolean{
+		return this.lastSavedVersionId !== this.model.getAlternativeVersionId();
+	}
+
+	public clearDirtyState(){
+		this.lastSavedVersionId = this.model.getAlternativeVersionId();
+	}
+
 	public setTextLabel(text : string):void{
 		this.elemdiv.innerText = text;
 	}
@@ -186,8 +200,8 @@ export class EquoMonacoEditor {
 		this.elemdiv = element;
 	}
 
-	public actionForFileChange(): void{
-		if (this.lastSavedVersionId === this.model.getAlternativeVersionId()){
+	private actionForFileChange(): void{
+		if (!this.isDirty()){
 			this.reload();
 			return;
 		}
@@ -239,12 +253,13 @@ export class EquoMonacoEditor {
 		});
 
 		this.webSocket.on(this.namespace + "_didSave", () => {
-			this.lastSavedVersionId = this.model.getAlternativeVersionId();
+			this.clearDirtyState();
 			this.notifyChanges();
 		});
 
 
 		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
+			this.clearDirtyState();
 			this.editor.onDidChangeModelContent(() => {
 				this.notifyChanges();
 			});
@@ -278,7 +293,7 @@ export class EquoMonacoEditor {
 
 		this.webSocket.on(this.namespace + "_doReload", (content: string) => {
 			this.editor.setValue(content);
-			this.lastSavedVersionId = this.model.getAlternativeVersionId();
+			this.clearDirtyState();
 			this.setTextLabel("");
 		});
 	}
@@ -286,6 +301,7 @@ export class EquoMonacoEditor {
 	private notifyChanges(): void {
 		this.webSocket.send(this.namespace + "_changesNotification",
 			{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
+		this.notifyChangeCallback();
 	}
 }
 
