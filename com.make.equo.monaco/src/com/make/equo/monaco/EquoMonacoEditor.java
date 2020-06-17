@@ -80,6 +80,7 @@ public class EquoMonacoEditor {
 		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
 		equoEventHandler.on(namespace + "_doSaveAs", (IEquoRunnable<Void>) runnable -> saveAs());
 		equoEventHandler.on(namespace + "_doSave", (IEquoRunnable<Void>) runnable -> save());
+		equoEventHandler.on(namespace + "_doReload", (IEquoRunnable<Void>) runnable -> reload());
 	}
 
 	public void initialize(String contents, String fileName, String filePath) {
