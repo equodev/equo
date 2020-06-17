@@ -21,8 +21,14 @@ export class EquoMonacoEditor {
 	private filePath!: string;
 	private fileName!: string;
 	private filePathChangedCallback!: Function;
+	private elemdiv: HTMLElement;
 
 	constructor() {
+		this.elemdiv = document.createElement('div');
+		this.elemdiv.addEventListener("click", (e:Event) => this.reload());
+		this.elemdiv.style.background = "#DD944F";
+		this.elemdiv.style.textAlign = "center";
+		this.filePathChangedCallback = this.defaultForChangeFile;
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
 		this.webSocket = equoWebSocketService.service;
 	}
@@ -60,6 +66,10 @@ export class EquoMonacoEditor {
 		this.webSocket.send(this.namespace + "_doSave");
 	}
 
+	public reload(): void {
+		this.webSocket.send(this.namespace + "_doReload");
+	}
+
 	public setFilePathChangedListener(callback: Function){
 		this.filePathChangedCallback = callback;
 	}
@@ -82,6 +92,8 @@ export class EquoMonacoEditor {
 						id: language
 					});
 				}
+
+				element.appendChild(this.elemdiv);
 
 				this.model = monaco.editor.createModel(
 					values.text,
@@ -166,6 +178,22 @@ export class EquoMonacoEditor {
 		this.webSocket.send("_createEditor", {filePath: filePath});
 	}
 
+	public setTextLabel(text : string):void{
+		this.elemdiv.innerText = text;
+	}
+
+	public setLabelChanges(element: HTMLElement): void{
+		this.elemdiv = element;
+	}
+
+	public defaultForChangeFile(): void{
+		if (this.lastSavedVersionId === this.model.getAlternativeVersionId()){
+			this.reload();
+			return;
+		}
+		this.setTextLabel("New changes in the document. Click here to reaload");
+	}
+
 	private getLanguageOfFile(name: string): monaco.languages.ILanguageExtensionPoint | undefined {
 		let ext = '.' + name.split('.').pop();
 		let languages = monaco.languages.getLanguages();
@@ -242,6 +270,16 @@ export class EquoMonacoEditor {
 		this.webSocket.on(this.namespace + "_doSelectAll", () => {
 			this.editor.focus();
 			this.webSocket.send(this.namespace + "_canSelectAll");
+		});
+
+		this.webSocket.on(this.namespace + "_reportChanges", () => {
+			this.filePathChangedCallback();
+		});
+
+		this.webSocket.on(this.namespace + "_doReload", (content: string) => {
+			this.editor.setValue(content);
+			this.lastSavedVersionId = this.model.getAlternativeVersionId();
+			this.setTextLabel("");
 		});
 	}
 
