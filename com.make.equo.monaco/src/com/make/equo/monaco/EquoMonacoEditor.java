@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +47,7 @@ public class EquoMonacoEditor {
 	private List<IEquoRunnable<Void>> onLoadListeners;
 	protected String filePath = "";
 	private boolean dispose = false;
-	private String fileName ="";
+	private String fileName = "";
 	private WatchService watchService;
 
 	public String getFilePath() {
@@ -63,7 +61,7 @@ public class EquoMonacoEditor {
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 	}
-	
+
 	public EquoMonacoEditor(IEquoEventHandler handler, IEquoFileSystem equoFileSystem) {
 		this(handler);
 		this.equoFileSystem = equoFileSystem;
@@ -141,14 +139,10 @@ public class EquoMonacoEditor {
 				e.printStackTrace();
 			}
 		});
-		if (!fileName.equals("")) {
-			new Thread() {
-				public void run() {
-					listenChangesPath();
-				}
-			}.start();;
+		if (!filePath.equals("")) {
+			listenChangesPath();
 		}
-		
+
 	}
 
 	public void addOnLoadListener(IEquoRunnable<Void> listener) {
@@ -234,22 +228,24 @@ public class EquoMonacoEditor {
 	}
 
 	public void saveAs() {
-		getContentsAsync(content -> {
-			Display.getDefault().asyncExec(() -> {
-				File file = equoFileSystem.saveFileAs(content);
-				if (file != null) {
-					filePath = file.getAbsolutePath();
-					handleAfterSave();
-					registerFileToListen();
-				}
+		if (equoFileSystem != null) {
+			getContentsAsync(content -> {
+				Display.getDefault().asyncExec(() -> {
+					File file = equoFileSystem.saveFileAs(content);
+					if (file != null) {
+						filePath = file.getAbsolutePath();
+						handleAfterSave();
+						listenChangesPath();
+					}
+				});
 			});
-		});
+		}
 	}
 
 	public void save() {
 		if (filePath == null || filePath.trim().equals("")) {
 			saveAs();
-		} else {
+		} else if (equoFileSystem != null) {
 			getContentsAsync(content -> {
 				Display.getDefault().asyncExec(() -> {
 					if (equoFileSystem.saveFile(new File(filePath), content)) {
@@ -259,50 +255,78 @@ public class EquoMonacoEditor {
 			});
 		}
 	}
-	
+
 	public void registerFileToListen() {
 		fileName = Paths.get(filePath).getFileName().toString();
 		Path path = Paths.get(Paths.get(filePath).getParent().toString());
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
-			path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+			path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
+					StandardWatchEventKinds.ENTRY_DELETE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void listenChangesPath() {
-		registerFileToListen();
-		boolean poll = true;
-		
-		while (poll && !dispose) {
-			WatchKey key = null;
+		if (filePath == null || filePath.equals("")) {
+			return;
+		}
+
+		if (watchService != null) {
 			try {
-				key = watchService.take();
-			} catch (InterruptedException e) {
+				watchService.close();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			for (WatchEvent<?> event : key.pollEvents()) {
-				if (event.context().toString().trim().equals(fileName)) {
-					reportChanges();
+		}
+
+		registerFileToListen();
+
+		new Thread() {
+			public void run() {
+				boolean poll = true;
+
+				while (poll && !dispose) {
+					WatchKey key = null;
+					try {
+						key = watchService.take();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					for (WatchEvent<?> event : key.pollEvents()) {
+						if (event.context().toString().trim().equals(fileName)) {
+							reportChanges();
+						}
+					}
+					poll = key.reset();
 				}
 			}
-			poll = key.reset();
-		}
+		}.start();
 	}
-	
+
 	public void reportChanges() {
-		equoEventHandler.send(namespace + "_reportChanges");
+		getContentsAsync(content -> {
+			Display.getDefault().asyncExec(() -> {
+				String fileContent = getFileContent();
+				if (fileContent == null || !content.equals(fileContent)) {
+					equoEventHandler.send(namespace + "_reportChanges");
+				}
+			});
+		});
 	}
-	
+
+	private String getFileContent() {
+		if (filePath != null && !filePath.equals("") && equoFileSystem != null) {
+			return equoFileSystem.readFile(new File(filePath));
+		}
+		return null;
+	}
+
 	public void reload() {
-		Path filePath = FileSystems.getDefault().getPath(this.filePath+"/"+fileName);
-		String content = "";
-		try {
-			content = Files.lines(filePath).collect(Collectors.joining("\n"));
+		String content = getFileContent();
+		if (content != null) {
 			equoEventHandler.send(namespace + "_doReload", content);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

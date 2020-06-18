@@ -23,6 +23,8 @@ export class EquoMonacoEditor {
 	private filePathChangedCallback!: Function;
 	private notifyChangeCallback!: Function;
 	private elemdiv: HTMLElement;
+	private sendChangesToJavaSide: boolean = false;
+	private shortcutsAdded: boolean = false;
 
 	constructor() {
 		this.elemdiv = document.createElement('div');
@@ -115,11 +117,11 @@ export class EquoMonacoEditor {
 					automaticLayout: true
 				});
 
+				if (this.shortcutsAdded){
+					this.activateShortcuts();
+				}
+
 				this.clearDirtyState();
-				let thisEditor = this;
-				this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(){
-					thisEditor.save();
-				});
 				this.bindEquoFunctions();
 
 				if (values.lspPath) {
@@ -203,6 +205,14 @@ export class EquoMonacoEditor {
 		this.elemdiv = element;
 	}
 
+	public activateShortcuts(): void{
+		this.shortcutsAdded = true;
+		let thisEditor = this;
+		this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(){
+			thisEditor.save();
+		});
+	}
+
 	private actionForFileChange(): void{
 		if (!this.isDirty()){
 			this.reload();
@@ -262,9 +272,7 @@ export class EquoMonacoEditor {
 
 
 		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
-			this.editor.onDidChangeModelContent(() => {
-				this.notifyChanges();
-			});
+			this.sendChangesToJavaSide = true;
 		});
 
 
@@ -301,8 +309,10 @@ export class EquoMonacoEditor {
 	}
 
 	private notifyChanges(): void {
-		this.webSocket.send(this.namespace + "_changesNotification",
-			{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
+		if (this.sendChangesToJavaSide){
+			this.webSocket.send(this.namespace + "_changesNotification",
+				{ isDirty: this.lastSavedVersionId !== this.model.getAlternativeVersionId(), canRedo: (this.model as any).canRedo(), canUndo: (this.model as any).canUndo() });
+		}
 		this.notifyChangeCallback();
 	}
 }
