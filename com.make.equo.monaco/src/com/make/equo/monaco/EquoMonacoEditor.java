@@ -6,6 +6,15 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -38,6 +48,9 @@ public class EquoMonacoEditor {
 	private String namespace;
 	private List<IEquoRunnable<Void>> onLoadListeners;
 	protected String filePath = "";
+	private boolean dispose = false;
+	private String fileName ="";
+	private WatchService watchService;
 
 	public String getFilePath() {
 		return filePath;
@@ -68,10 +81,12 @@ public class EquoMonacoEditor {
 		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
 		equoEventHandler.on(namespace + "_doSaveAs", (IEquoRunnable<Void>) runnable -> saveAs());
 		equoEventHandler.on(namespace + "_doSave", (IEquoRunnable<Void>) runnable -> save());
+		equoEventHandler.on(namespace + "_doReload", (IEquoRunnable<Void>) runnable -> reload());
 	}
 
 	public void initialize(String contents, String fileName, String filePath) {
 		this.filePath = filePath;
+		this.fileName = fileName;
 		handleCreateEditor(contents, fileName);
 	}
 
@@ -126,6 +141,14 @@ public class EquoMonacoEditor {
 				e.printStackTrace();
 			}
 		});
+		if (!fileName.equals("")) {
+			new Thread() {
+				public void run() {
+					listenChangesPath();
+				}
+			}.start();;
+		}
+		
 	}
 
 	public void addOnLoadListener(IEquoRunnable<Void> listener) {
@@ -199,12 +222,14 @@ public class EquoMonacoEditor {
 	}
 
 	public void paste() {
-		browser.setFocus();
+		if (browser != null)
+			browser.setFocus();
 		equoEventHandler.send(namespace + "_doPaste");
 	}
 
 	public void selectAll() {
-		browser.setFocus();
+		if (browser != null)
+			browser.setFocus();
 		equoEventHandler.send(namespace + "_doSelectAll");
 	}
 
@@ -215,6 +240,7 @@ public class EquoMonacoEditor {
 				if (file != null) {
 					filePath = file.getAbsolutePath();
 					handleAfterSave();
+					registerFileToListen();
 				}
 			});
 		});
@@ -231,6 +257,52 @@ public class EquoMonacoEditor {
 					}
 				});
 			});
+		}
+	}
+	
+	public void registerFileToListen() {
+		fileName = Paths.get(filePath).getFileName().toString();
+		Path path = Paths.get(Paths.get(filePath).getParent().toString());
+		try {
+			watchService = FileSystems.getDefault().newWatchService();
+			path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void listenChangesPath() {
+		registerFileToListen();
+		boolean poll = true;
+		
+		while (poll && !dispose) {
+			WatchKey key = null;
+			try {
+				key = watchService.take();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			for (WatchEvent<?> event : key.pollEvents()) {
+				if (event.context().toString().trim().equals(fileName)) {
+					reportChanges();
+				}
+			}
+			poll = key.reset();
+		}
+	}
+	
+	public void reportChanges() {
+		equoEventHandler.send(namespace + "_reportChanges");
+	}
+	
+	public void reload() {
+		Path filePath = FileSystems.getDefault().getPath(this.filePath+"/"+fileName);
+		String content = "";
+		try {
+			content = Files.lines(filePath).collect(Collectors.joining("\n"));
+			equoEventHandler.send(namespace + "_doReload", content);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -308,6 +380,7 @@ public class EquoMonacoEditor {
 
 	public void dispose() {
 		lspProxy.stopServer();
+		dispose = true;
 	}
 
 }
