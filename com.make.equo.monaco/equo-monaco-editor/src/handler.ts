@@ -176,6 +176,9 @@ export class EquoMonacoEditor {
 				}
 
 				this.wasCreated = true;
+				this.editor.onDidChangeModelContent(() => {
+					this.notifyChanges();
+				});
 			}
 		});
 
@@ -259,7 +262,6 @@ export class EquoMonacoEditor {
 
 
 		this.webSocket.on(this.namespace + "_subscribeModelChanges", () => {
-			this.clearDirtyState();
 			this.editor.onDidChangeModelContent(() => {
 				this.notifyChanges();
 			});
