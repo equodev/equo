@@ -231,5 +231,9 @@ public class EquoApplicationBuilder{
 	public MenuBuilder withMainMenu(String menuLabel) {
 		return optionalViewBuilder.withMainMenu(menuLabel);
 	}
+	
+	public OptionalViewBuilder getOptionalViewBuilder() {
+		return optionalViewBuilder;
+	}
 
 }

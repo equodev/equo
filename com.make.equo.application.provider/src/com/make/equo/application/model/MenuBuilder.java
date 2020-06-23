@@ -2,9 +2,12 @@ package com.make.equo.application.model;
 
 import java.util.List;
 
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+
+import com.make.equo.application.util.IConstants;
 
 public class MenuBuilder {
 
@@ -39,14 +42,34 @@ public class MenuBuilder {
 	}
 
 	public MenuBuilder remove() {
-		List<MMenuElement> childrens = menu.getChildren();
-		for (MMenuElement children : childrens) {
-			children.setVisible(false);
-		}
-		childrens.clear();
-		menu.setVisible(false);
+		removeRecursively(menu);
 		parentMenu.getChildren().remove(menu);
 		return new MenuBuilder(this);
+	}
+
+	private void removeShortcutFromItem(MMenuElement element) {
+		if (element instanceof MHandledMenuItem) {
+			MHandledMenuItem item = (MHandledMenuItem) element;
+			Object shortcut = item.getTransientData().get(IConstants.ITEM_SHORTCUT);
+			if (shortcut != null) {
+				optionalFieldBuilder.removeShortcut((String) shortcut);
+			}
+		}
+	}
+
+	private void removeRecursively(MMenuElement element) {
+		if (element instanceof MMenu) {
+			MMenu menu = (MMenu) element;
+			List<MMenuElement> childrens = menu.getChildren();
+			for (MMenuElement children : childrens) {
+				removeShortcutFromItem(children);
+				removeRecursively(children);
+				children.setVisible(false);
+			}
+			childrens.clear();
+		}
+		removeShortcutFromItem(element);
+		element.setVisible(false);
 	}
 
 	public MenuBuilder removeChildren(String label) {
@@ -54,7 +77,7 @@ public class MenuBuilder {
 		MMenuElement itemToDelete = null;
 		for (MMenuElement children : childrens) {
 			if (children.getLabel().equals(label)) {
-				children.setVisible(false);
+				removeRecursively(children);
 				itemToDelete = children;
 				break;
 			}

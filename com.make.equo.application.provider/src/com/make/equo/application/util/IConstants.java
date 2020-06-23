@@ -88,4 +88,6 @@ public interface IConstants {
 
 	public static final String IS_AN_EQUO_MODEL_ELEMENT = "isAnEquoModelElement";
 
+	public static final String ITEM_SHORTCUT = "itemshortcut";
+
 }

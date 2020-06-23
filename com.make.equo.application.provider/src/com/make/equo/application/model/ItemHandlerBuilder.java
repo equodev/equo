@@ -74,6 +74,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
 	}
 
 	public ItemBuilder addShortcut(String keySequence) {
+		itemBuilder.getItem().getTransientData().put(IConstants.ITEM_SHORTCUT, keySequence);
 		new ItemShortcutBuilder(this.getItemBuilder(), userEvent).addShortcut(keySequence);
 		EquoApplicationBuilder equoApplicationBuilder = getItemBuilder().getOptionalFieldBuilder()
 				.getEquoApplicationBuilder();
