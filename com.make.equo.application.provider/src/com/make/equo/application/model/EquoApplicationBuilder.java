@@ -36,6 +36,7 @@ public class EquoApplicationBuilder{
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
 	private IEquoEventHandler equoEventHandler;
+	private OptionalViewBuilder optionalViewBuilder;
 
 	@Activate
 	private void start() {
@@ -44,11 +45,13 @@ public class EquoApplicationBuilder{
 	}
 
 	public OptionalViewBuilder webWrapper(String url) {
-		return this.getViewBuilder().withSingleView(url);
+		optionalViewBuilder = this.getViewBuilder().withSingleView(url);
+		return optionalViewBuilder;
 	}
 
 	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
-		return this.getViewBuilder().withBaseHtml(baseHtmlFile);
+		optionalViewBuilder = this.getViewBuilder().withBaseHtml(baseHtmlFile);
+		return optionalViewBuilder;
 	}
 
 	/**
@@ -223,6 +226,10 @@ public class EquoApplicationBuilder{
 
 	private boolean isAnEclipseBasedApp() {
 		return ECLIPSE_RCP_APP_ID.equals(System.getProperty("eclipse.application"));
+	}
+
+	public MenuBuilder withMainMenu(String menuLabel) {
+		return optionalViewBuilder.withMainMenu(menuLabel);
 	}
 
 }
