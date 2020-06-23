@@ -15,4 +15,6 @@ Export-Package: \
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
     com.make.equo.aer.api;version=latest,\
-    com.make.equo.contribution.api;version=latest
+    com.make.equo.contribution.api;version=latest,\
+    com.google.guava;version=20.0,\
+    com.google.guava.source;version=20.0
