@@ -37,6 +37,7 @@ Export-Package: \
 	javax.inject.source,\
 	org.eclipse.e4.ui.workbench.swt,\
 	org.eclipse.e4.ui.workbench.swt.source,\
+	org.eclipse.e4.ui.workbench.renderers.swt,\
 	org.eclipse.e4.core.services,\
 	org.eclipse.e4.core.services.source,\
 	org.eclipse.e4.core.commands,\

@@ -11,6 +11,8 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -231,9 +233,26 @@ public class EquoApplicationBuilder{
 	public MenuBuilder withMainMenu(String menuLabel) {
 		return optionalViewBuilder.withMainMenu(menuLabel);
 	}
-	
+
 	public OptionalViewBuilder getOptionalViewBuilder() {
 		return optionalViewBuilder;
+	}
+
+	public EquoApplicationBuilder setMenu(EquoMenuModel model) {
+		Display.getDefault().asyncExec(() -> {
+			MenuBuilder menuBuilder = new MenuBuilder(this.optionalViewBuilder);
+			menuBuilder.remove();
+			model.implement(menuBuilder);
+			MMenu mainMenu = optionalViewBuilder.getMainMenu();
+			if (mainMenu == null) {
+				mainMenu = getmWindow().getMainMenu();
+			}
+			MenuManagerRenderer renderer = (MenuManagerRenderer) mainMenu.getRenderer();
+			if (renderer != null) {
+				renderer.getManager(mainMenu).update(true);
+			}
+		});
+		return this;
 	}
 
 }

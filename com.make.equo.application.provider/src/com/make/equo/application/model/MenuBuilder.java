@@ -17,6 +17,9 @@ public class MenuBuilder {
 
 	MenuBuilder(OptionalViewBuilder optionalFieldBuilder) {
 		this.parentMenu = optionalFieldBuilder.getMainMenu();
+		if (this.parentMenu == null) {
+			this.parentMenu = optionalFieldBuilder.getEquoApplicationBuilder().getmWindow().getMainMenu();
+		}
 		this.optionalFieldBuilder = optionalFieldBuilder;
 	}
 
@@ -27,9 +30,6 @@ public class MenuBuilder {
 	}
 
 	public MenuBuilder addMenu(String label) {
-		if (parentMenu == null) {
-			parentMenu = optionalFieldBuilder.getEquoApplicationBuilder().getmWindow().getMainMenu();
-		}
 		for (MMenuElement children : parentMenu.getChildren()) {
 			// If already exists a menu with this label, return that one
 			if (children instanceof MMenu && children.getLabel().equals(label)) {
@@ -42,8 +42,16 @@ public class MenuBuilder {
 	}
 
 	public MenuBuilder remove() {
-		removeRecursively(menu);
-		parentMenu.getChildren().remove(menu);
+		if (menu == null) {
+			List<MMenuElement> children = parentMenu.getChildren();
+			for (MMenuElement menu : children) {
+				removeRecursively(menu);
+			}
+			children.clear();
+		} else {
+			removeRecursively(menu);
+			parentMenu.getChildren().remove(menu);
+		}
 		return new MenuBuilder(this);
 	}
 
