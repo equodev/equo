@@ -16,16 +16,59 @@ export class EquoMonacoEditor {
 	private namespace!: string;
 	private wasCreated: boolean = false;
 	private webSocket: EquoWebSocket;
+	private languageClient!: MonacoLanguageClient;
+	private lspws!: WebSocket;
+	private filePath!: string;
+	private fileName!: string;
+	private filePathChangedCallback!: Function;
 
 	constructor() {
 		var equoWebSocketService: EquoWebSocketService = EquoWebSocketService.get();
 		this.webSocket = equoWebSocketService.service;
 	}
 
-	public create(element: HTMLElement): void {
+
+	public getEditor(): monaco.editor.IStandaloneCodeEditor {
+		return this.editor;
+	}
+
+	public getFilePath(): string{
+		return this.filePath;
+	}
+
+	public getFileName(): string{
+		return this.fileName;
+	}
+
+	public dispose(): void {
+		if (this.lspws){
+			//@ts-ignore
+			this.lspws.close(1000, '', {keepClosed: true, fastClose: true, delay: 0});
+		}
+		if (this.languageClient)
+			this.languageClient.stop();
+		this.model.dispose();
+		this.editor.dispose();
+		this.webSocket.send(this.namespace + "_disposeEditor");
+	}
+
+	public saveAs(): void {
+		this.webSocket.send(this.namespace + "_doSaveAs");
+	}
+
+	public save(): void {
+		this.webSocket.send(this.namespace + "_doSave");
+	}
+
+	public setFilePathChangedListener(callback: Function){
+		this.filePathChangedCallback = callback;
+	}
+
+	public create(element: HTMLElement, filePath?: string): void {
 		this.webSocket.on("_doCreateEditor", (values: { text: string; name: string; namespace: string; lspPath?: string }) => {
 			if (!this.wasCreated) {
 				this.namespace = values.namespace;
+				this.fileName = name;
 
 				let l = this.getLanguageOfFile(values.name);
 				let language = '';
@@ -50,26 +93,31 @@ export class EquoMonacoEditor {
 					model: this.model,
 					lightbulb: {
 						enabled: true
-					}
+					},
+					automaticLayout: true
 				});
 
 				this.lastSavedVersionId = this.model.getAlternativeVersionId();
-
+				let thisEditor = this;
+				this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(){
+					thisEditor.save();
+				});
 				this.bindEquoFunctions();
 
 				if (values.lspPath) {
 					MonacoServices.install(this.editor);
 
 					// create the web socket
-					const url = normalizeUrl(values.lspPath)
-					const webSocket = createWebSocket(url);
+					var url = normalizeUrl(values.lspPath)
+					this.lspws = createWebSocket(url);
+					var webSocket = this.lspws;
 					// listen when the web socket is opened
 					listen({
 						webSocket,
 						onConnection: connection => {
 							// create and start the language client
-							const languageClient = createLanguageClient(connection);
-							const disposable = languageClient.start();
+							this.languageClient = createLanguageClient(connection);
+							var disposable = this.languageClient.start();
 							connection.onClose(() => disposable.dispose());
 						}
 					});
@@ -113,7 +161,9 @@ export class EquoMonacoEditor {
 			}
 		});
 
-		this.webSocket.send("_createEditor");
+		if (filePath)
+			this.filePath = filePath;
+		this.webSocket.send("_createEditor", {filePath: filePath});
 	}
 
 	private getLanguageOfFile(name: string): monaco.languages.ILanguageExtensionPoint | undefined {
@@ -136,6 +186,12 @@ export class EquoMonacoEditor {
 			this.webSocket.send(this.namespace + "_selection", e.selection);
 		});
 
+		this.webSocket.on(this.namespace + "_filePathChanged", (values: { path: string; name: string}) => {
+			this.filePath = values.path;
+			this.fileName = values.name;
+			if (this.filePathChangedCallback)
+				this.filePathChangedCallback(this.filePath, this.fileName);
+		});
 
 		this.webSocket.on(this.namespace + "_doFind", () => {
 			this.editor.getAction("actions.find").run();
@@ -196,7 +252,21 @@ export class EquoMonacoEditor {
 }
 
 export namespace EquoMonaco {
-	export function create(element: HTMLElement): void {
-		return new EquoMonacoEditor().create(element);
+	export function create(element: HTMLElement, filePath?: string): EquoMonacoEditor {
+		let monacoEditor = new EquoMonacoEditor();
+		monacoEditor.create(element, filePath);
+		return monacoEditor;
+	}
+
+	export function addLspServer(executionParameters: Array<string>, extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_addLspServer", {executionParameters: executionParameters, extensions: extensions});
+	}
+
+	export function removeLspServer(extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_removeLspServer", {extensions: extensions});
+	}
+
+	export function addLspWsServer(fullServerPath: string, extensions: Array<string>): void{
+		EquoWebSocketService.get().service.send("_addLspWsServer", {fullServerPath: fullServerPath, extensions: extensions});
 	}
 }

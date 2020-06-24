@@ -5,23 +5,27 @@ import static com.make.equo.monaco.util.IMonacoConstants.EQUO_MONACO_CONTRIBUTIO
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.monaco.lsp.LspProxy;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
 
 public class EquoMonacoEditor {
+	protected IEquoFileSystem equoFileSystem;
 
 	private static LspProxy lspProxy = new LspProxy();
 	private static Map<String, String> lspServers = new HashMap<>();
@@ -33,24 +37,46 @@ public class EquoMonacoEditor {
 	private Browser browser;
 	private String namespace;
 	private List<IEquoRunnable<Void>> onLoadListeners;
+	protected String filePath = "";
+
+	public String getFilePath() {
+		return filePath;
+	}
 
 	protected IEquoEventHandler equoEventHandler;
 
 	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler) {
-		this();
-		this.equoEventHandler = handler;
+		this(handler);
 		browser = new Browser(parent, style);
 		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
 	}
+	
+	public EquoMonacoEditor(IEquoEventHandler handler, IEquoFileSystem equoFileSystem) {
+		this(handler);
+		this.equoFileSystem = equoFileSystem;
+	}
 
-	public EquoMonacoEditor() {
+	public EquoMonacoEditor(IEquoEventHandler handler) {
+		this.equoEventHandler = handler;
 		namespace = "editor" + Double.toHexString(Math.random());
 		onLoadListeners = new ArrayList<IEquoRunnable<Void>>();
 		loaded = false;
+		registerActions();
+	}
+
+	private void registerActions() {
+		equoEventHandler.on(namespace + "_disposeEditor", (IEquoRunnable<Void>) runnable -> dispose());
+		equoEventHandler.on(namespace + "_doSaveAs", (IEquoRunnable<Void>) runnable -> saveAs());
+		equoEventHandler.on(namespace + "_doSave", (IEquoRunnable<Void>) runnable -> save());
+	}
+
+	public void initialize(String contents, String fileName, String filePath) {
+		this.filePath = filePath;
+		handleCreateEditor(contents, fileName);
 	}
 
 	protected void createEditor(String contents, String fileName) {
-		equoEventHandler.on("_createEditor", (IEquoRunnable<Void>) runnable -> handleCreateEditor(contents, fileName));
+		equoEventHandler.on("_createEditor", (JsonObject payload) -> handleCreateEditor(contents, fileName));
 	}
 
 	protected String getLspServerForFile(String fileName) {
@@ -145,6 +171,13 @@ public class EquoMonacoEditor {
 		equoEventHandler.send(namespace + "_didSave");
 	}
 
+	public void notifyFilePathChanged() {
+		Map<String, String> payload = new HashMap<>();
+		payload.put("filePath", filePath);
+		payload.put("fileName", new File(filePath).getName());
+		equoEventHandler.send(namespace + "_filePathChanged", payload);
+	}
+
 	public void undo() {
 		equoEventHandler.send(namespace + "_undo");
 	}
@@ -173,6 +206,32 @@ public class EquoMonacoEditor {
 	public void selectAll() {
 		browser.setFocus();
 		equoEventHandler.send(namespace + "_doSelectAll");
+	}
+
+	public void saveAs() {
+		getContentsAsync(content -> {
+			Display.getDefault().asyncExec(() -> {
+				File file = equoFileSystem.saveFileAs(content);
+				if (file != null) {
+					filePath = file.getAbsolutePath();
+					handleAfterSave();
+				}
+			});
+		});
+	}
+
+	public void save() {
+		if (filePath == null || filePath.trim().equals("")) {
+			saveAs();
+		} else {
+			getContentsAsync(content -> {
+				Display.getDefault().asyncExec(() -> {
+					if (equoFileSystem.saveFile(new File(filePath), content)) {
+						handleAfterSave();
+					}
+				});
+			});
+		}
 	}
 
 	public void configSelection(IEquoRunnable<Boolean> selectionFunction) {
@@ -219,18 +278,32 @@ public class EquoMonacoEditor {
 	 * Add a lsp server to be used by the editors on the files with the given
 	 * extensions
 	 * 
-	 * @param excecutionParameters The parameters needed to start the lsp server
-	 *                             through stdio. Example: ["html-languageserver",
-	 *                             "--stdio"]
-	 * @param extensions           A collection of extensions for what the editor
-	 *                             will use the given lsp server. The extensions
-	 *                             must not have the initial dot. Example: ["php",
-	 *                             "php4"]
+	 * @param executionParameters The parameters needed to start the lsp server
+	 *                            through stdio. Example: ["html-languageserver",
+	 *                            "--stdio"]
+	 * @param extensions          A collection of extensions for what the editor
+	 *                            will use the given lsp server. The extensions must
+	 *                            not have the initial dot. Example: ["php", "php4"]
 	 */
-	public static void addLspServer(Collection<String> excecutionParameters, Collection<String> extensions) {
-		String nameForServer = extensions.stream().map(s -> s.replace(" ", "")).collect(Collectors.joining());
-		lspProxy.addServer(nameForServer, excecutionParameters);
-		addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + nameForServer, extensions);
+	public static void addLspServer(List<String> executionParameters, Collection<String> extensions) {
+		for (String extension : extensions) {
+			lspProxy.addServer(extension, executionParameters);
+			addLspWsServer("ws://127.0.0.1:" + lspProxy.getPort() + "/" + extension, Collections.singleton(extension));
+		}
+	}
+
+	/**
+	 * Remove a lsp server assigned to the given extensions
+	 * 
+	 * @param extensions A collection of the file extensions for which the
+	 *                   previously assigned lsp will be removed The extensions must
+	 *                   not have the initial dot. Example: ["php", "php4"]
+	 */
+	public static void removeLspServer(Collection<String> extensions) {
+		lspProxy.removeServer(extensions);
+		for (String extension : extensions) {
+			lspServers.remove(extension);
+		}
 	}
 
 	public void dispose() {
