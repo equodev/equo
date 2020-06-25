@@ -58,6 +58,9 @@ public class ItemHandlerBuilder extends HandlerBuilder {
 
 	protected void addCommandToHandler(MHandledItem item, MCommand command) {
 		IEclipseContext eclipseContext = getMApplication().getContext();
+		if (eclipseContext == null) {
+			return;
+		}
 		ECommandService commandService = eclipseContext.get(ECommandService.class);
 		if (commandService != null) {
 			Map<String, Object> parameters = new HashMap<>(4);
