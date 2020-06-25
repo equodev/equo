@@ -28,7 +28,7 @@ import com.make.equo.ws.api.IEquoEventHandler;
 
 @Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder{
-
+	private static EquoApplicationBuilder currentBuilder;
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
 	private MApplication mApplication;
@@ -65,6 +65,7 @@ public class EquoApplicationBuilder{
 	 * @return
 	 */
 	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel, IEquoApplication equoApp) {
+		currentBuilder = this;
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
@@ -230,11 +231,7 @@ public class EquoApplicationBuilder{
 		return ECLIPSE_RCP_APP_ID.equals(System.getProperty("eclipse.application"));
 	}
 
-	public MenuBuilder withMainMenu(String menuLabel) {
-		return optionalViewBuilder.withMainMenu(menuLabel);
-	}
-
-	public OptionalViewBuilder getOptionalViewBuilder() {
+	OptionalViewBuilder getOptionalViewBuilder() {
 		return optionalViewBuilder;
 	}
 
@@ -253,6 +250,10 @@ public class EquoApplicationBuilder{
 			}
 		});
 		return this;
+	}
+
+	static EquoApplicationBuilder getCurrentBuilder() {
+		return currentBuilder;
 	}
 
 }

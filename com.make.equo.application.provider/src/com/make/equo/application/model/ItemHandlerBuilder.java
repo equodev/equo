@@ -37,6 +37,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
 	private ItemBuilder onClick(Runnable runnable) {
 		this.runnable = runnable;
 		MHandledItem item = getItemBuilder().getItem();
+		item.getTransientData().put(IConstants.ITEM_RUNNABLE, runnable);
 
 		String id = item.getElementId();
 

@@ -90,4 +90,6 @@ public interface IConstants {
 
 	public static final String ITEM_SHORTCUT = "itemshortcut";
 
+	public static final String ITEM_RUNNABLE = "itemrunnable";
+
 }
