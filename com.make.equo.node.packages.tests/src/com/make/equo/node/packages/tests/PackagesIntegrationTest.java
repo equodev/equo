@@ -108,7 +108,6 @@ public class PackagesIntegrationTest {
 		await().timeout(FIVE_SECONDS).pollInterval(ONE_SECOND).untilAsserted(() -> {
 			handler.send("_getDom");
 			assertThat(dom.get()).isNotNull().contains("editor");
-			System.out.println(dom.get());
 		});
 	}
 
