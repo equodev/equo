@@ -9,7 +9,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/equo-monaco-editor": "^0.1.3"
+        "@equo/equo-monaco-editor": "^0.1.0"
     },
     "devDependencies": {
         "webpack": "^4.42.0",
