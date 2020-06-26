@@ -96,6 +96,6 @@ export namespace EquoWebSocketService {
         };
     }
     export function get(): EquoWebSocket {
-        return EquoService.get<EquoWebSocket>(WebsocketServiceId, create);;
+        return EquoService.get<EquoWebSocket>(WebsocketServiceId, create);
     }
 }
