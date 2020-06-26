@@ -7,6 +7,7 @@ import com.make.equo.application.util.IConstants;
 
 public class EquoMenuItem extends AbstractEquoMenu {
 	private Runnable runnable = null;
+	private String action = null;
 	private String shortcut = null;
 
 	public EquoMenuItem(String title) {
@@ -31,11 +32,15 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		this.shortcut = shortcut;
 	}
 
+	public void setAction(String action) {
+		this.action = action;
+	}
+
 	@Override
 	void implement(MenuBuilder menuBuilder) {
 		MenuItemBuilder itemBuilder = menuBuilder.addMenuItem(getTitle());
 		if (runnable != null) {
-			itemBuilder = itemBuilder.onClick(runnable);
+			itemBuilder = itemBuilder.onClick(runnable, action);
 			if (shortcut != null) {
 				itemBuilder.addShortcut(shortcut);
 			}
@@ -58,7 +63,14 @@ public class EquoMenuItem extends AbstractEquoMenu {
 				runnable = (Runnable) runnableObject;
 			}
 
+			String action = null;
+			Object actionObject = menuItem.getTransientData().get(IConstants.ITEM_ACTION);
+			if (actionObject != null) {
+				action = (String) actionObject;
+			}
+
 			EquoMenuItem item = new EquoMenuItem(element.getLabel(), runnable, shortcut);
+			item.setAction(action);
 			return item;
 		} else {
 			return EquoMenuItemSeparator.getElement(element);

@@ -92,4 +92,6 @@ public interface IConstants {
 
 	public static final String ITEM_RUNNABLE = "itemrunnable";
 
+	public static final String ITEM_ACTION = "itemaction";
+
 }
