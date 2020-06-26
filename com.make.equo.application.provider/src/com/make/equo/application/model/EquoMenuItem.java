@@ -43,22 +43,26 @@ public class EquoMenuItem extends AbstractEquoMenu {
 	}
 
 	static AbstractEquoMenu getElement(MMenuElement element) {
-		MMenuItem menuItem = ((MMenuItem) element);
+		if (element instanceof MMenuItem) {
+			MMenuItem menuItem = ((MMenuItem) element);
 
-		String shortcut = null;
-		Object shortcutObject = menuItem.getTransientData().get(IConstants.ITEM_SHORTCUT);
-		if (shortcutObject != null) {
-			shortcut = (String) shortcutObject;
+			String shortcut = null;
+			Object shortcutObject = menuItem.getTransientData().get(IConstants.ITEM_SHORTCUT);
+			if (shortcutObject != null) {
+				shortcut = (String) shortcutObject;
+			}
+
+			Runnable runnable = null;
+			Object runnableObject = menuItem.getTransientData().get(IConstants.ITEM_RUNNABLE);
+			if (runnableObject != null) {
+				runnable = (Runnable) runnableObject;
+			}
+
+			EquoMenuItem item = new EquoMenuItem(element.getLabel(), runnable, shortcut);
+			return item;
+		} else {
+			return EquoMenuItemSeparator.getElement(element);
 		}
-
-		Runnable runnable = null;
-		Object runnableObject = menuItem.getTransientData().get(IConstants.ITEM_RUNNABLE);
-		if (runnableObject != null) {
-			runnable = (Runnable) runnableObject;
-		}
-
-		EquoMenuItem item = new EquoMenuItem(element.getLabel(), runnable, shortcut);
-		return item;
 	}
 
 }
