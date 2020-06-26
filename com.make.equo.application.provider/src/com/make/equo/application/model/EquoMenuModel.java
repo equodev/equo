@@ -19,6 +19,42 @@ public class EquoMenuModel {
 		}
 	}
 
+	private EquoMenu getMenu(String menu) {
+		for (EquoMenu m : menus) {
+			if (m.getTitle().equals(menu))
+				return m;
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the menu element under the given path
+	 * 
+	 * @param path The path to get the element, separated by "/". If the element
+	 *             it's under File -> New -> Project, then the argument must be
+	 *             "File/New/Project"
+	 * @return
+	 */
+	public AbstractEquoMenu get(String path) {
+		String[] steps = path.split("/"); // TODO: a way to escape
+		AbstractEquoMenu currentItem = null;
+		for (String item : steps) {
+			if (currentItem == null) {
+				currentItem = getMenu(item);
+			} else {
+				if (currentItem instanceof EquoMenu) {
+					currentItem = ((EquoMenu) currentItem).getItem(item);
+				} else {
+					return null;
+				}
+			}
+			if (currentItem == null) { // Path wrong
+				return null;
+			}
+		}
+		return currentItem;
+	}
+
 	/**
 	 * Gets the menu model that is currently shown
 	 * 

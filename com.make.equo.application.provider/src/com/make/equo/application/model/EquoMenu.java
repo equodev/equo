@@ -19,6 +19,14 @@ public class EquoMenu extends AbstractEquoMenu {
 		return this;
 	}
 
+	public AbstractEquoMenu getItem(String itemTitle) {
+		for (AbstractEquoMenu item : children) {
+			if (item.getTitle().equals(itemTitle))
+				return item;
+		}
+		return null;
+	}
+
 	@Override
 	void implement(MenuBuilder menuBuilder) {
 		MenuBuilder menu = menuBuilder.addMenu(getTitle());
