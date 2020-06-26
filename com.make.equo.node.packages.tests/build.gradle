@@ -1,0 +1,23 @@
+buildscript {
+  repositories { mavenCentral() }
+  dependencies { classpath 'com.moowork.gradle:gradle-node-plugin:1.3.1' }
+}
+
+plugins {
+  id "com.moowork.node" version "1.3.1"
+}
+
+apply plugin: 'com.moowork.node'
+
+task yarnPublish(type: YarnTask) {
+  args = ['run', 'publish']
+}
+
+node {
+  download = true
+  version = '10.16.3'
+}
+
+processResources {
+  dependsOn yarn_install
+}
