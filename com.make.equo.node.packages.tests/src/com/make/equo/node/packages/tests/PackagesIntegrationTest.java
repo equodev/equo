@@ -3,8 +3,6 @@ package com.make.equo.node.packages.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Durations.FIVE_SECONDS;
-import static org.awaitility.Durations.ONE_SECOND;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -85,7 +83,7 @@ public class PackagesIntegrationTest {
 
 	@Test
 	public void analyticsAreReceivedCorrectlyByTheService() {
-		await().timeout(FIVE_SECONDS).untilAsserted(() -> {
+		await().untilAsserted(() -> {
 			assertThat(analyticsServiceMock).isInstanceOf(AnalyticsServiceMock.class).extracting("receivedMessages")
 					.asInstanceOf(list(String.class)).contains("testEvent-{\"testKey\":\"testValue\"}");
 		});
@@ -93,7 +91,7 @@ public class PackagesIntegrationTest {
 
 	@Test
 	public void loggingMessagesAreReceivedCorrectlyByTheService() {
-		await().timeout(FIVE_SECONDS).untilAsserted(() -> {
+		await().untilAsserted(() -> {
 			assertThat(loggingServiceMock).isInstanceOf(LoggingServiceMock.class).extracting("receivedMessages")
 					.asInstanceOf(list(String.class)).hasSize(3).contains("testInfo", "testWarn", "testError");
 		});
@@ -105,7 +103,7 @@ public class PackagesIntegrationTest {
 		handler.on("_doGetDom", (JsonPayloadEquoRunnable) payload -> {
 			dom.set(payload.toString());
 		});
-		await().timeout(FIVE_SECONDS).pollInterval(ONE_SECOND).untilAsserted(() -> {
+		await().untilAsserted(() -> {
 			handler.send("_getDom");
 			assertThat(dom.get()).isNotNull().contains("editor");
 		});
