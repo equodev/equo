@@ -1,10 +1,12 @@
 -include ${build}/../com.make.equo.testing.common/testing.bnd
 
 Export-Package: \
-    com.make.equo.testing.common.util,\
-    com.make.equo.testing.common.statements
+    com.make.equo.testing.common.components,\
+    com.make.equo.testing.common.statements,\
+    com.make.equo.testing.common.util
 
 -buildpath: \
+    com.make.equo.application.provider;version=latest,\
     com.make.equo.renderers;version=latest,\
     org.eclipse.e4.ui.workbench,\
     org.eclipse.e4.ui.workbench.swt,\
@@ -15,4 +17,3 @@ Export-Package: \
     org.eclipse.core.commands,\
     org.mockito.mockito-all,\
     org.eclipse.e4.ui.workbench.renderers.swt
-    
