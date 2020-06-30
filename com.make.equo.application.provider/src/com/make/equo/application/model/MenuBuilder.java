@@ -37,8 +37,11 @@ public class MenuBuilder {
 				return new MenuBuilder(this);
 			}
 		}
+		MMenu actualMenu = menu;
 		menu = createMenu(parentMenu, label);
-		return new MenuBuilder(this);
+		MenuBuilder newMenuBuilder = new MenuBuilder(this);
+		menu = actualMenu;
+		return newMenuBuilder;
 	}
 
 	public MenuBuilder remove() {
