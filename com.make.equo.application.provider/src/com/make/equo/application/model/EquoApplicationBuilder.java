@@ -110,7 +110,7 @@ public class EquoApplicationBuilder{
 			
 			CustomDeserializer deserializer = new CustomDeserializer();
 		    deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
-		    deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItem.class);
+		    deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 		    
 		    Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
 
