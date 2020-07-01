@@ -20,11 +20,14 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
+import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder{
@@ -99,6 +102,22 @@ public class EquoApplicationBuilder{
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
+		configureJavascriptApi();
+	}
+
+	private void configureJavascriptApi() {
+		equoEventHandler.on("_setMenu", (JsonPayloadEquoRunnable) payload -> {
+			
+			CustomDeserializer deserializer = new CustomDeserializer();
+		    deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
+		    deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItem.class);
+		    
+		    Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
+
+		    EquoMenuModel menu= gson.fromJson(payload, EquoMenuModel.class);
+		    
+		    setMenu(menu);
+		});
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {

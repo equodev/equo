@@ -6,8 +6,12 @@ import java.util.List;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class EquoMenu extends AbstractEquoMenu {
 	private List<AbstractEquoMenu> children;
+	public static final String CLASSNAME = "EquoMenu";
 
 	public EquoMenu(String title) {
 		setTitle(title);
@@ -47,4 +51,19 @@ public class EquoMenu extends AbstractEquoMenu {
 		}
 	}
 
+
+	@Override
+	public JsonObject serialize() {
+		JsonArray jArr = new JsonArray();
+		for(AbstractEquoMenu menu: children){
+			jArr.add(menu.serialize());
+		}
+		
+		JsonObject jOb = new JsonObject();
+		jOb.addProperty("type", CLASSNAME);
+		jOb.addProperty("title", getTitle());
+		jOb.add("children", jArr);
+		return jOb;
+	}
+	
 }

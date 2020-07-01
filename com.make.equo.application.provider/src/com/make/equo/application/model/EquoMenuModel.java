@@ -6,6 +6,9 @@ import java.util.List;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class EquoMenuModel {
 	private List<EquoMenu> menus = new ArrayList<>();
 
@@ -76,5 +79,16 @@ public class EquoMenuModel {
 			}
 		}
 		return model;
+	}
+	
+	public JsonObject serialize() {
+		JsonArray jArr = new JsonArray();
+		for(EquoMenu menu: menus) {
+			jArr.add(menu.serialize());
+		}
+		
+		JsonObject jOb = new JsonObject();
+		jOb.add("menus", jArr);
+		return jOb;
 	}
 }

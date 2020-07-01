@@ -5,10 +5,13 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenuItem;
 
 import com.make.equo.application.util.IConstants;
 
+import com.google.gson.JsonObject;
+
 public class EquoMenuItem extends AbstractEquoMenu {
 	private Runnable runnable = null;
 	private String action = null;
 	private String shortcut = null;
+	public static final String CLASSNAME = "EquoMenuItem";
 
 	public EquoMenuItem(String title) {
 		setTitle(title);
@@ -75,6 +78,20 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		} else {
 			return EquoMenuItemSeparator.getElement(element);
 		}
+	}
+
+	@Override
+	public JsonObject serialize() {
+		JsonObject jOb = new JsonObject();
+		jOb.addProperty("type", CLASSNAME);
+		jOb.addProperty("title", getTitle());
+		
+		if (shortcut != null)
+			jOb.addProperty("shortcut", shortcut);
+
+		if (action != null)
+			jOb.addProperty("action", action);
+		return jOb;
 	}
 
 }
