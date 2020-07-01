@@ -20,4 +20,5 @@ node {
 
 processResources {
   dependsOn yarn_install
+  dependsOn yarnPublish
 }
