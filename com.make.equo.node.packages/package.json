@@ -9,6 +9,6 @@
   },
   "scripts": {
     "prepare": "lerna run prepare",
-    "publish": "lerna publish"
+    "publish": "lerna publish from-git"
   }
 }
