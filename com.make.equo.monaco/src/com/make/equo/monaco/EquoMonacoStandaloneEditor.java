@@ -1,13 +1,8 @@
 package com.make.equo.monaco;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -68,16 +63,15 @@ public class EquoMonacoStandaloneEditor {
 		equoEventHandler.on("_createEditor", (JsonObject payload) -> {
 			JsonElement jsonFilePath = payload.get("filePath");
 			if (jsonFilePath != null) {
-				String fileString = jsonFilePath.getAsString();
-				File file = new File(fileString);
-				Path filePath = FileSystems.getDefault().getPath(fileString);
-				String content = "";
-				try {
-					content = Files.lines(filePath).collect(Collectors.joining("\n"));
-					new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize(content, file.getName(), fileString);
-				} catch (IOException e) {
+				String filePath = jsonFilePath.getAsString();
+				File file = new File(filePath);
+				String content = equoFileSystem.readFile(new File(filePath));
+				if (content != null) {
+					new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize(content, file.getName(),
+							filePath);
+				} else {
 					if (!file.exists()) {
-						new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize("", file.getName(), fileString);
+						new EquoMonacoEditor(equoEventHandler, equoFileSystem).initialize("", file.getName(), filePath);
 					}
 				}
 			} else {
