@@ -1,6 +1,6 @@
 {
     "name": "@equo/equo-monaco-editor-bundle",
-    "version": "0.1.5",
+    "version": "0.1.0",
     "description": "Monaco Editor for Eclipse",
     "license": "UNLICENSED",
     "main": "./lib/index.js",
@@ -9,7 +9,8 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/equo-monaco-editor": "^0.1.0"
+        "monaco-editor": "^0.20.0",
+        "monaco-languageclient": "^0.11.0"
     },
     "devDependencies": {
         "webpack": "^4.42.0",

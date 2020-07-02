@@ -1,2 +1,2 @@
-import { EquoMonaco } from '@equo/equo-monaco-editor';
+import { EquoMonaco } from '../../../com.make.equo.node.packages/packages/equo-monaco-editor/lib/index';
 EquoMonaco.create(document.getElementById('container')!);

@@ -4,8 +4,7 @@
     "description": "Monaco Editor for Eclipse",
     "license": "UNLICENSED",
     "publishConfig": {
-        "access": "restricted",
-        "registry": "http://dev.registry.equoplatform.com"
+        "access": "restricted"
     },
     "main": "./lib/index.js",
     "typings": "./lib/index",

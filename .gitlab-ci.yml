@@ -20,11 +20,12 @@ cache:
 
 before_script:
   - export HOME=$CI_PROJECT_DIR
+  - echo -e $REGISTRY_CREDENTIALS | base64 -d > $HOME/.npmrc
 
 .all:
   artifacts:
     reports:
-       junit: 
+       junit:
           - "*/generated/test-reports/test/TEST-*.xml"
           - "*/generated/test-reports/testOSGi/TEST-*.xml"
     paths:
@@ -38,7 +39,7 @@ before_script:
       - com.make.equo*/generated/*.jar
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
-    
+
 .print_converage: &print_converage
 - awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
 
@@ -48,13 +49,13 @@ build:
   script:
     - gradle $gradle_opt assemble
 
-test: 
+test:
   extends: .all
   stage: test
   script:
     - gradle $gradle_opt test
-    
-test.integration: 
+
+test.integration:
   extends: .all
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
@@ -63,7 +64,7 @@ test.integration:
     - export DISPLAY=:1
   script:
     - ./gradlew $gradle_opt testOSGi
-    
+
 coverage.report:
   extends: .all
   stage: report
@@ -72,7 +73,7 @@ coverage.report:
     - *print_converage
   except:
     - master
-   
+
 full.coverage.report:
   extends: .all
   stage: report
@@ -81,16 +82,17 @@ full.coverage.report:
     - *print_converage
   only:
     - master
-    
+
 release:
   extends: .all
   stage: release
   script:
     - gradle $gradle_opt release
     - gradle $gradle_opt publish
+    - gradle com.make.equo.node.packages:yarnPublish
   only:
     - master
-    
+
 pages:
   stage: release
   script:
