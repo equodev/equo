@@ -70,7 +70,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 //		};
 //		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
 //		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
-		
+		System.setProperty("swt.chromium.args",
+				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+		System.setProperty("org.eclipse.swt.chromium.remote-debugging-port", "9500");
 		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new CustomSelfSignedMitmManager())
 				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
 				.start();
