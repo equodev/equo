@@ -9,6 +9,6 @@
   },
   "scripts": {
     "prepare": "lerna run prepare",
-    "publish": "lerna publish from-package"
+    "publish": "lerna publish from-package --yes"
   }
 }
