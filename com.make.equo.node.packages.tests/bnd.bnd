@@ -28,7 +28,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     org.java-websocket.Java-WebSocket,\
     org.mockito.mockito-all,\
     org.awaitility;version='[4.0.2,4.0.3)'
-    
+
 -privatepackage: \
     com.make.equo.node.packages.tests,\
     com.make.equo.node.packages.tests.mocks,\
@@ -52,6 +52,8 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     com.make.equo.server.provider;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.make.equo.ws.provider;version=latest,\
+    com.make.equo.filesystem.api;version=latest,\
+    com.make.equo.filesystem.provider;version=latest,\
     com.make.equo.logging.client.api;version=latest,\
     com.make.equo.logging.client.provider;version=latest,\
     com.make.equo.analytics.client.api;version=latest,\
