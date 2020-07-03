@@ -105,7 +105,7 @@ public class PackagesIntegrationTest {
 		});
 		await().untilAsserted(() -> {
 			handler.send("_getDom");
-			assertThat(dom.get()).isNotNull().contains("editor");
+			assertThat(dom.get()).isNotNull().contains("<div class=\\\"monaco-editor");
 		});
 	}
 
