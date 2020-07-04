@@ -62,6 +62,8 @@ test.integration:
   before_script:
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
     - export DISPLAY=:1
+    - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    - apt-get install -y nodejs    
   script:
     - ./gradlew $gradle_opt testOSGi
 
