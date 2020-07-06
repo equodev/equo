@@ -100,13 +100,13 @@ public class PackagesIntegrationTest {
 
 	@Test
 	public void monacoEditorIsCreatedCorrectly() {
-		AtomicReference<String> dom = new AtomicReference<>();
-		handler.on("_doGetDom", (JsonPayloadEquoRunnable) payload -> {
-			dom.set(payload.toString());
+		AtomicReference<Boolean> wasCreated = new AtomicReference<>(false);
+		handler.on("_doGetIsEditorCreated", (JsonPayloadEquoRunnable) payload -> {
+			wasCreated.set(true);
 		});
 		await().timeout(ONE_MINUTE).untilAsserted(() -> {
-			handler.send("_getDom");
-			assertThat(dom.get()).isNotNull().contains("<div class=\\\"monaco-editor");
+			handler.send("_getIsEditorCreated");
+			assertThat(wasCreated.get()).isTrue();
 		});
 	}
 

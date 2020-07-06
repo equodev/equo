@@ -6,10 +6,12 @@ import { EquoWebSocketService, EquoWebSocket } from '../../../com.make.equo.node
 
 var websocket: EquoWebSocket = EquoWebSocketService.get();
 
-websocket.on('_getDom', () => {
-    websocket.send('_doGetDom', {
-        dom: document.documentElement.innerHTML
-    });
+websocket.on('_getIsEditorCreated', () => {
+    if (document.getElementsByClassName('monaco-editor').length > 0) {
+        websocket.send('_doGetIsEditorCreated', {
+            created: true
+        });
+    }
 });
 
 EquoMonaco.create(document.getElementById('container')!);
