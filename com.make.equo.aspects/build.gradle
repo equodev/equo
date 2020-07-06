@@ -1,9 +1,17 @@
 task compileAspects() {
   inputs.files {
-    compileJava.classpath
+    project.files(sourceSets.main.java.srcDirs).getAsFileTree().matching {
+      include '**/*.aj'
+      exclude '**/*.java'
+    }.getFiles()
   }
 
-  outputs.dir compileJava.destinationDir
+  File aspectsDest = project.file('aspectsBin')
+
+  outputs.dir aspectsDest
+  outputs.cacheIf { 
+    true 
+  }
 
   doLast {
     println("Compiling Aspects")
@@ -29,7 +37,7 @@ task compileAspects() {
     ant.iajc(
       source:    project.sourceCompatibility,
       target:    project.targetCompatibility,
-      destDir:   compileJava.destinationDir,
+      destDir:   aspectsDest,
       fork:      "false",
       classpath: configurations.compile.plus(configurations.ajc).asPath) {
         sourceroots {
@@ -48,9 +56,10 @@ task compileAspects() {
         }
       }
     }
+    
   }
 }
 
 processResources {
-  dependsOn compileAspects
+  from compileAspects
 }
