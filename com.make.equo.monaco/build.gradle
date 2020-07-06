@@ -5,6 +5,22 @@ node {
   version = node_version
 }
 
+yarn_install {
+  doFirst {
+    mkdir 'resources'
+  }
+  inputs.files {
+    project.file('package.json')
+    project.file('yarn.lock')
+  }
+  outputs.dir {
+    project.file('resources')
+  }
+  outputs.cacheIf {
+    true
+  }
+}
+
 processResources {
-  dependsOn yarn_install
+  from yarn_install
 }
