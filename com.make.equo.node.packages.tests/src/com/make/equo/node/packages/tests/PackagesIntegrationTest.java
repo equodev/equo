@@ -3,6 +3,7 @@ package com.make.equo.node.packages.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
+import static org.awaitility.Durations.ONE_MINUTE;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -103,7 +104,7 @@ public class PackagesIntegrationTest {
 		handler.on("_doGetDom", (JsonPayloadEquoRunnable) payload -> {
 			dom.set(payload.toString());
 		});
-		await().untilAsserted(() -> {
+		await().timeout(ONE_MINUTE).untilAsserted(() -> {
 			handler.send("_getDom");
 			assertThat(dom.get()).isNotNull().contains("<div class=\\\"monaco-editor");
 		});
