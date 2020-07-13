@@ -1,8 +1,5 @@
 .gradle/
-.gradle/*
-/node_modules
-/node_modules/*
-/equo-monaco-editor/node_modules/*
-/equo-monaco-editor/dist/*
-/equo-monaco-editor/lib/*
-/resources/*
+node_modules/
+dist/
+lib/
+resources/

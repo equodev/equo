@@ -12,6 +12,7 @@ Private-Package: \
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.filesystem.api;version=latest,\
     com.make.equo.ws.api;version=latest,\
+    com.make.equo.node.packages;version=latest,\
     com.google.gson,\
     org.eclipse.equinox.common,\
     org.eclipse.osgi,\

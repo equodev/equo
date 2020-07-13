@@ -1,14 +1,13 @@
 {
   "private": true,
   "workspaces": [
-    "equo-monaco-editor",
+    "equo-monaco-editor-bundle",
     "jsonrpc-ws-proxy"
   ],
   "dependencies": {
     "lerna": "^3.20.2"
   },
   "scripts": {
-    "prepare": "lerna run prepare",
-    "publish": "lerna publish"
+    "prepare": "lerna run prepare"
   }
 }
