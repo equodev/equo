@@ -4,11 +4,27 @@ task yarnPublish(type: YarnTask) {
   args = ['run', 'publishFromPackage']
 }
 
+yarn_install {
+  doFirst {
+    mkdir 'node_modules'
+  }
+  inputs.files {
+    project.file('package.json')
+    project.file('yarn.lock')
+  }
+  outputs.dir {
+    project.file('node_modules')
+  }
+  outputs.cacheIf {
+    true
+  }
+}
+
 node {
   download = true
   version = node_version
 }
 
 processResources {
-  dependsOn yarn_install
+  from yarn_install
 }
