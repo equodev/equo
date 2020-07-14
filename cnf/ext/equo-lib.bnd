@@ -17,7 +17,7 @@
 plugindir: ${workspace}/cnf/plugins
 -pluginpath:\
     ${plugindir}/publisher-0.1.6.jar; \
-        url="https://dl.maketechnology.io/bndp2/rls/publisher-0.1.6.jar", \
+        url="https://equo-bndp2.ams3.digitaloceanspaces.com/rls/publisher-0.1.6.jar", \
     ${plugindir}/biz.aQute.repository-3.5.0.jar; \
         url="https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
 

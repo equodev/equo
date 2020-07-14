@@ -40,11 +40,11 @@ public class EquoEventHandler implements IEquoEventHandler {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setViewBuilder(IEquoWebSocketService equoWebSocketService) {
+	void setWebsocketService(IEquoWebSocketService equoWebSocketService) {
 		this.equoWebSocketService = equoWebSocketService;
 	}
 
-	void unsetViewBuilder(IEquoWebSocketService equoWebSocketService) {
+	void unsetWebsocketService(IEquoWebSocketService equoWebSocketService) {
 		this.equoWebSocketService = null;
 	}
 }

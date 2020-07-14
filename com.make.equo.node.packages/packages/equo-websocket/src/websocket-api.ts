@@ -89,10 +89,18 @@ export class EquoWebSocket extends WebSocket {
 
 export namespace EquoWebSocketService {
     const WebsocketServiceId: string = 'equo-websocket';
+    const queryParams: URLSearchParams = new URLSearchParams(window.location.search);
+    const portS: string | null = queryParams.get("equowsport");
+    const port: number = portS === null ? 0 : +portS;
+
+    if (port === 0) {
+        throw new Error("WebSocket port could not be found.");
+    }
+
     export function create(): EquoService<EquoWebSocket> {
         return {
             id: WebsocketServiceId,
-            service: new EquoWebSocket(45454)
+            service: new EquoWebSocket(port)
         };
     }
     export function get(): EquoWebSocket {

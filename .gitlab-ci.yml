@@ -8,12 +8,14 @@ stages:
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
+  YARN_CACHE_FOLDER: $CI_PROJECT_DIR/.yarn-cache
   gradle_opt: "--build-cache --no-daemon"
 
 # HOME is to cwd so bnd will download to ~/.bnd and ~/.m2 with ~=HOME
 cache:
   key: "gradle"
   paths:
+    - .yarn-cache
     - .gradle-home/
     - .m2/
     - .bnd/
@@ -62,6 +64,8 @@ test.integration:
   before_script:
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
     - export DISPLAY=:1
+    - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    - apt-get install -y nodejs    
   script:
     - ./gradlew $gradle_opt testOSGi
 
