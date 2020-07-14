@@ -1,7 +1,7 @@
 apply plugin: "com.moowork.node"
 
 task yarnPublish(type: YarnTask) {
-  args = ['run', 'publish']
+  args = ['run', 'publishFromPackage']
 }
 
 yarn_install {
