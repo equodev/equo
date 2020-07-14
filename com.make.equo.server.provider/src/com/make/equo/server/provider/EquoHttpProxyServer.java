@@ -38,7 +38,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
 	private volatile IEquoLoggingService equoLoggingService;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
@@ -93,7 +93,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	public void addUrl(String url) {
 		if (!proxiedUrls.contains(url)) {
 			proxiedUrls.add(url);
-		} else {
+		} else if (equoLoggingService != null) {
 			equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
 		}
 	}
