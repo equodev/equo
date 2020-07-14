@@ -37,13 +37,12 @@ public class EquoMenuItem extends AbstractEquoMenu {
 
 	public void setAction(String action) {
 		this.action = action;
-		this.runnable = () -> {};
 	}
 
 	@Override
 	void implement(MenuBuilder menuBuilder) {
 		MenuItemBuilder itemBuilder = menuBuilder.addMenuItem(getTitle());
-		if (runnable != null) {
+		if (runnable != null || action != null) {
 			itemBuilder = itemBuilder.onClick(runnable, action);
 			if (shortcut != null) {
 				itemBuilder.addShortcut(shortcut);
