@@ -37,6 +37,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
 
 	public void setAction(String action) {
 		this.action = action;
+		this.runnable = () -> {};
 	}
 
 	@Override
