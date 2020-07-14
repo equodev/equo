@@ -28,6 +28,7 @@ import com.make.equo.node.packages.tests.mocks.LoggingServiceMock;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.testing.common.util.EquoRule;
 import com.make.equo.ws.api.IEquoEventHandler;
+import com.make.equo.ws.api.IEquoWebSocketService;
 import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 public class PackagesIntegrationTest {
@@ -49,6 +50,9 @@ public class PackagesIntegrationTest {
 
 	@Inject
 	protected IEquoLoggingService loggingServiceMock;
+
+	@Inject
+	protected IEquoWebSocketService websocketService;
 
 	@Inject
 	protected IEquoEventHandler handler;
@@ -77,7 +81,7 @@ public class PackagesIntegrationTest {
 			data.grabExcessHorizontalSpace = true;
 			data.grabExcessVerticalSpace = true;
 			chromium.setLayoutData(data);
-			chromium.setUrl("http://testbundles");
+			chromium.setUrl("http://testbundles/" + String.format("?equowsport=%d", websocketService.getPort()));
 			shell.open();
 		});
 	}
