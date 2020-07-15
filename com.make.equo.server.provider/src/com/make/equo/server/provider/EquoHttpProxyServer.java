@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.littleshoot.proxy.HttpProxyServer;
-import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -51,6 +50,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 		if (proxyServer == null) {
 			startServer();
 		}
+		
 	}
 
 	@Override
@@ -70,8 +70,8 @@ public class EquoHttpProxyServer implements IEquoServer {
 //		};
 //		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
 //		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
-
-		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new SelfSignedMitmManager())
+		
+		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new CustomSelfSignedMitmManager())
 				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
 				.start();
 	}
