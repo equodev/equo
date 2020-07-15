@@ -8,23 +8,26 @@ stages:
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
+  YARN_CACHE_FOLDER: $CI_PROJECT_DIR/.yarn-cache
   gradle_opt: "--build-cache --no-daemon"
 
 # HOME is to cwd so bnd will download to ~/.bnd and ~/.m2 with ~=HOME
 cache:
   key: "gradle"
   paths:
+    - .yarn-cache
     - .gradle-home/
     - .m2/
     - .bnd/
 
 before_script:
   - export HOME=$CI_PROJECT_DIR
+  - echo -e $REGISTRY_CREDENTIALS | base64 -d > $HOME/.npmrc
 
 .all:
   artifacts:
     reports:
-       junit: 
+       junit:
           - "*/generated/test-reports/test/TEST-*.xml"
           - "*/generated/test-reports/testOSGi/TEST-*.xml"
     paths:
@@ -38,7 +41,7 @@ before_script:
       - com.make.equo*/generated/*.jar
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
-    
+
 .print_converage: &print_converage
 - awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
 
@@ -48,22 +51,24 @@ build:
   script:
     - gradle $gradle_opt assemble
 
-test: 
+test:
   extends: .all
   stage: test
   script:
     - gradle $gradle_opt test
-    
-test.integration: 
+
+test.integration:
   extends: .all
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
   before_script:
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
     - export DISPLAY=:1
+    - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    - apt-get install -y nodejs    
   script:
     - ./gradlew $gradle_opt testOSGi
-    
+
 coverage.report:
   extends: .all
   stage: report
@@ -72,7 +77,7 @@ coverage.report:
     - *print_converage
   except:
     - master
-   
+
 full.coverage.report:
   extends: .all
   stage: report
@@ -81,16 +86,17 @@ full.coverage.report:
     - *print_converage
   only:
     - master
-    
+
 release:
   extends: .all
   stage: release
   script:
     - gradle $gradle_opt release
     - gradle $gradle_opt publish
+    - gradle com.make.equo.node.packages:yarnPublish
   only:
     - master
-    
+
 pages:
   stage: release
   script:

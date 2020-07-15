@@ -1,5 +1,8 @@
 package com.make.equo.eclipse.testapp;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;

@@ -1,4 +1,5 @@
 *.class
+.directory
 bin/
 bin_test/
 target/

@@ -1,0 +1,20 @@
+{
+    "name": "@equo/service-manager",
+    "version": "0.1.0",
+    "description": "Websocket API for usage within the Equo Framework",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    }
+}

@@ -13,6 +13,7 @@ bgColor=#0000FF
 equoUsername='YWRtaW4='
 equoPassword=bHVzaXRhbm8yMDE4
 eclipseApplication=org.eclipse.ui.ide.workbench
+-buildpath.editor: com.make.equo.monaco;version=latest
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide.application)',\
@@ -45,6 +46,8 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	com.make.equo.application.provider;version=snapshot,\
 	com.make.equo.aspects;version=snapshot,\
 	com.make.equo.contribution.media.provider;version=snapshot,\
+	com.make.equo.eclipse.monaco.editor;version=snapshot,\
+	com.make.equo.monaco;version=snapshot,\
 	com.make.equo.renderers;version=snapshot,\
 	com.make.equo.server.api;version=snapshot,\
 	com.make.equo.server.offline.api;version=snapshot,\
@@ -68,7 +71,7 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
 	org.apache.felix.scr;version='[2.1.14,2.1.15)',\
 	org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
-	org.aspectj.runtime;version='[1.9.2,1.9.3)',\
+	org.aspectj.runtime;version='[1.9.6,1.9.7)',\
 	org.eclipse.compare;version='[3.7.800,3.7.801)',\
 	org.eclipse.compare.core;version='[3.6.700,3.6.701)',\
 	org.eclipse.core.commands;version='[3.9.600,3.9.601)',\
@@ -176,5 +179,4 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.eclipse.ui.intro;version='[3.5.800,3.5.801)',\
 	com.make.equo.logging.client.api;version=snapshot,\
 	com.make.equo.logging.client.provider;version=snapshot,\
-	org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)'
-	
+	org.eclipse.equinox.weaving.hook;version='[1.2.200,1.2.201)'

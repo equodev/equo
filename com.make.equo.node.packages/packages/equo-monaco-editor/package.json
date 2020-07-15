@@ -1,0 +1,28 @@
+{
+    "name": "@equo/equo-monaco-editor",
+    "version": "0.1.0",
+    "description": "Monaco Editor for Eclipse",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "dependencies": {
+        "@equo/websocket": "^0.1.0",
+        "monaco-editor": "^0.20.0",
+        "monaco-languageclient": "^0.11.0",
+        "normalize-url": "^5.0.0",
+        "reconnecting-websocket": "^3.2.2",
+        "vscode-ws-jsonrpc": "^0.1.1"
+    },
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    }
+}
