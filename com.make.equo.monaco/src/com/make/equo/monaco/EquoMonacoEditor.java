@@ -31,6 +31,7 @@ import com.make.equo.filesystem.api.IEquoFileSystem;
 import com.make.equo.monaco.lsp.LspProxy;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoRunnable;
+import com.make.equo.ws.api.IEquoWebSocketService;
 
 public class EquoMonacoEditor {
 	protected IEquoFileSystem equoFileSystem;
@@ -56,10 +57,12 @@ public class EquoMonacoEditor {
 
 	protected IEquoEventHandler equoEventHandler;
 
-	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler) {
+	public EquoMonacoEditor(Composite parent, int style, IEquoEventHandler handler,
+			IEquoWebSocketService websocketService) {
 		this(handler);
 		browser = new Browser(parent, style);
-		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace);
+		String wsPort = String.format("&equowsport=%s", String.valueOf(websocketService.getPort()));
+		browser.setUrl("http://" + EQUO_MONACO_CONTRIBUTION_NAME + "?namespace=" + namespace + wsPort);
 	}
 
 	public EquoMonacoEditor(IEquoEventHandler handler, IEquoFileSystem equoFileSystem) {
