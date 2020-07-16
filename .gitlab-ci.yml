@@ -15,7 +15,7 @@ variables:
 cache:
   key: "gradle"
   paths:
-    - .yarn-cache
+    - .yarn-cache/
     - .gradle-home/
     - .m2/
     - .bnd/
