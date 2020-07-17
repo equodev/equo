@@ -70,10 +70,12 @@ public class EquoMenuModel {
 			OptionalViewBuilder optionalViewBuilder = builder.getOptionalViewBuilder();
 			if (optionalViewBuilder != null) {
 				MMenu menu = optionalViewBuilder.getMainMenu();
-				for (MMenuElement children : menu.getChildren()) {
-					AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(children);
-					if (subMenu instanceof EquoMenu) {
-						model.addMenu((EquoMenu) subMenu);
+				if (menu != null) {
+					for (MMenuElement children : menu.getChildren()) {
+						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(children);
+						if (subMenu instanceof EquoMenu) {
+							model.addMenu((EquoMenu) subMenu);
+						}
 					}
 				}
 			}
