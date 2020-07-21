@@ -5,7 +5,8 @@ Private-Package: \
     com.make.equo.monaco.lsp,\
     com.make.equo.monaco.util
 -includeresource: \
-    resources/
+    resources/,\
+    node_modules/=node_modules/
 -buildpath: \
     osgi.cmpn,\
     com.make.equo.contribution.api;version=latest,\

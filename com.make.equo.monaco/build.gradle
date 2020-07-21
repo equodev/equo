@@ -8,6 +8,7 @@ node {
 yarn_install {
   doFirst {
     mkdir 'resources'
+    mkdir 'node_modules'
   }
   inputs.files {
     project.file('package.json')
@@ -15,6 +16,7 @@ yarn_install {
   }
   outputs.dir {
     project.file('resources')
+    project.file('node_modules')
   }
   outputs.cacheIf {
     true
