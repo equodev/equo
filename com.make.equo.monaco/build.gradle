@@ -8,13 +8,15 @@ node {
 yarn_install {
   doFirst {
     mkdir 'resources'
+    mkdir 'node_modules'
   }
   inputs.files {
     project.file('package.json')
     project.file('yarn.lock')
   }
-  outputs.dir {
+  outputs.dirs {
     project.file('resources')
+    project.file('node_modules')
   }
   outputs.cacheIf {
     true

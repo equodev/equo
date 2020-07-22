@@ -93,7 +93,7 @@ release:
   script:
     - gradle $gradle_opt release
     - gradle $gradle_opt publish
-    - gradle com.make.equo.node.packages:yarnPublish
+    - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
   only:
     - master
 
