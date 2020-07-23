@@ -2,6 +2,7 @@ package com.make.equo.server.provider;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -70,12 +71,25 @@ public class EquoHttpProxyServer implements IEquoServer {
 //		};
 //		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
 //		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
-		System.setProperty("swt.chromium.args",
-				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
-		System.setProperty("org.eclipse.swt.chromium.remote-debugging-port", "9500");
-		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(9896).withManInTheMiddle(new CustomSelfSignedMitmManager())
-				.withAllowRequestToOriginServer(true).withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
-				.start();
+		int port = getPortForServer();
+		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
+				+ ";--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port)
+				.withManInTheMiddle(new CustomSelfSignedMitmManager()).withAllowRequestToOriginServer(true)
+				.withTransparent(false).withFiltersSource(httpFiltersSourceAdapter).start();
+	}
+
+	private int getPortForServer() {
+		int port = 9896;
+		try {
+			ServerSocket socketPortReserve = new ServerSocket(0);
+			socketPortReserve.setReuseAddress(true);
+			port = socketPortReserve.getLocalPort();
+			socketPortReserve.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return port;
 	}
 
 	@Deactivate
