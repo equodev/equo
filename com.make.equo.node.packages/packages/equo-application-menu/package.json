@@ -1,0 +1,24 @@
+{
+    "name": "@equo/equo-application-menu",
+    "version": "0.1.0",
+    "description": "Application menu for Equo apps",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "dependencies": {
+        "@equo/websocket": "^0.1.0"
+    },
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    },
+    "gitHead": "ba4457c93aefd371235fe61a6f025c335f913bab"
+}

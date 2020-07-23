@@ -1,7 +1,9 @@
 package com.make.equo.application.model;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -22,11 +24,13 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
+import com.make.equo.ws.api.IEquoRunnable;
 import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component(service = EquoApplicationBuilder.class)
@@ -113,10 +117,11 @@ public class EquoApplicationBuilder{
 		    deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 		    
 		    Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
-
-		    EquoMenuModel menu= gson.fromJson(payload, EquoMenuModel.class);
-		    
-		    setMenu(menu);
+		    setMenu(gson.fromJson(payload, EquoMenuModel.class));
+		});
+		
+		equoEventHandler.on("_getMenu",(JsonPayloadEquoRunnable) payload -> {
+			equoEventHandler.send("_doGetMenu", EquoMenuModel.getActiveModel().serialize());
 		});
 	}
 
