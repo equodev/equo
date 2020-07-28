@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build --target wc --name equo src/components/*.vue,src/components/basic*.vue"
+    "prepare": "yarn run clean && vue-cli-service build --target wc --name equotoolbarwc src/components/*.vue,src/components/basic*.vue && yarn run copy",
+    "clean": "rimraf ../../resources",
+    "copy":  "cp -r ./dist ../../resources"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.28",

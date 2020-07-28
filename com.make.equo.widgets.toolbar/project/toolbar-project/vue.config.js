@@ -32,9 +32,17 @@ function enableShadowCss(config) {
   }));
 }
 
+
 module.exports = {
   // https://cli.vuejs.org/guide/webpack.html#chaining-advanced
   chainWebpack: config => {
     enableShadowCss(config);
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js' // 'vue/dist/vue.common.js' for webpack 1
+      }
+    }
   }
 }

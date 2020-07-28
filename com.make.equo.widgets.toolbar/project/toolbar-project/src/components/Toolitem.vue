@@ -2,7 +2,7 @@
 <template>
     <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-                <v-btn class="e-btn"  v-on:click="eventHandler" icon text dark v-on="on">
+                <v-btn v-on:click="eventhandlerEval" icon text dark v-on="on">
                   <font-awesome-icon :icon="['fas',icon]" />
                 </v-btn>
             </template>
@@ -22,12 +22,12 @@ library.add(
 )
 
   export default {
-    name: "equo-toolbar",
+    name: "equo-toolitem",
     components: { VBtn, VTooltip, FontAwesomeIcon },
         props:{
-        eventHandler:{
-            type: Function,
-            default: () => 1,
+        eventhandler:{
+            type: String,
+            //default: () => console.log("eventHandler by Default"),
         },
         tooltip:{
             type: String,
@@ -37,8 +37,12 @@ library.add(
             type: String,
             default: ""
         }
+    },
+    methods: {
+      eventhandlerEval(){
+        eval(this.eventhandler + "()");
+      }
     }
-     
   }
 </script>
 <style>

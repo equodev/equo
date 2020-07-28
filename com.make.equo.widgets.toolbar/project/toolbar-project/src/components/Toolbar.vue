@@ -45,6 +45,6 @@ export default {
     padding: 0px 0px;
 }
 @import url("./../styles/vuetify.css");
-@import url("./../styles/styles.css")
+@import url("./../styles/styles.css");
 
 </style>

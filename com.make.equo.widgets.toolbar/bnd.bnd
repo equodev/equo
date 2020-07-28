@@ -1,0 +1,11 @@
+Bundle-Version: ${version}.${tstamp}
+
+-includeresource.resources: resources/
+
+-includeresource.api: api/
+
+-buildpath: \
+    osgi.annotation,\
+    osgi.cmpn,\
+    com.make.equo.contribution.api;version=latest
+-privatepackage: com.make.equo.widgets.toolbar
