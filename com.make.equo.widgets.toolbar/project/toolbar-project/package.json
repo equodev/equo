@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "prepare": "yarn run clean && vue-cli-service build --target wc --name equotoolbarwc src/components/*.vue,src/components/basic*.vue && yarn run copy",
+    "prepare": "yarn run clean && vue-cli-service build --target wc --name equotoolbarwc src/components/*.vue,src/components/basic*.vue --inline-vue && yarn run copy",
     "clean": "rimraf ../../resources",
     "copy":  "cp -r ./dist ../../resources"
   },
