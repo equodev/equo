@@ -1,11 +1,10 @@
 package com.make.equo.builders.tests;
 
+import static java.lang.Integer.toHexString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static java.lang.Integer.toHexString;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -13,12 +12,12 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.make.equo.application.model.ToolbarBuilder;
 import com.make.equo.application.model.ToolbarItemBuilder;
 import com.make.equo.builders.mocks.EmptyClient;
+import com.make.equo.renderers.EclipseWebRendererFactory;
 import com.make.equo.renderers.ToolBarRenderer;
 import com.make.equo.ws.api.IEquoWebSocketService;
 
@@ -31,7 +30,7 @@ public class ToolbarRendererEventTest extends AbstractBuilderTest {
 
 	@Before
 	public void settingContext() {
-		this.injector = injector.withApplicationContext(modelTestingConfigurator.getMainApplication());
+		this.injector = injector.withApplicationContext(modelTestingConfigurator.getMainApplication(), new EclipseWebRendererFactory());
 	}
 	
 	private Boolean executed;
