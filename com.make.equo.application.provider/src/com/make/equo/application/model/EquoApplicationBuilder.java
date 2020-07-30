@@ -1,9 +1,7 @@
 package com.make.equo.application.model;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -13,8 +11,6 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
-import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
-import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -24,17 +20,15 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.impl.HandlerBuilder;
 import com.make.equo.application.util.IConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
-import com.make.equo.ws.api.IEquoRunnable;
 import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component(service = EquoApplicationBuilder.class)
-public class EquoApplicationBuilder{
+public class EquoApplicationBuilder {
 	private static EquoApplicationBuilder currentBuilder;
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
@@ -111,16 +105,16 @@ public class EquoApplicationBuilder{
 
 	private void configureJavascriptApi() {
 		equoEventHandler.on("_setMenu", (JsonPayloadEquoRunnable) payload -> {
-			
+
 			CustomDeserializer deserializer = new CustomDeserializer();
-		    deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
-		    deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
-		    
-		    Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
-		    setMenu(gson.fromJson(payload, EquoMenuModel.class));
+			deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
+			deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
+			equoApplicationModel.setMenu(gson.fromJson(payload, EquoMenuModel.class));
 		});
-		
-		equoEventHandler.on("_getMenu",(JsonPayloadEquoRunnable) payload -> {
+
+		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
 			equoEventHandler.send("_doGetMenu", EquoMenuModel.getActiveModel().serialize());
 		});
 	}
@@ -257,24 +251,6 @@ public class EquoApplicationBuilder{
 
 	OptionalViewBuilder getOptionalViewBuilder() {
 		return optionalViewBuilder;
-	}
-
-	public EquoApplicationBuilder setMenu(EquoMenuModel model) {
-		Display.getDefault().asyncExec(() -> {
-			this.optionalViewBuilder.inicMainMenu();
-			MenuBuilder menuBuilder = new MenuBuilder(this.optionalViewBuilder);
-			menuBuilder.remove();
-			model.implement(menuBuilder);
-			MMenu mainMenu = optionalViewBuilder.getMainMenu();
-			if (mainMenu == null) {
-				mainMenu = getmWindow().getMainMenu();
-			}
-			MenuManagerRenderer renderer = (MenuManagerRenderer) mainMenu.getRenderer();
-			if (renderer != null) {
-				renderer.getManager(mainMenu).update(true);
-			}
-		});
-		return this;
 	}
 
 	static EquoApplicationBuilder getCurrentBuilder() {
