@@ -1,6 +1,6 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd
+-include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundlecoverage.bnd
 
 -buildpath: \
 	com.make.equo.application.provider;version=latest,\
