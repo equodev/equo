@@ -261,6 +261,7 @@ public class EquoApplicationBuilder{
 
 	public EquoApplicationBuilder setMenu(EquoMenuModel model) {
 		Display.getDefault().asyncExec(() -> {
+			this.optionalViewBuilder.inicMainMenu();
 			MenuBuilder menuBuilder = new MenuBuilder(this.optionalViewBuilder);
 			menuBuilder.remove();
 			model.implement(menuBuilder);

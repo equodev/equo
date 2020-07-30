@@ -14,7 +14,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
-	org.java-websocket.Java-WebSocket,\
+	Java-WebSocket,\
 	org.mockito.mockito-all,\
 	org.awaitility,\
 	

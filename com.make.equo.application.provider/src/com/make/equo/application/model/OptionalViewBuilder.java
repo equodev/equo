@@ -123,8 +123,12 @@ public class OptionalViewBuilder {
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
-		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
+		inicMainMenu();
 		return new MenuBuilder(this).addMenu(menuLabel);
+	}
+
+	void inicMainMenu() {
+		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
 	}
 
 	EquoApplicationBuilder getEquoApplicationBuilder() {

@@ -57,7 +57,7 @@ export class MenuItemSeparatorBuilder{
     return this.linker.getMenuItemBuilder().addMenu(label);
   }
 
-  public addMenuItem(label: string): MenuItemBuilder {
+  public addMenuItem(label: string): MenuItemBuilder | any {
     return this.linker.getMenuItemBuilder().addMenuItem(label);
   }
 }
@@ -100,17 +100,24 @@ export class MenuBuilder{
     let equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenu");
     equoMenu.setTitle(label);
+
+    let index = this.linker.getMenuAct().addChildren(equoMenu);
+    if (!(index !== -1 && this.linker.getMenuAct().getChildren()[index].getType() === "EquoMenuItem")) {
+      this.linker.setMenuAct(this.linker.getMenuAct().getChildren()[index]);
+    }
     
-    this.linker.setMenuAct(this.linker.getMenuAct().getChildren()[this.linker.getMenuAct().addChildren(equoMenu)]);
     return this;
   }
 
-  public addMenuItem(label: string): MenuItemBuilder{
+  public addMenuItem(label: string): MenuItemBuilder | any{
     let equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenuItem");
     equoMenu.setTitle(label);
     
     this.linker.buildMenuItemPosition = this.linker.getMenuAct().addChildren(equoMenu);
+    if (this.linker.buildMenuItemPosition !== -1 && this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].getType() === "EquoMenu") {
+      return null;
+    }
     return this.linker.getMenuItemBuilder();
   }
 
@@ -128,9 +135,13 @@ export class MenuBuilder{
     this.webSocket.send("_getMenu", {});
   }
 
-  public setApplicationMenu(): void {
+  public setApplicationMenu(funct?: Function): void {
     let equoMenuModel = new EquoMenuModel(this.menus);
     this.setApplicationMenuWithJson(JSON.parse(JSON.stringify(equoMenuModel)));
+
+    if(funct){
+      funct(this.webSocket, JSON.parse(JSON.stringify(equoMenuModel)));
+    }
   }
 
   public setApplicationMenuWithJson(json: JSON): void{
@@ -170,7 +181,7 @@ export class MenuBuilder{
     return this.appendMenu(itemMenuPath,-1, menuName);
   }
   
-  public searchByPathMenuRecursively(menuItems: Array<EquoMenu>, path: string, equoMenu:EquoMenu): boolean{
+  private searchByPathMenuRecursively(menuItems: Array<EquoMenu>, path: string, equoMenu:EquoMenu): boolean{
     let arr = path.split("/");
     let newPath = path;
     let inserted = false;
@@ -250,8 +261,9 @@ export class MenuBuilder{
     return removed;
   }
 
-  public removeMenuElementByPath(menuNamePathToRemove: string): boolean {
-    return this.removeMenuElementByPathRecursively(this.menus, menuNamePathToRemove);
+  public removeMenuElementByPath(menuNamePathToRemove: string): MenuBuilder {
+    this.removeMenuElementByPathRecursively(this.menus, menuNamePathToRemove);
+    return this;
   }
 
   private removeMenuElementByPathRecursively(menuItems: Array<EquoMenu>, menuNamePathToRemove: string): boolean {
@@ -264,10 +276,8 @@ export class MenuBuilder{
         if (menuItems[i].getTitle() === arr[0]) {
           arr.splice(0, 1);
           newPath = arr.join("/");
-
           if (newPath === "") {
             menuItems.splice(index, 1);
-            this.setApplicationMenu();
             removed = true;
             break;
           }
@@ -295,7 +305,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().withMainMenu(label);
   }
 
-  public addMenuItem(label: string): MenuItemBuilder{
+  public addMenuItem(label: string): MenuItemBuilder | any{
     return this.linker.getMenuBuilder().addMenuItem(label);
   }
 
@@ -320,8 +330,8 @@ export class MenuItemBuilder {
     return this.linker.getMenuItemSeparatorBuilder();
   }
 
-  public setApplicationMenu():void {
-    this.linker.getMenuBuilder().setApplicationMenu();
+  public setApplicationMenu(funct? :Function):void {
+    this.linker.getMenuBuilder().setApplicationMenu(funct);
   }
 }
 

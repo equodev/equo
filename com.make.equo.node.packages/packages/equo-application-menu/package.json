@@ -1,6 +1,6 @@
 {
     "name": "@equo/equo-application-menu",
-    "version": "0.1.0",
+    "version": "0.1.5",
     "description": "Application menu for Equo apps",
     "license": "UNLICENSED",
     "publishConfig": {
@@ -20,5 +20,5 @@
         "build": "yarn run compile",
         "compile": "tsc"
     },
-    "gitHead": "ba4457c93aefd371235fe61a6f025c335f913bab"
+    "gitHead": "b8e564bf09805b7fee7bd17a3b109ec809521b1a"
 }
