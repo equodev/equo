@@ -6,6 +6,9 @@ in a chained way.
 ## Usage
 
 Adding this package in your proyect and read about publishing packages on root folder.
+```
+import { EquoMenu, MenuBuilder } from '@equo/equo-application-menu';
+```
 
 ## Usage whit example Methods 
 
@@ -14,7 +17,7 @@ using **EquoMenu** for reference builds methods
 ### Create example menu
 
 ```
-var menu = EquoMenu;
+var menu = EquoMenu.create();
 
     menu.withMainMenu("Menu1") #create main menu 1
             .addMenuItem("SubMenu11").onClick("_test").addShortcut("M1+W") #add equo menu item in main menu
@@ -35,6 +38,10 @@ var menu = EquoMenu;
 ##### Note:
 func is a optional callback for customise message after building the menu.
 
+##### Example
+```
+setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_userAction", json); });    
+```
 
 ### appendMenuItem( Path, IndexToAddNewMenu, NameNewMenuItem )
 
@@ -66,7 +73,7 @@ Example method for remove menu using a path location.
 ### Adding menus on current menu model example
 ```
 EquoMenu.getCurrentModel( # method for use current menu model
-    (builder: any) => {
+    (builder: MenuBuilder) => {
         builder.withMainMenu("Menu3")
             .addMenuItem("subMenu31").onClick("_test").addShortcut("M1+W")
             .addMenu("subMenu32")

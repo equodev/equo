@@ -9,7 +9,7 @@ import { EquoMonaco } from '@equo/equo-monaco-editor';
 // @ts-ignore
 import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket';
 // @ts-ignore
-import { EquoMenu } from '@equo/equo-application-menu';
+import { EquoMenu, MenuBuilder } from '@equo/equo-application-menu';
 
 var websocket: EquoWebSocket = EquoWebSocketService.get();
 
@@ -38,7 +38,7 @@ EquoAnalyticsService.registerEvent({
 
 EquoFramework.openBrowser('');
 
-function inicMenu(elementMenu : any, func?: Function) {
+function inicMenu(elementMenu : MenuBuilder, func?: Function) {
     elementMenu.withMainMenu("Menu1")
     .addMenuItem("SubMenu11").onClick("_test").addShortcut("M1+W")
     .addMenu("SubMenu12")
@@ -57,40 +57,40 @@ function inicMenu(elementMenu : any, func?: Function) {
 
 websocket.on("_createMenu", () => {
     let menu1 = EquoMenu.create();
-    inicMenu(menu1, (ws: any, json: JSON) => { ws.send("_testSetMenu1", json); });
+    inicMenu(menu1, (ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu1", json); });
 });
 
 websocket.on("_appendMenuItem", () => {
 	let menu2 = EquoMenu.create();
     inicMenu(menu2);
     menu2.appendMenuItem("Menu1", 0, "SubMenu10").onClick("_test").addShortcut("M1+L")
-        .setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu2", json); });
+        .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu2", json); });
 });
 
 websocket.on("_appendMenu", () => {
 	let menu3 = EquoMenu.create();
     inicMenu(menu3);
     menu3.appendMenu("Menu2/SubMenu22", 1, "SubMenu223").addMenuItem("SubMenu2231").onClick("_test").addShortcut("M1+K")
-        .setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu3", json); });
+        .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu3", json); });
 });
 
 websocket.on("_removeMenuElement", () => {
 	let menu4 = EquoMenu.create();
     inicMenu(menu4);
-    menu4.removeMenuElementByPath("Menu2/SubMenu22/SubMenu222").setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu4", json); });
+    menu4.removeMenuElementByPath("Menu2/SubMenu22/SubMenu222").setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu4", json); });
 });
 
 websocket.on("_appendMenuAtTheEnd", () => {
 	let menu5 = EquoMenu.create();
     inicMenu(menu5);
     menu5.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221")
-        .setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu5", json); });
+        .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu5", json); });
 });
 
 websocket.on("_appendMenuItemAtTheEnd", () => {
 	let menu6 = EquoMenu.create();
     inicMenu(menu6);
-    menu6.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu6", json); });
+    menu6.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu6", json); });
 });
 
 websocket.on("_appendMenuRepeated", () => {
@@ -99,7 +99,7 @@ websocket.on("_appendMenuRepeated", () => {
     menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu();
 
     try {
-        menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu7", json); });
+        menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu7", json); });
     } catch (Exception) {
         websocket.send("_testSetMenu7", JSON.parse(JSON.stringify({"code":450,"error":"The menu SubMenu123 already exist in Menu1/SubMenu12"})))
     }
@@ -111,7 +111,7 @@ websocket.on("_appendMenuItemRepeated", () => {
     menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu();
 
     try {
-        menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu8", json); });
+        menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu8", json); });
     } catch (Exception) {
         websocket.send("_testSetMenu8", JSON.parse(JSON.stringify({"code":450,"error":"The menu SubMenu122 already exist in Menu1/SubMenu12"})))
     }
@@ -136,23 +136,23 @@ websocket.on("_createMenuWithRepeatedMenus", () => {
     .withMainMenu("Menu1")
         .addMenuItem("SubMenu14").onClick("_test").addShortcut("M1+W")
 
-    .setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu9", json); });
+    .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu9", json); });
 });
 
 websocket.on("_buildWithCurrentModel", () => {
-    EquoMenu.getCurrentModel((builder: any) => {builder
+    EquoMenu.getCurrentModel((builder: MenuBuilder) => {builder
         .withMainMenu("Menu3")
             .addMenuItem("subMenu31").onClick("_test").addShortcut("M1+W")
             .addMenu("subMenu32")
                 .addMenuItem("subMenu321")
         
-        .setApplicationMenu((ws: any, json: JSON) => { ws.send("_testSetMenu10", json); })
+        .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testSetMenu10", json); })
     })
 });
 
 websocket.on("_buildWithCurrentModelWithRepeatedMenus", () => {
 
-    EquoMenu.getCurrentModel((builder: any) => {
+    EquoMenu.getCurrentModel((builder: MenuBuilder) => {
         try {
             builder.withMainMenu("Menu2")
                 .addMenuItem("SubMenu22").onClick("_test").addShortcut("M1+W")

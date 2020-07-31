@@ -1,5 +1,5 @@
 
-import { EquoWebSocketService } from '@equo/websocket'
+import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
 
 export class Linker{
 
@@ -57,7 +57,7 @@ export class MenuItemSeparatorBuilder{
     return this.linker.getMenuItemBuilder().addMenu(label);
   }
 
-  public addMenuItem(label: string): MenuItemBuilder | any {
+  public addMenuItem(label: string): MenuItemBuilder | null {
     return this.linker.getMenuItemBuilder().addMenuItem(label);
   }
 }
@@ -109,7 +109,7 @@ export class MenuBuilder{
     return this;
   }
 
-  public addMenuItem(label: string): MenuItemBuilder | any{
+  public addMenuItem(label: string): MenuItemBuilder | null{
     let equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenuItem");
     equoMenu.setTitle(label);
@@ -135,7 +135,7 @@ export class MenuBuilder{
     this.webSocket.send("_getMenu", {});
   }
 
-  public setApplicationMenu(funct?: Function): void {
+  public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void): void {
     let equoMenuModel = new EquoMenuModel(this.menus);
     this.setApplicationMenuWithJson(JSON.parse(JSON.stringify(equoMenuModel)));
 
@@ -152,14 +152,14 @@ export class MenuBuilder{
       return this.menus;
   }
 
-  public appendMenuItem(menuPath: string, indexToAddItem: number, menuItemName:string): MenuItemBuilder | any{
+  public appendMenuItem(menuPath: string, indexToAddItem: number, menuItemName:string): MenuItemBuilder | null{
     this.indexToAddItem = indexToAddItem;
     if (this.createEquoMenu(menuItemName, "EquoMenuItem", menuPath))
       return this.linker.getMenuItemBuilder();
     return null;
   }
 
-  public appendMenu(menuPath: string, indexToAddItem: number, menuName:string): MenuBuilder | any {
+  public appendMenu(menuPath: string, indexToAddItem: number, menuName:string): MenuBuilder | null {
     this.indexToAddItem = indexToAddItem;
     if (this.createEquoMenu(menuName, "EquoMenu", menuPath))
       return this;
@@ -173,11 +173,11 @@ export class MenuBuilder{
     return this.searchByPathMenuRecursively(this.menus, path, equoMenu);
   }
 
-  public appendMenuItemAtTheEnd(itemMenuPath: string, menuItemName:string): MenuItemBuilder | any{
+  public appendMenuItemAtTheEnd(itemMenuPath: string, menuItemName:string): MenuItemBuilder | null{
     return this.appendMenuItem(itemMenuPath,-1, menuItemName);
   }
 
-  public appendMenuAtTheEnd(itemMenuPath: string, menuName:string): MenuBuilder | any{
+  public appendMenuAtTheEnd(itemMenuPath: string, menuName:string): MenuBuilder | null{
     return this.appendMenu(itemMenuPath,-1, menuName);
   }
   
@@ -305,7 +305,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().withMainMenu(label);
   }
 
-  public addMenuItem(label: string): MenuItemBuilder | any{
+  public addMenuItem(label: string): MenuItemBuilder | null{
     return this.linker.getMenuBuilder().addMenuItem(label);
   }
 
@@ -330,7 +330,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuItemSeparatorBuilder();
   }
 
-  public setApplicationMenu(funct? :Function):void {
+  public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void):void {
     this.linker.getMenuBuilder().setApplicationMenu(funct);
   }
 }
@@ -500,7 +500,7 @@ export namespace EquoMenu{
   export function create(): MenuBuilder {
     return new Linker().getMenuBuilder();
   }
-  export function getCurrentModel(funct: Function): void{
+  export function getCurrentModel(funct: (mb : MenuBuilder) => void): void{
     new Linker().setBuildWithCurrentModel(funct);
   }
 }
