@@ -89,7 +89,20 @@ public class TestApp implements IEquoApplication {
 							application.setMenu(model1);
 
 						}
-					}).start();
+					}).addMenuItem("Open New Browser").onClick(new Runnable() {
+						
+						@Override
+						public void run() {
+							application.openBrowser("https://www.maketechnology.io", "test", "left");
+						}
+					}).addMenuItem("Update Browser").onClick(new Runnable() {
+						
+						@Override
+						public void run() {
+							application.updateBrowser("https://www.linkedin.com/company/make-technology", "test");
+						}
+					})
+					.start();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
