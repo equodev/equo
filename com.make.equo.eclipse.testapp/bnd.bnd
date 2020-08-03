@@ -13,7 +13,6 @@ bgColor=#0000FF
 equoUsername='YWRtaW4='
 equoPassword=bHVzaXRhbm8yMDE4
 eclipseApplication=org.eclipse.ui.ide.workbench
--buildpath.editor: com.make.equo.monaco;version=latest
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide.application)',\
@@ -46,8 +45,6 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	com.make.equo.application.provider;version=snapshot,\
 	com.make.equo.aspects;version=snapshot,\
 	com.make.equo.contribution.media.provider;version=snapshot,\
-	com.make.equo.eclipse.monaco.editor;version=snapshot,\
-	com.make.equo.monaco;version=snapshot,\
 	com.make.equo.renderers;version=snapshot,\
 	com.make.equo.server.api;version=snapshot,\
 	com.make.equo.server.offline.api;version=snapshot,\

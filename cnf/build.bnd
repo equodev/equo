@@ -1,3 +1,5 @@
+-include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbuild.bnd
+
 -plugin.6.P2Repo: \
     com.make.bnd.p2release.P2RepoContentProvider; \
         name = Release; \

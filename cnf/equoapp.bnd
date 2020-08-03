@@ -45,7 +45,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.equo.ui.helper.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.media.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.renderers)',\
-    osgi.identity;filter:='(osgi.identity=com.make.equo.monaco)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.ds)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.e4.ui.workbench.swt)',\
@@ -148,7 +147,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.filesystem.api;version=latest,\
     com.make.equo.filesystem.provider;version=latest,\
     com.make.equo.server.offline.provider;version=latest,\
-    com.make.equo.monaco;version=latest,\
     com.squareup.moshi;version='[1.4.0,1.4.1)',\
     com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\

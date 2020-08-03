@@ -1,0 +1,5 @@
+Export-Package: \
+    com.make.equo.testing.common.internal.components
+
+-buildpath: \
+    com.make.equo.application.provider;version=latest

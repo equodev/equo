@@ -3,9 +3,6 @@ package com.make.equo.node.packages.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Durations.ONE_MINUTE;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
@@ -29,7 +26,6 @@ import com.make.equo.server.api.IEquoServer;
 import com.make.equo.testing.common.util.EquoRule;
 import com.make.equo.ws.api.IEquoEventHandler;
 import com.make.equo.ws.api.IEquoWebSocketService;
-import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 public class PackagesIntegrationTest {
 
@@ -99,18 +95,6 @@ public class PackagesIntegrationTest {
 		await().untilAsserted(() -> {
 			assertThat(loggingServiceMock).isInstanceOf(LoggingServiceMock.class).extracting("receivedMessages")
 					.asInstanceOf(list(String.class)).hasSize(3).contains("testInfo", "testWarn", "testError");
-		});
-	}
-
-	@Test
-	public void monacoEditorIsCreatedCorrectly() {
-		AtomicReference<Boolean> wasCreated = new AtomicReference<>(false);
-		handler.on("_doGetIsEditorCreated", (JsonPayloadEquoRunnable) payload -> {
-			wasCreated.set(true);
-		});
-		await().timeout(ONE_MINUTE).untilAsserted(() -> {
-			handler.send("_getIsEditorCreated");
-			assertThat(wasCreated.get()).isTrue();
 		});
 	}
 
