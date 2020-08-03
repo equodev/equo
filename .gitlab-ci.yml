@@ -20,9 +20,12 @@ cache:
     - .m2/
     - .bnd/
 
-before_script:
+.global_before_scripts: &global_before_scripts
   - export HOME=$CI_PROJECT_DIR
-  - echo -e $REGISTRY_CREDENTIALS | base64 -d > $HOME/.npmrc
+  - printf "%b\n" "$REGISTRY_CREDENTIALS" | base64 -d > $HOME/.npmrc
+
+before_script:
+  - *global_before_scripts
 
 .all:
   artifacts:
@@ -62,6 +65,7 @@ test.integration:
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
   before_script:
+    - *global_before_scripts
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
     - export DISPLAY=:1
     - curl -sL https://deb.nodesource.com/setup_10.x | bash -
