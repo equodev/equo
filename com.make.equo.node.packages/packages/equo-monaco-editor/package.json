@@ -29,6 +29,5 @@
         "clean": "rimraf lib",
         "build": "yarn run compile",
         "compile": "tsc"
-    },
-    "gitHead": "b0687978e5020bdc437d0a4dfb684d89a5cffeef"
+    }
 }

@@ -990,25 +990,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@equo/equo-application-menu@^0.1.8":
-  version "0.1.8"
-  resolved "http://localhost:4873/@equo%2fequo-application-menu/-/equo-application-menu-0.1.8.tgz#7a655e16e17dabaf1378f2c0de97c3a84fd1ed35"
-  integrity sha512-GOp6CI0C+zXnHAU/RKmPHGdkFAQOGZH1MgXwHAKH9mAoY2NR+Y6HmaCejMjf9yl9H5z80Upvg01LWxoXPZe3Dw==
-  dependencies:
-    "@equo/websocket" "^0.1.3"
-
-"@equo/service-manager@^0.1.3":
-  version "0.1.3"
-  resolved "http://localhost:4873/@equo%2fservice-manager/-/service-manager-0.1.3.tgz#258839599d340627e57d1475c39bfa0f63df487d"
-  integrity sha512-NU2YkPTWr8kuAVYvumK5UUqdg6DCaJbPbBH05kOF1CwDlBBfbXuS0dD20Asb9KrluHQ7tVc+0AwUyVC7eEiLwg==
-
-"@equo/websocket@^0.1.3":
-  version "0.1.3"
-  resolved "http://localhost:4873/@equo%2fwebsocket/-/websocket-0.1.3.tgz#d6eff54c3a8d761a91e0f58ab6b4476aad0f1c84"
-  integrity sha512-aXIDKSBrXiyrCbxTdIoSp5YcDPg8fSV11R9sd8VuxC58nthMTZH7oZ1WWCkqJ01Z/b1boDSggy1ob87nN5erMQ==
-  dependencies:
-    "@equo/service-manager" "^0.1.3"
-
 "@evocateur/libnpmaccess@^3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@evocateur/libnpmaccess/-/libnpmaccess-3.1.2.tgz#ecf7f6ce6b004e9f942b098d92200be4a4b1c845"
