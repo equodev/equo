@@ -5,10 +5,6 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
 import org.eclipse.swt.widgets.Display;
 
-import com.google.gson.JsonObject;
-import com.make.equo.application.handlers.ParameterizedCommandRunnable;
-import com.make.equo.application.util.IConstants;
-
 public class EquoApplicationModel {
 
 	private static EquoApplicationModel currentModel;
@@ -44,25 +40,6 @@ public class EquoApplicationModel {
 				renderer.getManager(mainMenu).update(true);
 			}
 		});
-	}
-	
-	public void openBrowser(String url, String name, String position) {
-		JsonObject params = new JsonObject();
-		params.addProperty("name", name);
-		params.addProperty("url", url);
-		params.addProperty("position", position);
-		
-		new ParameterizedCommandRunnable(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
-				getMainApplication().getContext()).run(params.toString());;
-	}
-	
-	public void updateBrowser(String url, String name) {
-		JsonObject params = new JsonObject();
-		params.addProperty("name", name);
-		params.addProperty("url", url);
-		
-		new ParameterizedCommandRunnable(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
-				getMainApplication().getContext()).run(params.toString());;
 	}
 
 	public static EquoApplicationModel getApplicaton() {

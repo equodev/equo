@@ -93,13 +93,13 @@ public class TestApp implements IEquoApplication {
 						
 						@Override
 						public void run() {
-							application.openBrowser("https://www.maketechnology.io", "test", "left");
+							IEquoApplication.openBrowser("https://www.maketechnology.io", "test", "left");
 						}
 					}).addMenuItem("Update Browser").onClick(new Runnable() {
 						
 						@Override
 						public void run() {
-							application.updateBrowser("https://www.linkedin.com/company/make-technology", "test");
+							IEquoApplication.updateBrowser("https://www.linkedin.com/company/make-technology", "test");
 						}
 					})
 					.start();
@@ -130,5 +130,5 @@ public class TestApp implements IEquoApplication {
 			e.printStackTrace();
 		}
 	}
-
+	
 }
