@@ -1,7 +1,6 @@
 const path = require('path');
 const lib = path.resolve(__dirname, "lib");
 const resources = path.resolve(__dirname, "../resources/");
-const MonacoWebpackPlugin = require('../../com.make.equo.node.packages/node_modules/monaco-editor-webpack-plugin');
 
 const common = {
     entry: {
@@ -10,15 +9,6 @@ const common = {
     output: {
         filename: '[name].bundle.js',
         path: resources
-    },
-    module: {
-        rules: [{
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
-        }, {
-          test: /\.ttf$/,
-          use: ['file-loader']
-        }]
     },
     target: 'web',
     node: {
@@ -29,14 +19,8 @@ const common = {
     },
     resolve: {
         modules: [path.resolve(__dirname, "../../com.make.equo.node.packages/node_modules/"), "node_modules"],
-        alias: {
-            'vscode': require.resolve('../../com.make.equo.node.packages/node_modules/monaco-languageclient/lib/vscode-compatibility')
-        },
         extensions: ['.js', '.ttf']
-    },
-    plugins: [
-        new MonacoWebpackPlugin()
-    ]
+    }
 };
 
 module.exports = common;

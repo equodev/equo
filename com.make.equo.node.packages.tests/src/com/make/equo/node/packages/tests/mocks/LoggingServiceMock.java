@@ -8,8 +8,7 @@ import org.osgi.service.component.annotations.Component;
 import com.google.gson.JsonObject;
 import com.make.equo.aer.api.IEquoLoggingService;
 
-// Adding a service ranking temporarily as the logging service is currently mandatory to run the framework
-@Component(property = { "service.ranking:Integer=10000" })
+@Component
 public class LoggingServiceMock implements IEquoLoggingService {
 
 	private List<String> receivedMessages = new ArrayList<>();

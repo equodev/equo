@@ -1,4 +1,4 @@
-package com.make.equo.testing.common.components;
+package com.make.equo.testing.common.internal.components;
 
 import org.osgi.service.component.annotations.Component;
 

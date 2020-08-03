@@ -32,14 +32,17 @@ task uploadEquoAppSetup(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/EquoApp.setup"
     file file('cnf/EquoApp.setup')
 }
+
 task uploadEquoIDEAppConfigSetup(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/EquoIDEAppConfig.setup"
     file file('cnf/EquoIDEAppConfig.setup')
 }
+
 task uploadEquoOrgProjectsSetup(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/EquoOrgProjects.setup"
     file file('cnf/EquoOrgProjects.setup')
 }
+
 task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/EquoOwnerApp.setup"
     file file('cnf/EquoOwnerApp.setup')
