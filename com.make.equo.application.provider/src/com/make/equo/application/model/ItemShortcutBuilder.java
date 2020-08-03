@@ -1,12 +1,12 @@
 package com.make.equo.application.model;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
-import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 
 import com.make.equo.application.util.IConstants;
@@ -37,12 +37,26 @@ public class ItemShortcutBuilder implements KeyBindingBuilder {
 					this.userEvent);
 			keyBinding.getParameters().add(userEventParameter);
 
-			mBindingTable.getBindings().add(keyBinding);
+			List<MKeyBinding> bindings = mBindingTable.getBindings();
+			removeShortcut(bindings, shortcut);
+			bindings.add(keyBinding);
 		} else {
 			// TODO add logging
 			System.out.println("There is no default binding table created for the " + shortcut + " shortcut");
 		}
 	}
 
+	private void removeShortcut(List<MKeyBinding> bindings, String shortcut) {
+		MKeyBinding bindingToDelete = null;
+		for (MKeyBinding binding : bindings) {
+			if (binding.getKeySequence().equals(shortcut)) {
+				bindingToDelete = binding;
+				break;
+			}
+		}
+		if (bindingToDelete != null) {
+			bindings.remove(bindingToDelete);
+		}
+	}
 
 }

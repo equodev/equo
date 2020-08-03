@@ -69,10 +69,14 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 		mApplication.getHandlers().add(newHandler);
 		
 		mApplication.getTransientData().put(newCommand.getElementId(), getRunnable());
-		
+
 		return newCommand;
 	}
-	
+
+	protected MApplication getMApplication() {
+		return mApplication;
+	}
+
 	protected abstract Runnable getRunnable();
 	
 }

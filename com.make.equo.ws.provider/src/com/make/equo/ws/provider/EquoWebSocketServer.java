@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.java_websocket.WebSocket;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -84,11 +83,6 @@ class EquoWebSocketServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, ByteBuffer message) {
 		broadcast(message.array());
 		System.out.println(conn + ": " + message);
-	}
-
-	@Override
-	public void onFragment(WebSocket conn, Framedata fragment) {
-		System.out.println("received fragment: " + fragment);
 	}
 
 	@Override
