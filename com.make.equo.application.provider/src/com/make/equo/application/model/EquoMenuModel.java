@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
+import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
+import org.eclipse.swt.widgets.Display;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -88,9 +90,28 @@ public class EquoMenuModel {
 		for(EquoMenu menu: menus) {
 			jArr.add(menu.serialize());
 		}
-		
+
 		JsonObject jOb = new JsonObject();
 		jOb.add("menus", jArr);
 		return jOb;
+	}
+
+	public void setUpMenus() {
+		final EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();
+		final OptionalViewBuilder optionalViewBuilder = currentBuilder.getOptionalViewBuilder();
+		Display.getDefault().asyncExec(() -> {
+			optionalViewBuilder.inicMainMenu();
+			MenuBuilder menuBuilder = new MenuBuilder(optionalViewBuilder);
+			menuBuilder.remove();
+			implement(menuBuilder);
+			MMenu mainMenu = optionalViewBuilder.getMainMenu();
+			if (mainMenu == null) {
+				mainMenu = currentBuilder.getmWindow().getMainMenu();
+			}
+			MenuManagerRenderer renderer = (MenuManagerRenderer) mainMenu.getRenderer();
+			if (renderer != null) {
+				renderer.getManager(mainMenu).update(true);
+			}
+		});
 	}
 }

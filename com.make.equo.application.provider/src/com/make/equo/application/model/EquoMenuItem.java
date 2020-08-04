@@ -13,7 +13,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
 	private String shortcut = null;
 	public static final String CLASSNAME = "EquoMenuItem";
 
-	public EquoMenuItem(String title) {
+	EquoMenuItem(String title) {
 		setTitle(title);
 	}
 

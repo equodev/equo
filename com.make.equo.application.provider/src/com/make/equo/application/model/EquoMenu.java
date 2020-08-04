@@ -13,7 +13,7 @@ public class EquoMenu extends AbstractEquoMenu {
 	private List<AbstractEquoMenu> children;
 	public static final String CLASSNAME = "EquoMenu";
 
-	public EquoMenu(String title) {
+	EquoMenu(String title) {
 		setTitle(title);
 		children = new ArrayList<>();
 	}
