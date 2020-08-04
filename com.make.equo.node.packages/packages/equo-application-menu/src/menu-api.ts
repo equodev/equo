@@ -309,8 +309,12 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().addMenuItem(label);
   }
 
-  public onClick(action: string): MenuItemBuilder{
-    this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setAction(action);
+  public onClick(action: string| (() => void)): MenuItemBuilder{
+    if (action instanceof Function){
+      this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setRunnable(action);
+    }else{
+      this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setAction(action);
+    }
     return this;
   }
 
@@ -388,6 +392,11 @@ export class EquoMenu{
         this.children.push(child);
       }
     }
+  }
+
+  public setRunnable(runnable: () => void){
+    EquoWebSocketService.get().on(this.id, runnable);
+    this.setAction(this.id);
   }
 
   public setType(type: string): void{

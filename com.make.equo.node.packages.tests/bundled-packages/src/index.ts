@@ -154,4 +154,11 @@ websocket.on("_buildWithCurrentModelWithRepeatedMenus", () => {
     })    
 });
 
+websocket.on("_customActionOnClick", () => {
+    EquoMenu.create().withMainMenu("Menu1")
+    .addMenuItem("SubMenu11").onClick(()=> {websocket.send("_customActionOnClickResponse")}).addShortcut("M1+W")
+
+    .setApplicationMenu((ws: EquoWebSocket, json: JSON) => { ws.send("_testCustomOnClick", json); });
+});
+
 websocket.send("_ready");
