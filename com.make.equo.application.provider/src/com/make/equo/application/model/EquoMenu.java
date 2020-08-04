@@ -13,8 +13,8 @@ public class EquoMenu extends AbstractEquoMenu {
 	private List<AbstractEquoMenu> children;
 	public static final String CLASSNAME = "EquoMenu";
 
-	EquoMenu(String title) {
-		setTitle(title);
+	EquoMenu(IEquoMenu parent, String title) {
+		super(parent, title);
 		children = new ArrayList<>();
 	}
 
@@ -39,15 +39,15 @@ public class EquoMenu extends AbstractEquoMenu {
 		}
 	}
 
-	static AbstractEquoMenu getElement(MMenuElement element) {
+	static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
 		if (element instanceof MMenu) {
-			EquoMenu menu = new EquoMenu(element.getLabel());
+			EquoMenu menu = new EquoMenu(parent, element.getLabel());
 			for (MMenuElement children : ((MMenu) element).getChildren()) {
-				menu.addItem(AbstractEquoMenu.getElement(children));
+				menu.addItem(AbstractEquoMenu.getElement(menu, children));
 			}
 			return menu;
 		} else {
-			return EquoMenuItem.getElement(element);
+			return EquoMenuItem.getElement(parent, element);
 		}
 	}
 

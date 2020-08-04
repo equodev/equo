@@ -13,29 +13,19 @@ public class EquoMenuItem extends AbstractEquoMenu {
 	private String shortcut = null;
 	public static final String CLASSNAME = "EquoMenuItem";
 
-	EquoMenuItem(String title) {
-		setTitle(title);
+	EquoMenuItem(IEquoMenu parent, String title) {
+		super(parent, title);
 	}
 
-	public EquoMenuItem(String title, Runnable runnable) {
-		this(title);
-		setRunnable(runnable);
-	}
-
-	public EquoMenuItem(String title, Runnable runnable, String shortcut) {
-		this(title, runnable);
-		setShortcut(shortcut);
-	}
-
-	public void setRunnable(Runnable runnable) {
+	public void onClick(Runnable runnable) {
 		this.runnable = runnable;
 	}
 
-	public void setShortcut(String shortcut) {
+	public void withShortcut(String shortcut) {
 		this.shortcut = shortcut;
 	}
 
-	public void setAction(String action) {
+	public void onClick(String action) {
 		this.action = action;
 	}
 
@@ -50,7 +40,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		}
 	}
 
-	static AbstractEquoMenu getElement(MMenuElement element) {
+	static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
 		if (element instanceof MMenuItem) {
 			MMenuItem menuItem = ((MMenuItem) element);
 
@@ -72,11 +62,13 @@ public class EquoMenuItem extends AbstractEquoMenu {
 				action = (String) actionObject;
 			}
 
-			EquoMenuItem item = new EquoMenuItem(element.getLabel(), runnable, shortcut);
-			item.setAction(action);
+			EquoMenuItem item = new EquoMenuItem(parent, element.getLabel());
+			item.onClick(runnable);
+			item.withShortcut(shortcut);
+			item.onClick(action);
 			return item;
 		} else {
-			return EquoMenuItemSeparator.getElement(element);
+			return EquoMenuItemSeparator.getElement(parent, element);
 		}
 	}
 

@@ -11,25 +11,33 @@ import org.eclipse.swt.widgets.Display;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class EquoMenuModel {
+public class EquoMenuModel implements IEquoMenu {
 	private List<EquoMenu> menus = new ArrayList<>();
 
-	public void addMenu(EquoMenu menu) {
-		menus.add(menu);
+	public EquoMenu withMainMenu(String title) {
+		EquoMenu menu = getExistingMenu(title);
+		if (menu == null) {
+			menu = new EquoMenu(this, title);
+			menus.add(menu);
+		}
+		return menu;
+	}
+
+	private EquoMenu getExistingMenu(String title) {
+		return menus.stream().filter(m -> m.getTitle().equals(title)).findFirst().orElseGet(null);
+	}
+
+	protected void addMenu(EquoMenu menu) {
+		EquoMenu existingMenu = getExistingMenu(menu.getTitle());
+		if (existingMenu != null) {
+			menus.add(menu);
+		}
 	}
 
 	void implement(MenuBuilder menuBuilder) {
 		for (EquoMenu menu : menus) {
 			menu.implement(menuBuilder);
 		}
-	}
-
-	private EquoMenu getMenu(String menu) {
-		for (EquoMenu m : menus) {
-			if (m.getTitle().equals(menu))
-				return m;
-		}
-		return null;
 	}
 
 	/**
@@ -45,7 +53,7 @@ public class EquoMenuModel {
 		AbstractEquoMenu currentItem = null;
 		for (String item : steps) {
 			if (currentItem == null) {
-				currentItem = getMenu(item);
+				currentItem = getExistingMenu(item);
 			} else {
 				if (currentItem instanceof EquoMenu) {
 					currentItem = ((EquoMenu) currentItem).getItem(item);
@@ -74,7 +82,7 @@ public class EquoMenuModel {
 				MMenu menu = optionalViewBuilder.getMainMenu();
 				if (menu != null) {
 					for (MMenuElement children : menu.getChildren()) {
-						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(children);
+						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(model, children);
 						if (subMenu instanceof EquoMenu) {
 							model.addMenu((EquoMenu) subMenu);
 						}
@@ -84,10 +92,10 @@ public class EquoMenuModel {
 		}
 		return model;
 	}
-	
+
 	public JsonObject serialize() {
 		JsonArray jArr = new JsonArray();
-		for(EquoMenu menu: menus) {
+		for (EquoMenu menu : menus) {
 			jArr.add(menu.serialize());
 		}
 

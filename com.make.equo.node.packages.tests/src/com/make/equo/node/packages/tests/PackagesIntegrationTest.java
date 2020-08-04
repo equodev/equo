@@ -149,8 +149,8 @@ public class PackagesIntegrationTest {
 		EquoMenu menu1 = new EquoMenu("Menu1");
 
 		EquoMenuItem subMenu11 = new EquoMenuItem("SubMenu11");
-		subMenu11.setShortcut("M1+W");
-		subMenu11.setAction("_test");
+		subMenu11.withShortcut("M1+W");
+		subMenu11.onClick("_test");
 
 		menu1.addItem(subMenu11);
 		equoMenuModel.addMenu(menu1);
@@ -158,7 +158,7 @@ public class PackagesIntegrationTest {
 		EquoMenu menu2 = new EquoMenu("Menu2");
 
 		EquoMenuItem equoMenuItem2 = new EquoMenuItem("SubMenu21");
-		equoMenuItem2.setAction("_test");
+		equoMenuItem2.onClick("_test");
 
 		menu2.addItem(equoMenuItem2);
 
@@ -168,8 +168,8 @@ public class PackagesIntegrationTest {
 		EquoMenu subMenu22 = new EquoMenu("SubMenu22");
 
 		EquoMenuItem subMenu221 = new EquoMenuItem("SubMenu221");
-		subMenu221.setShortcut("M1+G");
-		subMenu221.setAction("_test");
+		subMenu221.withShortcut("M1+G");
+		subMenu221.onClick("_test");
 
 		subMenu22.addItem(subMenu221);
 

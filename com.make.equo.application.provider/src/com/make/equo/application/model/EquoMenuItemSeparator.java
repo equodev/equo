@@ -7,7 +7,8 @@ import com.google.gson.JsonObject;
 public class EquoMenuItemSeparator extends AbstractEquoMenu {
 	public static final String CLASSNAME = "EquoMenuItemSeparator";
 
-	EquoMenuItemSeparator() {
+	EquoMenuItemSeparator(IEquoMenu parent, String title) {
+		super(parent, title);
 	}
 
 	@Override
@@ -15,8 +16,8 @@ public class EquoMenuItemSeparator extends AbstractEquoMenu {
 		new MenuItemSeparatorBuilder(menuBuilder).addMenuItemSeparator();
 	}
 
-	static AbstractEquoMenu getElement(MMenuElement element) {
-		return new EquoMenuItemSeparator();
+	static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
+		return new EquoMenuItemSeparator(parent, "");
 	}
 
 	@Override
