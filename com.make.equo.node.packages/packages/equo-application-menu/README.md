@@ -84,3 +84,9 @@ EquoMenu.getCurrentModel( # method for use current menu model
 ```
 #### Note
 If the menu name exists in the current menu model or construction, it will automatically reference the existing menu. 
+
+### Add action into "OnCLick" example
+
+.....addMenuItem("subMenu31").onClick("_test")..... #_test is the "userEvent" existing
+
+.....addMenuItem("subMenu31").onClick(() => { //TODO }).....  #Define custom action for "Onclick"
