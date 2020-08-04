@@ -1,3 +1,4 @@
+Bundle-ActivationPolicy: lazy
 -outputmask: ${@bsn}.jar
 -include: ${build}/equoapp.bnd
 #-runrepos: Release
