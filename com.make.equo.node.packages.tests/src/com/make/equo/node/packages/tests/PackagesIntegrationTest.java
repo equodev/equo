@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.aer.client.api.ILoggingApi;
 import com.make.equo.analytics.client.api.IAnalyticsApi;
@@ -302,5 +304,20 @@ public class PackagesIntegrationTest {
 
 		testMenuTemplate("_testSetMenu11", "_buildWithCurrentModelWithRepeatedMenus",
 				"The menu SubMenu22 already exist in Menu2 and your type is EquoMenu");
+	}
+	
+	@Test
+	public void customActionOnClick() {
+		AtomicReference<Boolean> wasCorrectly = new AtomicReference<>(false);
+		handler.on("_customActionOnClickResponse", (IEquoRunnable<Void>) runnable -> {
+			wasCorrectly.set(true);
+		});
+		handler.on("_testCustomOnClick", (JsonPayloadEquoRunnable) payload -> {
+			JsonArray menus = ((JsonObject)payload.getAsJsonObject()).get("menus").getAsJsonArray();
+			String action = ((JsonObject)((JsonArray)((JsonObject)menus.get(0)).get("children")).get(0)).get("action").getAsString();
+			handler.send(action);
+		});
+		handler.send("_customActionOnClick");
+		await().until(() -> wasCorrectly.get());
 	}
 }
