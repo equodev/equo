@@ -17,16 +17,19 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		super(parent, title);
 	}
 
-	public void onClick(Runnable runnable) {
+	public EquoMenuItem onClick(Runnable runnable) {
 		this.runnable = runnable;
+		return this;
 	}
 
-	public void withShortcut(String shortcut) {
+	public EquoMenuItem withShortcut(String shortcut) {
 		this.shortcut = shortcut;
+		return this;
 	}
 
-	public void onClick(String action) {
+	public EquoMenuItem onClick(String action) {
 		this.action = action;
+		return this;
 	}
 
 	@Override
