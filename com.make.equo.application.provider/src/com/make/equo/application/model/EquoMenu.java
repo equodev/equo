@@ -24,7 +24,7 @@ public class EquoMenu extends AbstractEquoMenu {
 	}
 
 	private AbstractEquoMenu getExistingChildren(String title) {
-		return children.stream().filter(ch -> ch.getTitle().equals(title)).findFirst().orElseGet(null);
+		return children.stream().filter(ch -> ch.getTitle().equals(title)).findFirst().orElse(null);
 	}
 
 	@Override

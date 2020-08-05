@@ -24,12 +24,12 @@ public class EquoMenuModel implements IEquoMenu {
 	}
 
 	private EquoMenu getExistingMenu(String title) {
-		return menus.stream().filter(m -> m.getTitle().equals(title)).findFirst().orElseGet(null);
+		return menus.stream().filter(m -> m.getTitle().equals(title)).findFirst().orElse(null);
 	}
 
 	protected void addMenu(EquoMenu menu) {
 		EquoMenu existingMenu = getExistingMenu(menu.getTitle());
-		if (existingMenu != null) {
+		if (existingMenu == null) {
 			menus.add(menu);
 		}
 	}
