@@ -29,7 +29,6 @@ import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.CustomDeserializer;
-import com.make.equo.application.model.EquoMenu;
 import com.make.equo.application.model.EquoMenuItem;
 import com.make.equo.application.model.EquoMenuItemSeparator;
 import com.make.equo.application.model.EquoMenuModel;
@@ -146,43 +145,15 @@ public class PackagesIntegrationTest {
 
 	private EquoMenuModel createTestMenuModel() {
 		EquoMenuModel equoMenuModel = new EquoMenuModel();
-		EquoMenu menu1 = new EquoMenu("Menu1");
-
-		EquoMenuItem subMenu11 = new EquoMenuItem("SubMenu11");
-		subMenu11.withShortcut("M1+W");
-		subMenu11.onClick("_test");
-
-		menu1.addItem(subMenu11);
-		equoMenuModel.addMenu(menu1);
-
-		EquoMenu menu2 = new EquoMenu("Menu2");
-
-		EquoMenuItem equoMenuItem2 = new EquoMenuItem("SubMenu21");
-		equoMenuItem2.onClick("_test");
-
-		menu2.addItem(equoMenuItem2);
-
-		EquoMenuItemSeparator equoMenuItemSeparator = new EquoMenuItemSeparator();
-		menu2.addItem(equoMenuItemSeparator);
-
-		EquoMenu subMenu22 = new EquoMenu("SubMenu22");
-
-		EquoMenuItem subMenu221 = new EquoMenuItem("SubMenu221");
-		subMenu221.withShortcut("M1+G");
-		subMenu221.onClick("_test");
-
-		subMenu22.addItem(subMenu221);
-
-		EquoMenu subMenu222 = new EquoMenu("SubMenu222");
-
-		EquoMenuItem subMenu2221 = new EquoMenuItem("SubMenu2221");
-
-		subMenu222.addItem(subMenu2221);
-
-		subMenu22.addItem(subMenu222);
-		menu2.addItem(subMenu22);
-
-		equoMenuModel.addMenu(menu2);
+		equoMenuModel.withMainMenu("Menu1")
+			.addMenuItem("SubMenu11").withShortcut("M1+W").onClick("_test")
+		.withMainMenu("Menu2")
+			.addMenuItem("SubMenu21").onClick("_test")
+			.addMenuItemSeparator()
+			.addMenu("SubMenu22")
+				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G")
+				.addMenu("SubMenu222")
+					.addMenuItem("SubMenu2221");
 
 		return equoMenuModel;
 	}
