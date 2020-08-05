@@ -45,4 +45,8 @@ public abstract class AbstractEquoMenu implements IEquoMenu {
 		return getParent().withMainMenu(title);
 	}
 
+	abstract public EquoMenuItem addMenuItem(String title);
+
+	abstract public EquoMenu addMenu(String title);
+
 }

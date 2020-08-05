@@ -77,13 +77,23 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		JsonObject jOb = new JsonObject();
 		jOb.addProperty("type", CLASSNAME);
 		jOb.addProperty("title", getTitle());
-		
+
 		if (shortcut != null)
 			jOb.addProperty("shortcut", shortcut);
 
 		if (action != null)
 			jOb.addProperty("action", action);
 		return jOb;
+	}
+
+	@Override
+	public EquoMenuItem addMenuItem(String title) {
+		return ((AbstractEquoMenu) getParent()).addMenuItem(title);
+	}
+
+	@Override
+	public EquoMenu addMenu(String title) {
+		return ((AbstractEquoMenu) getParent()).addMenu(title);
 	}
 
 }

@@ -18,9 +18,41 @@ public class EquoMenu extends AbstractEquoMenu {
 		children = new ArrayList<>();
 	}
 
-	public EquoMenu addItem(AbstractEquoMenu item) {
+	EquoMenu addItem(AbstractEquoMenu item) {
 		children.add(item);
 		return this;
+	}
+
+	private AbstractEquoMenu getExistingChildren(String title) {
+		return children.stream().filter(ch -> ch.getTitle().equals(title)).findFirst().orElseGet(null);
+	}
+
+	@Override
+	public EquoMenuItem addMenuItem(String title) {
+		AbstractEquoMenu item = getExistingChildren(title);
+		if (item != null) {
+			if (item instanceof EquoMenuItem) {
+				return (EquoMenuItem) item;
+			}
+			return null;
+		}
+		EquoMenuItem newItem = new EquoMenuItem(this, title);
+		children.add(newItem);
+		return newItem;
+	}
+	
+	@Override
+	public EquoMenu addMenu(String title) {
+		AbstractEquoMenu item = getExistingChildren(title);
+		if (item != null) {
+			if (item instanceof EquoMenu) {
+				return (EquoMenu) item;
+			}
+			return null;
+		}
+		EquoMenu newMenu = new EquoMenu(this, title);
+		children.add(newMenu);
+		return newMenu;
 	}
 
 	public AbstractEquoMenu getItem(String itemTitle) {
