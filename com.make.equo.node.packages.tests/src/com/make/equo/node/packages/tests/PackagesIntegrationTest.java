@@ -147,14 +147,20 @@ public class PackagesIntegrationTest {
 		EquoMenuModel equoMenuModel = new EquoMenuModel();
 		equoMenuModel.withMainMenu("Menu1")
 			.addMenuItem("SubMenu11").withShortcut("M1+W").onClick("_test")
+			.addMenuItem("NeedToBeRemoved")
 		.withMainMenu("Menu2")
 			.addMenuItem("SubMenu21").onClick("_test")
 			.addMenuItemSeparator()
 			.addMenu("SubMenu22")
-				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G");
+				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G")
+		.withMainMenu("MenuToBeRemoved")
+			.addMenuItem("ItemThatWillBeRemoved");
 
 		equoMenuModel.appendMenuAtTheEnd("Menu2/SubMenu22", "SubMenu222")
 			.addMenuItem("SubMenu2221");
+
+		equoMenuModel.removeMenuElementByPath("Menu1/NeedToBeRemoved");
+		equoMenuModel.removeMenuElementByPath("MenuToBeRemoved");
 
 		return equoMenuModel;
 	}

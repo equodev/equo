@@ -49,6 +49,19 @@ public class EquoMenuModel implements IEquoMenu {
 		return appendMenu(parentMenuPath, -1, newMenuTitle);
 	}
 
+	public void removeMenuElementByPath(String pathElementToRemove) {
+		AbstractEquoMenu item = get(pathElementToRemove);
+		if (item == null) {
+			return;
+		}
+		IEquoMenu parent = item.getParent();
+		if (parent instanceof EquoMenu) {
+			((EquoMenu) parent).removeChildren(item);
+		} else {
+			menus.remove(item);
+		}
+	}
+
 	private EquoMenu getExistingMenu(String title) {
 		return menus.stream().filter(m -> m.getTitle().equals(title)).findFirst().orElse(null);
 	}

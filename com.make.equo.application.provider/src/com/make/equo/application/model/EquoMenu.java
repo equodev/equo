@@ -86,6 +86,10 @@ public class EquoMenu extends AbstractEquoMenu {
 		return null;
 	}
 
+	void removeChildren(AbstractEquoMenu element) {
+		children.remove(element);
+	}
+
 	@Override
 	void implement(MenuBuilder menuBuilder) {
 		MenuBuilder menu = menuBuilder.addMenu(getTitle());
