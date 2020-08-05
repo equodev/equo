@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 public abstract class AbstractEquoMenu implements IEquoMenu {
 	private String title;
 	private IEquoMenu parent;
-	
-	AbstractEquoMenu(IEquoMenu parent, String title){
+
+	AbstractEquoMenu(IEquoMenu parent, String title) {
 		this.parent = parent;
 		setTitle(title);
 	}
@@ -45,8 +45,21 @@ public abstract class AbstractEquoMenu implements IEquoMenu {
 		return getParent().withMainMenu(title);
 	}
 
-	abstract public EquoMenuItem addMenuItem(String title);
+	public EquoMenuItem addMenuItem(String title) {
+		return ((AbstractEquoMenu) getParent()).addMenuItem(title);
+	}
 
-	abstract public EquoMenu addMenu(String title);
+	public EquoMenu addMenu(String title) {
+		return ((AbstractEquoMenu) getParent()).addMenu(title);
+	}
+
+	public EquoMenuItemSeparator addMenuItemSeparator() {
+		return ((AbstractEquoMenu) getParent()).addMenuItemSeparator();
+	}
+
+	@Override
+	public void setUpMenus() {
+		getParent().setUpMenus();
+	}
 
 }

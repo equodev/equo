@@ -97,5 +97,12 @@ public class EquoMenu extends AbstractEquoMenu {
 		jOb.add("children", jArr);
 		return jOb;
 	}
+
+	@Override
+	public EquoMenuItemSeparator addMenuItemSeparator() {
+		EquoMenuItemSeparator separator = new EquoMenuItemSeparator(this);
+		children.add(separator);
+		return separator;
+	}
 	
 }

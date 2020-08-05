@@ -1,5 +1,8 @@
 package com.make.equo.application.model;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 
 import com.google.gson.JsonObject;
@@ -7,8 +10,15 @@ import com.google.gson.JsonObject;
 public class EquoMenuItemSeparator extends AbstractEquoMenu {
 	public static final String CLASSNAME = "EquoMenuItemSeparator";
 
-	EquoMenuItemSeparator(IEquoMenu parent, String title) {
-		super(parent, title);
+	EquoMenuItemSeparator(IEquoMenu parent) {
+		super(parent, EquoMenuItemSeparator.getNextRandomString());
+	}
+
+	protected static final SecureRandom secureRandom = new SecureRandom();
+
+	protected static String getNextRandomString() {
+		BigInteger bInt = new BigInteger(130, secureRandom);
+		return bInt.toString(32);
 	}
 
 	@Override
@@ -17,7 +27,7 @@ public class EquoMenuItemSeparator extends AbstractEquoMenu {
 	}
 
 	static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
-		return new EquoMenuItemSeparator(parent, "");
+		return new EquoMenuItemSeparator(parent);
 	}
 
 	@Override
@@ -25,16 +35,6 @@ public class EquoMenuItemSeparator extends AbstractEquoMenu {
 		JsonObject jOb = new JsonObject();
 		jOb.addProperty("type", CLASSNAME);
 		return jOb;
-	}
-
-	@Override
-	public EquoMenuItem addMenuItem(String title) {
-		return ((AbstractEquoMenu) getParent()).addMenuItem(title);
-	}
-
-	@Override
-	public EquoMenu addMenu(String title) {
-		return ((AbstractEquoMenu) getParent()).addMenu(title);
 	}
 
 }

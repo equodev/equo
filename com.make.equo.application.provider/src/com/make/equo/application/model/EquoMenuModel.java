@@ -104,6 +104,7 @@ public class EquoMenuModel implements IEquoMenu {
 		return jOb;
 	}
 
+	@Override
 	public void setUpMenus() {
 		final EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();
 		final OptionalViewBuilder optionalViewBuilder = currentBuilder.getOptionalViewBuilder();

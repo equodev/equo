@@ -89,14 +89,4 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		return jOb;
 	}
 
-	@Override
-	public EquoMenuItem addMenuItem(String title) {
-		return ((AbstractEquoMenu) getParent()).addMenuItem(title);
-	}
-
-	@Override
-	public EquoMenu addMenu(String title) {
-		return ((AbstractEquoMenu) getParent()).addMenu(title);
-	}
-
 }
