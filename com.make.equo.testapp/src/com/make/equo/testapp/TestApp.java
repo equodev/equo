@@ -20,13 +20,13 @@ public class TestApp implements IEquoApplication {
 		final EquoMenuModel model2 = new EquoMenuModel();
 
 		model1.withMainMenu("Make Technology")
-			.addMenuItem("Change Menu").onClick(() -> model2.setUpMenus())
+			.addMenuItem("Change Menu").onClick(() -> model2.setApplicationMenu())
 			.addMenuItem("Contact Us")
 		.withMainMenu("About")
 			.addMenuItem("About");
 
 		model2.withMainMenu("Make Technology")
-		.addMenuItem("Change Menu").onClick(() -> model1.setUpMenus())
+		.addMenuItem("Change Menu").onClick(() -> model1.setApplicationMenu())
 		.addMenuItem("Contact Us")
 		.withMainMenu("Products")
 			.addMenuItem("Chromium")
@@ -89,7 +89,7 @@ public class TestApp implements IEquoApplication {
 
 						@Override
 						public void run() {
-							model1.setUpMenus();
+							model1.setApplicationMenu();
 						}
 					}).addMenuItem("Open New Browser").onClick(new Runnable() {
 						

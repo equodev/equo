@@ -144,7 +144,7 @@ public class EquoMenuModel implements IEquoMenu {
 	}
 
 	@Override
-	public void setUpMenus() {
+	public void setApplicationMenu() {
 		final EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();
 		final OptionalViewBuilder optionalViewBuilder = currentBuilder.getOptionalViewBuilder();
 		Display.getDefault().asyncExec(() -> {

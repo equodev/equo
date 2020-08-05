@@ -58,8 +58,8 @@ public abstract class AbstractEquoMenu implements IEquoMenu {
 	}
 
 	@Override
-	public void setUpMenus() {
-		getParent().setUpMenus();
+	public void setApplicationMenu() {
+		getParent().setApplicationMenu();
 	}
 
 }

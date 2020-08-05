@@ -104,7 +104,7 @@ public class EquoApplicationBuilder {
 			deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 
 			Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
-			gson.fromJson(payload, EquoMenuModel.class).setUpMenus();
+			gson.fromJson(payload, EquoMenuModel.class).setApplicationMenu();
 		});
 
 		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
