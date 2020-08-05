@@ -151,9 +151,10 @@ public class PackagesIntegrationTest {
 			.addMenuItem("SubMenu21").onClick("_test")
 			.addMenuItemSeparator()
 			.addMenu("SubMenu22")
-				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G")
-				.addMenu("SubMenu222")
-					.addMenuItem("SubMenu2221");
+				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G");
+
+		equoMenuModel.appendMenuAtTheEnd("Menu2/SubMenu22", "SubMenu222")
+			.addMenuItem("SubMenu2221");
 
 		return equoMenuModel;
 	}

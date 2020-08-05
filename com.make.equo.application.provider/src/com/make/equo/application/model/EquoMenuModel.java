@@ -23,6 +23,32 @@ public class EquoMenuModel implements IEquoMenu {
 		return menu;
 	}
 
+	public EquoMenuItem appendMenuItem(String parentMenuPath, int indexToAddItem, String newItemTitle) {
+		AbstractEquoMenu item = get(parentMenuPath);
+		if (!(item instanceof EquoMenu)) {
+			return null;
+		}
+		EquoMenu parent = (EquoMenu) item;
+		return parent.addMenuItem(indexToAddItem, newItemTitle);
+	}
+
+	public EquoMenuItem appendMenuItemAtTheEnd(String parentMenuPath, String newItemTitle) {
+		return appendMenuItem(parentMenuPath, -1, newItemTitle);
+	}
+
+	public EquoMenu appendMenu(String parentMenuPath, int indexToAddMenu, String newMenuTitle) {
+		AbstractEquoMenu item = get(parentMenuPath);
+		if (!(item instanceof EquoMenu)) {
+			return null;
+		}
+		EquoMenu parent = (EquoMenu) item;
+		return parent.addMenu(indexToAddMenu, newMenuTitle);
+	}
+
+	public EquoMenu appendMenuAtTheEnd(String parentMenuPath, String newMenuTitle) {
+		return appendMenu(parentMenuPath, -1, newMenuTitle);
+	}
+
 	private EquoMenu getExistingMenu(String title) {
 		return menus.stream().filter(m -> m.getTitle().equals(title)).findFirst().orElse(null);
 	}
@@ -49,7 +75,7 @@ public class EquoMenuModel implements IEquoMenu {
 	 * @return
 	 */
 	public AbstractEquoMenu get(String path) {
-		String[] steps = path.split("/"); // TODO: a way to escape
+		String[] steps = path.split("/");
 		AbstractEquoMenu currentItem = null;
 		for (String item : steps) {
 			if (currentItem == null) {

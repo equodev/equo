@@ -27,8 +27,7 @@ public class EquoMenu extends AbstractEquoMenu {
 		return children.stream().filter(ch -> ch.getTitle().equals(title)).findFirst().orElse(null);
 	}
 
-	@Override
-	public EquoMenuItem addMenuItem(String title) {
+	EquoMenuItem addMenuItem(int index, String title) {
 		AbstractEquoMenu item = getExistingChildren(title);
 		if (item != null) {
 			if (item instanceof EquoMenuItem) {
@@ -37,12 +36,20 @@ public class EquoMenu extends AbstractEquoMenu {
 			return null;
 		}
 		EquoMenuItem newItem = new EquoMenuItem(this, title);
-		children.add(newItem);
+		if (index >= 0) {
+			children.add(index, newItem);
+		} else {
+			children.add(newItem);
+		}
 		return newItem;
 	}
-	
+
 	@Override
-	public EquoMenu addMenu(String title) {
+	public EquoMenuItem addMenuItem(String title) {
+		return addMenuItem(-1, title);
+	}
+
+	EquoMenu addMenu(int index, String title) {
 		AbstractEquoMenu item = getExistingChildren(title);
 		if (item != null) {
 			if (item instanceof EquoMenu) {
@@ -51,8 +58,24 @@ public class EquoMenu extends AbstractEquoMenu {
 			return null;
 		}
 		EquoMenu newMenu = new EquoMenu(this, title);
-		children.add(newMenu);
+		if (index >= 0) {
+			children.add(index, newMenu);
+		} else {
+			children.add(newMenu);
+		}
 		return newMenu;
+	}
+
+	@Override
+	public EquoMenu addMenu(String title) {
+		return addMenu(-1, title);
+	}
+
+	@Override
+	public EquoMenuItemSeparator addMenuItemSeparator() {
+		EquoMenuItemSeparator separator = new EquoMenuItemSeparator(this);
+		children.add(separator);
+		return separator;
 	}
 
 	public AbstractEquoMenu getItem(String itemTitle) {
@@ -83,14 +106,13 @@ public class EquoMenu extends AbstractEquoMenu {
 		}
 	}
 
-
 	@Override
 	public JsonObject serialize() {
 		JsonArray jArr = new JsonArray();
-		for(AbstractEquoMenu menu: children){
+		for (AbstractEquoMenu menu : children) {
 			jArr.add(menu.serialize());
 		}
-		
+
 		JsonObject jOb = new JsonObject();
 		jOb.addProperty("type", CLASSNAME);
 		jOb.addProperty("title", getTitle());
@@ -98,11 +120,4 @@ public class EquoMenu extends AbstractEquoMenu {
 		return jOb;
 	}
 
-	@Override
-	public EquoMenuItemSeparator addMenuItemSeparator() {
-		EquoMenuItemSeparator separator = new EquoMenuItemSeparator(this);
-		children.add(separator);
-		return separator;
-	}
-	
 }
