@@ -124,6 +124,10 @@ public class EquoMenu extends AbstractEquoMenu {
 		return jOb;
 	}
 
+	public static EquoMainMenu createMainMenu() {
+		return new EquoMainMenu();
+	}
+
 	/**
 	 * Gets the menu model that is currently shown
 	 * 

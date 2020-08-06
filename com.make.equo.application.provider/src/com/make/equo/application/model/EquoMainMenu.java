@@ -13,6 +13,9 @@ import com.google.gson.JsonObject;
 public class EquoMainMenu implements IEquoMenu {
 	private List<EquoMenu> menus = new ArrayList<>();
 
+	EquoMainMenu() {
+	}
+
 	public EquoMenu withMainMenu(String title) {
 		EquoMenu menu = getExistingMenu(title);
 		if (menu == null) {

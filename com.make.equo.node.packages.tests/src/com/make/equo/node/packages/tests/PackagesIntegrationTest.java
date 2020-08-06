@@ -32,6 +32,7 @@ import com.make.equo.application.model.CustomDeserializer;
 import com.make.equo.application.model.EquoMenuItem;
 import com.make.equo.application.model.EquoMenuItemSeparator;
 import com.make.equo.application.model.EquoMainMenu;
+import com.make.equo.application.model.EquoMenu;
 import com.make.equo.node.packages.tests.common.ChromiumSetup;
 import com.make.equo.node.packages.tests.mocks.AnalyticsServiceMock;
 import com.make.equo.node.packages.tests.mocks.LoggingServiceMock;
@@ -144,7 +145,7 @@ public class PackagesIntegrationTest {
 	}
 
 	private EquoMainMenu createTestMenuModel() {
-		EquoMainMenu equoMenuModel = new EquoMainMenu();
+		EquoMainMenu equoMenuModel = EquoMenu.createMainMenu();
 		equoMenuModel.withMainMenu("Menu1")
 			.addMenuItem("SubMenu11").withShortcut("M1+W").onClick("_test")
 			.addMenuItem("NeedToBeRemoved")
