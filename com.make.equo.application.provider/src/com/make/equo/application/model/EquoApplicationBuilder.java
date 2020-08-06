@@ -108,7 +108,7 @@ public class EquoApplicationBuilder {
 		});
 
 		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
-			equoEventHandler.send("_doGetMenu", EquoMainMenu.getActiveModel().serialize());
+			equoEventHandler.send("_doGetMenu", EquoMenu.getActiveMenu().serialize());
 		});
 	}
 

@@ -124,4 +124,29 @@ public class EquoMenu extends AbstractEquoMenu {
 		return jOb;
 	}
 
+	/**
+	 * Gets the menu model that is currently shown
+	 * 
+	 * @return
+	 */
+	public static EquoMainMenu getActiveMenu() {
+		EquoMainMenu model = new EquoMainMenu();
+		EquoApplicationBuilder builder = EquoApplicationBuilder.getCurrentBuilder();
+		if (builder != null) {
+			OptionalViewBuilder optionalViewBuilder = builder.getOptionalViewBuilder();
+			if (optionalViewBuilder != null) {
+				MMenu menu = optionalViewBuilder.getMainMenu();
+				if (menu != null) {
+					for (MMenuElement children : menu.getChildren()) {
+						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(model, children);
+						if (subMenu instanceof EquoMenu) {
+							model.addMenu((EquoMenu) subMenu);
+						}
+					}
+				}
+			}
+		}
+		return model;
+	}
+
 }

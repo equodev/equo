@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
-import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
 import org.eclipse.swt.widgets.Display;
 
@@ -105,31 +104,6 @@ public class EquoMainMenu implements IEquoMenu {
 			}
 		}
 		return currentItem;
-	}
-
-	/**
-	 * Gets the menu model that is currently shown
-	 * 
-	 * @return
-	 */
-	public static EquoMainMenu getActiveModel() {
-		EquoMainMenu model = new EquoMainMenu();
-		EquoApplicationBuilder builder = EquoApplicationBuilder.getCurrentBuilder();
-		if (builder != null) {
-			OptionalViewBuilder optionalViewBuilder = builder.getOptionalViewBuilder();
-			if (optionalViewBuilder != null) {
-				MMenu menu = optionalViewBuilder.getMainMenu();
-				if (menu != null) {
-					for (MMenuElement children : menu.getChildren()) {
-						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(model, children);
-						if (subMenu instanceof EquoMenu) {
-							model.addMenu((EquoMenu) subMenu);
-						}
-					}
-				}
-			}
-		}
-		return model;
 	}
 
 	public JsonObject serialize() {
