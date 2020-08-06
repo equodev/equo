@@ -103,12 +103,12 @@ public class EquoApplicationBuilder {
 			deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
 			deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 
-			Gson gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
-			gson.fromJson(payload, EquoMenuModel.class).setApplicationMenu();
+			Gson gson = new GsonBuilder().registerTypeAdapter(EquoMainMenu.class, deserializer).create();
+			gson.fromJson(payload, EquoMainMenu.class).setApplicationMenu();
 		});
 
 		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
-			equoEventHandler.send("_doGetMenu", EquoMenuModel.getActiveModel().serialize());
+			equoEventHandler.send("_doGetMenu", EquoMainMenu.getActiveModel().serialize());
 		});
 	}
 

@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class EquoMenuModel implements IEquoMenu {
+public class EquoMainMenu implements IEquoMenu {
 	private List<EquoMenu> menus = new ArrayList<>();
 
 	public EquoMenu withMainMenu(String title) {
@@ -112,8 +112,8 @@ public class EquoMenuModel implements IEquoMenu {
 	 * 
 	 * @return
 	 */
-	public static EquoMenuModel getActiveModel() {
-		EquoMenuModel model = new EquoMenuModel();
+	public static EquoMainMenu getActiveModel() {
+		EquoMainMenu model = new EquoMainMenu();
 		EquoApplicationBuilder builder = EquoApplicationBuilder.getCurrentBuilder();
 		if (builder != null) {
 			OptionalViewBuilder optionalViewBuilder = builder.getOptionalViewBuilder();

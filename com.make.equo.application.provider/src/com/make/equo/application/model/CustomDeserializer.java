@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-public class CustomDeserializer implements JsonDeserializer<EquoMenuModel> {
+public class CustomDeserializer implements JsonDeserializer<EquoMainMenu> {
 
     private Map<String, Class<? extends AbstractEquoMenu>> typeRegistry;
 
@@ -23,10 +23,10 @@ public class CustomDeserializer implements JsonDeserializer<EquoMenuModel> {
     }
 
     @Override
-    public EquoMenuModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{
+    public EquoMainMenu deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{
         JsonObject menu = json.getAsJsonObject();
 
-        EquoMenuModel equoMenuModel = new EquoMenuModel();
+        EquoMainMenu equoMenuModel = new EquoMainMenu();
 
         JsonArray menus = menu.get("menus").getAsJsonArray();
 
