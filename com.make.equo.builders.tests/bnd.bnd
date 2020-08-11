@@ -1,5 +1,5 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
-
+Bundle-ActivationPolicy:
 -include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundlecoverage.bnd
 
 -buildpath: \
