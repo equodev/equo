@@ -281,7 +281,7 @@ public class PackagesIntegrationTest {
 		});
 
 		testMenuTemplate("_testSetMenu11", "_buildWithCurrentModelWithRepeatedMenus",
-				"The menu SubMenu22 already exist in Menu2 and your type is EquoMenu");
+				"The menu SubMenu22 already exist in Menu2 and your type is Menu");
 	}
 	
 	@Test
