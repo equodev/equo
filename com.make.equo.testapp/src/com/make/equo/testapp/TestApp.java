@@ -9,16 +9,15 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
-import com.make.equo.application.model.EquoMainMenu;
-import com.make.equo.application.model.EquoMenu;
+import com.make.equo.application.model.Menu;
 
 @Component
 public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
-		final EquoMainMenu model1 = EquoMenu.createMainMenu();
-		final EquoMainMenu model2 = EquoMenu.createMainMenu();
+		final Menu model1 = Menu.create();
+		final Menu model2 = Menu.create();
 
 		model1.withMainMenu("Make Technology")
 			.addMenuItem("Change Menu").onClick(() -> model2.setApplicationMenu())

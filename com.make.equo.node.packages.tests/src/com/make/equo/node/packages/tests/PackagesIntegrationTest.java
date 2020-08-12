@@ -31,8 +31,7 @@ import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.CustomDeserializer;
 import com.make.equo.application.model.EquoMenuItem;
 import com.make.equo.application.model.EquoMenuItemSeparator;
-import com.make.equo.application.model.EquoMainMenu;
-import com.make.equo.application.model.EquoMenu;
+import com.make.equo.application.model.Menu;
 import com.make.equo.node.packages.tests.common.ChromiumSetup;
 import com.make.equo.node.packages.tests.mocks.AnalyticsServiceMock;
 import com.make.equo.node.packages.tests.mocks.LoggingServiceMock;
@@ -83,7 +82,7 @@ public class PackagesIntegrationTest {
 		deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
 		deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 
-		gson = new GsonBuilder().registerTypeAdapter(EquoMainMenu.class, deserializer).create();
+		gson = new GsonBuilder().registerTypeAdapter(Menu.class, deserializer).create();
 
 		new ChromiumSetup();
 	}
@@ -137,15 +136,15 @@ public class PackagesIntegrationTest {
 			if (payload.get("code") != null) {
 				wasCorrectly.set(payload.toString().contains(json));
 			} else {
-				wasCorrectly.set(gson.fromJson(payload, EquoMainMenu.class).serialize().toString().equals(json));
+				wasCorrectly.set(gson.fromJson(payload, Menu.class).serialize().toString().equals(json));
 			}
 		});
 		handler.send(userActionSend);
 		await().until(() -> wasCorrectly.get());
 	}
 
-	private EquoMainMenu createTestMenuModel() {
-		EquoMainMenu equoMenuModel = EquoMenu.createMainMenu();
+	private Menu createTestMenuModel() {
+		Menu equoMenuModel = Menu.create();
 		equoMenuModel.withMainMenu("Menu1")
 			.addMenuItem("SubMenu11").withShortcut("M1+W").onClick("_test")
 			.addMenuItem("NeedToBeRemoved")

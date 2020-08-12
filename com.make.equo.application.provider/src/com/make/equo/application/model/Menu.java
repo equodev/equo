@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.workbench.renderers.swt.MenuManagerRenderer;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class EquoMainMenu implements IEquoMenu {
+public class Menu implements IEquoMenu {
 	private List<EquoMenu> menus = new ArrayList<>();
 
-	EquoMainMenu() {
+	Menu() {
 	}
 
 	public EquoMenu withMainMenu(String title) {
@@ -138,5 +139,34 @@ public class EquoMainMenu implements IEquoMenu {
 				renderer.getManager(mainMenu).update(true);
 			}
 		});
+	}
+
+	public static Menu create() {
+		return new Menu();
+	}
+
+	/**
+	 * Gets the menu model that is currently shown
+	 * 
+	 * @return
+	 */
+	public static Menu getActiveMenu() {
+		Menu model = new Menu();
+		EquoApplicationBuilder builder = EquoApplicationBuilder.getCurrentBuilder();
+		if (builder != null) {
+			OptionalViewBuilder optionalViewBuilder = builder.getOptionalViewBuilder();
+			if (optionalViewBuilder != null) {
+				MMenu menu = optionalViewBuilder.getMainMenu();
+				if (menu != null) {
+					for (MMenuElement children : menu.getChildren()) {
+						AbstractEquoMenu subMenu = AbstractEquoMenu.getElement(model, children);
+						if (subMenu instanceof EquoMenu) {
+							model.addMenu((EquoMenu) subMenu);
+						}
+					}
+				}
+			}
+		}
+		return model;
 	}
 }
