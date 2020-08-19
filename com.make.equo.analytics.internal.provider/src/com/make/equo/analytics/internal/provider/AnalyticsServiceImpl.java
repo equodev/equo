@@ -69,13 +69,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 		if (equoInfluxdbUrl != null && equoPassword != null && equoUsername != null) {
 
-//			equoUsername = decodeInfluxdbProperty(equoUsername);
-//			equoPassword = decodeInfluxdbProperty(equoPassword);
-//			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
-//			influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
-//			this.gson = new Gson();
-//			influxDB.enableBatch(BatchOptions.DEFAULTS);
-//			connected = true;
+			equoUsername = decodeInfluxdbProperty(equoUsername);
+			equoPassword = decodeInfluxdbProperty(equoPassword);
+			this.gson = new Gson();
+			try {
+				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
+			} catch (Exception e) {
+				this.influxDB = null;
+			}
+			
+			if (influxDB != null) {
+				influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
+				influxDB.enableBatch(BatchOptions.DEFAULTS);
+				connected = true;
+			}
 		} else {
 			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
 		}

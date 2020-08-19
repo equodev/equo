@@ -17,7 +17,7 @@ public class TestApp implements IEquoApplication {
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		try {
 
-			return appBuilder.webWrapper("http://www.vozidea.com")//.enableAnalytics()
+			return appBuilder.webWrapper("http://www.vozidea.com").enableAnalytics()
 					.enableOfflineSupport()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
