@@ -46,13 +46,6 @@ public class SinglePagePart {
 		}
 	}
 
-	@PreDestroy
-	public void destroy() {
-		if (browser != null) {
-			browser.dispose();
-		}
-	}
-
 	public void loadUrl(String newUrl) {
 		browser.setUrl(newUrl);
 	}

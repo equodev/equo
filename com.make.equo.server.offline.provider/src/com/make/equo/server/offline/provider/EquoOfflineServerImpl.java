@@ -71,6 +71,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		fileNamesToStatusCodes = new Properties();
 		Stream<String> lines = null;
 		try {
+			new File(getStartPagePath()).createNewFile();
 			startPageRequest = new String(Files.readAllBytes(Paths.get(getStartPagePath())));
 			fileNamesToContentTypes = loadPropertyFile(getFileNamesToContentTypesFilePath());
 			fileNamesToStatusCodes = loadPropertyFile(getFileNamesToStatusCodesFilePath());
@@ -165,18 +166,20 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			byte[] data = new byte[content.readableBytes()];
 			content.readBytes(data);
 
-			try {
-				String fileNameHash = getFileNameHash(originalRequestUniqueId);
-				File outputFile = new File(getCachePath() + File.separator + fileNameHash);
-				FileOutputStream fos = new FileOutputStream(outputFile);
-				fos.write(data);
-				fos.close();
-				if (contentTypeHeader != null) {
-					fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+			if (data.length > 0) {
+				try {
+					String fileNameHash = getFileNameHash(originalRequestUniqueId);
+					File outputFile = new File(getCachePath() + File.separator + fileNameHash);
+					FileOutputStream fos = new FileOutputStream(outputFile);
+					fos.write(data);
+					fos.close();
+					if (contentTypeHeader != null) {
+						fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+					}
+					fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
+				} catch (IOException | NoSuchAlgorithmException e) {
+					// TODO Log the exception, or maybe better log the file that wasn't found
 				}
-				fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
-			} catch (IOException | NoSuchAlgorithmException e) {
-				// TODO Log the exception, or maybe better log the file that wasn't found
 			}
 		}
 		savePropertyFile(fileNamesToContentTypes, "File Names to Content Types", getFileNamesToContentTypesFilePath());
@@ -268,7 +271,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			cacheOffline.put(requestUniqueId, buildResponse);
 			return buildResponse;
 		} catch (NoSuchAlgorithmException e) {
-
+			e.printStackTrace();
 		}
 		return null;
 	}

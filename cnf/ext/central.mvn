@@ -8,3 +8,4 @@ org.awaitility:awaitility:4.0.2
 org.hamcrest:hamcrest:2.2
 org.jacoco:org.jacoco.agent:jar:runtime:0.8.5
 org.java-websocket:Java-WebSocket:jar:1.5.1
+com.github.ganskef:littleproxy-mitm:1.1.0

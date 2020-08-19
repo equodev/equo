@@ -11,6 +11,7 @@ import org.littleshoot.proxy.impl.ProxyUtils;
 
 import com.make.equo.contribution.api.handler.IEquoContributionRequestHandler;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
+import com.make.equo.server.provider.EquoHttpProxyServer;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaders.Names;
@@ -22,15 +23,13 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	private IEquoOfflineServer equoOfflineServer;
 
 	private boolean connectionLimited = false;
-	private boolean isOfflineCacheSupported;
 
 	private List<String> proxiedUrls;
 
 	public EquoHttpFiltersSourceAdapter(IEquoContributionRequestHandler contributionRequestHandler,
-			IEquoOfflineServer equoOfflineServer, boolean isOfflineCacheSupported, List<String> proxiedUrls) {
+			IEquoOfflineServer equoOfflineServer, List<String> proxiedUrls) {
 		this.contributionRequestHandler = contributionRequestHandler;
 		this.equoOfflineServer = equoOfflineServer;
-		this.isOfflineCacheSupported = isOfflineCacheSupported;
 		this.proxiedUrls = proxiedUrls;
 	}
 
@@ -47,7 +46,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		}
 
 		if (isConnectionLimited()) {
-			if (isOfflineCacheSupported) {
+			if (EquoHttpProxyServer.isOfflineCacheSupported()) {
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
 			} else {
 				return contributionRequestHandler.handleOffline(originalRequest);
@@ -56,10 +55,10 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			Optional<String> url = getRequestedUrl(originalRequest);
 			if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
 				return new EquoHttpModifierFiltersAdapter(originalRequest,
-						contributionRequestHandler.getResolvedContributions(), isOfflineCacheSupported,
+						contributionRequestHandler.getResolvedContributions(),
 						equoOfflineServer);
 			} else {
-				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer, isOfflineCacheSupported);
+				return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer);
 			}
 		}
 	}

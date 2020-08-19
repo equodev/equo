@@ -18,9 +18,8 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 	private String customJsScripts;
 	private String customStyles;
 
-	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, ResolvedContribution globalContribution,
-			boolean isOfflineCacheSupported, IEquoOfflineServer equoOfflineServer) {
-		super(originalRequest, equoOfflineServer, isOfflineCacheSupported);
+	public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest, ResolvedContribution globalContribution, IEquoOfflineServer equoOfflineServer) {
+		super(originalRequest, equoOfflineServer);
 		this.equoContributionsJsApis = globalContribution.getScripts();
 		this.equoContributionStyles = globalContribution.getStyles();
 		this.customJsScripts = globalContribution.getCustomScripts(originalRequest.getUri());
@@ -28,7 +27,7 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 	}
 
 	@Override
-	public HttpObject serverToProxyResponse(HttpObject httpObject) {
+	public HttpObject serverToProxyResponse(HttpObject httpObject) {		
 		if (httpObject instanceof FullHttpResponse
 				&& ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
 			FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
@@ -43,5 +42,5 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 		}
 		return super.serverToProxyResponse(httpObject);
 	}
-
+	
 }

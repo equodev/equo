@@ -53,6 +53,7 @@ public class ViewBuilder {
 		mainAppBuilder.withContributionName("webwrapper");
 		this.url = normalizeUrl(url);
 		addUrlToProxyServer(this.url);
+		equoServer.addUrl(this.url);
 		part.getProperties().put(MAIN_URL_KEY, this.url);
 		part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
 		return optionalViewBuilder;
@@ -102,8 +103,8 @@ public class ViewBuilder {
 		if (!protocolURl.equals("http")) {
 			url = "http://" + url;
 		}
-		// if there is no connection, convert the url from https to http
-		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
+		// convert the url from https to http
+		if (url.startsWith("https")) {
 			url = url.replace("https", "http");
 		}
 		if (url.endsWith("/")) {

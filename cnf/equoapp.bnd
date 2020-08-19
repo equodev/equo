@@ -169,7 +169,11 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     javax.annotation;version='[1.2.0,1.2.1)',\
     javax.xml.bind;version='[2.2.0,2.2.1)',\
     javax.xml;version='[1.3.4,1.3.5)',\
-    org.influxdb.java;version='[2.9.0,2.9.1)'
+    org.influxdb.java;version='[2.9.0,2.9.1)',\
+    org.apache.log4j;version=1.2.15,\
+    org.bouncycastle.bcprov;version=1.64.0,\
+    org.bouncycastle.bcpkix;version=1.64.0
+    
 
 #-runbundles.debug: \    
 #    org.eclipse.equinox.console,\
