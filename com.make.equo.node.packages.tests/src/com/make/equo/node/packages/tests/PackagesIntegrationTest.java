@@ -29,10 +29,9 @@ import com.make.equo.analytics.client.api.IAnalyticsApi;
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.CustomDeserializer;
-import com.make.equo.application.model.EquoMenu;
 import com.make.equo.application.model.EquoMenuItem;
 import com.make.equo.application.model.EquoMenuItemSeparator;
-import com.make.equo.application.model.EquoMenuModel;
+import com.make.equo.application.model.Menu;
 import com.make.equo.node.packages.tests.common.ChromiumSetup;
 import com.make.equo.node.packages.tests.mocks.AnalyticsServiceMock;
 import com.make.equo.node.packages.tests.mocks.LoggingServiceMock;
@@ -83,7 +82,7 @@ public class PackagesIntegrationTest {
 		deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
 		deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
 
-		gson = new GsonBuilder().registerTypeAdapter(EquoMenuModel.class, deserializer).create();
+		gson = new GsonBuilder().registerTypeAdapter(Menu.class, deserializer).create();
 
 		new ChromiumSetup();
 	}
@@ -137,52 +136,31 @@ public class PackagesIntegrationTest {
 			if (payload.get("code") != null) {
 				wasCorrectly.set(payload.toString().contains(json));
 			} else {
-				wasCorrectly.set(gson.fromJson(payload, EquoMenuModel.class).serialize().toString().equals(json));
+				wasCorrectly.set(gson.fromJson(payload, Menu.class).serialize().toString().equals(json));
 			}
 		});
 		handler.send(userActionSend);
 		await().until(() -> wasCorrectly.get());
 	}
 
-	private EquoMenuModel createTestMenuModel() {
-		EquoMenuModel equoMenuModel = new EquoMenuModel();
-		EquoMenu menu1 = new EquoMenu("Menu1");
+	private Menu createTestMenuModel() {
+		Menu equoMenuModel = Menu.create();
+		equoMenuModel.withMainMenu("Menu1")
+			.addMenuItem("SubMenu11").withShortcut("M1+W").onClick("_test")
+			.addMenuItem("NeedToBeRemoved")
+		.withMainMenu("Menu2")
+			.addMenuItem("SubMenu21").onClick("_test")
+			.addMenuItemSeparator()
+			.addMenu("SubMenu22")
+				.addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G")
+		.withMainMenu("MenuToBeRemoved")
+			.addMenuItem("ItemThatWillBeRemoved");
 
-		EquoMenuItem subMenu11 = new EquoMenuItem("SubMenu11");
-		subMenu11.setShortcut("M1+W");
-		subMenu11.setAction("_test");
+		equoMenuModel.appendMenuAtTheEnd("Menu2/SubMenu22", "SubMenu222")
+			.addMenuItem("SubMenu2221");
 
-		menu1.addItem(subMenu11);
-		equoMenuModel.addMenu(menu1);
-
-		EquoMenu menu2 = new EquoMenu("Menu2");
-
-		EquoMenuItem equoMenuItem2 = new EquoMenuItem("SubMenu21");
-		equoMenuItem2.setAction("_test");
-
-		menu2.addItem(equoMenuItem2);
-
-		EquoMenuItemSeparator equoMenuItemSeparator = new EquoMenuItemSeparator();
-		menu2.addItem(equoMenuItemSeparator);
-
-		EquoMenu subMenu22 = new EquoMenu("SubMenu22");
-
-		EquoMenuItem subMenu221 = new EquoMenuItem("SubMenu221");
-		subMenu221.setShortcut("M1+G");
-		subMenu221.setAction("_test");
-
-		subMenu22.addItem(subMenu221);
-
-		EquoMenu subMenu222 = new EquoMenu("SubMenu222");
-
-		EquoMenuItem subMenu2221 = new EquoMenuItem("SubMenu2221");
-
-		subMenu222.addItem(subMenu2221);
-
-		subMenu22.addItem(subMenu222);
-		menu2.addItem(subMenu22);
-
-		equoMenuModel.addMenu(menu2);
+		equoMenuModel.removeMenuElementByPath("Menu1/NeedToBeRemoved");
+		equoMenuModel.removeMenuElementByPath("MenuToBeRemoved");
 
 		return equoMenuModel;
 	}
@@ -303,7 +281,7 @@ public class PackagesIntegrationTest {
 		});
 
 		testMenuTemplate("_testSetMenu11", "_buildWithCurrentModelWithRepeatedMenus",
-				"The menu SubMenu22 already exist in Menu2 and your type is EquoMenu");
+				"The menu SubMenu22 already exist in Menu2 and your type is Menu");
 	}
 	
 	@Test

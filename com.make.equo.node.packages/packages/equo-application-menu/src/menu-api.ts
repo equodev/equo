@@ -505,7 +505,7 @@ export class EquoMenu{
   }
 }
 
-export namespace EquoMenu{
+export namespace Menu{
   export function create(): MenuBuilder {
     return new Linker().getMenuBuilder();
   }

@@ -9,25 +9,28 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
-import com.make.equo.application.model.EquoApplicationModel;
-import com.make.equo.application.model.EquoMenu;
-import com.make.equo.application.model.EquoMenuItem;
-import com.make.equo.application.model.EquoMenuModel;
+import com.make.equo.application.model.Menu;
 
 @Component
 public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
-		final EquoApplicationModel application = EquoApplicationModel.getApplicaton();
-		final EquoMenuModel model1 = new EquoMenuModel();
-		final EquoMenuModel model2 = new EquoMenuModel();
-		model1.addMenu(new EquoMenu("Make Technology").addItem(new EquoMenuItem("Change menu", () -> application.setMenu(model2)))
-				.addItem(new EquoMenuItem("Contact US")));
-		model1.addMenu(new EquoMenu("About").addItem(new EquoMenuItem("About")));
-		model2.addMenu(new EquoMenu("Make Technology").addItem(new EquoMenuItem("Change menu", () -> application.setMenu(model1)))
-				.addItem(new EquoMenuItem("Contact US")));
-		model2.addMenu(new EquoMenu("Products").addItem(new EquoMenuItem("Chromium")).addItem(new EquoMenuItem("Equo")));
+		final Menu model1 = Menu.create();
+		final Menu model2 = Menu.create();
+
+		model1.withMainMenu("Make Technology")
+			.addMenuItem("Change Menu").onClick(() -> model2.setApplicationMenu())
+			.addMenuItem("Contact Us")
+		.withMainMenu("About")
+			.addMenuItem("About");
+
+		model2.withMainMenu("Make Technology")
+		.addMenuItem("Change Menu").onClick(() -> model1.setApplicationMenu())
+		.addMenuItem("Contact Us")
+		.withMainMenu("Products")
+			.addMenuItem("Chromium")
+			.addMenuItem("Equo");
 
 		try {
 
@@ -86,8 +89,7 @@ public class TestApp implements IEquoApplication {
 
 						@Override
 						public void run() {
-							application.setMenu(model1);
-
+							model1.setApplicationMenu();
 						}
 					}).addMenuItem("Open New Browser").onClick(new Runnable() {
 						

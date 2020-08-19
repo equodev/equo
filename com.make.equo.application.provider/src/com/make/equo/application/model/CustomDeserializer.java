@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-public class CustomDeserializer implements JsonDeserializer<EquoMenuModel> {
+public class CustomDeserializer implements JsonDeserializer<Menu> {
 
     private Map<String, Class<? extends AbstractEquoMenu>> typeRegistry;
 
@@ -23,35 +23,35 @@ public class CustomDeserializer implements JsonDeserializer<EquoMenuModel> {
     }
 
     @Override
-    public EquoMenuModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{
+    public Menu deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{
         JsonObject menu = json.getAsJsonObject();
 
-        EquoMenuModel equoMenuModel = new EquoMenuModel();
+        Menu equoMenuModel = new Menu();
 
         JsonArray menus = menu.get("menus").getAsJsonArray();
 
         for(JsonElement je: menus) {
-            equoMenuModel.addMenu((EquoMenu)getJsonMenu((JsonObject)je, context));
+            equoMenuModel.addMenu((EquoMenu)getJsonMenu(equoMenuModel, (JsonObject)je, context));
         }
 
         return equoMenuModel;
     }
 
-    private AbstractEquoMenu getJsonMenu(JsonObject menu, JsonDeserializationContext context) {  	
+    private AbstractEquoMenu getJsonMenu(IEquoMenu parent, JsonObject menu, JsonDeserializationContext context) {  	
         String type = menu.get("type").getAsString();
         switch(type) {
         case EquoMenu.CLASSNAME:
-            EquoMenu equoMenu = new EquoMenu(menu.get("title").getAsString());
+            EquoMenu equoMenu = new EquoMenu(parent, menu.get("title").getAsString());
             JsonArray subMenus = menu.get("children").getAsJsonArray();
             for (JsonElement je: subMenus) {
-             equoMenu.addItem( getJsonMenu((JsonObject)je, context));
+             equoMenu.addItem( getJsonMenu(equoMenu, (JsonObject)je, context));
             }
             return equoMenu;
         default:
             if(typeRegistry.containsKey(type)) {
              return context.deserialize(menu, typeRegistry.get(type));
             }
-            return new EquoMenu("");
+            return new EquoMenu(parent, "");
         }
     }
 }

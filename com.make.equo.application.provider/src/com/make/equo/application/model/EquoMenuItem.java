@@ -13,30 +13,23 @@ public class EquoMenuItem extends AbstractEquoMenu {
 	private String shortcut = null;
 	public static final String CLASSNAME = "EquoMenuItem";
 
-	public EquoMenuItem(String title) {
-		setTitle(title);
+	EquoMenuItem(IEquoMenu parent, String title) {
+		super(parent, title);
 	}
 
-	public EquoMenuItem(String title, Runnable runnable) {
-		this(title);
-		setRunnable(runnable);
-	}
-
-	public EquoMenuItem(String title, Runnable runnable, String shortcut) {
-		this(title, runnable);
-		setShortcut(shortcut);
-	}
-
-	public void setRunnable(Runnable runnable) {
+	public EquoMenuItem onClick(Runnable runnable) {
 		this.runnable = runnable;
+		return this;
 	}
 
-	public void setShortcut(String shortcut) {
+	public EquoMenuItem withShortcut(String shortcut) {
 		this.shortcut = shortcut;
+		return this;
 	}
 
-	public void setAction(String action) {
+	public EquoMenuItem onClick(String action) {
 		this.action = action;
+		return this;
 	}
 
 	@Override
@@ -50,7 +43,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		}
 	}
 
-	static AbstractEquoMenu getElement(MMenuElement element) {
+	static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
 		if (element instanceof MMenuItem) {
 			MMenuItem menuItem = ((MMenuItem) element);
 
@@ -72,11 +65,13 @@ public class EquoMenuItem extends AbstractEquoMenu {
 				action = (String) actionObject;
 			}
 
-			EquoMenuItem item = new EquoMenuItem(element.getLabel(), runnable, shortcut);
-			item.setAction(action);
+			EquoMenuItem item = new EquoMenuItem(parent, element.getLabel());
+			item.onClick(runnable);
+			item.withShortcut(shortcut);
+			item.onClick(action);
 			return item;
 		} else {
-			return EquoMenuItemSeparator.getElement(element);
+			return EquoMenuItemSeparator.getElement(parent, element);
 		}
 	}
 
@@ -85,7 +80,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		JsonObject jOb = new JsonObject();
 		jOb.addProperty("type", CLASSNAME);
 		jOb.addProperty("title", getTitle());
-		
+
 		if (shortcut != null)
 			jOb.addProperty("shortcut", shortcut);
 
