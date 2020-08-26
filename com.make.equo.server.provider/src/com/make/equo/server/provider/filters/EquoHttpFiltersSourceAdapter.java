@@ -35,7 +35,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	@Override
 	public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext clientCtx) {
-		if (ProxyUtils.isCONNECT(originalRequest)) {
+ 		if (ProxyUtils.isCONNECT(originalRequest)) { 			
 			return new HttpFiltersAdapter(originalRequest, clientCtx);
 		}
 
@@ -46,7 +46,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		}
 
 		if (isConnectionLimited()) {
-			if (EquoHttpProxyServer.isOfflineCacheSupported()) {
+			if (EquoHttpProxyServer.isOfflineCacheSupported()) {				
 				return equoOfflineServer.getOfflineHttpFiltersAdapter(originalRequest);
 			} else {
 				return contributionRequestHandler.handleOffline(originalRequest);
@@ -103,5 +103,5 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	public void setConnectionUnlimited() {
 		connectionLimited = false;
 	}
-
+	
 }

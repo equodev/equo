@@ -4,7 +4,6 @@ import static com.make.equo.application.util.IConstants.MAIN_URL_KEY;
 import static com.make.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;

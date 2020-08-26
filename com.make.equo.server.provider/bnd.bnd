@@ -1,17 +1,19 @@
 Bundle-Version: ${version}.${tstamp}
 Private-Package: \
 	com.make.equo.server.provider,\
-	org.littleshoot.proxy.mitm
+    org.littleshoot.proxy.mitm,\
+    org.littleshoot.dnssec4j
 	
 Export-Package: \
-    com.make.equo.server.provider.filters
-    
+    com.make.equo.server.provider.filters,\
+    org.littleshoot.proxy,\
+    org.littleshoot.proxy.impl
+
 -includeresource: resources/
 -buildpath: \
-	org.littleshoot.littleproxy,\
-	org.littleshoot.littleproxy.source,\
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
+	com.make.equo.server.offline.provider;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
 	osgi.cmpn,\
@@ -21,10 +23,10 @@ Export-Package: \
 	com.make.equo.contribution.api;version=latest,\
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
-	com.github.ganskef:littleproxy-mitm;version=1.1.0
-    
--runbundles: \
-    org.apache.log4j;version=1.2.15,\
-    org.bouncycastle.bcprov;version=1.64.0,\
-    org.bouncycastle.bcpkix;version=1.64.0
-    
+	com.github.ganskef:littleproxy-mitm;version=1.1,\
+    org.littleshoot:littleproxy;version=1.1,\
+    org.bouncycastle.bcpkix;version=1.64,\
+    org.slf4j.api;version=1.7,\
+    org.bouncycastle.bcprov;version=1.64,\
+    org.littleshoot:dnssec4j;version=0.1
+	

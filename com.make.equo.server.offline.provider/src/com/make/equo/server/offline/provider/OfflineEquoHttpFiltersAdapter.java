@@ -13,14 +13,14 @@ import io.netty.handler.codec.http.HttpResponse;
 public class OfflineEquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	private IEquoOfflineServer equoOfflineServer;
-
+	
 	public OfflineEquoHttpFiltersAdapter(HttpRequest originalRequest, IEquoOfflineServer equoOfflineServer) {
 		super(originalRequest);
 		this.equoOfflineServer = equoOfflineServer;
 	}
 
-	@Override
-	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+  @Override
+  public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 		try {
 			HttpResponse offlineResponse = equoOfflineServer.getOfflineResponse(originalRequest);
 			return offlineResponse;
@@ -28,7 +28,7 @@ public class OfflineEquoHttpFiltersAdapter extends HttpFiltersAdapter {
 			e.printStackTrace();
 			// TODO log the exception, the not found offline request/file
 		}
-		return (HttpResponse) httpObject;
-	}
+		return (HttpResponse) httpObject;	
+  }
 
 }

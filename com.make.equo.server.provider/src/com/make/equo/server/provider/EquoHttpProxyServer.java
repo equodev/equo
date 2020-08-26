@@ -6,15 +6,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.littleshoot.proxy.DefaultHostResolver;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
-import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
 import org.littleshoot.proxy.mitm.RootCertificateException;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -71,11 +72,23 @@ public class EquoHttpProxyServer implements IEquoServer {
 		int port = getPortForServer();
 		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
 				+ ";--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+		
+	    DefaultHostResolver serverResolver = new DefaultHostResolver() {
+	        @Override
+	        public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
+	            if (!isInternetReachable()) { // <- enable offline
+	                return new InetSocketAddress(host, port);
+	            }
+	            return super.resolve(host, port);
+	        }
+	    };
+		
 		try {
 			proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port)
-//					.withManInTheMiddle(new CustomSelfSignedMitmManager()).withAllowRequestToOriginServer(true)
-					.withManInTheMiddle(new CertificateSniffingMitmManager()).withAllowRequestToOriginServer(true)
-					.withTransparent(false).withFiltersSource(httpFiltersSourceAdapter).start();
+					.withTransparent(false).withFiltersSource(httpFiltersSourceAdapter)
+					.withServerResolver(serverResolver)
+					.withManInTheMiddle(new CustomHostNameMitmManager())
+					.start();
 		} catch (RootCertificateException e) {
 			e.printStackTrace();
 		}

@@ -3,40 +3,5 @@
 	<classpathentry kind="con" path="aQute.bnd.classpath.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" output="bin" path="src"/>
-	<classpathentry kind="lib" path="/home/mauro/.bnd/cache/p2plugins/org.littleshoot.littleproxy-1.1.2.jar" sourcepath="/home/mauro/.bnd/cache/p2plugins/org.littleshoot.littleproxy.source-1.1.2.jar">
-		<attributes>
-			<attribute name="bsn" value="org.littleshoot.littleproxy"/>
-			<attribute name="type" value="REPO"/>
-			<attribute name="project" value="com.make.equo.contribution.api"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/littleshoot/proxy/*"/>
-			<accessrule kind="accessible" pattern="org/littleshoot/proxy/extras/*"/>
-			<accessrule kind="accessible" pattern="org/littleshoot/proxy/impl/*"/>
-			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/mauro/.bnd/cache/p2plugins/com.squareup.okhttp3.okhttp-3.5.0.jar" sourcepath="/home/mauro/.bnd/cache/p2plugins/com.squareup.okhttp3.okhttp.source-3.5.0.jar">
-		<attributes>
-			<attribute name="bsn" value="com.squareup.okhttp3.okhttp"/>
-			<attribute name="type" value="REPO"/>
-			<attribute name="project" value="com.make.equo.analytics.client.provider"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="okhttp3/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/cache/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/cache2/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/connection/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/http/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/http1/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/http2/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/io/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/platform/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/tls/*"/>
-			<accessrule kind="accessible" pattern="okhttp3/internal/ws/*"/>
-			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,18 +4,17 @@ Export-Package: \
     com.make.equo.contribution.api.resolvers,\
     com.make.equo.contribution.api.handler
 -buildpath: \
-    ${junit},\
-    org.littleshoot.littleproxy,\
-    org.littleshoot.littleproxy.source,\
-    org.eclipse.osgi,\
-    org.eclipse.osgi.source,\
-    com.google.gson,\
-    com.google.gson.source,\
-    com.make.equo.server.offline.api;version=latest,\
-    io.netty.all,\
-    io.netty.all.source,\
-    osgi.cmpn,\
-    assertj-core;version=3.15
+	${junit},\
+	org.eclipse.osgi,\
+	org.eclipse.osgi.source,\
+	com.google.gson,\
+	com.google.gson.source,\
+	com.make.equo.server.offline.api;version=latest,\
+	io.netty.all,\
+	io.netty.all.source,\
+	osgi.cmpn,\
+	assertj-core;version=3.15,\
+	org.littleshoot:littleproxy;version=1.1
 
 -runbundles.equo: \
     org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)'

@@ -7,7 +7,6 @@ Private-Package: \
 	io.netty.all,\
 	io.netty.all.source,\
 	com.google.guava;version=20.0,\
-    com.google.guava.source;version=20.0,\
-	org.littleshoot.littleproxy,\
-	org.littleshoot.littleproxy.source,\
-	osgi.cmpn
+	com.google.guava.source;version=20.0,\
+	osgi.cmpn,\
+	org.littleshoot:littleproxy;version=1.1
