@@ -1,0 +1,23 @@
+{
+    "name": "@equo/toolbar-api",
+    "version": "0.1.0",
+    "description": "Toolbar Component Api for Equo apps",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "dependencies":{
+        "@equo/equo-toolbar-wc":"0.1.0"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    }
+}
