@@ -171,7 +171,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     javax.xml;version='[1.3.4,1.3.5)',\
     org.influxdb.java;version='[2.9.0,2.9.1)'
     
-
 #-runbundles.debug: \    
 #    org.eclipse.equinox.console,\
 #    org.apache.felix.gogo.command,\
