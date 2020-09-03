@@ -64,6 +64,8 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource{
     private PrivateKey caPrivKey;
 
     private Cache<String, SSLContext> serverSSLContexts;
+    
+    private Certificate cert = null;
 
     /**
      * Creates a SSL engine source create a Certificate Authority if needed and
@@ -211,8 +213,12 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource{
             keystore.store(os, authority.password());
         }
 
-        Certificate cert = keystore.getCertificate(authority.alias());
+        cert = keystore.getCertificate(authority.alias());
         exportPem(authority.aliasFile(".pem"), cert);
+    }
+    
+    public Certificate getCert() {
+    	return cert;
     }
 
     private void initializeSSLContext() throws GeneralSecurityException,

@@ -28,6 +28,7 @@ public class CustomAuthority extends Authority{
      */
     public CustomAuthority() {
         keyStoreDir = new File(Paths.get(System.getProperty("user.home"),".equo").toString());
+        keyStoreDir.mkdirs();
         alias = "littleproxy-mitm"; // proxy id
         password = "Be Your Own Lantern".toCharArray();
         organization = "LittleProxy-mitm"; // proxy name

@@ -21,3 +21,4 @@ org.glassfish.main.javaee-api:javax.jms:jar:3.1.2.2
 org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:jar:1.9.0-alpha-2
 org.apache.geronimo.specs:geronimo-osgi-registry:jar:1.1
 junit:junit:jar:4.13
+external:jss4:jar:4.7.2

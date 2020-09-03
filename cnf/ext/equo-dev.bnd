@@ -19,5 +19,10 @@ javac.debug:            on
         readOnly = true; \
         cache = ~/.bnd/cache/mvncentral
 
+-plugin.local = \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        index=${.}/local.maven; \
+        name="Local"
+
 # JUnit
 junit: org.apache.servicemix.bundles.junit; version=4.12

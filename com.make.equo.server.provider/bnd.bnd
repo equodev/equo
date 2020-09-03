@@ -2,12 +2,33 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: \
 	com.make.equo.server.provider,\
     org.littleshoot.proxy.mitm,\
-    org.littleshoot.dnssec4j
+    org.littleshoot.dnssec4j,\
+    org.littleshoot.proxy.extras,\
+    org.mozilla.jss.asn1,\
+    org.mozilla.jss.crypto,\
+    org.mozilla.jss.pkcs11,\
+    org.mozilla.jss.netscape.security.x509,\
+    org.mozilla.jss.netscape.security.pkcs,\
+    org.mozilla.jss.netscape.security.util,\
+    org.mozilla.jss.netscape.security.extensions,\
+    org.mozilla.jss.netscape.security.provider,\
+    org.mozilla.jss.pkcs11.attrs,\
+    org.mozilla.jss.pkcs12,\
+    org.mozilla.jss.pkcs7,\
+    org.mozilla.jss.pkix.cert,\
+    org.mozilla.jss.pkix.primitive,\
+    org.mozilla.jss.provider.java.security,\
+    org.mozilla.jss.ssl,\
+    org.mozilla.jss.nss,\
+    org.mozilla.jss.ssl.javax,\
+    org.mozilla.jss.provider.javax.crypto,\
+    org.mozilla.jss.util
 	
 Export-Package: \
     com.make.equo.server.provider.filters,\
     org.littleshoot.proxy,\
-    org.littleshoot.proxy.impl
+    org.littleshoot.proxy.impl,\
+    org.mozilla.jss
 
 -includeresource: resources/
 -buildpath: \
@@ -28,5 +49,5 @@ Export-Package: \
     org.bouncycastle.bcpkix;version=1.64,\
     org.slf4j.api;version=1.7,\
     org.bouncycastle.bcprov;version=1.64,\
-    org.littleshoot:dnssec4j;version=0.1
-	
+    org.littleshoot:dnssec4j;version=0.1,\
+    external:jss4;version=4.7
