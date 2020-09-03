@@ -114,20 +114,26 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			FullHttpRequest fullHttpRequest = (FullHttpRequest) originalRequest;
 			String requestUniqueId = getRequestUniqueId(fullHttpRequest);
 			
-			requestUniqueId = requestUniqueId.replaceAll("\\?equowsport=.....$","");
-			
-			//check if redirect response 
-			if (((FullHttpResponse) httpObject).getStatus().code() >= 300 && ((FullHttpResponse) httpObject).getStatus().code() < 400) {				
-				redirectResponses.put(((FullHttpResponse) httpObject).headers().get("location"), requestUniqueId);
+			handlerForRequestResponses(httpObject, fullResponse, duplicatedResponse, fullHttpRequest, requestUniqueId);
+		}
+	}
+
+	//Save the responses in the requests where they originated, it does not matter if they are code 300
+	private void handlerForRequestResponses(HttpObject httpObject, FullHttpResponse fullResponse,
+			HttpResponse duplicatedResponse, FullHttpRequest fullHttpRequest, String requestUniqueId) {
+		requestUniqueId = requestUniqueId.replaceAll("\\?equowsport=.....$","");
+		
+		//check if redirect response 
+		if (((FullHttpResponse) httpObject).getStatus().code() >= 300 && ((FullHttpResponse) httpObject).getStatus().code() < 400) {				
+			redirectResponses.put(((FullHttpResponse) httpObject).headers().get("location"), requestUniqueId);
+		}else {
+			//if response exist in redirect response, belongs of original request
+			if (redirectResponses.containsKey(fullResponse.headers().get("X-Originating-URL"))) {
+				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, redirectResponses.get(fullResponse.headers().get("X-Originating-URL")));
+				cacheOffline.put(redirectResponses.get(fullResponse.headers().get("X-Originating-URL")), duplicatedResponse);
 			}else {
-				//if response exist in redirect response, belongs of original request
-				if (redirectResponses.containsKey(fullResponse.headers().get("X-Originating-URL"))) {
-					saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, redirectResponses.get(fullResponse.headers().get("X-Originating-URL")));
-					cacheOffline.put(redirectResponses.get(fullResponse.headers().get("X-Originating-URL")), duplicatedResponse);
-				}else {
-					saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
-					cacheOffline.put(requestUniqueId, duplicatedResponse);
-				}
+				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
+				cacheOffline.put(requestUniqueId, duplicatedResponse);
 			}
 		}
 	}

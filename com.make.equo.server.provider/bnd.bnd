@@ -1,34 +1,34 @@
 Bundle-Version: ${version}.${tstamp}
 Private-Package: \
 	com.make.equo.server.provider,\
-    org.littleshoot.proxy.mitm,\
-    org.littleshoot.dnssec4j,\
-    org.littleshoot.proxy.extras,\
-    org.mozilla.jss.asn1,\
-    org.mozilla.jss.crypto,\
-    org.mozilla.jss.pkcs11,\
-    org.mozilla.jss.netscape.security.x509,\
-    org.mozilla.jss.netscape.security.pkcs,\
-    org.mozilla.jss.netscape.security.util,\
-    org.mozilla.jss.netscape.security.extensions,\
-    org.mozilla.jss.netscape.security.provider,\
-    org.mozilla.jss.pkcs11.attrs,\
-    org.mozilla.jss.pkcs12,\
-    org.mozilla.jss.pkcs7,\
-    org.mozilla.jss.pkix.cert,\
-    org.mozilla.jss.pkix.primitive,\
-    org.mozilla.jss.provider.java.security,\
-    org.mozilla.jss.ssl,\
-    org.mozilla.jss.nss,\
-    org.mozilla.jss.ssl.javax,\
-    org.mozilla.jss.provider.javax.crypto,\
-    org.mozilla.jss.util
+	org.littleshoot.proxy.mitm,\
+	org.littleshoot.dnssec4j,\
+	org.littleshoot.proxy.extras,\
+	org.mozilla.jss.asn1,\
+	org.mozilla.jss.crypto,\
+	org.mozilla.jss.pkcs11,\
+	org.mozilla.jss.netscape.security.x509,\
+	org.mozilla.jss.netscape.security.pkcs,\
+	org.mozilla.jss.netscape.security.util,\
+	org.mozilla.jss.netscape.security.extensions,\
+	org.mozilla.jss.netscape.security.provider,\
+	org.mozilla.jss.pkcs11.attrs,\
+	org.mozilla.jss.pkcs12,\
+	org.mozilla.jss.pkcs7,\
+	org.mozilla.jss.pkix.cert,\
+	org.mozilla.jss.pkix.primitive,\
+	org.mozilla.jss.provider.java.security,\
+	org.mozilla.jss.ssl,\
+	org.mozilla.jss.nss,\
+	org.mozilla.jss.ssl.javax,\
+	org.mozilla.jss.provider.javax.crypto,\
+	org.mozilla.jss.util
 	
 Export-Package: \
-    com.make.equo.server.provider.filters,\
-    org.littleshoot.proxy,\
-    org.littleshoot.proxy.impl,\
-    org.mozilla.jss
+	com.make.equo.server.provider.filters,\
+	org.littleshoot.proxy,\
+	org.littleshoot.proxy.impl,\
+	org.mozilla.jss
 
 -includeresource: resources/
 -buildpath: \
@@ -45,9 +45,9 @@ Export-Package: \
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
 	com.github.ganskef:littleproxy-mitm;version=1.1,\
-    org.littleshoot:littleproxy;version=1.1,\
-    org.bouncycastle.bcpkix;version=1.64,\
-    org.slf4j.api;version=1.7,\
-    org.bouncycastle.bcprov;version=1.64,\
-    org.littleshoot:dnssec4j;version=0.1,\
-    external:jss4;version=4.7
+	org.littleshoot:littleproxy;version=1.1,\
+	org.bouncycastle.bcpkix;version=1.64,\
+	org.slf4j.api;version=1.7,\
+	org.bouncycastle.bcprov;version=1.64,\
+	org.littleshoot:dnssec4j;version=0.1,\
+	external:jss4;version=4.7

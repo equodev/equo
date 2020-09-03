@@ -28,48 +28,48 @@ import org.mozilla.jss.NotInitializedException;
 import io.netty.handler.codec.http.HttpRequest;
 
 public class CustomHostNameMitmManager implements MitmManager{
-    private CustomBouncyCastleSslEngineSource sslEngineSource;
+	private CustomBouncyCastleSslEngineSource sslEngineSource;
 
-    public CustomHostNameMitmManager() throws RootCertificateException {
-        this(new CustomAuthority());
-    }
+	public CustomHostNameMitmManager() throws RootCertificateException {
+		this(new CustomAuthority());
+	}
 
-    public CustomHostNameMitmManager(CustomAuthority authority)
-            throws RootCertificateException {
-        try {
-            boolean trustAllServers = true;
-            boolean sendCerts = true;
-            sslEngineSource = new CustomBouncyCastleSslEngineSource(authority,
-                    trustAllServers, sendCerts);
-        } catch (final Exception e) {
-            throw new RootCertificateException(
-                    "Errors during assembling root CA.", e);
-        }
-    }
+	public CustomHostNameMitmManager(CustomAuthority authority)
+			throws RootCertificateException {
+		try {
+			boolean trustAllServers = true;
+			boolean sendCerts = true;
+			sslEngineSource = new CustomBouncyCastleSslEngineSource(authority,
+					trustAllServers, sendCerts);
+		} catch (final Exception e) {
+			throw new RootCertificateException(
+					"Errors during assembling root CA.", e);
+		}
+	}
 
-    public SSLEngine serverSslEngine(String peerHost, int peerPort) {
-        return sslEngineSource.newSslEngine(peerHost, peerPort);
-    }
+	public SSLEngine serverSslEngine(String peerHost, int peerPort) {
+		return sslEngineSource.newSslEngine(peerHost, peerPort);
+	}
 
-    @Override
-    public SSLEngine serverSslEngine() {
-        return sslEngineSource.newSslEngine();
-    }
+	@Override
+	public SSLEngine serverSslEngine() {
+		return sslEngineSource.newSslEngine();
+	}
 
-    public SSLEngine clientSslEngineFor(HttpRequest httpRequest, SSLSession serverSslSession) {
-        String serverHostAndPort = httpRequest.getUri();
-        try {
-            String serverName = serverHostAndPort.split(":")[0];
-            SubjectAlternativeNameHolder san = new SubjectAlternativeNameHolder();
-            san.addDomainName(serverName);
-            return sslEngineSource.createCertForHost(serverName, san);
-        } catch (Exception e) {
-            throw new FakeCertificateException(
-                    "Creation dynamic certificate failed for "
-                            + serverHostAndPort, e);
-        }
-    }
-    
+	public SSLEngine clientSslEngineFor(HttpRequest httpRequest, SSLSession serverSslSession) {
+		String serverHostAndPort = httpRequest.getUri();
+		try {
+			String serverName = serverHostAndPort.split(":")[0];
+			SubjectAlternativeNameHolder san = new SubjectAlternativeNameHolder();
+			san.addDomainName(serverName);
+			return sslEngineSource.createCertForHost(serverName, san);
+		} catch (Exception e) {
+			throw new FakeCertificateException(
+					"Creation dynamic certificate failed for "
+							+ serverHostAndPort, e);
+		}
+	}
+	
 	private void importCert(Certificate cert, String name)throws Exception {
 		byte[] certByte = null;
 		try {
@@ -79,8 +79,8 @@ public class CustomHostNameMitmManager implements MitmManager{
 			try {
 				cryptoManager = CryptoManager.getInstance();
 				char[] passchar1 = {};
-		        Password pass1 = new Password(passchar1.clone());
-		        
+				Password pass1 = new Password(passchar1.clone());
+				
 				try {
 					cryptoManager.getTokenByName("Internal Key Storage Token").initPassword(pass1, pass1);
 				} catch (Exception e) {}
@@ -104,24 +104,24 @@ public class CustomHostNameMitmManager implements MitmManager{
 				e.printStackTrace();
 			}
 		} catch (CertificateEncodingException e1) {}
-    }
-    
-    public void inicializeCryptoManager(String fipsmode, String dbdir, String name) {
-    	if(sslEngineSource.getCert() == null)
-    		return;
-    	
+	}
+	
+	public void inicializeCryptoManager(String fipsmode, String dbdir, String name) {
+		if(sslEngineSource.getCert() == null)
+			return;
+		
 		new File(dbdir).mkdirs();
-        InitializationValues vals = new InitializationValues(dbdir, "", "", "");
+		InitializationValues vals = new InitializationValues(dbdir, "", "", "");
 
-        if (fipsmode.equalsIgnoreCase("enable")) {
-            vals.fipsMode = InitializationValues.FIPSMode.ENABLED;
-        } else if (fipsmode.equalsIgnoreCase("disable")){
-            vals.fipsMode = InitializationValues.FIPSMode.DISABLED;
-        } else {
-            vals.fipsMode = InitializationValues.FIPSMode.UNCHANGED;
-        }
+		if (fipsmode.equalsIgnoreCase("enable")) {
+			vals.fipsMode = InitializationValues.FIPSMode.ENABLED;
+		} else if (fipsmode.equalsIgnoreCase("disable")){
+			vals.fipsMode = InitializationValues.FIPSMode.DISABLED;
+		} else {
+			vals.fipsMode = InitializationValues.FIPSMode.UNCHANGED;
+		}
 
-        try {
+		try {
 			CryptoManager.initialize(vals);
 			try {
 				importCert(sslEngineSource.getCert(), name);
