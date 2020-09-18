@@ -1,6 +1,8 @@
 package com.make.equo.server.provider;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLEngine;
@@ -135,6 +137,20 @@ public class CustomHostNameMitmManager implements MitmManager{
 		} catch (AlreadyInitializedException e) {
 			e.printStackTrace();
 		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void importCertWindows() {
+		if(sslEngineSource.getCert() == null)
+			return;
+		String certPath = Paths.get(System.getProperty("user.home"),".equo","littleproxy-mitm.pem").toString();
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command("powershell.exe", "/c", "Import-Certificate -FilePath "+certPath+" -CertStoreLocation Cert:\\CurrentUser\\Root");
+
+		try {
+			processBuilder.start();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
