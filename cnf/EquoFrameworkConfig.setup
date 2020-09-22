@@ -18,7 +18,7 @@
       <requirement
           name="org.freejava.javasourceattacher.feature.feature.group"/>
       <requirement
-          name="org.dadacoalition.yedit.feature.feature.group"/>
+          name="com.make.equo.monaco.feature.feature.group"/>
       <repository
           url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
       <repository
@@ -26,10 +26,10 @@
       <repository
           url="https://dl.bintray.com/tha/eclipserepo/"/>
       <repository
-          url="http://dadacoalition.org/yedit"/>
+          url="https://equo-monaco-editor.ams3.digitaloceanspaces.com/rls/p2/"/>
     </setupTask>
     <productVersion
-        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='2019-06']"/>
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
     <description>Equo IDE installation</description>
   </installation>
   <workspace
