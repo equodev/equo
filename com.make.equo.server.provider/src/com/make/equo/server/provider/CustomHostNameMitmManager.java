@@ -130,6 +130,7 @@ public class CustomHostNameMitmManager implements MitmManager{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			java.security.Security.removeProvider("Mozilla-JSS");
 		} catch (KeyDatabaseException e) {
 			e.printStackTrace();
 		} catch (CertDatabaseException e) {
