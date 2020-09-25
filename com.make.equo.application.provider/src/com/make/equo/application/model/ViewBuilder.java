@@ -103,8 +103,9 @@ public class ViewBuilder {
 		if (!protocolURl.equals("http")) {
 			url = "http://" + url;
 		}
-		// convert the url from https to http
+		// if there is no connection, convert the url from https to http
 		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
+			// convert the url from https to http
 			url = url.replace("https", "http");
 		}
 		if (url.endsWith("/")) {
