@@ -2,7 +2,22 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: \
 	com.make.equo.analytics.internal.provider,\
 	com.make.equo.analytics.internal.provider.util,\
-	ch.hsr.geohash
+	ch.hsr.geohash,\
+    org.mozilla.jss.crypto,\
+    org.mozilla.jss.asn1,\
+    org.mozilla.jss.pkcs11,\
+    org.mozilla.jss.netscape.security.*,\
+    org.mozilla.jss.pkcs11.attrs,\
+    org.mozilla.jss.pkcs12,\
+    org.mozilla.jss.pkcs7,\
+    org.mozilla.jss.pkix.cert,\
+    org.mozilla.jss.pkix.primitive,\
+    org.mozilla.jss.provider.java.security,\
+    org.mozilla.jss.ssl,\
+    org.mozilla.jss.nss,\
+    org.mozilla.jss.ssl.javax,\
+    org.mozilla.jss.provider.javax.crypto,\
+    org.mozilla.jss.util
 -buildpath: \
 	com.google.gson,\
 	com.google.gson.source,\
@@ -14,4 +29,5 @@ Private-Package: \
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	osgi.cmpn,\
-	ch.hsr:geohash
+	ch.hsr:geohash,\
+    external:jss4;version=4.7

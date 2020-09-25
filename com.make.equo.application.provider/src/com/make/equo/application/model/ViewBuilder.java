@@ -104,7 +104,7 @@ public class ViewBuilder {
 			url = "http://" + url;
 		}
 		// convert the url from https to http
-		if (url.startsWith("https")) {
+		if (!equoServer.isAddressReachable(url) && url.startsWith("https")) {
 			url = url.replace("https", "http");
 		}
 		if (url.endsWith("/")) {

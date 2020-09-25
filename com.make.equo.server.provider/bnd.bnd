@@ -28,9 +28,14 @@ Export-Package: \
 	com.make.equo.server.provider.filters,\
 	org.littleshoot.proxy,\
 	org.littleshoot.proxy.impl,\
-	org.mozilla.jss
+	org.mozilla.*
 
--includeresource: resources/
+-includeresource: \
+    resources,\
+    libjss4.so=${def;maven.repo.local;~/.m2/}/repository/external/libjss4/4.7.2/libjss4-4.7.2.so
+
+Bundle-NativeCode: libjss4.so ; osname=linux ; processor=x86_64
+
 -buildpath: \
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
@@ -46,8 +51,8 @@ Export-Package: \
 	com.google.guava.source;version=20.0,\
 	com.github.ganskef:littleproxy-mitm;version=1.1,\
 	org.littleshoot:littleproxy;version=1.1,\
-	org.bouncycastle.bcpkix;version=1.64,\
-	org.slf4j.api;version=1.7,\
-	org.bouncycastle.bcprov;version=1.64,\
-	org.littleshoot:dnssec4j;version=0.1,\
+    org.bouncycastle.bcpkix;version=1.64,\
+    org.slf4j.api;version=1.7,\
+    org.bouncycastle.bcprov;version=1.64,\
+    org.littleshoot:dnssec4j;version=0.1,\
 	external:jss4;version=4.7

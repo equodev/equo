@@ -19,10 +19,13 @@ javac.debug:            on
         readOnly = true; \
         cache = ~/.bnd/cache/mvncentral
 
--plugin.local = \
+-plugin.4.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
-        index=${.}/local.maven; \
-        name="Local"
+        releaseUrl = "https://equo-central.ams3.digitaloceanspaces.com/release"; \
+        index = ${.}/equo.mvn; \
+        name = "Equo Central"; \
+        readOnly = true; \
+        cache = ~/.bnd/cache/mvnequo
 
 # JUnit
 junit: org.apache.servicemix.bundles.junit; version=4.12
