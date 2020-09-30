@@ -9,3 +9,6 @@ org.hamcrest:hamcrest:2.2
 org.jacoco:org.jacoco.agent:jar:runtime:0.8.5
 org.java-websocket:Java-WebSocket:jar:1.5.1
 org.littleshoot:dnssec4j:0.1.6
+com.sun.jdmk:jmxtools:jar:1.2.1
+org.glassfish.main.javaee-api:javax.jms:jar:3.1.2.2
+junit:junit:jar:4.13

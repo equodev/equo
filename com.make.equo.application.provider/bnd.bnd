@@ -5,15 +5,15 @@ Export-Package: \
 	org.osgi.service.component.annotations
 -includeresource: resources/
 -buildpath: \
-    com.make.equo.aer.api;version=latest,\
-    com.make.equo.aer.internal.api;version=latest,\
-    com.make.equo.ui.helper.provider;version=latest,\
-    com.make.equo.contribution.api;version=latest,\
+	com.make.equo.aer.api;version=latest,\
+	com.make.equo.aer.internal.api;version=latest,\
+	com.make.equo.ui.helper.provider;version=latest,\
+	com.make.equo.contribution.api;version=latest,\
 	com.make.equo.server.api;version=latest,\
 	com.make.equo.ws.api;version=latest,\
 	com.make.equo.analytics.internal.api;version=latest,\
 	com.make.equo.server.offline.api;version=latest,\
-    org.eclipse.swt.chromium,\
+	org.eclipse.swt.chromium,\
 	org.eclipse.osgi,\
 	org.eclipse.osgi.source,\
 	org.eclipse.core.runtime,\

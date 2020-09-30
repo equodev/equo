@@ -6,8 +6,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.make.equo.server.api.IEquoServer;
-
 /**
  * Useful to get and use the Equo Server from classes which are not OSGI
  * components.

@@ -4,25 +4,7 @@ Private-Package: \
 	org.littleshoot.proxy.mitm,\
 	org.littleshoot.dnssec4j,\
 	org.littleshoot.proxy.extras,\
-	org.mozilla.jss.asn1,\
-	org.mozilla.jss.crypto,\
-	org.mozilla.jss.pkcs11,\
-	org.mozilla.jss.netscape.security.x509,\
-	org.mozilla.jss.netscape.security.pkcs,\
-	org.mozilla.jss.netscape.security.util,\
-	org.mozilla.jss.netscape.security.extensions,\
-	org.mozilla.jss.netscape.security.provider,\
-	org.mozilla.jss.pkcs11.attrs,\
-	org.mozilla.jss.pkcs12,\
-	org.mozilla.jss.pkcs7,\
-	org.mozilla.jss.pkix.cert,\
-	org.mozilla.jss.pkix.primitive,\
-	org.mozilla.jss.provider.java.security,\
-	org.mozilla.jss.ssl,\
-	org.mozilla.jss.nss,\
-	org.mozilla.jss.ssl.javax,\
-	org.mozilla.jss.provider.javax.crypto,\
-	org.mozilla.jss.util
+	org.mozilla.jss.*
 	
 Export-Package: \
 	com.make.equo.server.provider.filters,\
@@ -31,8 +13,8 @@ Export-Package: \
 	org.mozilla.*
 
 -includeresource: \
-    resources,\
-    libjss4.so=${def;maven.repo.local;~/.m2/}/repository/external/libjss4/4.7.2/libjss4-4.7.2.so
+	resources,\
+	libjss4.so=${def;maven.repo.local;~/.m2/}/repository/external/libjss4/4.7.2/libjss4-4.7.2.so
 
 Bundle-NativeCode: libjss4.so ; osname=linux ; processor=x86_64
 
@@ -44,15 +26,21 @@ Bundle-NativeCode: libjss4.so ; osname=linux ; processor=x86_64
 	io.netty.all.source,\
 	osgi.cmpn,\
 	org.eclipse.osgi,\
-	org.eclipse.osgi.source,\
 	com.make.equo.aer.api;version=latest,\
 	com.make.equo.contribution.api;version=latest,\
 	com.google.guava;version=20.0,\
 	com.google.guava.source;version=20.0,\
 	com.github.ganskef:littleproxy-mitm;version=1.1,\
-	org.littleshoot:littleproxy;version=1.1,\
-    org.bouncycastle.bcpkix;version=1.64,\
-    org.slf4j.api;version=1.7,\
-    org.bouncycastle.bcprov;version=1.64,\
-    org.littleshoot:dnssec4j;version=0.1,\
-	external:jss4;version=4.7
+	org.bouncycastle.bcpkix;version=1.64,\
+	org.slf4j.api;version=1.7,\
+	org.bouncycastle.bcprov;version=1.64,\
+	org.littleshoot:dnssec4j;version=0.1,\
+	external:jss4;version=4.7,\
+	org.apache.commons.cli;version=1.2,\
+	com.sun.jdmk:jmxtools;version=1.2,\
+	org.glassfish.main.javaee-api.javax.jms;version=3.1,\
+	org.apache.commons.lang;version=2.6,\
+	junit:junit;version=4.13,\
+	org.xbill.dns;version=2.0,\
+	org.hamcrest,\
+	org.littleshoot:littleproxy;version=1.1
