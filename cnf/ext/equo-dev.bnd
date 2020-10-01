@@ -19,6 +19,14 @@ javac.debug:            on
         readOnly = true; \
         cache = ~/.bnd/cache/mvncentral
 
+-plugin.4.Mvn2: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        releaseUrl = "https://dist.wso2.org/maven2"; \
+        index = ${.}/central2.mvn; \
+        name = "Maven Central2"; \
+        readOnly = true; \
+        cache = ~/.bnd/cache/mvncentral2
+
 -plugin.4.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
         releaseUrl = "https://equo-central.ams3.digitaloceanspaces.com/release"; \
