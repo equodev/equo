@@ -99,7 +99,7 @@ public class CustomHostNameMitmManager implements MitmManager {
 		}
 	}
 
-	public void inicializeCryptoManager(String fipsmode, String dbdir, String name) {
+	public void initializeCryptoManager(String fipsmode, String dbdir, String name) {
 		if (sslEngineSource.getCert() == null)
 			return;
 

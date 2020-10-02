@@ -94,7 +94,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 			if (System.getProperty("os.name").toLowerCase().contains("win"))
 				customHostNameMitmManager.importCertWindows();
 			else
-				customHostNameMitmManager.inicializeCryptoManager("disable",
+				customHostNameMitmManager.initializeCryptoManager("disable",
 						Paths.get(System.getProperty("user.home"), ".pki", "nssdb").toString(), "Little-Proxy");
 		} catch (RootCertificateException e) {
 			e.printStackTrace();
