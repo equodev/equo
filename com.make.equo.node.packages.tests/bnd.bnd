@@ -100,5 +100,6 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	org.eclipse.swt.chromium.64b,\
 	org.eclipse.swt.chromium.gtk.linux.x86_64,\
+	com.make.chromium.cef.gtk.linux.x86_64,\
 	com.make.equo.aer.internal.api;version=latest,\
 	com.make.equo.application.provider;version=latest
