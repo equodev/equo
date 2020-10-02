@@ -297,7 +297,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			try {
 				inputStream = new FileInputStream(outputFilePath);
 			} catch (Exception e) {
-				ByteBuf buffer = Unpooled.wrappedBuffer("Not found offline response".getBytes());
+				ByteBuf buffer = Unpooled.wrappedBuffer("Offline response not found".getBytes());
 
 				HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
 						buffer);
