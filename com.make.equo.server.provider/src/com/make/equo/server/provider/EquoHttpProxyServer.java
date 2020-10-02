@@ -61,7 +61,6 @@ public class EquoHttpProxyServer implements IEquoServer {
 		if (proxyServer == null) {
 			startServer();
 		}
-
 	}
 
 	@Override
@@ -190,5 +189,4 @@ public class EquoHttpProxyServer implements IEquoServer {
 			return false; // Either timeout or unreachable or failed DNS lookup.
 		}
 	}
-
 }
