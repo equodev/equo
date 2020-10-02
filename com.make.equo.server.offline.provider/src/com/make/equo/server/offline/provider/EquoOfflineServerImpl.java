@@ -129,12 +129,13 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		if (((FullHttpResponse) httpObject).getStatus().code() >= 300 && ((FullHttpResponse) httpObject).getStatus().code() < 400) {
 			redirectResponses.put(((FullHttpResponse) httpObject).headers().get("location"), requestUniqueId);
 		}else {
+			String keyResponse = fullResponse.headers().get("X-Originating-URL");
 			//if response exist in redirect response, belongs of original request
-			if (redirectResponses.containsKey(fullResponse.headers().get("X-Originating-URL"))) {
+			if (redirectResponses.containsKey(keyResponse)) {
 				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse,
-						redirectResponses.get(fullResponse.headers().get("X-Originating-URL")));
-				cacheOffline.put(originalRequest.headers().get(Names.HOST).replaceAll("^www.", "")+redirectResponses.get(fullResponse.headers().get("X-Originating-URL")), duplicatedResponse);
-				redirectResponses.remove(fullResponse.headers().get("X-Originating-URL"));
+				redirectResponses.get(keyResponse));
+				cacheOffline.put(originalRequest.headers().get(Names.HOST).replaceAll("^www.", "")+redirectResponses.get(keyResponse), duplicatedResponse);
+				redirectResponses.remove(keyResponse);
 			}else {
 				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
 				cacheOffline.put(originalRequest.headers().get(Names.HOST).replaceAll("^www.", "")+requestUniqueId, duplicatedResponse);
