@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
@@ -62,7 +66,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	public void start() {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
+		connect();
+	}
 
+	private boolean connect() {
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
 		String equoUsername = getInfluxdbProperty("equo_username");
 		String equoPassword = getInfluxdbProperty("equo_password");
@@ -77,7 +84,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			} catch (Exception e) {
 				this.influxDB = null;
 			}
-			
+
 			if (influxDB != null) {
 				influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
 				influxDB.enableBatch(BatchOptions.DEFAULTS);
@@ -85,8 +92,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			}
 		} else {
 			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
+			connected = false;
 		}
+		return connected;
+	}
 
+	private boolean isAddressReachable() {
+		try (Socket socket = new Socket()) {
+			URI uri = new URI(INFO_JSON_URL);
+			String host = uri.getHost();
+			socket.connect(new InetSocketAddress(host, 80));
+			return true;
+		} catch (IOException | URISyntaxException e) {
+			return false;
+		}
 	}
 
 	private String getInfluxdbProperty(String propertyName) {
@@ -223,7 +242,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public boolean isEnabled() {
-		return enabled && connected;
+		if (enabled && isAddressReachable()) {
+			if (connected)
+				return true;
+			else
+				return connect();
+		}
+		return false;
 	}
 
 	private void logMessage() {
