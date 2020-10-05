@@ -18,6 +18,7 @@ public class TestApp implements IEquoApplication {
 		try {
 
 			return appBuilder.webWrapper("https://www.maketechnology.io").enableAnalytics()
+					.enableOfflineSupport()
 					.withCustomScript("js/testAnalytics.js").withCustomScript("js/testLogging.js").withMainMenu("File")
 					.addMenuItem("New").onClick(new Runnable() {
 

@@ -53,6 +53,7 @@ public class ViewBuilder {
 		mainAppBuilder.withContributionName("webwrapper");
 		this.url = normalizeUrl(url);
 		addUrlToProxyServer(this.url);
+		equoServer.addUrl(this.url);
 		part.getProperties().put(MAIN_URL_KEY, this.url);
 		part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
 		return optionalViewBuilder;

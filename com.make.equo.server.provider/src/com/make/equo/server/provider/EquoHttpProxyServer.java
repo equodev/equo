@@ -6,11 +6,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.littleshoot.proxy.DefaultHostResolver;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.littleshoot.proxy.mitm.RootCertificateException;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -34,7 +41,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 	private static boolean enableOfflineCache = false;
 
 	private static volatile HttpProxyServer proxyServer;
-//	private ScheduledExecutorService internetConnectionChecker;
+	private ScheduledExecutorService internetConnectionChecker;
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
 	private volatile IEquoOfflineServer equoOfflineServer;
@@ -45,38 +52,52 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoContributionRequestHandler contributionRequestHandler;
 
+	private static EquoHttpProxyServer equoHttpProxyServer = null;
+	private EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter;
+
 	@Override
 	@Activate
 	public void start() {
 		if (proxyServer == null) {
 			startServer();
 		}
-		
 	}
 
 	@Override
 	public void startServer() {
-		EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(
-				contributionRequestHandler, equoOfflineServer, isOfflineCacheSupported(), proxiedUrls);
+		equoHttpProxyServer = this;
+		httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(contributionRequestHandler, equoOfflineServer,
+				proxiedUrls);
 
-//		Runnable internetConnectionRunnable = new Runnable() {
-//			@Override
-//			public void run() {
-//				if (!isInternetReachable()) {
-//					httpFiltersSourceAdapter.setConnectionLimited();
-//				} else {
-//					httpFiltersSourceAdapter.setConnectionUnlimited();
-//				}
-//			}
-//		};
-//		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
-//		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 		int port = getPortForServer();
 		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
-				+ ";--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
-		proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port)
-				.withManInTheMiddle(new CustomSelfSignedMitmManager()).withAllowRequestToOriginServer(true)
-				.withTransparent(false).withFiltersSource(httpFiltersSourceAdapter).start();
+				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+
+		DefaultHostResolver serverResolver = new DefaultHostResolver() {
+			@Override
+			public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
+				if (!isInternetReachable()) { // <- enable offline
+					return new InetSocketAddress(host, port);
+				}
+				return super.resolve(host, port);
+			}
+		};
+
+		try {
+			CustomHostNameMitmManager customHostNameMitmManager = new CustomHostNameMitmManager();
+
+			proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port).withTransparent(false)
+					.withFiltersSource(httpFiltersSourceAdapter).withServerResolver(serverResolver)
+					.withManInTheMiddle(new CustomHostNameMitmManager()).start();
+
+			if (System.getProperty("os.name").toLowerCase().contains("win"))
+				customHostNameMitmManager.importCertWindows();
+			else
+				customHostNameMitmManager.initializeCryptoManager("disable",
+						Paths.get(System.getProperty("user.home"), ".pki", "nssdb").toString(), "Little-Proxy");
+		} catch (RootCertificateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private int getPortForServer() {
@@ -95,12 +116,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 	@Deactivate
 	public void stop() {
 		System.out.println("Stopping proxy...");
-//		if (internetConnectionChecker != null) {
-//			internetConnectionChecker.shutdownNow();
-//		}
-//		if (proxyServer != null) {
-//			proxyServer.stop();
-//		}
+		if (internetConnectionChecker != null) {
+			internetConnectionChecker.shutdownNow();
+		}
+		if (proxyServer != null) {
+			proxyServer.stop();
+		}
 	}
 
 	@Override
@@ -112,8 +133,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 		}
 	}
 
-	private boolean isOfflineCacheSupported() {
-		return isOfflineServerSupported() && enableOfflineCache;
+	public static boolean isOfflineCacheSupported() {
+		return (equoHttpProxyServer == null) ? false
+				: equoHttpProxyServer.isOfflineServerSupported() && enableOfflineCache;
 	}
 
 	private boolean isOfflineServerSupported() {
@@ -126,6 +148,20 @@ public class EquoHttpProxyServer implements IEquoServer {
 		if (isOfflineCacheSupported()) {
 			equoOfflineServer.setProxiedUrls(proxiedUrls);
 		}
+
+		Runnable internetConnectionRunnable = new Runnable() {
+			@Override
+			public void run() {
+				if (!isInternetReachable()) {
+					httpFiltersSourceAdapter.setConnectionLimited();
+				} else {
+					httpFiltersSourceAdapter.setConnectionUnlimited();
+				}
+			}
+		};
+
+		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
+		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -135,12 +171,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 		}
 	}
 
-//	private boolean isInternetReachable() {
-//		if (proxiedUrls.isEmpty()) {
-//			return false;
-//		}
-//		return isAddressReachable(proxiedUrls.get(0));
-//	}
+	private boolean isInternetReachable() {
+		if (proxiedUrls.isEmpty()) {
+			return false;
+		}
+		return isAddressReachable(proxiedUrls.get(0));
+	}
 
 	@Override
 	public boolean isAddressReachable(String appUrl) {
@@ -153,5 +189,4 @@ public class EquoHttpProxyServer implements IEquoServer {
 			return false; // Either timeout or unreachable or failed DNS lookup.
 		}
 	}
-
 }

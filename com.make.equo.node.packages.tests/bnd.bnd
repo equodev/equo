@@ -5,6 +5,12 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 -includeresource: \
     resources/
 
+os:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};macosx;linux}}
+ws:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};cocoa;gtk}}
+chromiumos:${if;${matches;${tolower;${os.name}};.*win.*};win32;${if;${matches;${tolower;${os.name}};.*mac.*};macosx;linux}}
+cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
+chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
+
 -buildpath: \
     com.google.gson;version='[2.8.2,2.8.3)',\
     com.make.equo.aer.api;version=latest,\
@@ -27,7 +33,8 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     org.eclipse.swt.chromium,\
     Java-WebSocket,\
     org.mockito.mockito-all,\
-    org.awaitility;version='[4.0.2,4.0.3)'
+    org.awaitility;version='[4.0.2,4.0.3)',\
+    org.hamcrest
 
 -privatepackage: \
     com.make.equo.node.packages.tests,\
@@ -35,7 +42,12 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     com.make.equo.node.packages.tests.mocks,\
     com.make.equo.node.packages.tests.util
 
--runrequires: bnd.identity;version='latest';id='com.make.equo.application.provider'
+-runrequires: \
+    bnd.identity;version='latest';id='com.make.equo.application.provider',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.node.packages.tests)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.64b)',\
+    osgi.identity;filter:='(osgi.identity=${chromium.fragment})',\
+    osgi.identity;filter:='(osgi.identity=${cef.fragment})'
 
 -runbundles: \
     Java-WebSocket;version='[1.5.1,1.5.2)',\
@@ -58,17 +70,45 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     com.make.equo.testing.common;version=latest,\
     com.make.equo.testing.common.internal;version=latest,\
     org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\
+    com.make.equo.node.packages.tests;version=latest,\
+    com.make.equo.server.offline.api;version=latest,\
+    com.make.equo.ui.helper.provider;version=latest,\
+    org.mockito.mockito-all;version='[1.10.19,1.10.20)',\
+    org.awaitility;version='[4.0.2,4.0.3)',\
+    ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
+    ch.qos.logback.core;version='[1.1.2,1.1.3)',\
+    ch.qos.logback.slf4j;version='[1.1.2,1.1.3)',\
+    com.google.guava;version='[20.0.0,20.0.1)',\
+    com.ibm.icu;version='[64.2.0,64.2.1)',\
+    io.netty.all;version='[4.0.44,4.0.45)',\
+    javax.inject;version='[1.0.0,1.0.1)',\
+    org.apache.batik.constants;version='[1.11.0,1.11.1)',\
+    org.apache.batik.css;version='[1.11.0,1.11.1)',\
+    org.apache.batik.i18n;version='[1.11.0,1.11.1)',\
+    org.apache.batik.util;version='[1.11.0,1.11.1)',\
+    org.apache.commons.cli;version='[1.2.0,1.2.1)',\
+    org.apache.commons.codec;version='[1.10.0,1.10.1)',\
+    org.apache.commons.io;version='[2.6.0,2.6.1)',\
+    org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
+    org.apache.commons.lang;version='[2.6.0,2.6.1)',\
+    org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
+    org.apache.commons.logging;version='[1.2.0,1.2.1)',\
+    org.apache.felix.scr;version='[2.1.14,2.1.15)',\
+    org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
+    org.apache.log4j;version='[1.2.15,1.2.16)',\
+    org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)',\
+    org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
+    org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
+    org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
+    org.hamcrest;version='[2.2.0,2.2.1)',\
+    org.slf4j.api;version='[1.7.10,1.7.11)',\
+    org.w3c.css.sac;version='[1.3.1,1.3.2)',\
+    org.w3c.dom.events;version='[3.0.0,3.0.1)',\
+    org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
+    org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
+    org.xbill.dns;version='[2.0.8,2.0.9)',\
     org.eclipse.swt.chromium.64b,\
     org.eclipse.swt.chromium.gtk.linux.x86_64,\
     com.make.chromium.cef.gtk.linux.x86_64,\
-    slf4j.api;version='[1.7.25,1.7.26)',\
-    org.influxdb.java;version='[2.9.0,2.9.1)',\
-    com.squareup.moshi;version='[1.4.0,1.4.1)',\
-    com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
-    com.squareup.okio;version='[1.11.0,1.11.1)',\
-    com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
-    com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
-    com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
-    org.mockito.mockito-all;version='[1.10.19,1.10.20)',\
-    org.awaitility;version='[4.0.2,4.0.3)',\
-    org.hamcrest
+    com.make.equo.aer.internal.api;version=latest,\
+    com.make.equo.application.provider;version=latest

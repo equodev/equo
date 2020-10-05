@@ -3,20 +3,18 @@ package com.make.equo.server.provider.filters;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.make.equo.server.offline.api.IEquoOfflineServer;
+import com.make.equo.server.provider.EquoHttpProxyServer;
 
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
-	private boolean isOfflineTraficSupported;
-	private IEquoOfflineServer equoOfflineServer;
+	protected IEquoOfflineServer equoOfflineServer;
 
-	public EquoHttpFiltersAdapter(HttpRequest originalRequest, IEquoOfflineServer equoOfflineServer,
-			boolean isOfflineTraficSupported) {
+	public EquoHttpFiltersAdapter(HttpRequest originalRequest, IEquoOfflineServer equoOfflineServer) {
 		super(originalRequest);
 		this.equoOfflineServer = equoOfflineServer;
-		this.isOfflineTraficSupported = isOfflineTraficSupported;
 	}
 
 	@Override
@@ -25,16 +23,12 @@ public class EquoHttpFiltersAdapter extends HttpFiltersAdapter {
 		return super.serverToProxyResponse(httpObject);
 	}
 
-	private boolean isOfflineTrafficSupported() {
-		return isOfflineTraficSupported;
-	}
-
 	public IEquoOfflineServer getEquoOfflineServer() {
 		return equoOfflineServer;
 	}
 
 	public void saveRequestResponseIfPossible(HttpRequest originalRequest, HttpObject httpObject) {
-		if (isOfflineTrafficSupported()) {
+		if (EquoHttpProxyServer.isOfflineCacheSupported()) {
 			getEquoOfflineServer().saveRequestResponse(originalRequest, httpObject);
 		}
 	}

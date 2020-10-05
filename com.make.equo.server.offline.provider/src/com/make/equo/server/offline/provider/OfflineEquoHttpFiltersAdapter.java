@@ -21,13 +21,11 @@ public class OfflineEquoHttpFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-		String newUri = originalRequest.getUri().replaceFirst(":443$", "");
-		newUri = newUri.replace("https://", "http");
-		originalRequest.setUri(newUri);
 		try {
 			HttpResponse offlineResponse = equoOfflineServer.getOfflineResponse(originalRequest);
 			return offlineResponse;
 		} catch (IOException e) {
+			e.printStackTrace();
 			// TODO log the exception, the not found offline request/file
 		}
 		return (HttpResponse) httpObject;
