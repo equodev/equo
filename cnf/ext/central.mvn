@@ -12,3 +12,4 @@ org.littleshoot:dnssec4j:0.1.6
 org.glassfish.main.javaee-api:javax.jms:jar:3.1.2.2
 junit:junit:jar:4.13
 biz.aQute.bnd:biz.aQute.bndlib:5.0.1
+biz.aQute.bnd:biz.aQute.launcher:5.0.1
