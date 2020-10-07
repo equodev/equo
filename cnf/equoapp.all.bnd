@@ -2,8 +2,8 @@
 
 -runbundles.osgi: \
     org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]',\
-    biz.aQute.launcher;version='[3.5.0,3.6.0)',\
-    biz.aQute.bndlib;version='[3.5.0,3.6.0)'
+    biz.aQute.launcher;version='[5.0.1,5.1.0)',\
+    biz.aQute.bndlib;version='[5.0.1,5.1.0)'
 
 -runbundles.chromium: \
     org.eclipse.swt.chromium.gtk.linux.x86_64,\
