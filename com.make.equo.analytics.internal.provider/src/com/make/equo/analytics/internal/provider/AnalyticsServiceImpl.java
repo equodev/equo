@@ -62,17 +62,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private JsonObject systemInfo = null;
 
-	private Thread thread = null;
-
 	private ExecutorService execService = Executors.newFixedThreadPool(1);
 
 	private static final long TIME_TO_TRY_RECONNECT = 300000;
 
-	private static final int CONNECTED = 0;
-
-	private static final int UNDEFINED_PARAMETERS = 1;
-
-	private static final int FAILED_CONNECT = 2;
+	private enum ConnectionResult{
+		CONNECTED, UNDEFINED_PARAMETERS, FAILED_CONNECT;
+	}
 
 	@Activate
 	public void start() {
@@ -81,8 +77,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		handlerConnect();
 	}
 
-	private int connect() {
-		int result = CONNECTED;
+	private ConnectionResult connect() {
+		ConnectionResult result = ConnectionResult.CONNECTED;
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
 		String equoUsername = getInfluxdbProperty("equo_username");
 		String equoPassword = getInfluxdbProperty("equo_password");
@@ -96,7 +92,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
 			} catch (Exception e) {
 				this.influxDB = null;
-				result = FAILED_CONNECT;
+				result = ConnectionResult.FAILED_CONNECT;
 			}
 
 			if (influxDB != null) {
@@ -107,34 +103,32 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		} else {
 			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
 			connected = false;
-			result = UNDEFINED_PARAMETERS;
+			result = ConnectionResult.UNDEFINED_PARAMETERS;
 		}
 		return result;
 	}
 
 	//If analytics is enabled and failed to connect, try to reconnect each TIME_TO_TRY_RECONNECT time.
 	private void handlerConnect() {
-		thread = new Thread() {
+		new Thread() {
 			public void run() {
-				try {
-					while(!isInterrupted()) {
-						if (connect() == FAILED_CONNECT) {
-							System.out.println("Analytics are not working because InfluxDB can't connect");
-							
+				while(true) {
+					if (connect() == ConnectionResult.FAILED_CONNECT) {
+						System.out.println("Analytics are not working because InfluxDB can't connect");
+						
+						try {
 							sleep(TIME_TO_TRY_RECONNECT);
-							if (!enabled){
-								interrupt();
-								System.out.println("Analytics are not enabled by the Client App");
-							}
-						}else
-							interrupt();
-					}
-				} catch (InterruptedException e) {
+						} catch (InterruptedException e) {
+						}
+						if (!enabled){
+							System.out.println("Analytics are not enabled by the Client App");
+							return;
+						}
+					}else
+						return;
 				}
 			}
-		};
-		
-		thread.start();
+		}.start();
 	}
 
 	private String getInfluxdbProperty(String propertyName) {
@@ -224,16 +218,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Deactivate
 	public void stop() {
-		execService.submit(() -> {
-			registerSessionTime();
-			//if batch is active, send the rest points
-			if (influxDB.isBatchEnabled()) {
-				influxDB.disableBatch();
-			}
-			if (influxDB != null) {
-				influxDB.close();
-			}
-		});
+		registerSessionTime();
+		if (influxDB != null) {
+			influxDB.close();
+		}
 	}
 
 	private void registerSessionTime() {
