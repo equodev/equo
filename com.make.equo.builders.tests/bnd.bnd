@@ -1,6 +1,11 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 Bundle-ActivationPolicy:
--include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundlecoverage.bnd
+
+-javaagent: true
+
+-runvm.coverage: -javaagent:${repo;org.jacoco:org.jacoco.agent:jar:runtime;0.8.6}=destfile=generated/jacoco/test.exec
+
+-include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd
 
 -buildpath: \
     com.make.equo.application.provider;version=latest,\
@@ -93,7 +98,11 @@ Bundle-ActivationPolicy:
     org.w3c.dom.events;version='[3.0.0,3.0.1)',\
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
     org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
-    org.xbill.dns;version='[2.0.8,2.0.9)'
+    org.xbill.dns;version='[2.0.8,2.0.9)',\
+    javax.annotation,\
+    javax.activation,\
+    javax.xml,\
+    javax.xml.bind
     
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt)',\

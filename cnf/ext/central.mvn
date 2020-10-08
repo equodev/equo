@@ -6,7 +6,7 @@ org.assertj:assertj-core:3.15.0
 org.mockito:mockito-all:1.10.19
 org.awaitility:awaitility:4.0.2
 org.hamcrest:hamcrest:2.2
-org.jacoco:org.jacoco.agent:jar:runtime:0.8.5
+org.jacoco:org.jacoco.agent:jar:runtime:0.8.6
 org.java-websocket:Java-WebSocket:jar:1.5.1
 org.littleshoot:dnssec4j:0.1.6
 org.glassfish.main.javaee-api:javax.jms:jar:3.1.2.2

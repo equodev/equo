@@ -1,6 +1,10 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundlecoverage.bnd
+-javaagent: true
+
+-runvm.coverage: -javaagent:${repo;org.jacoco:org.jacoco.agent:jar:runtime;0.8.6}=destfile=generated/jacoco/test.exec
+
+-include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbundle.bnd
 
 -includeresource: \
     resources/
@@ -111,4 +115,8 @@ chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
     org.eclipse.swt.chromium.gtk.linux.x86_64,\
     com.make.chromium.cef.gtk.linux.x86_64,\
     com.make.equo.aer.internal.api;version=latest,\
-    com.make.equo.application.provider;version=latest
+    com.make.equo.application.provider;version=latest,\
+    javax.annotation,\
+    javax.activation,\
+    javax.xml,\
+    javax.xml.bind
