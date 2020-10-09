@@ -65,8 +65,8 @@ alljars: ${map;param2jar;${bundlesVers.all}}
 -runproperties: \
     eclipse.application=org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher
 -runprogramargs: \
-    -artifactRepository, file:///${workspace}/cnf/p2repo, \
-    -metadataRepository, file:${workspace}/cnf/p2repo, \
+    -artifactRepository, file:///${workspace}/cnf/release, \
+    -metadataRepository, file:${workspace}/cnf/release, \
     -configs, gtk.linux.x86, \
     -bundles, "${alljars}", \
     -publishArtifacts, \

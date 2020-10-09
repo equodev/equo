@@ -25,20 +25,59 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 	bnd.identity;version='latest';id='com.make.equo.server.api',\
 	bnd.identity;version='latest';id='com.make.equo.server.offline.api',\
 	bnd.identity;version='latest';id='com.make.equo.server.offline.provider',\
+	bnd.identity;version='latest';id='com.make.equo.server.provider',\
 	bnd.identity;version='latest';id='com.make.equo.ui.helper.provider',\
 	bnd.identity;version='latest';id='com.make.equo.ws.api',\
-	bnd.identity;version='latest';id='com.make.equo.ws.provider'
+	bnd.identity;version='latest';id='com.make.equo.ws.provider',\
+	bnd.identity;id='org.eclipse.swt.chromium',\
+	bnd.identity;id='org.eclipse.swt.chromium.64b',\
+	bnd.identity;id='org.eclipse.swt.chromium.cocoa.macosx.x86_64',\
+	bnd.identity;id='org.eclipse.swt.chromium.gtk.linux.x86_64',\
+	bnd.identity;id='org.eclipse.swt.chromium.win32.win32.x86_64',\
+	bnd.identity;id='org.eclipse.swt',\
+	bnd.identity;id='org.eclipse.swt.cocoa.macosx.x86_64',\
+	bnd.identity;id='org.eclipse.swt.gtk.linux.x86_64',\
+	bnd.identity;id='org.eclipse.swt.win32.win32.x86_64',\
+	bnd.identity;id='javax.activation',\
+	bnd.identity;id='biz.aQute.bndlib',\
+	bnd.identity;id='biz.aQute.launcher',\
+	bnd.identity;id='bndtools.runtime.eclipse.applaunch',\
+	bnd.identity;id='org.eclipse.equinox.weaving.hook',\
+	bnd.identity;id='javax.annotation',\
+	bnd.identity;id='javax.inject',\
+	bnd.identity;id='javax.xml',\
+	bnd.identity;id='javax.xml.bind',\
+	bnd.identity;id='com.make.chromium.cef.dev.cocoa.macosx',\
+	bnd.identity;id='com.make.chromium.cef.dev.gtk.linux',\
+	bnd.identity;id='com.make.chromium.cef.dev.win32.win32',\
+	bnd.identity;id='com.make.chromium.cef.cocoa.macosx.x86_64',\
+	bnd.identity;id='com.make.chromium.cef.gtk.linux.x86_64',\
+	bnd.identity;id='com.make.chromium.cef.win32.win32.x86_64',\
+	bnd.identity;id='org.eclipse.equinox.ds',\
+	bnd.identity;id='org.eclipse.equinox.event',\
+	bnd.identity;id='jnr.x86asm',\
+	bnd.identity;id='org.aspectj.runtime',\
+	bnd.identity;id='org.eclipse.osgi',\
+	bnd.identity;id='org.eclipse.osgi.util'
 
-
-# com.make.equo.server.provider WAS MANUALLY ADDED. Resolution is currently failing for it
+# org.eclipse.osgi added manually. It is not being resolved
 runbundles: \
 	Java-WebSocket;version='[1.5.1,1.5.2)',\
+	biz.aQute.bndlib;version='[3.5.0,3.5.1)',\
+	biz.aQute.launcher;version='[3.5.0,3.5.1)',\
+	bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
 	ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.core;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.slf4j;version='[1.1.2,1.1.3)',\
 	com.google.gson;version='[2.8.2,2.8.3)',\
 	com.google.guava;version='[20.0.0,20.0.1)',\
 	com.ibm.icu;version='[64.2.0,64.2.1)',\
+	com.make.chromium.cef.cocoa.macosx.x86_64;version='[69.0.0,69.0.1)',\
+	com.make.chromium.cef.dev.cocoa.macosx;version='[69.0.0,69.0.1)',\
+	com.make.chromium.cef.dev.gtk.linux;version='[69.0.0,69.0.1)',\
+	com.make.chromium.cef.dev.win32.win32;version='[69.0.0,69.0.1)',\
+	com.make.chromium.cef.gtk.linux.x86_64;version='[69.0.0,69.0.1)',\
+	com.make.chromium.cef.win32.win32.x86_64;version='[69.0.0,69.0.1)',\
 	com.make.equo.aer.api;version=snapshot,\
 	com.make.equo.aer.internal.api;version=snapshot,\
 	com.make.equo.aer.internal.provider;version=snapshot,\
@@ -61,7 +100,7 @@ runbundles: \
 	com.make.equo.server.api;version=snapshot,\
 	com.make.equo.server.offline.api;version=snapshot,\
 	com.make.equo.server.offline.provider;version=snapshot,\
-    com.make.equo.server.provider;version=snapshot,\
+	com.make.equo.server.provider;version=snapshot,\
 	com.make.equo.ui.helper.provider;version=snapshot,\
 	com.make.equo.ws.api;version=snapshot,\
 	com.make.equo.ws.provider;version=snapshot,\
@@ -72,17 +111,29 @@ runbundles: \
 	com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
 	com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
+	javax.activation;version='[1.1.0,1.1.1)',\
+	javax.annotation;version='[1.2.0,1.2.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
+	javax.xml;version='[1.3.4,1.3.5)',\
+	javax.xml.bind;version='[2.2.0,2.2.1)',\
+	jnr.x86asm;version='[1.0.2,1.0.3)',\
 	org.apache.batik.constants;version='[1.11.0,1.11.1)',\
 	org.apache.batik.css;version='[1.11.0,1.11.1)',\
 	org.apache.batik.i18n;version='[1.11.0,1.11.1)',\
 	org.apache.batik.util;version='[1.11.0,1.11.1)',\
+	org.apache.commons.cli;version='[1.2.0,1.2.1)',\
+	org.apache.commons.codec;version='[1.10.0,1.10.1)',\
 	org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
+	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
 	org.apache.commons.logging;version='[1.2.0,1.2.1)',\
 	org.apache.felix.scr;version='[2.1.14,2.1.15)',\
 	org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
+	org.apache.log4j;version='[1.2.15,1.2.16)',\
 	org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
+	org.aspectj.runtime;version='[1.9.6,1.9.7)',\
+	org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
+	org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
 	org.eclipse.core.commands;version='[3.9.600,3.9.601)',\
 	org.eclipse.core.contenttype;version='[3.7.500,3.7.501)',\
 	org.eclipse.core.databinding;version='[1.7.700,1.7.701)',\
@@ -119,20 +170,30 @@ runbundles: \
 	org.eclipse.emf.emfstore.common;version='[1.9.0,1.9.1)',\
 	org.eclipse.equinox.app;version='[1.4.300,1.4.301)',\
 	org.eclipse.equinox.common;version='[3.10.600,3.10.601)',\
+	org.eclipse.equinox.ds;version='[1.6.100,1.6.101)',\
+	org.eclipse.equinox.event;version='[1.5.300,1.5.301)',\
 	org.eclipse.equinox.preferences;version='[3.7.600,3.7.601)',\
 	org.eclipse.equinox.registry;version='[3.8.600,3.8.601)',\
+	org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)',\
 	org.eclipse.jface;version='[3.18.0,3.18.1)',\
 	org.eclipse.jface.databinding;version='[1.9.200,1.9.201)',\
+    org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1702)',\
 	org.eclipse.osgi.services;version='[3.8.0,3.8.1)',\
 	org.eclipse.osgi.util;version='[3.5.300,3.5.301)',\
 	org.eclipse.swt;version='[3.113.0,3.113.1)',\
 	org.eclipse.swt.chromium;version='[69.2.0,69.2.1)',\
+	org.eclipse.swt.chromium.64b;version='[69.2.0,69.2.1)',\
+	org.eclipse.swt.chromium.cocoa.macosx.x86_64;version='[69.2.0,69.2.1)',\
+	org.eclipse.swt.chromium.gtk.linux.x86_64;version='[69.2.0,69.2.1)',\
+	org.eclipse.swt.chromium.win32.win32.x86_64;version='[69.2.0,69.2.1)',\
+	org.eclipse.swt.cocoa.macosx.x86_64;version='[3.113.0,3.113.1)',\
+	org.eclipse.swt.gtk.linux.x86_64;version='[3.113.0,3.113.1)',\
 	org.eclipse.swt.win32.win32.x86_64;version='[3.113.0,3.113.1)',\
 	org.influxdb.java;version='[2.9.0,2.9.1)',\
-	org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
 	org.slf4j.api;version='[1.7.10,1.7.11)',\
 	org.w3c.css.sac;version='[1.3.1,1.3.2)',\
 	org.w3c.dom.events;version='[3.0.0,3.0.1)',\
 	org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
 	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
+	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	slf4j.api;version='[1.7.25,1.7.26)'
