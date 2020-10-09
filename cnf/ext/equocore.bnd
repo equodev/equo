@@ -14,4 +14,4 @@
 
 
 -runblacklist.core: \
-    bnd.identity;id='org.eclipse.rap.rwt'
+    bnd.identity;id='org.eclipse.rap.*'
