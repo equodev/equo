@@ -8,14 +8,20 @@ task generateEquoAppForUpdate(type: Copy){
     filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/") }
 }
 
+task replaceVersionOnEquoBuild(type: Copy){
+    from 'cnf/equobuild.bnd'
+    into '/tmp/auxequobuild'
+    filter { line -> line.replaceAll('VERSIONPLACEHOLDER', "${version}") }
+}
+
 task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
     key "${equo.channel}/equoapp.bnd"
     file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
-task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
+task uploadEquoBuild(type: com.make.equo.UploadFileTask, dependsOn: replaceVersionOnEquoBuild) {
     key "${equo.channel}/equobuild.bnd"
-    file file('cnf/equobuild.bnd')
+    file file('/tmp/auxequobuild/equobuild.bnd')
 }
 
 task uploadEquoCore(type: com.make.equo.UploadFileTask) {
