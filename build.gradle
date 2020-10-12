@@ -5,7 +5,7 @@ equo {
 task generateEquoAppForUpdate(type: Copy){
     from 'cnf/equoapp.bnd'
     into '/tmp/auxequoapp'
-    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/rls/${version}/") }
+    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/${version}/") }
 }
 
 task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
