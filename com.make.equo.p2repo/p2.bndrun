@@ -67,7 +67,6 @@ alljars: ${map;param2jar;${bundlesVers.all}}
 -runprogramargs: \
     -artifactRepository, file:///${workspace}/cnf/release, \
     -metadataRepository, file:${workspace}/cnf/release, \
-    -configs, gtk.linux.x86, \
     -bundles, "${alljars}", \
     -publishArtifacts, \
     -overwriteArtifacts
