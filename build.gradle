@@ -35,29 +35,39 @@ task uploadEquoCi(type: com.make.equo.UploadFileTask) {
 }
 
 task uploadEquoAppSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoApp.setup"
+    key "${setupsChannel}/EquoApp.setup"
     file file('cnf/EquoApp.setup')
 }
 
 task uploadEquoIDEAppConfigSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoIDEAppConfig.setup"
+    key "${setupsChannel}/EquoIDEAppConfig.setup"
     file file('cnf/EquoIDEAppConfig.setup')
 }
 
 task uploadEquoOrgProjectsSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoOrgProjects.setup"
+    key "${setupsChannel}/EquoOrgProjects.setup"
     file file('cnf/EquoOrgProjects.setup')
 }
 
 task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoOwnerApp.setup"
+    key "${setupsChannel}/EquoOwnerApp.setup"
     file file('cnf/EquoOwnerApp.setup')
+}
+
+task uploadEquoFrameworkSetup(type: com.make.equo.UploadFileTask) {
+    key "${setupsChannel}/EquoFramework.setup"
+    file file('cnf/EquoFramework.setup')
+}
+
+task uploadEquoFrameworkConfigSetup(type: com.make.equo.UploadFileTask) {
+    key "${setupsChannel}/EquoFrameworkConfig.setup"
+    file file('cnf/EquoFrameworkConfig.setup')
 }
 
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadMetadata]) {
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
 }
 
 allprojects {
