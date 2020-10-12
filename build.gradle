@@ -1,30 +1,30 @@
 equo {
-    channel = "rls"
+    channel = version
 }
 
 task generateEquoAppForUpdate(type: Copy){
     from 'cnf/equoapp.bnd'
     into '/tmp/auxequoapp'
-    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/${version}/") }
+    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/") }
 }
 
 task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
-    key "${equo.channel}/${version}/equoapp.bnd"
+    key "${equo.channel}/equoapp.bnd"
     file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
 task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/equobuild.bnd"
+    key "${equo.channel}/equobuild.bnd"
     file file('cnf/equobuild.bnd')
 }
 
 task uploadEquoCore(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/ext/equocore.bnd"
+    key "${equo.channel}/ext/equocore.bnd"
     file file('cnf/ext/equocore.bnd')
 }
 
 task uploadEquoCi(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/equoci.yml"
+    key "${equo.channel}/equoci.yml"
     file file('cnf/equoci.yml')
 }
 

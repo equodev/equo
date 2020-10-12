@@ -6,7 +6,7 @@ javac.debug:            on
 -plugin.1.Equo: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = Equo; \
-        url = "https://dl.maketechnology.io/framework/rls/repo/"; \
+        url = "https://dl.maketechnology.io/framework/0.2.0/repo/"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
 
