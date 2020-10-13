@@ -1,61 +1,73 @@
 equo {
-    channel = "rls"
+    channel = version
 }
 
 task generateEquoAppForUpdate(type: Copy){
     from 'cnf/equoapp.bnd'
     into '/tmp/auxequoapp'
-    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/rls/${version}/") }
+    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/") }
+}
+
+task replaceVersionOnEquoBuild(type: Copy){
+    from 'cnf/equobuild.bnd'
+    into '/tmp/auxequobuild'
+    filter { line -> line.replaceAll('VERSIONPLACEHOLDER', "${version}") }
 }
 
 task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppForUpdate) {
-    key "${equo.channel}/${version}/equoapp.bnd"
+    key "${equo.channel}/equoapp.bnd"
     file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
-task uploadEquoBuild(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/equobuild.bnd"
-    file file('cnf/equobuild.bnd')
+task uploadEquoBuild(type: com.make.equo.UploadFileTask, dependsOn: replaceVersionOnEquoBuild) {
+    key "${equo.channel}/equobuild.bnd"
+    file file('/tmp/auxequobuild/equobuild.bnd')
 }
 
 task uploadEquoCore(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/ext/equocore.bnd"
+    key "${equo.channel}/ext/equocore.bnd"
     file file('cnf/ext/equocore.bnd')
 }
 
 task uploadEquoCi(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/${version}/equoci.yml"
+    key "${equo.channel}/equoci.yml"
     file file('cnf/equoci.yml')
 }
 
 task uploadEquoAppSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoApp.setup"
+    key "${setupsChannel}/EquoApp.setup"
     file file('cnf/EquoApp.setup')
 }
 
 task uploadEquoIDEAppConfigSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoIDEAppConfig.setup"
+    key "${setupsChannel}/EquoIDEAppConfig.setup"
     file file('cnf/EquoIDEAppConfig.setup')
 }
 
 task uploadEquoOrgProjectsSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoOrgProjects.setup"
+    key "${setupsChannel}/EquoOrgProjects.setup"
     file file('cnf/EquoOrgProjects.setup')
 }
 
 task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
-    key "${equo.channel}/EquoOwnerApp.setup"
+    key "${setupsChannel}/EquoOwnerApp.setup"
     file file('cnf/EquoOwnerApp.setup')
+}
+
+task uploadEquoFrameworkSetup(type: com.make.equo.UploadFileTask) {
+    key "${setupsChannel}/EquoFramework.setup"
+    file file('cnf/EquoFramework.setup')
+}
+
+task uploadEquoFrameworkConfigSetup(type: com.make.equo.UploadFileTask) {
+    key "${setupsChannel}/EquoFrameworkConfig.setup"
+    file file('cnf/EquoFrameworkConfig.setup')
 }
 
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadMetadata]) {
-}
-
-task wrapper(type: Wrapper) {
-  jarFile = rootProject.file('.gradle-wrapper/gradle-wrapper.jar')
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
 }
 
 allprojects {
@@ -69,7 +81,7 @@ allprojects {
     }
     
     jacoco {
-        toolVersion = '0.8.5'
+        toolVersion = '0.8.6'
     }
       
 }

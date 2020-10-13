@@ -1,4 +1,4 @@
-image: registry.gitlab.com/maketechnology/equo/docker/gradle:adoptopenjdk8-alpine
+image: registry.gitlab.com/maketechnology/equo/docker/gradle5.4.1:adoptopenjdk8-alpine
 
 stages:
   - build
@@ -96,6 +96,7 @@ release:
   stage: release
   script:
     - gradle $gradle_opt release
+    - gradle $gradle_opt run.p2
     - gradle $gradle_opt publish
     - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
   only:

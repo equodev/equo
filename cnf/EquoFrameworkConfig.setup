@@ -20,7 +20,7 @@
       <requirement
           name="com.make.equo.monaco.feature.feature.group"/>
       <repository
-          url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
+          url="https://bndtools.jfrog.io/bndtools/update-latest"/>
       <repository
           url="https://ecd-plugin.github.io/update"/>
       <repository
@@ -36,7 +36,7 @@
       name="equo.ide.workspace"
       label="Equo IDE Workspace">
     <stream
-        href="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup#//@streams[name='master']"/>
+        href="https://dl.maketechnology.io/framework/rls/EquoFramework.setup#//@streams[name='master']"/>
     <description>Equo IDE workspace provides cool stuff.</description>
   </workspace>
 </setup:Configuration>

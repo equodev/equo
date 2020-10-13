@@ -1,11 +1,17 @@
--include https://testing-core.ams3.digitaloceanspaces.com/rls/0.1.6/testbuild.bnd
 Bundle-ActivationPolicy: lazy
 
--plugin.6.P2Repo: \
-    com.make.bnd.p2release.P2RepoContentProvider; \
-        name = Release; \
-        includeAllDependencies = true; \
-        runbundles = ${build}/equoapp.all.bnd
+#-plugin.6.P2Repo: \
+#    com.make.bnd.p2release.P2RepoContentProvider; \
+#        name = Release; \
+#        includeAllDependencies = true; \
+#        runbundles = ${build}/equoapp.all.bnd
+
+-plugin.1.Testing: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Equo Testing"; \
+        locations = "https://testing-core.ams3.digitaloceanspaces.com/rls/repo/index.xml.gz"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/equo-testing
 
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
@@ -23,3 +29,16 @@ Bundle-ActivationPolicy: lazy
         name = ChromiumDEVTools; \
         url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/69-dev.1/repository/"; \
         location = ~/.bnd/cache/devtools
+
+-plugin.7.WeavingP2Repo: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = "Equinox Weaving"; \
+        url = "https://download.eclipse.org/tools/ajdt/410/dev/update/"
+
+-plugin.2.Eclipse201912: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Eclipse201912"; \
+        expand-bcp = true; \
+        locations = "https://p2repo-osgi-index.fra1.digitaloceanspaces.com/2019-12/index.xml.gz"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/eclipse201912

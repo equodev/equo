@@ -27,7 +27,6 @@ equoPassword=bHVzaXRhbm8yMDE4
     com.make.equo.analytics.internal.api;version=snapshot,\
     com.make.equo.analytics.internal.provider;version=snapshot,\
     com.make.equo.application.client;version=snapshot,\
-    com.make.equo.aspects;version=snapshot,\
     com.make.equo.contribution.api;version=snapshot,\
     com.make.equo.contribution.media.provider;version=snapshot,\
     com.make.equo.contribution.provider;version=snapshot,\

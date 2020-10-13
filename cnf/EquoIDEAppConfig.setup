@@ -14,7 +14,7 @@
       <requirement
           name="bndtools.main.feature.feature.group"/>
       <repository
-          url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
+          url="https://bndtools.jfrog.io/bndtools/update-latest"/>
     </setupTask>
     <productVersion
         href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='2019-06']"/>
