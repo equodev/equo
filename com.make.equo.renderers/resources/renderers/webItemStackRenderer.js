@@ -140,7 +140,7 @@ $(document).ready(function () {
 
     // Add web stack elements to the html body
     const createWebItemStack = function (namespace, e4Model) {
-        console.log('The e4 model is ', e4Model);
+        Logger.debug('The e4 model is ', e4Model);
         const filteredE4Model = e4Model.filter(tab => {
             return tab.toBeRendered == 'true';
         });
