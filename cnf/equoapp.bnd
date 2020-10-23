@@ -57,7 +57,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=javax.activation)',\
     osgi.identity;filter:='(osgi.identity=javax.annotation)',\
     osgi.identity;filter:='(osgi.identity=javax.xml.bind)'
-
+-runproperties: logback.configurationFile=file:${.}/logback.xml
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=slf4j.api)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.cocoa.*)',\
