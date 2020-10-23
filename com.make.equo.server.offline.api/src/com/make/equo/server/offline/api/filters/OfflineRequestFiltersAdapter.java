@@ -63,6 +63,9 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
 	}
 
 	protected HttpResponse buildHttpResponse(URL resolvedUrl) {
+		if (resolvedUrl == null) {
+			return null;
+		}
 		try {
 			final URLConnection connection = resolvedUrl.openConnection();
 			InputStream inputStream = connection.getInputStream();

@@ -20,10 +20,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum EquoBundleManager {
 
 	INSTANCE;
+
+	protected static final Logger logger = LoggerFactory.getLogger(EquoBundleManager.class);
 
 	private static final String NETTY_HTTP_REQUEST_PACKAGE = "io.netty.handler.codec.http;resolution:=optional";
 
@@ -105,7 +109,7 @@ public enum EquoBundleManager {
 					}
 				} catch (IOException e) {
 					// Logger.log(Logger.SEVERITY_ERROR, e);
-					System.out.println("Unable to build package list.");
+					logger.error("Unable to build package list.");
 					e.printStackTrace();
 				} finally {
 					IOUtils.closeQuietly(zipStream);
@@ -137,14 +141,14 @@ public enum EquoBundleManager {
 			String classNameFull = equoApplicationClazz.getName().replace('.', '/');
 			directoryPath = classPath.substring(5, classPath.lastIndexOf(classNameFull) - 1);
 		} else {
-			System.out.format("Could not find manifest for %s\n", classPath);
+			logger.error("Could not find manifest for %s\n", classPath);
 		}
 		return directoryPath;
 	}
 
 	public File convertAppToBundle(Class<?> equoApplicationClazz) {
 		String parentPath = getDirectoryPath(equoApplicationClazz);
-		System.out.println("The directory parent is " + parentPath);
+		logger.debug("The directory parent is " + parentPath);
 		if (parentPath != null) {
 			String manifestPath = parentPath + MANIFEST_PATH;
 			File manifestFile = new Path(manifestPath).toFile();
@@ -170,7 +174,7 @@ public enum EquoBundleManager {
 				atts.putValue(IMPORT_PACKAGE, buildImportPackageList());
 				manifest.write(manifestStream);
 			} catch (IOException e) {
-				System.out.println("Unable to generate MANIFEST.MF");
+				logger.error("Unable to generate MANIFEST.MF");
 				e.printStackTrace();
 			} finally {
 				IOUtils.closeQuietly(manifestStream);
@@ -199,7 +203,7 @@ public enum EquoBundleManager {
 	}
 
 	public Map<String, String> initializeBundleProperties(File appBundleFile) {
-		System.out.println("App bundle file is " + appBundleFile.getAbsolutePath());
+		logger.debug("App bundle file is " + appBundleFile.getAbsolutePath());
 		Map<String, String> bundleInitProps = new HashMap<String, String>();
 
 		bundleInitProps.put("osgi.clean", "true");

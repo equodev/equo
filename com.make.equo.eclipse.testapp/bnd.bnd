@@ -192,3 +192,4 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
 	org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
 	org.xbill.dns
+-runproperties: logger.level=debug

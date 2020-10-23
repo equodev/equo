@@ -1,5 +1,8 @@
 import { EquoService } from '@equo/service-manager'
 
+const global = window as any;
+const Logger: any = global["Logger"] as any;
+
 export class EquoWebSocket extends WebSocket {
 
     private userEventCallbacks: any = {};
@@ -18,11 +21,11 @@ export class EquoWebSocket extends WebSocket {
         if (event.data === undefined)
             return;
 
-        console.log('event.data is...', event.data);
+        Logger.debug('event.data is...', event.data);
     }
 
     onmessage = (event: any): void => {
-        console.log('event.data is...', event.data);
+        Logger.debug('event.data is...', event.data);
         if (event.data === undefined) {
             return;
         }
@@ -43,7 +46,7 @@ export class EquoWebSocket extends WebSocket {
     };
 
     onclose = (event: any): void => {
-        console.log('event.data is...', event.data);
+        Logger.debug('event.data is...', event.data);
     };
 
 
@@ -66,7 +69,7 @@ export class EquoWebSocket extends WebSocket {
         setTimeout(
             () => {
                 if (socket.readyState === socket.OPEN) {
-                    console.log('Connection is made');
+                    Logger.debug('Connection is made');
                     if (callback != null) {
                         callback();
                     }

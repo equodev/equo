@@ -32,7 +32,8 @@ public class ContributionFileRequestFiltersAdapter extends OfflineRequestFilters
 		URL resolvedUrl = urlResolver.resolve(fileName);
 		if (resolvedUrl == null) {
 			URI requestUriAsUri = URI.create(requestUri);
-			if (requestUriAsUri.getHost().contains(contributionName)) {
+			final String host = requestUriAsUri.getHost();
+			if (host != null && host.contains(contributionName)) {
 				fileName = fileName.substring(fileName.indexOf(contributionName) + contributionName.length(),
 						fileName.length());
 				resolvedUrl = urlResolver.resolve(fileName);

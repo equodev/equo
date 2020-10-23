@@ -15,7 +15,8 @@ Export-Package: \
     osgi.cmpn,\
     ${junit},\
     assertj-core;version=3.15,\
-    org.littleshoot:littleproxy;version=1.1
+    org.littleshoot:littleproxy;version=1.1,\
+    org.slf4j.api
 Private-Package: \
     com.make.equo.contribution.provider.filter,\
     com.make.equo.contribution.provider.cache

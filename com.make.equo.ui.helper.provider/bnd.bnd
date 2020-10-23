@@ -35,7 +35,8 @@ Export-Package: \
     org.eclipse.emf.ecore.source,\
     org.eclipse.emf.common,\
     org.eclipse.emf.common.source,\
-    osgi.cmpn
+    osgi.cmpn,\
+    org.slf4j.api
 Private-Package: \
     com.make.equo.ui.helper.provider.model.impl,\
     com.make.equo.ui.helper.provider.model.util

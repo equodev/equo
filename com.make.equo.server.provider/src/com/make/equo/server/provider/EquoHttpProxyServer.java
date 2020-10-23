@@ -25,6 +25,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.contribution.api.handler.IEquoContributionRequestHandler;
@@ -35,6 +37,7 @@ import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
+	protected static final Logger logger = LoggerFactory.getLogger(EquoHttpProxyServer.class);
 
 	private static final List<String> proxiedUrls = new ArrayList<String>();
 
@@ -115,7 +118,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	@Deactivate
 	public void stop() {
-		System.out.println("Stopping proxy...");
+		logger.info("Stopping proxy...");
 		if (internetConnectionChecker != null) {
 			internetConnectionChecker.shutdownNow();
 		}
