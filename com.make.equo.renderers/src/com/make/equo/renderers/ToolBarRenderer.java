@@ -30,6 +30,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -40,6 +42,7 @@ import com.make.equo.renderers.util.IRendererConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
+	protected static Logger logger = LoggerFactory.getLogger(ToolBarRenderer.class);
 
 	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
 
@@ -147,10 +150,8 @@ public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRend
 			String commandId = commandAsJson.getAsString();
 
 			if (UNKNOWN_EQUO_COMMAND.equals(commandId)) {
-				// TODO Do a real log of the toolBarElement id which does not have an associated
-				// command
 				String toolBarElementId = payload.get("toolBarElementId").getAsString();
-				System.out.println("There is no command for the toolBar element " + toolBarElementId);
+				logger.debug("There is no command for the toolBar element " + toolBarElementId);
 				return;
 			}
 

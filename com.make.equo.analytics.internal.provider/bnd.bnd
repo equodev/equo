@@ -13,4 +13,5 @@ Private-Package: \
 	com.make.equo.application.provider;version=latest,\
 	org.eclipse.osgi,\
 	osgi.cmpn,\
-	ch.hsr:geohash
+	ch.hsr:geohash,\
+    org.slf4j.api

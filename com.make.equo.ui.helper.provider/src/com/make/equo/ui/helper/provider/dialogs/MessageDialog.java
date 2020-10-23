@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
@@ -25,6 +27,7 @@ import com.make.equo.ui.helper.provider.model.WebdialogFactory;
  */
 
 public class MessageDialog {
+	protected static Logger logger = LoggerFactory.getLogger(MessageDialog.class);
 
    static {
       try {
@@ -33,7 +36,7 @@ public class MessageDialog {
                .getServiceReference(ModelElementInjector.class);
          injector = bndContext.getService(svcReference);
       } catch (Exception e) {
-         System.out.println("Couldn't retrieve model injector");
+         logger.error("Couldn't retrieve model injector");
       }
    }
 

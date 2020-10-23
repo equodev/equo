@@ -9,6 +9,8 @@ import java.util.Map;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.make.equo.ws.api.IEquoRunnable;
@@ -17,6 +19,7 @@ import com.make.equo.ws.api.NamedActionMessage;
 import com.make.equo.ws.api.actions.IActionHandler;
 
 class EquoWebSocketServer extends WebSocketServer {
+	protected static Logger logger = LoggerFactory.getLogger(EquoWebSocketServer.class);
 
 	private Gson gsonParser;
 	private Map<String, IEquoRunnableParser<?>> eventHandlers;
@@ -39,8 +42,7 @@ class EquoWebSocketServer extends WebSocketServer {
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
 		broadcast("new connection: " + handshake.getResourceDescriptor());
-		System.out
-				.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo Framework!");
+		logger.debug(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo Framework!");
 		this.firstClientConnected = true;
 		synchronized (messagesToSend) {
 			for (String messageToSend : messagesToSend) {
@@ -53,14 +55,14 @@ class EquoWebSocketServer extends WebSocketServer {
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 		broadcast(conn + " has left the Equo Framework!");
-		System.out.println(conn + " has left the Equo Framework!");
+		logger.debug(conn + " has left the Equo Framework!");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		// broadcast(message);
-		System.out.println(conn + ": " + message);
+		logger.debug(conn + ": " + message);
 		NamedActionMessage actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
 		String action = actionMessage.getAction().toLowerCase();
 		if (eventHandlers.containsKey(action)) {
@@ -82,7 +84,7 @@ class EquoWebSocketServer extends WebSocketServer {
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer message) {
 		broadcast(message.array());
-		System.out.println(conn + ": " + message);
+		logger.debug(conn + ": " + message);
 	}
 
 	@Override
@@ -98,7 +100,7 @@ class EquoWebSocketServer extends WebSocketServer {
 	public void onStart() {
 		// TODO log web socket server started
 		this.started = true;
-		System.out.println("Equo Websocket Server started!");
+		logger.info("Equo Websocket Server started!");
 	}
 
 	@Override

@@ -60,6 +60,7 @@ Private-Package: com.make.equo.renderers.contributions,\
     org.eclipse.emf.common,\
     org.eclipse.emf.common.source,\
     org.eclipse.e4.core.commands,\
-    org.eclipse.e4.core.commands.source
+    org.eclipse.e4.core.commands.source,\
+    org.slf4j.api
 Export-Package: \
     com.make.equo.renderers

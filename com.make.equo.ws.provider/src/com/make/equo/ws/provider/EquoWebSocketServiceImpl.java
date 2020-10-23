@@ -11,6 +11,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.GsonBuilder;
 import com.make.equo.ws.api.IEquoRunnableParser;
@@ -20,6 +22,7 @@ import com.make.equo.ws.api.actions.IActionHandler;
 
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
+	protected static Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
 
 	@SuppressWarnings("rawtypes")
 	private Map<String, IActionHandler> actionHandlers = new HashMap<>();
@@ -28,14 +31,14 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 	
 	@Activate
 	public void start() {
-		System.out.println("Initializing Equo websocket server...");
+		logger.info("Initializing Equo websocket server...");
 		equoWebSocketServer = new EquoWebSocketServer(eventHandlers, actionHandlers);
 		equoWebSocketServer.start();
 	}
 
 	@Deactivate
 	public void stop() {
-		System.out.println("Stopping Equo websocket server... ");
+		logger.info("Stopping Equo websocket server... ");
 		eventHandlers.clear();
 		try {
 			equoWebSocketServer.stop();

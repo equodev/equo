@@ -8,10 +8,13 @@ import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.application.util.IConstants;
 
 public class ItemShortcutBuilder implements KeyBindingBuilder {
+	protected static Logger logger = LoggerFactory.getLogger(ItemShortcutBuilder.class);
 
 	private ItemBuilder itemBuilder;
 	private String userEvent;
@@ -41,8 +44,7 @@ public class ItemShortcutBuilder implements KeyBindingBuilder {
 			removeShortcut(bindings, shortcut);
 			bindings.add(keyBinding);
 		} else {
-			// TODO add logging
-			System.out.println("There is no default binding table created for the " + shortcut + " shortcut");
+			logger.debug("There is no default binding table created for the " + shortcut + " shortcut");
 		}
 	}
 

@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.littleshoot.proxy.HttpFilters;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.contribution.api.EquoContribution;
 import com.make.equo.contribution.api.IEquoContributionManager;
@@ -23,6 +25,7 @@ import io.netty.handler.codec.http.HttpRequest;
 
 @Component
 public class DefaultEquoContributionRequestHandler implements IEquoContributionRequestHandler {
+	protected static Logger logger = LoggerFactory.getLogger(DefaultEquoContributionRequestHandler.class);
 
 	private static final String limitedConnectionGenericPageFilePath = "/limitedConnectionPage.html";
 
@@ -54,7 +57,7 @@ public class DefaultEquoContributionRequestHandler implements IEquoContributionR
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
