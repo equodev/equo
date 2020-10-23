@@ -19,7 +19,7 @@ import com.make.equo.ws.api.NamedActionMessage;
 import com.make.equo.ws.api.actions.IActionHandler;
 
 class EquoWebSocketServer extends WebSocketServer {
-	protected static Logger logger = LoggerFactory.getLogger(EquoWebSocketServer.class);
+	protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServer.class);
 
 	private Gson gsonParser;
 	private Map<String, IEquoRunnableParser<?>> eventHandlers;

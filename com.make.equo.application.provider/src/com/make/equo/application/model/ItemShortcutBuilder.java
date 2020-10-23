@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.make.equo.application.util.IConstants;
 
 public class ItemShortcutBuilder implements KeyBindingBuilder {
-	protected static Logger logger = LoggerFactory.getLogger(ItemShortcutBuilder.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ItemShortcutBuilder.class);
 
 	private ItemBuilder itemBuilder;
 	private String userEvent;

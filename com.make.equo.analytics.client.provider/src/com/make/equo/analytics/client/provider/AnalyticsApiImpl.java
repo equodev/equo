@@ -30,7 +30,7 @@ import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component
 public class AnalyticsApiImpl implements IAnalyticsApi {
-	protected static Logger logger = LoggerFactory.getLogger(AnalyticsApiImpl.class);
+	protected static final Logger logger = LoggerFactory.getLogger(AnalyticsApiImpl.class);
 
 	private static final String CUSTOM_EVENT_KEY = "customEvent";
 	static final int DEFAULT_COUNT = 1;

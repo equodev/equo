@@ -25,7 +25,7 @@ import io.netty.handler.codec.http.HttpRequest;
 
 @Component
 public class DefaultEquoContributionRequestHandler implements IEquoContributionRequestHandler {
-	protected static Logger logger = LoggerFactory.getLogger(DefaultEquoContributionRequestHandler.class);
+	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionRequestHandler.class);
 
 	private static final String limitedConnectionGenericPageFilePath = "/limitedConnectionPage.html";
 

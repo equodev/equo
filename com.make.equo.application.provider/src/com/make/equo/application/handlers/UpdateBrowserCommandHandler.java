@@ -17,7 +17,7 @@ import com.make.equo.application.parts.SinglePagePart;
 import com.make.equo.application.util.IConstants;
 
 public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
-	protected static Logger logger = LoggerFactory.getLogger(UpdateBrowserCommandHandler.class);
+	protected static final Logger logger = LoggerFactory.getLogger(UpdateBrowserCommandHandler.class);
 
 	@Execute
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER) String browserParams,

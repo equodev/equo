@@ -42,7 +42,7 @@ import com.make.equo.renderers.util.IRendererConstants;
 import com.make.equo.ws.api.IEquoEventHandler;
 
 public class ToolBarRenderer extends ToolBarManagerRenderer implements IEquoRenderer {
-	protected static Logger logger = LoggerFactory.getLogger(ToolBarRenderer.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ToolBarRenderer.class);
 
 	private static final String UNKNOWN_EQUO_COMMAND = "unknownEquoCommand";
 

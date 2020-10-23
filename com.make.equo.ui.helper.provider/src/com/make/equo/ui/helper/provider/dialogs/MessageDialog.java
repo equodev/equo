@@ -27,7 +27,7 @@ import com.make.equo.ui.helper.provider.model.WebdialogFactory;
  */
 
 public class MessageDialog {
-	protected static Logger logger = LoggerFactory.getLogger(MessageDialog.class);
+	protected static final Logger logger = LoggerFactory.getLogger(MessageDialog.class);
 
    static {
       try {

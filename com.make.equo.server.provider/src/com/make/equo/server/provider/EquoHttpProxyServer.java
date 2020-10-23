@@ -37,7 +37,7 @@ import com.make.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
-	protected static Logger logger = LoggerFactory.getLogger(EquoHttpProxyServer.class);
+	protected static final Logger logger = LoggerFactory.getLogger(EquoHttpProxyServer.class);
 
 	private static final List<String> proxiedUrls = new ArrayList<String>();
 

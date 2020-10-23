@@ -11,7 +11,7 @@ import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.client.EquoBundleManager;
 
 public class Equo {
-	protected static Logger logger = LoggerFactory.getLogger(Equo.class);
+	protected static final Logger logger = LoggerFactory.getLogger(Equo.class);
 
 	public static void start(Class<?> equoApplicationClazz) {
 		if (!IEquoApplication.class.isAssignableFrom(equoApplicationClazz)) {

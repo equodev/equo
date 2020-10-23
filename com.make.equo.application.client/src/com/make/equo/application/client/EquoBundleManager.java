@@ -27,7 +27,7 @@ public enum EquoBundleManager {
 
 	INSTANCE;
 
-	protected static Logger logger = LoggerFactory.getLogger(EquoBundleManager.class);
+	protected static final Logger logger = LoggerFactory.getLogger(EquoBundleManager.class);
 
 	private static final String NETTY_HTTP_REQUEST_PACKAGE = "io.netty.handler.codec.http;resolution:=optional";
 

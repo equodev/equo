@@ -14,7 +14,7 @@ import com.make.equo.server.provider.EquoHttpProxyContribution;
 import io.netty.handler.codec.http.HttpRequest;
 
 public class ContributionJsAdapterHandler implements IFiltersAdapterHandler {
-	protected static Logger logger = LoggerFactory.getLogger(ContributionJsAdapterHandler.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ContributionJsAdapterHandler.class);
 
 	private static final List<String> ALLOWED_LEVELS = Arrays.asList("TRACE", "INFO", "DEBUG", "WARN", "ERROR", "TRACE",
 			"TIME", "OFF");

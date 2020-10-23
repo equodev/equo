@@ -43,7 +43,7 @@ import ch.hsr.geohash.GeoHash;
 
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
-	protected static Logger logger = LoggerFactory.getLogger(AnalyticsServiceImpl.class);
+	protected static final Logger logger = LoggerFactory.getLogger(AnalyticsServiceImpl.class);
 
 	private static final String VALUE_FIELD = "value";
 	private static final String INFO_JSON_URL = "https://ipapi.co/json"; 

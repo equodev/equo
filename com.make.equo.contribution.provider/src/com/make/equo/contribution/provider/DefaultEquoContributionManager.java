@@ -15,7 +15,7 @@ import com.make.equo.contribution.api.ResolvedContribution;
 
 @Component
 public class DefaultEquoContributionManager implements IEquoContributionManager {
-	protected static Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
+	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
 
 	@Reference
 	private EquoContributionResolver resolver;

@@ -22,7 +22,7 @@ import com.make.equo.ws.api.actions.IActionHandler;
 
 @Component
 public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
-	protected static Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
+	protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
 
 	@SuppressWarnings("rawtypes")
 	private Map<String, IActionHandler> actionHandlers = new HashMap<>();
