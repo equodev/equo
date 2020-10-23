@@ -49,14 +49,14 @@ public class ContributionJsFilterAdapter extends HttpFiltersAdapter {
 	private HttpResponse buildHttpResponse(URL resolvedUrl) {
 		try {
 			final URLConnection connection = resolvedUrl.openConnection();
-			InputStream inputStream = connection.getInputStream();
-			byte[] bytes = ByteStreams.toByteArray(inputStream);
-			ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
-			final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
-			String fileName = resolvedUrl.getFile().substring(1);
-			String contentType = fileTypeMap.getContentType(fileName);
-			inputStream.close();
-			return buildResponse(buffer, contentType);
+			try (InputStream inputStream = connection.getInputStream()) {
+				byte[] bytes = ByteStreams.toByteArray(inputStream);
+				ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
+				final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
+				String fileName = resolvedUrl.getFile().substring(1);
+				String contentType = fileTypeMap.getContentType(fileName);
+				return buildResponse(buffer, contentType);
+			}
 		} catch (IOException e) {
 			// TODO log exception
 			ByteBuf buffer;
