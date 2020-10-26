@@ -6,6 +6,7 @@ task generateEquoAppForUpdate(type: Copy){
     from 'cnf/equoapp.bnd'
     into '/tmp/auxequoapp'
     filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/") }
+    filter { line -> line.replaceAll('file:\\$\\{\\.\\}', "https://dl.maketechnology.io/framework/${equo.channel}") }
 }
 
 task replaceVersionOnEquoBuild(type: Copy){
@@ -27,6 +28,11 @@ task uploadEquoBuild(type: com.make.equo.UploadFileTask, dependsOn: replaceVersi
 task uploadEquoCore(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/ext/equocore.bnd"
     file file('cnf/ext/equocore.bnd')
+}
+
+task uploadLogback(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/logback.xml"
+    file file('cnf/logback.xml')
 }
 
 task uploadEquoCi(type: com.make.equo.UploadFileTask) {
@@ -67,7 +73,7 @@ task uploadEquoFrameworkConfigSetup(type: com.make.equo.UploadFileTask) {
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadLogback, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
 }
 
 allprojects {
