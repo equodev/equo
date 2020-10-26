@@ -111,8 +111,4 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     org.xbill.dns;version='[2.0.8,2.0.9)',\
     org.eclipse.swt.chromium.64b,\
     com.make.equo.aer.internal.api;version=latest,\
-    com.make.equo.application.provider;version=latest,\
-    javax.annotation,\
-    javax.activation,\
-    javax.xml,\
-    javax.xml.bind
+    com.make.equo.application.provider;version=latest
