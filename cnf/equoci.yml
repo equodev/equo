@@ -1,4 +1,4 @@
-image: registry.gitlab.com/maketechnology/equo/docker/gradle:jdk8-alpine
+image: registry.gitlab.com/maketechnology/equo/docker/gradle5.4.1:jdk8-alpine
 
 stages:
   - build
