@@ -16,18 +16,18 @@ Bundle-ActivationPolicy: lazy
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "https://dl.maketechnology.io/chromium-swt/76.5/repository"; \
+        url = "http://dl.maketechnology.io/chromium-swt-ee/76-32b.gtk2/repository"; \
         location = ~/.bnd/cache/chromium.swt
 -plugin.5.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumCEF; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/76-64b.3/repository/"; \
+        url = "http://dl.maketechnology.io/chromium-cef/76-64b/repository"; \
         location = ~/.bnd/cache/cefbinaries
 
 -plugin.4.ChromiumDEVTools: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumDEVTools; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/76-dev.3/repository/"; \
+        url = "http://dl.maketechnology.io/chromium-cef/76-dev/repository"; \
         location = ~/.bnd/cache/devtools
 
 -plugin.7.WeavingP2Repo: \
