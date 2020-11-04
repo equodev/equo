@@ -180,7 +180,6 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.apache.commons.logging;version='[1.2.0,1.2.1)',\
 	org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
 	org.eclipse.e4.ui.dialogs;version='[1.1.600,1.1.601)',\
-	org.eclipse.swt.chromium;version='[69.2.0,69.2.1)',\
 	org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
 	org.w3c.dom.events;version='[3.0.0,3.0.1)',\
 	org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
