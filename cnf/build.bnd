@@ -16,7 +16,7 @@ Bundle-ActivationPolicy: lazy
 -plugin.4.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "http://dl.maketechnology.io/chromium-swt-ee/76-32b.gtk2/repository"; \
+        url = "http://dl.maketechnology.io/chromium-swt-ee/76/repository"; \
         location = ~/.bnd/cache/chromium.swt
 -plugin.5.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
