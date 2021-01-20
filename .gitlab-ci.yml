@@ -1,10 +1,7 @@
-image: registry.gitlab.com/maketechnology/equo/docker/gradle5.4.1:adoptopenjdk8-alpine
+image: adoptopenjdk:8u275-b01-jre-openj9-0.23.0-windowsservercore
 
 stages:
   - build
-  - test
-  - report
-  - release
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
@@ -45,71 +42,9 @@ before_script:
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
 
-.print_converage: &print_converage
-- awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
-
 build:
   extends: .all
   stage: build
+  tags: [win]
   script:
-    - gradle $gradle_opt assemble
-
-test:
-  extends: .all
-  stage: test
-  script:
-    - gradle $gradle_opt test
-
-test.integration:
-  extends: .all
-  image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
-  stage: test
-  before_script:
-    - *global_before_scripts
-    - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
-    - export DISPLAY=:1
-    - curl -sL https://deb.nodesource.com/setup_10.x | bash -
-    - apt-get install -y nodejs    
-  script:
-    - ./gradlew $gradle_opt testOSGi
-    - kill $(pidof Xvfb)
-
-coverage.report:
-  extends: .all
-  stage: report
-  script:
-    - gradle $gradle_opt jacocoRootReport
-    - *print_converage
-  except:
-    - master
-
-full.coverage.report:
-  extends: .all
-  stage: report
-  script:
-    - gradle $gradle_opt jacocoRootReport -PreportHtml=true
-    - *print_converage
-  only:
-    - master
-
-release:
-  extends: .all
-  stage: release
-  script:
-    - gradle $gradle_opt release
-    - gradle $gradle_opt run.p2
-    - gradle $gradle_opt publish
-    - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
-  only:
-    - master
-
-pages:
-  stage: release
-  script:
-    - cp -R $CI_PROJECT_DIR/build/reports/jacoco/jacocoRootReport/html/ public/
-    - ls -R public/
-  artifacts:
-    paths:
-    - public
-  only:
-    - master
+    - ./gradlew $gradle_opt assemble
