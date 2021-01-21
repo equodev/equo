@@ -1,7 +1,8 @@
-image: us.gcr.io/equo-2018/win-adoptopenjdk8:latest
+image: registry.gitlab.com/maketechnology/equo/docker/gradle5.4.1:adoptopenjdk8-alpine
 
 stages:
   - build
+  - test
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
@@ -17,6 +18,9 @@ cache:
     - .m2/
     - .bnd/
 
+.global_before_scripts: &global_before_scripts
+  - export HOME=$CI_PROJECT_DIR
+  - printf "%b\n" "$REGISTRY_CREDENTIALS" | base64 -d > $HOME/.npmrc
 
 .all:
   artifacts:
@@ -36,9 +40,30 @@ cache:
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
 
-build:
+.win:
+  image: us.gcr.io/equo-2018/win-adoptopenjdk8:latest
   extends: .all
-  stage: build
   tags: [win]
+
+build-win:
+  extends: .win
+  stage: build
+  timeout: 2h
   script:
-    - ./gradlew --no-daemon assemble
+    - ./gradlew --build-cache --no-daemon assemble
+
+test-win:
+  extends: .win
+  dependencies:
+    - build-win
+  stage: test
+  script:
+    - gradle --build-cache --no-daemon test
+
+test.integration-win:
+  extends: .win
+  dependencies:
+    - build-win
+  stage: test
+  script:
+    - ./gradlew --build-cache --no-daemon testOSGi
