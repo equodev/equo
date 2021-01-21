@@ -18,7 +18,7 @@
         "clean": "rimraf lib && rimraf ../resources",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
-        "copy": "cpx src/index.html ../resources/ && cp -avr lib/* ../resources/"
+        "copy": "cpx src/index.html ../resources/ && cpx lib/* ../resources/"
     },
     "private": true
 }
