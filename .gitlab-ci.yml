@@ -58,7 +58,7 @@ test-win:
     - build-win
   stage: test
   script:
-    - gradle --build-cache --no-daemon test
+    - ./gradlew --build-cache --no-daemon test
 
 test.integration-win:
   extends: .win
