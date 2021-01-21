@@ -1,4 +1,4 @@
-image: adoptopenjdk:8u275-b01-jre-openj9-0.23.0-windowsservercore
+image: us.gcr.io/equo-2018/win-adoptopenjdk8:latest
 
 stages:
   - build
@@ -17,12 +17,6 @@ cache:
     - .m2/
     - .bnd/
 
-.global_before_scripts: &global_before_scripts
-  - export HOME=$CI_PROJECT_DIR
-  - printf "%b\n" "$REGISTRY_CREDENTIALS" | base64 -d > $HOME/.npmrc
-
-before_script:
-  - *global_before_scripts
 
 .all:
   artifacts:
@@ -47,4 +41,4 @@ build:
   stage: build
   tags: [win]
   script:
-    - ./gradlew $gradle_opt assemble
+    - ./gradlew --no-daemon assemble

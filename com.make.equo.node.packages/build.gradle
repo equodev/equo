@@ -19,11 +19,13 @@ yarn_install {
   outputs.cacheIf {
     true
   }
+  args = ['--network-timeout', '1000000']
 }
 
 node {
   download = true
   version = node_version
+  yarnVersion = yarn_version
 }
 
 processResources {
