@@ -3,14 +3,12 @@ Private-Package: \
     com.make.equo.server.provider,\
     org.littleshoot.proxy.mitm,\
     org.littleshoot.dnssec4j,\
-    org.littleshoot.proxy.extras,\
-    org.mozilla.jss.*
+    org.littleshoot.proxy.extras
     
 Export-Package: \
     com.make.equo.server.provider.filters,\
     org.littleshoot.proxy,\
-    org.littleshoot.proxy.impl,\
-    org.mozilla.*
+    org.littleshoot.proxy.impl
 
 -includeresource: \
     resources,\
