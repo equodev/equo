@@ -31,7 +31,6 @@ import javax.net.ssl.TrustManager;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.littleshoot.proxy.SslEngineSource;
-import org.littleshoot.proxy.mitm.CertificateHelper;
 import org.littleshoot.proxy.mitm.MergeTrustManager;
 import org.littleshoot.proxy.mitm.RootCertificateException;
 import org.littleshoot.proxy.mitm.SubjectAlternativeNameHolder;
