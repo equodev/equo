@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -74,7 +73,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 		int port = getPortForServer();
 		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
-				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
+				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1;--ignore-certificate-errors");
 
 		DefaultHostResolver serverResolver = new DefaultHostResolver() {
 			@Override
@@ -87,17 +86,9 @@ public class EquoHttpProxyServer implements IEquoServer {
 		};
 
 		try {
-			CustomHostNameMitmManager customHostNameMitmManager = new CustomHostNameMitmManager();
-
 			proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port).withTransparent(false)
 					.withFiltersSource(httpFiltersSourceAdapter).withServerResolver(serverResolver)
 					.withManInTheMiddle(new CustomHostNameMitmManager()).start();
-
-			if (System.getProperty("os.name").toLowerCase().contains("win"))
-				customHostNameMitmManager.importCertWindows();
-			else
-				customHostNameMitmManager.initializeCryptoManager("disable",
-						Paths.get(System.getProperty("user.home"), ".pki", "nssdb").toString(), "Little-Proxy");
 		} catch (RootCertificateException e) {
 			e.printStackTrace();
 		}
