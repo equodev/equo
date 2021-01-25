@@ -11,14 +11,15 @@
     "devDependencies": {
         "cpx": "^1.5.0",
         "webpack": "^4.42.0",
-        "webpack-cli": "^3.3.11"
+        "webpack-cli": "^3.3.11",
+        "ncp": "^2.0.0"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",
         "clean": "rimraf lib && rimraf ../resources",
         "build": "yarn run compile && webpack && yarn run copy",
         "compile": "tsc",
-        "copy": "cpx src/index.html ../resources/ && cpx lib/* ../resources/"
+        "copy": "cpx src/index.html ../resources/ && ncp lib ../resources"
     },
     "private": true
 }
