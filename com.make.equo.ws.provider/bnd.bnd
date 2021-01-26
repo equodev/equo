@@ -11,6 +11,7 @@ Private-Package: com.make.equo.ws.provider
 	com.make.equo.server.offline.api;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
+	javax.activation,\
 	osgi.annotation,\
 	osgi.cmpn,\
 	Java-WebSocket,\

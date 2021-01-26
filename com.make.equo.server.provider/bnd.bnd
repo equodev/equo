@@ -22,6 +22,7 @@ Bundle-NativeCode: /libjss4.so; osname=linux; processor=x86_64, *
 	com.make.equo.server.offline.provider;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
+	javax.activation,\
 	osgi.cmpn,\
 	org.eclipse.osgi,\
 	com.make.equo.aer.api;version=latest,\
