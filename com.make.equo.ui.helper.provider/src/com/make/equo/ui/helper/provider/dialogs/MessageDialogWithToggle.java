@@ -88,7 +88,7 @@ public class MessageDialogWithToggle extends MessageDialog {
 	}
 
 	public void setToggle(MButtonToggle toggle) {
-		this.toggle = toggle;
+		MessageDialogWithToggle.toggle = toggle;
 	}
 
 }

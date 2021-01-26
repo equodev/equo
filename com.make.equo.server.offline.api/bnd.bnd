@@ -10,4 +10,5 @@ Export-Package: \
     com.google.guava.source;version=20.0,\
     osgi.cmpn,\
     org.apache.httpcomponents.httpcore;version=4.4.6,\
-    org.littleshoot:littleproxy;version=1.1
+    org.littleshoot:littleproxy;version=1.1,\
+    javax.activation

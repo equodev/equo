@@ -33,6 +33,7 @@ Export-Package: \
     org.eclipse.e4.core.contexts.source,\
     org.eclipse.e4.ui.model.workbench,\
     org.eclipse.e4.ui.model.workbench.source,\
+    javax.annotation,\
     javax.inject,\
     javax.inject.source,\
     org.eclipse.e4.ui.workbench.swt,\
