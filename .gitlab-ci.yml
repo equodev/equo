@@ -41,7 +41,7 @@ cache:
     expire_in: 12w
 
 .win:
-  image: us.gcr.io/equo-2018/win-adoptopenjdk8:latest
+  image: us.gcr.io/equo-2018/win-adoptopenjdk8:dll
   extends: .all
   tags: [win]
 
