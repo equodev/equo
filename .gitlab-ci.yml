@@ -24,6 +24,9 @@ cache:
   - export HOME=$CI_PROJECT_DIR
   - printf "%b\n" "$REGISTRY_CREDENTIALS" | base64 -d > $HOME/.npmrc
 
+before_script:
+  - *global_before_scripts
+
 .all:
   artifacts:
     reports:
@@ -42,56 +45,28 @@ cache:
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
 
-.win:
-  image: us.gcr.io/equo-2018/win-adoptopenjdk8:dll
-  extends: .all
-  tags: [win]
+start-windows-pipeline:
+  stage: build
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
     - if: $CI_COMMIT_BRANCH != 'master'
       when: manual
-
-build-win:
-  extends: .win
-  stage: build
-  timeout: 2h
-  script:
-    - ./gradlew --build-cache --no-daemon assemble
-
-test-win:
-  extends: .win
-  needs:
-    - build-win
-  stage: test
-  script:
-    - ./gradlew --build-cache --no-daemon test
-
-test.integration-win:
-  extends: .win
-  needs:
-    - build-win
-  stage: test
-  timeout: 2h
-  script:
-    - ./gradlew --build-cache --no-daemon testOSGi
-
-.linux:
-  extends: .all
-  before_script:
-    - *global_before_scripts
+      allow_failure: true 
+  trigger:
+    include: .win-pipeline.yml
 
 .print_converage: &print_converage
 - awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
 
 build:
-  extends: .linux
+  extends: .all
   stage: build
   script:
     - gradle $gradle_opt assemble
 
 test:
-  extends: .linux
+  extends: .all
   needs:
     - build
   stage: test
@@ -99,7 +74,7 @@ test:
     - gradle $gradle_opt test
 
 test.integration:
-  extends: .linux
+  extends: .all
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
   needs:
@@ -115,7 +90,7 @@ test.integration:
     - kill $(pidof Xvfb)
 
 coverage.report:
-  extends: .linux
+  extends: .all
   stage: report
   needs:
     - test
@@ -127,7 +102,7 @@ coverage.report:
     - master
 
 full.coverage.report:
-  extends: .linux
+  extends: .all
   stage: report
   needs:
     - test
@@ -139,7 +114,7 @@ full.coverage.report:
     - master
 
 release:
-  extends: .linux
+  extends: .all
   stage: release
   script:
     - gradle $gradle_opt release
