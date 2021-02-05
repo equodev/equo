@@ -46,6 +46,11 @@ cache:
   image: us.gcr.io/equo-2018/win-adoptopenjdk8:dll
   extends: .all
   tags: [win]
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      when: always
+    - if: $CI_COMMIT_BRANCH != 'master'
+      when: manual
 
 build-win:
   extends: .win
@@ -56,7 +61,7 @@ build-win:
 
 test-win:
   extends: .win
-  dependencies:
+  needs:
     - build-win
   stage: test
   script:
@@ -64,9 +69,10 @@ test-win:
 
 test.integration-win:
   extends: .win
-  dependencies:
+  needs:
     - build-win
   stage: test
+  timeout: 2h
   script:
     - ./gradlew --build-cache --no-daemon testOSGi
 
@@ -86,6 +92,8 @@ build:
 
 test:
   extends: .linux
+  needs:
+    - build
   stage: test
   script:
     - gradle $gradle_opt test
@@ -94,6 +102,8 @@ test.integration:
   extends: .linux
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
+  needs:
+    - build
   before_script:
     - *global_before_scripts
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
@@ -107,6 +117,9 @@ test.integration:
 coverage.report:
   extends: .linux
   stage: report
+  needs:
+    - test
+    - test.integration
   script:
     - gradle $gradle_opt jacocoRootReport
     - *print_converage
@@ -116,6 +129,9 @@ coverage.report:
 full.coverage.report:
   extends: .linux
   stage: report
+  needs:
+    - test
+    - test.integration
   script:
     - gradle $gradle_opt jacocoRootReport -PreportHtml=true
     - *print_converage
