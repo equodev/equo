@@ -3,6 +3,8 @@ image: registry.gitlab.com/maketechnology/equo/docker/gradle5.4.1:adoptopenjdk8-
 stages:
   - build
   - test
+  - report
+  - release
 
 variables:
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradle-home
@@ -67,3 +69,77 @@ test.integration-win:
   stage: test
   script:
     - ./gradlew --build-cache --no-daemon testOSGi
+
+.linux:
+  extends: .all
+  before_script:
+    - *global_before_scripts
+
+.print_converage: &print_converage
+- awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
+
+build:
+  extends: .linux
+  stage: build
+  script:
+    - gradle $gradle_opt assemble
+
+test:
+  extends: .linux
+  stage: test
+  script:
+    - gradle $gradle_opt test
+
+test.integration:
+  extends: .linux
+  image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
+  stage: test
+  before_script:
+    - *global_before_scripts
+    - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
+    - export DISPLAY=:1
+    - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    - apt-get install -y nodejs    
+  script:
+    - ./gradlew $gradle_opt testOSGi || (kill $(pidof Xvfb) && false)
+    - kill $(pidof Xvfb)
+
+coverage.report:
+  extends: .linux
+  stage: report
+  script:
+    - gradle $gradle_opt jacocoRootReport
+    - *print_converage
+  except:
+    - master
+
+full.coverage.report:
+  extends: .linux
+  stage: report
+  script:
+    - gradle $gradle_opt jacocoRootReport -PreportHtml=true
+    - *print_converage
+  only:
+    - master
+
+release:
+  extends: .linux
+  stage: release
+  script:
+    - gradle $gradle_opt release
+    - gradle $gradle_opt run.p2
+    - gradle $gradle_opt publish
+    - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
+  only:
+    - master
+
+pages:
+  stage: release
+  script:
+    - cp -R $CI_PROJECT_DIR/build/reports/jacoco/jacocoRootReport/html/ public/
+    - ls -R public/
+  artifacts:
+    paths:
+    - public
+  only:
+    - master
