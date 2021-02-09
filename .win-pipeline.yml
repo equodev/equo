@@ -1,0 +1,43 @@
+stages:
+  - build
+  - test
+
+.all:
+  image: us.gcr.io/equo-2018/win-adoptopenjdk8:dll
+  tags: [win]
+  artifacts:
+    reports:
+       junit:
+          - "*/generated/test-reports/test/TEST-*.xml"
+          - "*/generated/test-reports/testOSGi/TEST-*.xml"
+    paths:
+      - cnf/equoapp.bnd
+      - cnf/equobuild.bnd
+      - cnf/release
+      - cnf/cache
+      - cnf/build
+      - build
+      - build-cache
+      - com.make.equo*/generated/*.jar
+      - com.make.equo*/generated/jacoco/test.exec
+    expire_in: 12w
+
+build-win:
+  extends: .all
+  stage: build
+  timeout: 2h
+  script:
+    - ./gradlew --build-cache --no-daemon assemble
+
+test-win:
+  extends: .all
+  stage: test
+  script:
+    - ./gradlew --build-cache --no-daemon test
+
+test.integration-win:
+  extends: .all
+  stage: test
+  timeout: 2h
+  script:
+    - ./gradlew --build-cache --no-daemon testOSGi

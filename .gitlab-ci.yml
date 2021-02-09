@@ -45,6 +45,17 @@ before_script:
       - com.make.equo*/generated/jacoco/test.exec
     expire_in: 12w
 
+start-windows-pipeline:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      when: always
+    - if: $CI_COMMIT_BRANCH != 'master'
+      when: manual
+      allow_failure: true 
+  trigger:
+    include: .win-pipeline.yml
+
 .print_converage: &print_converage
 - awk -F, '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
 
@@ -56,6 +67,8 @@ build:
 
 test:
   extends: .all
+  needs:
+    - build
   stage: test
   script:
     - gradle $gradle_opt test
@@ -64,6 +77,8 @@ test.integration:
   extends: .all
   image: registry.gitlab.com/maketechpub/docker/adopt:ubuntu.jdk8.gtk3
   stage: test
+  needs:
+    - build
   before_script:
     - *global_before_scripts
     - Xvfb :1 -screen 0 1152x720x24+32 -ac -noreset 2> xvfb.err &
@@ -71,12 +86,15 @@ test.integration:
     - curl -sL https://deb.nodesource.com/setup_10.x | bash -
     - apt-get install -y nodejs    
   script:
-    - ./gradlew $gradle_opt testOSGi
+    - ./gradlew $gradle_opt testOSGi || (kill $(pidof Xvfb) && false)
     - kill $(pidof Xvfb)
 
 coverage.report:
   extends: .all
   stage: report
+  needs:
+    - test
+    - test.integration
   script:
     - gradle $gradle_opt jacocoRootReport
     - *print_converage
@@ -86,6 +104,9 @@ coverage.report:
 full.coverage.report:
   extends: .all
   stage: report
+  needs:
+    - test
+    - test.integration
   script:
     - gradle $gradle_opt jacocoRootReport -PreportHtml=true
     - *print_converage
