@@ -3,6 +3,7 @@ apply plugin: "com.moowork.node"
 node {
   download = true
   version = node_version
+  yarnVersion = yarn_version
 }
 
 yarn_install {
@@ -19,6 +20,7 @@ yarn_install {
   outputs.cacheIf {
     true
   }
+  args = ['--network-timeout', '1000000']
 }
 
 processResources {

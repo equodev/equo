@@ -13,6 +13,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -108,9 +110,20 @@ public class PackagesIntegrationTest {
 			chromium.setLayoutData(data);
 			chromium.setUrl("http://testbundles/" + String.format("?equowsport=%d", websocketService.getPort()));
 			shell.open();
+			forceBrowserToStart();
 		});
 
 		await().untilTrue(start);
+	}
+
+	private void forceBrowserToStart() {
+		Listener[] listeners = chromium.getListeners(SWT.Paint);
+		assertThat(listeners.length > 0);
+		Event event = new Event();
+		event.type = SWT.Paint;
+		event.display = display;
+		event.widget = chromium;
+		listeners[0].handleEvent(event);
 	}
 
 	@Test
