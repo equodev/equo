@@ -5,15 +5,8 @@ You should have already installed yarn/npm.
 
 ## Step-by-Step Installation
 
-1. Create .npmrc file inside web project with the following content:
 
-```
-@equo:registry=https://registry.dev.equoplatform.com
-//registry.dev.equoplatform.com/:_authToken=GL0kmnbIuMKhYGkv9oiN0BAdm5Q6ccNxn1uuKCTul14=
-```
-
-
-or execute the following command on Terminal:
+1.  Execute the following command on Terminal:
 
 ```
 npm adduser --registry https://registry.dev.equoplatform.com
@@ -21,8 +14,6 @@ Username: AskForAdminCredentials
 Password: AskForAdminCredentials
 Email: (this IS public) AskForAdminCredentials
 ```
-
-
 
 2. Open a Terminal on project folder and insert the following command:
    
@@ -47,11 +38,13 @@ import { Toolbar } from '@equo/toolbar-api'
 **Contruction methods:**
 
 *Toolbar.create()* :It allows to start the customization on our toolbar ( mandatory )
+
 *.build()* : It allows to add to the HTML body with all the customization previously added.
 
 **Behavioral methods:**
 
-*withBackgroundColor(String)*: It allows to change the toolbar's background color using rgb or hexacode.
+*.withBackgroundColor(String)*: It allows to change the toolbar's background color using rgb or hexacode.
+
 *.addToolItem()*: It allows to add a new item to the toolbar.
 
 
