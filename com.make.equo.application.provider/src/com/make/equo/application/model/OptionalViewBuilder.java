@@ -148,7 +148,7 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
-	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
 		mainAppBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;
 	}
