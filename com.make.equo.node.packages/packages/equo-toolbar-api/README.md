@@ -1,7 +1,9 @@
 # JS Toolbar API installation project
 
 ## Pre-requirements:
-You should have already installed yarn/npm.
+You should have already installed npm/yarn.
+
+Npm version must be 6.0.0 or above.
 
 ## Step-by-Step Installation
 
@@ -9,7 +11,7 @@ You should have already installed yarn/npm.
 1.  Execute the following command on Terminal:
 
 ```
-npm adduser --registry https://registry.dev.equoplatform.com
+npm login --scope=@equo --registry https://registry.dev.equoplatform.com
 Username: AskForAdminCredentials
 Password: AskForAdminCredentials
 Email: (this IS public) AskForAdminCredentials
