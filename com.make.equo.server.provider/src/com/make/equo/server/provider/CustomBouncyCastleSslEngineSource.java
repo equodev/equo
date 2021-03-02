@@ -53,7 +53,6 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
 
 	private final CustomAuthority authority;
 
-	private final boolean trustAllServers;
 	private final boolean sendCerts;
 
 	private SSLContext sslContext;
@@ -90,11 +89,10 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
 			Cache<String, SSLContext> sslContexts)
 			throws GeneralSecurityException, OperatorCreationException, RootCertificateException, IOException {
 		this.authority = authority;
-		this.trustAllServers = trustAllServers;
 		this.sendCerts = sendCerts;
 		this.serverSSLContexts = sslContexts;
 		initializeKeyStore();
-		initializeSSLContext();
+		initializeSSLContext(trustAllServers);
 	}
 
 	/**
@@ -207,7 +205,7 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
 		return cert;
 	}
 
-	private void initializeSSLContext() throws GeneralSecurityException, IOException {
+	void initializeSSLContext(boolean trustAllServers) throws GeneralSecurityException, IOException {
 		KeyStore ks = loadKeyStore();
 		caCert = ks.getCertificate(authority.alias());
 		caPrivKey = (PrivateKey) ks.getKey(authority.alias(), authority.password());

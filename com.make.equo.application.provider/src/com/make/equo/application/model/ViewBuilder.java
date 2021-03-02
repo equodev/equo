@@ -94,6 +94,11 @@ public class ViewBuilder {
 		return optionalViewBuilder;
 	}
 
+	OptionalViewBuilder setSSLTrust(boolean trustAllServers) {
+		equoServer.setTrust(trustAllServers);
+		return optionalViewBuilder;
+	}
+
 	private void addUrlToProxyServer(String url) {
 		mainAppBuilder.withProxiedUri(url);
 	}
