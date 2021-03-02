@@ -148,6 +148,10 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	public OptionalViewBuilder trustAnySSLCert(boolean trustAllServers) {
+		return this.viewBuilder.setSSLTrust(trustAllServers);
+	}
+
 	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
 		mainAppBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;

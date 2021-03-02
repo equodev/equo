@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -56,6 +57,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 	private static EquoHttpProxyServer equoHttpProxyServer = null;
 	private EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter;
+	private CustomHostNameMitmManager customHostNameMitmManager = null;
 
 	@Override
 	@Activate
@@ -86,9 +88,10 @@ public class EquoHttpProxyServer implements IEquoServer {
 		};
 
 		try {
+			customHostNameMitmManager = new CustomHostNameMitmManager(false);
 			proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port).withTransparent(false)
 					.withFiltersSource(httpFiltersSourceAdapter).withServerResolver(serverResolver)
-					.withManInTheMiddle(new CustomHostNameMitmManager()).start();
+					.withManInTheMiddle(customHostNameMitmManager).start();
 		} catch (RootCertificateException e) {
 			e.printStackTrace();
 		}
@@ -181,6 +184,17 @@ public class EquoHttpProxyServer implements IEquoServer {
 			return true;
 		} catch (IOException | URISyntaxException e) {
 			return false; // Either timeout or unreachable or failed DNS lookup.
+		}
+	}
+
+	@Override
+	public void setTrust(boolean trustAllServers) {
+		if (customHostNameMitmManager != null) {
+			try {
+				customHostNameMitmManager.changeTrust(trustAllServers);
+			} catch (GeneralSecurityException | IOException e) {
+				logger.error("Error changing SSL trust", e);
+			}
 		}
 	}
 }

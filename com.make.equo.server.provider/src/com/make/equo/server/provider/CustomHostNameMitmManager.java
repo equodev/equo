@@ -1,5 +1,8 @@
 package com.make.equo.server.provider;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLSession;
 
@@ -13,13 +16,12 @@ import io.netty.handler.codec.http.HttpRequest;
 public class CustomHostNameMitmManager implements MitmManager {
 	private CustomBouncyCastleSslEngineSource sslEngineSource;
 
-	public CustomHostNameMitmManager() throws RootCertificateException {
-		this(new CustomAuthority());
+	public CustomHostNameMitmManager(boolean trustAllServers) throws RootCertificateException {
+		this(new CustomAuthority(), trustAllServers);
 	}
 
-	public CustomHostNameMitmManager(CustomAuthority authority) throws RootCertificateException {
+	public CustomHostNameMitmManager(CustomAuthority authority, boolean trustAllServers) throws RootCertificateException {
 		try {
-			boolean trustAllServers = true;
 			boolean sendCerts = true;
 			sslEngineSource = new CustomBouncyCastleSslEngineSource(authority, trustAllServers, sendCerts);
 		} catch (final Exception e) {
@@ -46,6 +48,10 @@ public class CustomHostNameMitmManager implements MitmManager {
 		} catch (Exception e) {
 			throw new FakeCertificateException("Creation dynamic certificate failed for " + serverHostAndPort, e);
 		}
+	}
+
+	void changeTrust(boolean trustAllServers) throws GeneralSecurityException, IOException {
+		sslEngineSource.initializeSSLContext(trustAllServers);
 	}
 
 }
