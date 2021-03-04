@@ -63,7 +63,7 @@ export class ToolbarBuilder {
       this.defineToolItem(toolitems, i, toolbar);
     }
 
-    document.body.appendChild(toolbar);
+    document.body.insertBefore(toolbar,document.body.firstChild);
   }
 
 
