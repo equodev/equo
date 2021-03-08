@@ -104,7 +104,7 @@ export default {
 
               contextMenuOptions:[
                       {title: "Open",eventHandler:function(path, tree){
-                        if (tree.editor)
+                        if (typeof tree.editor !== 'undefined')
                           tree.editor.dispose();
                         tree.editor = EquoMonaco.create(document.getElementById('editor'), path);
                       }},

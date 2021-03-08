@@ -25,4 +25,8 @@ equoPassword=bHVzaXRhbm8yMDE4
     org.apache.log4j,\
     org.bouncycastle.bcpkix,\
     org.bouncycastle.bcprov,\
-    org.xbill.dns
+    org.xbill.dns,\
+    com.make.equo.monaco,\
+    io.netty.all,\
+    org.eclipse.jface.text,\
+    org.eclipse.text
