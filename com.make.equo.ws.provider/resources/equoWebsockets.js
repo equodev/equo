@@ -7,8 +7,8 @@ window.equo = window.equo || {};
 
     const openSocket = function () {
         // Ensures only one connection is open at a time
-        if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
-            console.log('WebSocket is already opened.');
+        if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
+            Logger.debug('WebSocket is already opened.');
             return;
         }
         let wsPort = '%d';
@@ -24,12 +24,12 @@ window.equo = window.equo || {};
             if (event.data === undefined)
                 return;
 
-            console.log('event.data is...', event.data);
+            Logger.debug('event.data is...', event.data);
         };
 
-        webSocket.onmessage = function (event) {
-            console.log('event.data is...', event.data);
-            if (event.data === undefined) {
+        webSocket.onmessage = function(event){
+            Logger.debug('event.data is...', event.data);
+            if(event.data === undefined) {
                 return;
             }
             try {
@@ -48,8 +48,8 @@ window.equo = window.equo || {};
             }
         };
 
-        webSocket.onclose = function (event) {
-            console.log('event.data is...', event.data);
+        webSocket.onclose = function(event){
+            Logger.debug('event.data is...', event.data);
         };
     }();
 
@@ -95,17 +95,17 @@ window.equo = window.equo || {};
         setTimeout(
             function () {
                 if (socket.readyState === 1) {
-                    console.log('Connection is made');
-                    if (callback != null) {
+                    Logger.debug('Connection is made');
+                    if(callback != null){
                         callback();
                     }
                     return;
 
                 } else {
-                    try {
-                        openSocket();
-                    } catch (err) { }
-                    console.log('wait for connection...')
+		            try{
+		                openSocket();
+                    }catch(err){}
+                    Logger.debug('wait for connection...')
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...

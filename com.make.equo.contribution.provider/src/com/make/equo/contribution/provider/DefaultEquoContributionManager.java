@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.contribution.api.EquoContribution;
 import com.make.equo.contribution.api.IEquoContributionManager;
@@ -16,6 +18,7 @@ import com.make.equo.contribution.api.handler.ParameterizedHandler;
 
 @Component
 public class DefaultEquoContributionManager implements IEquoContributionManager {
+	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
 
 	@Reference
 	private EquoContributionResolver resolver;
@@ -27,7 +30,7 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 		try {
 			equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
 			resolve(contribution);
-			System.out.println("Equo Contribution added: " + contribution.getContributionName());
+			logger.info("Equo Contribution added: " + contribution.getContributionName());
 		} catch (IllegalStateException e) {
 			equoContributions.remove(contribution.getContributionName().toLowerCase());
 			e.printStackTrace();

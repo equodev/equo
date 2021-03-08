@@ -11,6 +11,8 @@ public interface IConstants {
 	public static final String MAIN_PART_ID = "com.make.equo.part.main";
 
 	public static final String MAIN_URL_KEY = "mainUrl";
+	
+	public static final String MAIN_URL_WS_PORT = "equoWsPort";
 
 	public static final String EQUO_HANDLER_PREFIX = "com.make.equo.handler";
 
@@ -91,5 +93,11 @@ public interface IConstants {
 	public static final String MAC_OSX = "mac";
 
 	public static final String IS_AN_EQUO_MODEL_ELEMENT = "isAnEquoModelElement";
+
+	public static final String ITEM_SHORTCUT = "itemshortcut";
+
+	public static final String ITEM_RUNNABLE = "itemrunnable";
+
+	public static final String ITEM_ACTION = "itemaction";
 
 }

@@ -9,5 +9,9 @@ window.equo = window.equo || {};
     equo.updateBrowser = function(browserParams) {
         equo.sendToWebSocketServer('updateBrowser', browserParams);
     };
+    
+    equo.addMenu = function(menuModel) {
+        equo.sendToWebSocketServer('_setMenu', menuModel);
+    };
 
 }(equo));

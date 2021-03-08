@@ -61,6 +61,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 	private String startPageRequest;
 	private List<String> proxiedUrls;
 	private List<IHttpRequestFilter> httpRequestFilters;
+	private Map<String, String> redirectResponses;
 
 	@Activate
 	public void start() {
@@ -69,8 +70,10 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 		httpRequestFilters = new ArrayList<>();
 		fileNamesToContentTypes = new Properties();
 		fileNamesToStatusCodes = new Properties();
+		redirectResponses = new HashMap<>();
 		Stream<String> lines = null;
 		try {
+			new File(getStartPagePath()).createNewFile();
 			startPageRequest = new String(Files.readAllBytes(Paths.get(getStartPagePath())));
 			fileNamesToContentTypes = loadPropertyFile(getFileNamesToContentTypesFilePath());
 			fileNamesToStatusCodes = loadPropertyFile(getFileNamesToStatusCodesFilePath());
@@ -110,8 +113,33 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			HttpResponse duplicatedResponse = (HttpResponse) fullResponse.duplicate().retain();
 			FullHttpRequest fullHttpRequest = (FullHttpRequest) originalRequest;
 			String requestUniqueId = getRequestUniqueId(fullHttpRequest);
-			saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
-			cacheOffline.put(requestUniqueId, duplicatedResponse);
+
+			handlerForRequestResponses(httpObject, fullResponse, duplicatedResponse, fullHttpRequest, requestUniqueId,
+					originalRequest);
+		}
+	}
+
+	//Save the responses in the requests where they originated, it does not matter
+	//if they are code 300
+	private void handlerForRequestResponses(HttpObject httpObject, FullHttpResponse fullResponse,
+			HttpResponse duplicatedResponse, FullHttpRequest fullHttpRequest, String requestUniqueId, HttpRequest originalRequest) {
+		requestUniqueId = requestUniqueId.replaceAll("\\?equowsport=.....$", "");
+
+		//check if redirect response 
+		if (((FullHttpResponse) httpObject).getStatus().code() >= 300 && ((FullHttpResponse) httpObject).getStatus().code() < 400) {
+			redirectResponses.put(((FullHttpResponse) httpObject).headers().get("location"), requestUniqueId);
+		}else {
+			String keyResponse = fullResponse.headers().get("X-Originating-URL");
+			//if response exist in redirect response, belongs of original request
+			if (redirectResponses.containsKey(keyResponse)) {
+				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse,
+				redirectResponses.get(keyResponse));
+				cacheOffline.put(originalRequest.headers().get(Names.HOST).replaceAll("^www.", "")+redirectResponses.get(keyResponse), duplicatedResponse);
+				redirectResponses.remove(keyResponse);
+			}else {
+				saveStartPageIfPossible(fullHttpRequest, duplicatedResponse, requestUniqueId);
+				cacheOffline.put(originalRequest.headers().get(Names.HOST).replaceAll("^www.", "")+requestUniqueId, duplicatedResponse);
+			}
 		}
 	}
 
@@ -142,7 +170,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			String requestUniqueId) {
 		Optional<String> proxiedUrl = getProxiedUrl(originalRequest);
 		if (proxiedUrl.isPresent() && isApage(httpResponse)) {
-			startPageRequest = requestUniqueId;
+			startPageRequest = originalRequest.headers().get(Names.HOST) + requestUniqueId;
 		}
 	}
 
@@ -165,18 +193,20 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			byte[] data = new byte[content.readableBytes()];
 			content.readBytes(data);
 
-			try {
-				String fileNameHash = getFileNameHash(originalRequestUniqueId);
-				File outputFile = new File(getCachePath() + File.separator + fileNameHash);
-				FileOutputStream fos = new FileOutputStream(outputFile);
-				fos.write(data);
-				fos.close();
-				if (contentTypeHeader != null) {
-					fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+			if (data.length > 0) {
+				try {
+					String fileNameHash = getFileNameHash(originalRequestUniqueId.split("\\?")[0]);
+					File outputFile = new File(getCachePath() + File.separator + fileNameHash);
+					FileOutputStream fos = new FileOutputStream(outputFile);
+					fos.write(data);
+					fos.close();
+					if (contentTypeHeader != null) {
+						fileNamesToContentTypes.put(fileNameHash, contentTypeHeader);
+					}
+					fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
+				} catch (IOException | NoSuchAlgorithmException e) {
+					// TODO Log the exception, or maybe better log the file that wasn't found
 				}
-				fileNamesToStatusCodes.put(fileNameHash, Integer.toString(code));
-			} catch (IOException | NoSuchAlgorithmException e) {
-				// TODO Log the exception, or maybe better log the file that wasn't found
 			}
 		}
 		savePropertyFile(fileNamesToContentTypes, "File Names to Content Types", getFileNamesToContentTypesFilePath());
@@ -253,12 +283,31 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			requestUniqueId = startPageRequest;
 			startPageRequest = null;
 		} else {
-			requestUniqueId = getRequestUniqueId((FullHttpRequest) originalRequest);
+			requestUniqueId = originalRequest.headers().get(Names.HOST)
+					+ getRequestUniqueId((FullHttpRequest) originalRequest);
 		}
 		try {
+			requestUniqueId = requestUniqueId.replaceAll("^www.", "").split("\\?")[0];
 			String fileNameHash = getFileNameHash(requestUniqueId);
+
 			String outputFilePath = getCachePath() + File.separator + fileNameHash;
-			FileInputStream inputStream = new FileInputStream(outputFilePath);
+			FileInputStream inputStream;
+
+			// check if file not exists
+			try {
+				inputStream = new FileInputStream(outputFilePath);
+			} catch (Exception e) {
+				ByteBuf buffer = Unpooled.wrappedBuffer("Offline response not found".getBytes());
+
+				HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
+						buffer);
+
+				HttpHeaders.setContentLength(response, buffer.readableBytes());
+				HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, "*/*");
+
+				return response;
+			}
+
 			byte[] bytes = ByteStreams.toByteArray(inputStream);
 			ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
 			String contentType = fileNamesToContentTypes.getProperty(fileNameHash);
@@ -268,7 +317,7 @@ public class EquoOfflineServerImpl implements IEquoOfflineServer {
 			cacheOffline.put(requestUniqueId, buildResponse);
 			return buildResponse;
 		} catch (NoSuchAlgorithmException e) {
-
+			e.printStackTrace();
 		}
 		return null;
 	}

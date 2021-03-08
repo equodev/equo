@@ -3,13 +3,7 @@ package com.make.equo.application.model;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
-import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
-import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
@@ -52,6 +46,13 @@ public class OptionalViewBuilder {
 
 	public OptionalViewBuilder addShortcut(String keySequence, String userEvent) {
 		return addShortcut(keySequence, null, userEvent);
+	}
+
+	public OptionalViewBuilder removeShortcut(String keySequence) {
+		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
+		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), null, null)
+				.removeShortcut(keySequence);
+		return this;
 	}
 
 	/**
@@ -122,8 +123,12 @@ public class OptionalViewBuilder {
 	}
 
 	public MenuBuilder withMainMenu(String menuLabel) {
-		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
+		inicMainMenu();
 		return new MenuBuilder(this).addMenu(menuLabel);
+	}
+
+	void inicMainMenu() {
+		mainMenu = equoApplicationBuilder.getmWindow().getMainMenu();
 	}
 
 	EquoApplicationBuilder getEquoApplicationBuilder() {
@@ -143,7 +148,11 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
-	public OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
+	public OptionalViewBuilder trustAnySSLCert(boolean trustAllServers) {
+		return this.viewBuilder.setSSLTrust(trustAllServers);
+	}
+
+	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
 		mainAppBuilder.withBaseHtmlResource(baseHtmlFile);
 		return this;
 	}

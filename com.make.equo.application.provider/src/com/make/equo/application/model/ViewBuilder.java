@@ -1,5 +1,7 @@
 package com.make.equo.application.model;
 
+import static com.make.equo.application.util.IConstants.MAIN_URL_KEY;
+import static com.make.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 import static com.make.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
 import java.net.URISyntaxException;
@@ -20,6 +22,7 @@ import com.make.equo.application.util.IConstants;
 import com.make.equo.contribution.api.EquoContributionBuilder;
 import com.make.equo.contribution.api.resolvers.EquoGenericURLResolver;
 import com.make.equo.server.api.IEquoServer;
+import com.make.equo.ws.api.IEquoWebSocketService;
 
 @Component(service = ViewBuilder.class)
 public class ViewBuilder {
@@ -31,15 +34,18 @@ public class ViewBuilder {
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private EquoContributionBuilder mainAppBuilder;
-	
+
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private EquoContributionBuilder offlineSupportBuilder;
-	
+
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoServer equoServer;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
 	private volatile AnalyticsService analyticsService;
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+	private IEquoWebSocketService websocketService;
 
 	private OptionalViewBuilder optionalViewBuilder;
 
@@ -47,7 +53,9 @@ public class ViewBuilder {
 		mainAppBuilder.withContributionName("webwrapper");
 		this.url = normalizeUrl(url);
 		addUrlToProxyServer(this.url);
-		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
+		equoServer.addUrl(this.url);
+		part.getProperties().put(MAIN_URL_KEY, this.url);
+		part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
 		return optionalViewBuilder;
 	}
 
@@ -55,6 +63,7 @@ public class ViewBuilder {
 		mainAppBuilder.withContributionName("plainequoapp");
 		this.url = "http://plainequoapp/";
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
+		part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
 		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
 	}
 
@@ -79,8 +88,14 @@ public class ViewBuilder {
 		mainAppBuilder.withURLResolver(equoAppUrlResolver);
 		offlineSupportBuilder.withContributionName(OFFLINE_SUPPORT_CONTRIBUTION_NAME);
 		offlineSupportBuilder.withURLResolver(equoAppUrlResolver);
-		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, mainAppBuilder, offlineSupportBuilder, equoApp);
+		optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService, mainAppBuilder,
+				offlineSupportBuilder, equoApp);
 
+		return optionalViewBuilder;
+	}
+
+	OptionalViewBuilder setSSLTrust(boolean trustAllServers) {
+		equoServer.setTrust(trustAllServers);
 		return optionalViewBuilder;
 	}
 

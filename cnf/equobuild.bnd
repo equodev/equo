@@ -4,20 +4,11 @@ javac.compliance:       1.8
 javac.debug:            on
 
 -plugin.1.Equo: \
-    aQute.bnd.repository.osgi.OSGiRepository; \
+    aQute.bnd.repository.p2.provider.P2Repository; \
         name = Equo; \
-        locations = "https://dl.maketechnology.io/framework/rls/repo/index.xml.gz"; \
+        url = "https://dl.maketechnology.io/framework/VERSIONPLACEHOLDER/repo/"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
-
-#-plugin.1.Equo: \
-#    aQute.bnd.repository.osgi.OSGiRepository; \
-#        name = Equo; \
-#        locations = "file:///home/make2019/equo-framework-master/ws/git/cnf/release/index.xml.gz"; \
-#        poll.time = -1; \
-#        cache = ~/.bnd/cache/equo
-
-
 
 #-plugin.1.Equo: \
 #    aQute.bnd.repository.p2.provider.P2Repository; \
@@ -28,28 +19,28 @@ javac.debug:            on
 #        locations = "file:///home/guille/ws/equo/framework/cnf/release/index.xml.gz"; \
 #        poll.time = -1
 
-plugindir: ${workspace}/cnf/cache/plugins
+#plugindir: ${workspace}/cnf/cache/plugins
 
 #-pluginpath:\
 #    ${plugindir}/publisher.jar; \
 #        url="file:///home/guille/ws/equo/bnd.p2/com.make.bnd.p2release/generated/distributions/executable/publisher.jar", \
-#    ${plugindir}/biz.aQute.repository-3.5.0.jar; \
-#        url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
--pluginpath:\
-    ${plugindir}/publisher-0.1.6.jar; \
-        url="https://dl.maketechnology.io/bndp2/rls/publisher-0.1.6.jar", \
-    ${plugindir}/biz.aQute.repository-3.5.0.jar; \
-        url="https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/3.5.0/biz.aQute.repository-3.5.0.jar"
+#    ${plugindir}/biz.aQute.repository-5.0.1.jar; \
+#        url="http://central.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/5.0.1/biz.aQute.repository-5.0.1.jar"
+#-pluginpath:\
+#    ${plugindir}/publisher-0.1.6.jar; \
+#        url="https://dl.maketechnology.io/bndp2/rls/publisher-0.1.6.jar", \
+#    ${plugindir}/biz.aQute.repository-5.0.1.jar; \
+#        url="https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.repository/5.0.1/biz.aQute.repository-5.0.1.jar"
 
 -plugin.5.Release: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
         name = Release; \
         local = ${build}/release; \
-        type = P2|R5
+        type = R5
         
--plugin.6.P2Repo: \
-    com.make.bnd.p2release.P2RepoContentProvider; \
-        name = Release
+#-plugin.6.P2Repo: \
+#    com.make.bnd.p2release.P2RepoContentProvider; \
+#        name = Release
 
 -releaserepo: Release
 -baselinerepo: Release

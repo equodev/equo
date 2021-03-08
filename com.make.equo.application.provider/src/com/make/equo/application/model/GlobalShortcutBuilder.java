@@ -47,16 +47,26 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 		globalKeyBinding.getParameters().add(userEventParameter);
 
 		MBindingTable parentPartBindingTable = equoApplicationBuilder.getViewBuilder().getBindingTable();
+		removeShortcutFromBindingTable(shortcut, parentPartBindingTable.getBindings());
 		parentPartBindingTable.getBindings().add(globalKeyBinding);
 	}
 
-	public void addGlobalShortcutToExistingCommand(MCommand command, String shortcut) {
-		if (!shortcut.equals("")) {
-			MKeyBinding globalKeyBinding = createKeyBinding(command, shortcut);
-			Optional<MBindingTable> bindingTable = getDefaultBindingTable(equoApplicationBuilder);
-			if (bindingTable.isPresent()) {
-				bindingTable.get().getBindings().add(globalKeyBinding);
+	public void removeShortcut(String shortcut) {
+		MBindingTable parentPartBindingTable = equoApplicationBuilder.getViewBuilder().getBindingTable();
+		removeShortcutFromBindingTable(shortcut, parentPartBindingTable.getBindings());
+		removeShortcutFromBindingTable(shortcut, getDefaultBindingTable(equoApplicationBuilder).get().getBindings());
+	}
+
+	private void removeShortcutFromBindingTable(String shortcut, List<MKeyBinding> bindings) {
+		MKeyBinding bindingToDelete = null;
+		for (MKeyBinding binding : bindings) {
+			if (binding.getKeySequence().equals(shortcut)) {
+				bindingToDelete = binding;
+				break;
 			}
+		}
+		if (bindingToDelete != null) {
+			bindings.remove(bindingToDelete);
 		}
 	}
 

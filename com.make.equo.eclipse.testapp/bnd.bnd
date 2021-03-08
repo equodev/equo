@@ -13,7 +13,6 @@ bgColor=#0000FF
 equoUsername='YWRtaW4='
 equoPassword=bHVzaXRhbm8yMDE4
 eclipseApplication=org.eclipse.ui.ide.workbench
--buildpath.editor: com.make.equo.monaco;version=latest
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.ui.ide.application)',\
@@ -25,14 +24,15 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.ui)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.apt.core)',\
 	osgi.identity;filter:='(osgi.identity=org.eclipse.jdt.apt.ui)',\
-
+	osgi.identity;filter:='(osgi.identity=org.apache.commons.cli)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.commons.codec)',\
+	osgi.identity;filter:='(osgi.identity=org.xbill.dns)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.log4j)',\
+	osgi.identity;filter:='(osgi.identity=org.bouncycastle.bcpkix)',\
+	osgi.identity;filter:='(osgi.identity=org.bouncycastle.bcprov)'
 -runbundles: \
 	bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
-	com.github.jnr.ffi;version='[2.1.7,2.1.8)',\
-	com.github.jnr.jffi;version='[1.2.15,1.2.16)',\
-	com.github.jnr.jffi.native;version='[1.2.15,1.2.16)',\
 	com.google.gson;version='[2.8.2,2.8.3)',\
-	com.google.guava;version='[20.0.0,20.1.0)',\
 	com.ibm.icu;version='[64.2.0,64.2.1)',\
 	com.make.equo.aer.api;version=snapshot,\
 	com.make.equo.aer.internal.api;version=snapshot,\
@@ -44,34 +44,26 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	com.make.equo.analytics.internal.provider;version=snapshot,\
 	com.make.equo.application.client;version=snapshot,\
 	com.make.equo.application.provider;version=snapshot,\
-	com.make.equo.aspects;version=snapshot,\
 	com.make.equo.contribution.media.provider;version=snapshot,\
-	com.make.equo.eclipse.monaco.editor;version=snapshot,\
-	com.make.equo.monaco;version=snapshot,\
 	com.make.equo.renderers;version=snapshot,\
 	com.make.equo.server.api;version=snapshot,\
 	com.make.equo.server.offline.api;version=snapshot,\
 	com.make.equo.server.offline.provider;version=snapshot,\
-	com.make.equo.server.provider;version=snapshot,\
 	com.make.equo.ui.helper.provider;version=snapshot,\
 	com.make.equo.ws.api;version=snapshot,\
 	com.make.equo.ws.provider;version=snapshot,\
 	com.squareup.moshi;version='[1.4.0,1.4.1)',\
 	com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
-	com.squareup.okhttp3.okhttp;version='[3.9.1,3.9.2)',\
-	com.squareup.okio;version='[1.13.0,1.13.1)',\
 	com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
 	com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
-	jnr.x86asm;version='[1.0.2,1.0.3)',\
 	org.apache.batik.css;version='[1.11.0,1.11.1)',\
 	org.apache.batik.util;version='[1.11.0,1.11.1)',\
 	org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
 	org.apache.felix.scr;version='[2.1.14,2.1.15)',\
 	org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
-	org.aspectj.runtime;version='[1.9.6,1.9.7)',\
 	org.eclipse.compare;version='[3.7.800,3.7.801)',\
 	org.eclipse.compare.core;version='[3.6.700,3.6.701)',\
 	org.eclipse.core.commands;version='[3.9.600,3.9.601)',\
@@ -150,13 +142,7 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.eclipse.ui.workbench;version='[3.117.0,3.117.1)',\
 	org.eclipse.ui.workbench.texteditor;version='[3.14.0,3.14.1)',\
 	org.influxdb.java;version='[2.9.0,2.9.1)',\
-	org.java-websocket.Java-WebSocket;version='[1.3.6,1.3.7)',\
-	org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
-	org.objectweb.asm;version='[5.0.3,5.0.4)',\
-	org.objectweb.asm.analysis;version='[5.0.3,5.0.4)',\
-	org.objectweb.asm.commons;version='[5.0.3,5.0.4)',\
-	org.objectweb.asm.tree;version='[5.0.3,5.0.4)',\
-	org.objectweb.asm.util;version='[5.0.3,5.0.4)',\
+	Java-WebSocket;version='[1.5.1,1.5.2)',\
 	org.slf4j.api;version='[1.7.10,1.7.11)',\
 	org.tukaani.xz;version='[1.8.0,1.8.1)',\
 	org.w3c.css.sac;version='[1.3.1,1.3.2)',\
@@ -179,4 +165,30 @@ eclipseApplication=org.eclipse.ui.ide.workbench
 	org.eclipse.ui.intro;version='[3.5.800,3.5.801)',\
 	com.make.equo.logging.client.api;version=snapshot,\
 	com.make.equo.logging.client.provider;version=snapshot,\
-	org.eclipse.equinox.weaving.hook;version='[1.2.200,1.2.201)'
+	org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)',\
+	com.google.guava;version='[20.0.0,20.0.1)',\
+	com.make.equo.contribution.api;version=snapshot,\
+	com.make.equo.contribution.provider;version=snapshot,\
+	com.make.equo.filesystem.api;version=snapshot,\
+	com.make.equo.filesystem.provider;version=snapshot,\
+	com.make.equo.server.provider;version='[0.2.0,0.2.1)',\
+	com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
+	com.squareup.okio;version='[1.11.0,1.11.1)',\
+	org.apache.batik.constants;version='[1.11.0,1.11.1)',\
+	org.apache.batik.i18n;version='[1.11.0,1.11.1)',\
+	org.apache.commons.io;version='[2.6.0,2.6.1)',\
+	org.apache.commons.logging;version='[1.2.0,1.2.1)',\
+	org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
+	org.eclipse.e4.ui.dialogs;version='[1.1.600,1.1.601)',\
+	org.littleshoot.littleproxy;version='[1.1.2,1.1.3)',\
+	org.w3c.dom.events;version='[3.0.0,3.0.1)',\
+	org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
+	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
+	org.apache.commons.cli;version='[1.2.0,1.2.1)',\
+	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
+	org.apache.commons.codec;version='[1.10.0,1.10.1)',\
+	org.apache.log4j;version='[1.2.15,1.2.16)',\
+	org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
+	org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
+	org.xbill.dns
+-runproperties: logger.level=debug

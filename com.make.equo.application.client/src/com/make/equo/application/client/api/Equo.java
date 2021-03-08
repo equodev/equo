@@ -4,11 +4,14 @@ import java.io.File;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.client.EquoBundleManager;
 
 public class Equo {
+	protected static final Logger logger = LoggerFactory.getLogger(Equo.class);
 
 	public static void start(Class<?> equoApplicationClazz) {
 		if (!IEquoApplication.class.isAssignableFrom(equoApplicationClazz)) {
@@ -32,7 +35,7 @@ public class Equo {
 		try {
 			EclipseStarter.run(args, null);
 		} catch (Exception e) {
-			System.out.println("Failed to start Equo Application...");
+			logger.error("Failed to start Equo Application...");
 			e.printStackTrace();
 		}
 	}

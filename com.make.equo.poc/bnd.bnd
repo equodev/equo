@@ -19,4 +19,11 @@ equoPassword=bHVzaXRhbm8yMDE4
 	com.make.equo.poc.payloads
 
 -runbundles.poc: \
-    com.make.equo.widgets.shell 
+    com.make.equo.widgets.shell ,\
+    org.apache.commons.cli,\
+    org.apache.commons.codec,\
+    org.apache.commons.lang,\
+    org.apache.log4j,\
+    org.bouncycastle.bcpkix,\
+    org.bouncycastle.bcprov,\
+    org.xbill.dns

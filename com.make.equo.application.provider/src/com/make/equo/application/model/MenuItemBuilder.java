@@ -4,6 +4,7 @@ import static com.make.equo.application.util.OSUtils.isMac;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.commands.impl.CommandsFactoryImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
@@ -14,6 +15,11 @@ import com.make.equo.application.util.ICommandConstants;
 import com.make.equo.application.util.IConstants;
 
 public class MenuItemBuilder extends ItemBuilder {
+	private static MCommand disabledCommand;
+	static {
+		disabledCommand = CommandsFactoryImpl.eINSTANCE.createCommand();
+		disabledCommand.setElementId("DISABLEDCOMMAND");
+	}
 
 	private MenuBuilder menuBuilder;
 
@@ -38,6 +44,7 @@ public class MenuItemBuilder extends ItemBuilder {
 		String menuItemId = parentMenu.getElementId() + "." + label.replaceAll("\\s+", "").toLowerCase();
 		newMenuItem.setElementId(menuItemId);
 		newMenuItem.setLabel(label);
+		newMenuItem.setCommand(disabledCommand);
 		parentMenu.getChildren().add(newMenuItem);
 		return newMenuItem;
 	}

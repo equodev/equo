@@ -10,6 +10,8 @@ import java.net.URLConnection;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.BatchOptions;
@@ -24,6 +26,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -39,6 +43,7 @@ import ch.hsr.geohash.GeoHash;
 
 @Component
 public class AnalyticsServiceImpl implements AnalyticsService {
+	protected static final Logger logger = LoggerFactory.getLogger(AnalyticsServiceImpl.class);
 
 	private static final String VALUE_FIELD = "value";
 	private static final String INFO_JSON_URL = "https://ipapi.co/json"; 
@@ -58,11 +63,25 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	private static boolean enabled = false;
 
+	private JsonObject systemInfo = null;
+
+	private ExecutorService execService = Executors.newFixedThreadPool(1);
+
+	private static final long TIME_TO_TRY_RECONNECT = 300000;
+
+	private enum ConnectionResult{
+		CONNECTED, UNDEFINED_PARAMETERS, FAILED_CONNECT;
+	}
+
 	@Activate
 	public void start() {
 		this.appName = getEquoAppName();
 		this.appVersion = getEquoAppVersion();
+		handlerConnect();
+	}
 
+	private ConnectionResult connect() {
+		ConnectionResult result = ConnectionResult.CONNECTED;
 		String equoInfluxdbUrl = getInfluxdbProperty("equo_influxdb_url");
 		String equoUsername = getInfluxdbProperty("equo_username");
 		String equoPassword = getInfluxdbProperty("equo_password");
@@ -71,21 +90,54 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 			equoUsername = decodeInfluxdbProperty(equoUsername);
 			equoPassword = decodeInfluxdbProperty(equoPassword);
-			this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
-			influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
 			this.gson = new Gson();
-			influxDB.enableBatch(BatchOptions.DEFAULTS);
-			connected = true;
-		} else {
-			System.out.println("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
-		}
+			try {
+				this.influxDB = InfluxDBFactory.connect(equoInfluxdbUrl, equoUsername, equoPassword);
+			} catch (Exception e) {
+				this.influxDB = null;
+				result = ConnectionResult.FAILED_CONNECT;
+			}
 
+			if (influxDB != null) {
+				influxDB.setDatabase(IAnalyticsConstants.INFLUXDB_DATABASE_NAME);
+				influxDB.enableBatch(BatchOptions.DEFAULTS);
+				connected = true;
+			}
+		} else {
+			logger.error("Connection to InfluxDB failed: InfluxDB parameters must be defined.");
+			connected = false;
+			result = ConnectionResult.UNDEFINED_PARAMETERS;
+		}
+		return result;
+	}
+
+	//If analytics is enabled and failed to connect, try to reconnect each TIME_TO_TRY_RECONNECT time.
+	private void handlerConnect() {
+		new Thread() {
+			public void run() {
+				while(true) {
+					if (connect() == ConnectionResult.FAILED_CONNECT) {
+						logger.error("Analytics are not working because InfluxDB can't connect");
+						
+						try {
+							sleep(TIME_TO_TRY_RECONNECT);
+						} catch (InterruptedException e) {
+						}
+						if (!enabled){
+							logger.error("Analytics are not enabled by the Client App");
+							return;
+						}
+					}else
+						return;
+				}
+			}
+		}.start();
 	}
 
 	private String getInfluxdbProperty(String propertyName) {
 		String influxdbProperty = System.getProperty(propertyName);
 		if (influxdbProperty == null) {
-			System.out.println("The " + propertyName + " Influxdb property of the Equo Platform must be defined.");
+			logger.error("The " + propertyName + " Influxdb property of the Equo Platform must be defined.");
 		}
 		return influxdbProperty;
 	}
@@ -125,18 +177,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 	@Override
 	public void registerEvent(String eventKey, double value, JsonObject segmentation) {
-		writeInflux(eventKey, value, segmentation);
+		execService.submit(() -> writeInflux(eventKey, value, segmentation));
 	}
 
 	@Override
 	public void registerEvent(String eventKey, double value, String segmentationAsString) {
-		JsonParser parser = new JsonParser();
-		JsonObject segmentation = parser.parse(segmentationAsString).getAsJsonObject();
-		writeInflux(eventKey, value, segmentation);
+		execService.submit(() -> {
+			JsonParser parser = new JsonParser();
+			JsonObject segmentation = parser.parse(segmentationAsString).getAsJsonObject();
+			writeInflux(eventKey, value, segmentation);
+		});
 	}
 
 	private void writeInflux(String eventKey, double value) {
-		writeInflux(eventKey, value, new JsonObject());
+		execService.submit(() -> writeInflux(eventKey, value, new JsonObject()) );
 	}
 	
 	private void writeInflux(String eventKey, double value, JsonObject segmentation) {
@@ -144,8 +198,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			String segmentationAsString = gson.toJson(addSystemInfo(segmentation));
 			Point build = buildBasicLog(eventKey, value).tag(getSegmentation(segmentationAsString)).build();
 			influxDB.write(build);
-		} else {
-			logMessage();
 		}
 	}
 
@@ -178,7 +230,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	private void registerSessionTime() {
 		long endTime = System.currentTimeMillis();
 		long sessionTime = endTime - appStartTime;
-		System.out.println("Total execution time: " + sessionTime);
+		logger.info("Total execution time: " + sessionTime);
 		registerEvent(IAnalyticsEventsNames.SESSION_TIME, sessionTime);
 	}
 
@@ -189,6 +241,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	}
 
 	private JsonObject addSystemInfo(JsonObject json) {
+		if ((systemInfo != null))
+			return systemInfo;
+
 		json.addProperty("javaVendor", System.getProperty("java.vendor"));
 		json.addProperty("javaVersion", System.getProperty("java.version"));
 		json.addProperty("country", System.getProperty("user.country"));
@@ -197,6 +252,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		json.addProperty("osVersion", System.getProperty("os.version"));
 
 		appendGeohash(json);
+		systemInfo = json;
 		return json;
 	}
 
@@ -217,14 +273,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	@Override
 	public boolean isEnabled() {
 		return enabled && connected;
-	}
-
-	private void logMessage() {
-		if (!enabled) {
-			System.out.println("Analytics are not enabled by the Client App");
-		} else {
-			System.out.println("Analytics are not working because InfluxDB is not connected");
-		}
 	}
 	
 	private Optional<JsonObject> getUserInfoJson() {

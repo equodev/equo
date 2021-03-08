@@ -1,50 +1,104 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
+Bundle-ActivationPolicy:
 
--include ${build}/../com.make.equo.testing.common/testing.bnd
+-include: https://testing-core.ams3.digitaloceanspaces.com/0.2.0/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/0.2.0/testbundlecoverage.bnd
 
 -buildpath: \
-	com.make.equo.application.provider;version=latest,\
-	com.make.equo.renderers;version=latest,\
-	com.make.equo.ws.api;version=latest,\
-	com.make.equo.testing.common;version=latest,\
-	org.eclipse.e4.ui.model.workbench,\
-	org.eclipse.e4.ui.workbench.renderers.swt,\
-	org.eclipse.e4.ui.workbench,\
-	org.eclipse.e4.ui.workbench.swt,\
-	org.eclipse.emf.common,\
-	org.eclipse.emf.ecore,\
-	org.eclipse.emf.ecore.xmi,\
-	org.java-websocket.Java-WebSocket,\
-	org.mockito.mockito-all,\
-	org.awaitility,\
-	
+    com.make.equo.application.provider;version=latest,\
+    com.make.equo.renderers;version=latest,\
+    com.make.equo.ws.api;version=latest,\
+    com.make.equo.testing.common;version=latest,\
+    org.eclipse.e4.ui.model.workbench,\
+    org.eclipse.e4.ui.workbench.renderers.swt,\
+    org.eclipse.e4.ui.workbench,\
+    org.eclipse.e4.ui.workbench.swt,\
+    org.eclipse.emf.common,\
+    org.eclipse.emf.ecore,\
+    org.eclipse.emf.ecore.xmi,\
+    Java-WebSocket,\
+    org.mockito.mockito-all,\
+    org.awaitility
+    
 -privatepackage: \
-	com.make.equo.builders.mocks,\
-	com.make.equo.builders.tests,\
-	com.make.equo.builders.tests.util
--runrequires: bnd.identity;version='latest';id='com.make.equo.application.provider'
-
--runbundles.components: \
-    com.make.equo.ws.provider;version=latest,\
-    com.make.equo.aer.provider;version=latest,\
-    com.make.equo.analytics.internal.provider;version=latest,\
+    com.make.equo.builders.mocks,\
+    com.make.equo.builders.tests,\
+    com.make.equo.builders.tests.util
+-runrequires: \
+    osgi.identity;filter:='(osgi.identity=com.make.equo.ws.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.analytics.internal.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.aer.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.server.provider)',\
+    osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.1.14))',\
+    osgi.identity;filter:='(osgi.identity=com.make.equo.builders.tests)'
 
 -runbundles: \
-	com.google.gson;version='[2.8.2,2.8.3)',\
-	com.make.equo.renderers; version=latest,\
-	com.make.equo.contribution.api;version=latest,\
-	com.make.equo.contribution.provider;version=latest,\
-	com.make.equo.testing.common;version=latest,\
-	org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\
-	slf4j.api;version='[1.7.25,1.7.26)',\
-	org.influxdb.java;version='[2.9.0,2.9.1)',\
-	com.squareup.moshi;version='[1.4.0,1.4.1)',\
-	com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
-	com.squareup.okio;version='[1.11.0,1.11.1)',\
+    com.google.gson;version='[2.8.2,2.8.3)',\
+    org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\
+    slf4j.api;version='[1.7.25,1.7.26)',\
+    org.influxdb.java;version='[2.9.0,2.9.1)',\
+    com.squareup.moshi;version='[1.4.0,1.4.1)',\
+    com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
+    com.squareup.okio;version='[1.11.0,1.11.1)',\
     com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
     com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
     com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
     org.mockito.mockito-all;version='[1.10.19,1.10.20)',\
-    org.awaitility,\
-    org.hamcrest,\
-	
+    Java-WebSocket;version='[1.5.1,1.5.2)',\
+    assertj-core;version='[3.15.0,3.15.1)',\
+    ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
+    ch.qos.logback.core;version='[1.1.2,1.1.3)',\
+    ch.qos.logback.slf4j;version='[1.1.2,1.1.3)',\
+    com.google.guava;version='[20.0.0,20.0.1)',\
+    com.ibm.icu;version='[64.2.0,64.2.1)',\
+    com.make.equo.aer.api;version=snapshot,\
+    com.make.equo.aer.internal.api;version=snapshot,\
+    com.make.equo.aer.provider;version=snapshot,\
+    com.make.equo.analytics.internal.api;version=snapshot,\
+    com.make.equo.analytics.internal.provider;version=snapshot,\
+    com.make.equo.application.provider;version=snapshot,\
+    com.make.equo.builders.tests;version=snapshot,\
+    com.make.equo.renderers;version=latest,\
+    com.make.equo.contribution.api;version=latest,\
+    com.make.equo.contribution.provider;version=latest,\
+    com.make.equo.server.api;version=snapshot,\
+    com.make.equo.server.offline.api;version=snapshot,\
+    com.make.equo.server.provider;version=snapshot,\
+    com.make.equo.testing.common;version=latest,\
+    com.make.equo.testing.common.internal;version=latest,\
+    com.make.equo.ui.helper.provider;version=snapshot,\
+    com.make.equo.ws.api;version=snapshot,\
+    com.make.equo.ws.provider;version=snapshot,\
+    io.netty.all;version='[4.0.44,4.0.45)',\
+    javax.inject;version='[1.0.0,1.0.1)',\
+    org.apache.batik.constants;version='[1.11.0,1.11.1)',\
+    org.apache.batik.css;version='[1.11.0,1.11.1)',\
+    org.apache.batik.i18n;version='[1.11.0,1.11.1)',\
+    org.apache.batik.util;version='[1.11.0,1.11.1)',\
+    org.apache.commons.cli;version='[1.2.0,1.2.1)',\
+    org.apache.commons.codec;version='[1.10.0,1.10.1)',\
+    org.apache.commons.io;version='[2.6.0,2.6.1)',\
+    org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
+    org.apache.commons.lang;version='[2.6.0,2.6.1)',\
+    org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
+    org.apache.commons.logging;version='[1.2.0,1.2.1)',\
+    org.apache.felix.scr;version='[2.1.14,2.1.15)',\
+    org.apache.httpcomponents.httpcore;version='[4.4.10,4.4.11)',\
+    org.apache.log4j;version='[1.2.15,1.2.16)',\
+    org.apache.servicemix.bundles.junit;version='[4.12.0,4.12.1)',\
+    org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
+    org.awaitility;version='[4.0.2,4.0.3)',\
+    org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
+    org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
+    org.hamcrest;version='[2.2.0,2.2.1)',\
+    org.w3c.css.sac;version='[1.3.1,1.3.2)',\
+    org.w3c.dom.events;version='[3.0.0,3.0.1)',\
+    org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
+    org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
+    org.xbill.dns;version='[2.0.8,2.0.9)'
+    
+-runblacklist: \
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt.osgi)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.jface)',\
+    osgi.identity;filter:='(osgi.identity=osgi.cmpn)'
+    

@@ -1,0 +1,5 @@
+.gradle/
+lib/
+node_modules/
+resources/
+littleproxy*

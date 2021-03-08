@@ -1,7 +1,9 @@
 package com.make.equo.application.parts;
 
+import static com.make.equo.application.util.IConstants.MAIN_URL_KEY;
+import static com.make.equo.application.util.IConstants.MAIN_URL_WS_PORT;
+
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -10,8 +12,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
-
-import com.make.equo.application.util.IConstants;
 
 public class SinglePagePart {
 
@@ -34,20 +34,14 @@ public class SinglePagePart {
 
 	@PostConstruct
 	public void createControls(Composite parent) {
-		String equoAppUrl = thisPart.getProperties().get(IConstants.MAIN_URL_KEY);
+		String equoAppUrl = thisPart.getProperties().get(MAIN_URL_KEY);
+		String equoWsPort = thisPart.getProperties().get(MAIN_URL_WS_PORT);
 		if (equoAppUrl != null) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(GridLayoutFactory.fillDefaults().create());
 			browser = new Browser(composite, SWT.NONE);
-			browser.setUrl(equoAppUrl);
+			browser.setUrl(equoAppUrl + String.format("?equowsport=%s", equoWsPort));
 			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		}
-	}
-
-	@PreDestroy
-	public void destroy() {
-		if (browser != null) {
-			browser.dispose();
 		}
 	}
 

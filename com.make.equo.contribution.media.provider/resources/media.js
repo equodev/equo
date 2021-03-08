@@ -57,10 +57,10 @@ window.equo = window.equo || {};
    */
   equo.playVideoWhenClick = (domElement) => {
     $(document).on('click', domElement, function (event) {
-      console.log('this is... ', this);
+      Logger.debug('this is... ', this);
       if (typeof getCurrentMediaTitleFunction !== 'undefined') {
         let mediaTitle = getCurrentMediaTitleFunction(this);
-        console.log('media playing is... ', mediaTitle);
+        Logger.debug('media playing is... ', mediaTitle);
         event.preventDefault();
         equo.registerEvent({
           key: 'movies_played',

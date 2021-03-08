@@ -1,0 +1,33 @@
+apply plugin: "com.moowork.node"
+
+task yarnPublish(type: YarnTask) {
+  dependsOn yarn_install
+  args = ['run', 'publishFromPackage']
+}
+
+yarn_install {
+  doFirst {
+    mkdir 'node_modules'
+  }
+  inputs.files {
+    project.file('package.json')
+    project.file('yarn.lock')
+  }
+  outputs.dir {
+    project.file('node_modules')
+  }
+  outputs.cacheIf {
+    true
+  }
+  args = ['--network-timeout', '1000000']
+}
+
+node {
+  download = true
+  version = node_version
+  yarnVersion = yarn_version
+}
+
+processResources {
+  from yarn_install
+}

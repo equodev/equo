@@ -14,6 +14,8 @@ public interface IEquoServer {
 
 	void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter);
 
+	void setTrust(boolean trustAllServers);
+
 	boolean isAddressReachable(String appUrl);
 
 }

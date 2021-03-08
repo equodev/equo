@@ -22,19 +22,14 @@ import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
-import org.eclipse.swt.widgets.Display;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.handlers.ParameterizedCommandRunnable;
 import com.make.equo.application.handlers.filesystem.*;
@@ -43,10 +38,11 @@ import com.make.equo.application.util.IConstants;
 import com.make.equo.contribution.api.IEquoContributionManager;
 import com.make.equo.contribution.api.handler.ParameterizedHandler;
 import com.make.equo.ws.api.IEquoEventHandler;
+import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component(service = EquoApplicationBuilder.class)
 public class EquoApplicationBuilder {
-
+	private static EquoApplicationBuilder currentBuilder;
 	private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
 	private MApplication mApplication;
@@ -56,19 +52,16 @@ public class EquoApplicationBuilder {
 	private EquoApplicationModel equoApplicationModel;
 	private String applicationName;
 	private IEquoEventHandler equoEventHandler;
-
-	@Activate
-	private void start() {
-		System.setProperty("swt.chromium.args",
-				"--proxy-server=localhost:9896;--ignore-certificate-errors;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1");
-	}
+	private OptionalViewBuilder optionalViewBuilder;
 
 	public OptionalViewBuilder webWrapper(String url) {
-		return this.getViewBuilder().withSingleView(url);
+		optionalViewBuilder = this.getViewBuilder().withSingleView(url);
+		return optionalViewBuilder;
 	}
 
 	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
-		return this.getViewBuilder().withBaseHtml(baseHtmlFile);
+		optionalViewBuilder = this.getViewBuilder().withBaseHtml(baseHtmlFile);
+		return optionalViewBuilder;
 	}
 
 	/**
@@ -80,6 +73,7 @@ public class EquoApplicationBuilder {
 	 * @return
 	 */
 	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel, IEquoApplication equoApp) {
+		currentBuilder = this;
 		this.equoApplicationModel = equoApplicationModel;
 		this.mApplication = this.equoApplicationModel.getMainApplication();
 		this.mWindow = (MTrimmedWindow) getmApplication().getChildren().get(0);
@@ -176,7 +170,25 @@ public class EquoApplicationBuilder {
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
 
 		addAppLevelCommands(getmApplication());
-		listenForCommands();
+
+		getmApplication().getBindingTables().add(mainWindowBindingTable);
+		configureJavascriptApi();
+	}
+
+	private void configureJavascriptApi() {
+		equoEventHandler.on("_setMenu", (JsonPayloadEquoRunnable) payload -> {
+
+			CustomDeserializer deserializer = new CustomDeserializer();
+			deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
+			deserializer.registerMenuType(EquoMenuItemSeparator.CLASSNAME, EquoMenuItemSeparator.class);
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(Menu.class, deserializer).create();
+			gson.fromJson(payload, Menu.class).setApplicationMenu();
+		});
+
+		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
+			equoEventHandler.send("_doGetMenu", Menu.getActiveMenu().serialize());
+		});
 	}
 
 	private void addAppLevelCommands(MApplication mApplication) {
@@ -333,6 +345,14 @@ public class EquoApplicationBuilder {
 
 	private boolean isAnEclipseBasedApp() {
 		return ECLIPSE_RCP_APP_ID.equals(System.getProperty("eclipse.application"));
+	}
+
+	OptionalViewBuilder getOptionalViewBuilder() {
+		return optionalViewBuilder;
+	}
+
+	static EquoApplicationBuilder getCurrentBuilder() {
+		return currentBuilder;
 	}
 
 }

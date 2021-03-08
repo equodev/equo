@@ -1,0 +1,23 @@
+{
+    "name": "@equo/analytics",
+    "version": "0.1.0",
+    "description": "Logging API for usage within the Equo Framework",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "dependencies": {
+        "@equo/websocket": "^0.1.1"
+    },
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc"
+    }
+}

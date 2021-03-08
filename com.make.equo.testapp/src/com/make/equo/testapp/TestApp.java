@@ -9,12 +9,29 @@ import org.osgi.service.component.annotations.Component;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.model.EquoApplicationBuilder;
+import com.make.equo.application.model.Menu;
 
 @Component
 public class TestApp implements IEquoApplication {
 
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
+		final Menu model1 = Menu.create();
+		final Menu model2 = Menu.create();
+
+		model1.withMainMenu("Make Technology")
+			.addMenuItem("Change Menu").onClick(() -> model2.setApplicationMenu())
+			.addMenuItem("Contact Us")
+		.withMainMenu("About")
+			.addMenuItem("About");
+
+		model2.withMainMenu("Make Technology")
+		.addMenuItem("Change Menu").onClick(() -> model1.setApplicationMenu())
+		.addMenuItem("Contact Us")
+		.withMainMenu("Products")
+			.addMenuItem("Chromium")
+			.addMenuItem("Equo");
+
 		try {
 
 			return appBuilder.plainApp("index.html").enableAnalytics()
@@ -68,7 +85,26 @@ public class TestApp implements IEquoApplication {
 								e.printStackTrace();
 							}
 						}
-					}).start();
+					}).withMainMenu("Menu Test").addMenuItem("Change menu").onClick(new Runnable() {
+
+						@Override
+						public void run() {
+							model1.setApplicationMenu();
+						}
+					}).addMenuItem("Open New Browser").onClick(new Runnable() {
+						
+						@Override
+						public void run() {
+							IEquoApplication.openBrowser("https://www.maketechnology.io", "test", "left");
+						}
+					}).addMenuItem("Update Browser").onClick(new Runnable() {
+						
+						@Override
+						public void run() {
+							IEquoApplication.updateBrowser("https://www.linkedin.com/company/make-technology", "test");
+						}
+					})
+					.start();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -96,5 +132,5 @@ public class TestApp implements IEquoApplication {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

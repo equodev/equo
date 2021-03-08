@@ -12,6 +12,6 @@ Private-Package: \
 	org.influxdb.java,\
 	com.make.equo.application.provider;version=latest,\
 	org.eclipse.osgi,\
-	org.eclipse.osgi.source,\
 	osgi.cmpn,\
-	ch.hsr:geohash
+	ch.hsr:geohash,\
+    org.slf4j.api

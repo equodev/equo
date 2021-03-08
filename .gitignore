@@ -1,4 +1,5 @@
 *.class
+.directory
 bin/
 bin_test/
 target/
@@ -10,9 +11,13 @@ workspace/
 /.gradle/
 _rt/
 .rt/
+.m2/
+.bnd/
+.gradle-home/
+.yarn-cache/
+build-cache/
 cnf/cache
 cnf/*/
 !cnf/ext
 *.prefs
-littleproxy_cert
-littleproxy_keystore.jks
+.npmrc

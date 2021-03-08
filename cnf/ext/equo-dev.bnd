@@ -1,15 +1,4 @@
-javac.source:           1.8
-javac.target:           1.8
-javac.compliance:       1.8
 javac.debug:            on
-
--plugin.2.Eclipse201912: \
-    aQute.bnd.repository.osgi.OSGiRepository; \
-        name = "Eclipse201912"; \
-        expand-bcp = true; \
-        locations = "https://p2repo-osgi-index.fra1.digitaloceanspaces.com/2019-12/index.xml.gz"; \
-        poll.time = -1; \
-        cache = ~/.bnd/cache/eclipse201912
 
 -plugin.4.Mvn: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
@@ -18,6 +7,22 @@ javac.debug:            on
         name = "Maven Central"; \
         readOnly = true; \
         cache = ~/.bnd/cache/mvncentral
+
+-plugin.4.Wso2: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        releaseUrl = "https://dist.wso2.org/maven2"; \
+        index = ${.}/wso2.mvn; \
+        name = "Wso2 Central"; \
+        readOnly = true; \
+        cache = ~/.bnd/cache/wso2central
+
+-plugin.4.Equo-Central: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        releaseUrl = "https://equo-central.ams3.digitaloceanspaces.com/release"; \
+        index = ${.}/equo.mvn; \
+        name = "Equo Central"; \
+        readOnly = true; \
+        cache = ~/.bnd/cache/mvnequo
 
 # JUnit
 junit: org.apache.servicemix.bundles.junit; version=4.12

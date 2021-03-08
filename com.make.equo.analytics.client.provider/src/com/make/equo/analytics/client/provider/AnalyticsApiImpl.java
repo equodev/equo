@@ -4,6 +4,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,6 +30,7 @@ import com.make.equo.ws.api.JsonPayloadEquoRunnable;
 
 @Component
 public class AnalyticsApiImpl implements IAnalyticsApi {
+	protected static final Logger logger = LoggerFactory.getLogger(AnalyticsApiImpl.class);
 
 	private static final String CUSTOM_EVENT_KEY = "customEvent";
 	static final int DEFAULT_COUNT = 1;
@@ -36,7 +39,7 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 
 	@Activate
 	public void start() {
-		System.out.println("Initializing Analytics Client provider...");
+		logger.info("Initializing Analytics Client provider...");
 		equoEventHandler.on(CUSTOM_EVENT_KEY, new CustomEventPayloadRunnable());
 	}
 
@@ -85,7 +88,7 @@ public class AnalyticsApiImpl implements IAnalyticsApi {
 
 		@Override
 		public void run(JsonObject payload) {
-			System.out.println("custom event json payload is " + payload);
+			logger.debug("custom event json payload is " + payload);
 			JsonElement keyJsonElement = payload.get(EVENT_KEY);
 			if (keyJsonElement == null) {
 				throw new RuntimeException(

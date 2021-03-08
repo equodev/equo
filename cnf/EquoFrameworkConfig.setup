@@ -18,25 +18,25 @@
       <requirement
           name="org.freejava.javasourceattacher.feature.feature.group"/>
       <requirement
-          name="org.dadacoalition.yedit.feature.feature.group"/>
+          name="com.make.equo.monaco.feature.feature.group"/>
       <repository
-          url="https://dl.bintray.com/bndtools/bndtools/3.5.0"/>
+          url="https://bndtools.jfrog.io/bndtools/update-latest"/>
       <repository
           url="https://ecd-plugin.github.io/update"/>
       <repository
           url="https://dl.bintray.com/tha/eclipserepo/"/>
       <repository
-          url="http://dadacoalition.org/yedit"/>
+          url="https://equo-monaco-editor.ams3.digitaloceanspaces.com/rls/p2/"/>
     </setupTask>
     <productVersion
-        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='2019-06']"/>
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
     <description>Equo IDE installation</description>
   </installation>
   <workspace
       name="equo.ide.workspace"
       label="Equo IDE Workspace">
     <stream
-        href="https://raw.githubusercontent.com/maketechnology/setups/master/EquoFramework.setup#//@streams[name='master']"/>
+        href="https://dl.maketechnology.io/framework/rls/EquoFramework.setup#//@streams[name='master']"/>
     <description>Equo IDE workspace provides cool stuff.</description>
   </workspace>
 </setup:Configuration>
