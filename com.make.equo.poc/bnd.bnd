@@ -12,7 +12,6 @@ bgColor=#0000FF
 # Username and password to connect to the Equo Platform. For example for analytics
 equoUsername='YWRtaW4='
 equoPassword=bHVzaXRhbm8yMDE4
--buildpath.editor: com.make.equo.monaco;version=latest
 
 -privatepackage: \
 	com.make.equo.poc.eventhandlers,\

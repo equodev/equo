@@ -26,16 +26,15 @@ public class EquoHttpProxyContribution {
 		if (value == null || (value != null && Boolean.parseBoolean(value))) {
 			builder.withContributionName(PROXY_CONTRIBUTION_NAME).withScriptFile(LOGGER_API)
 					.withScriptFile(EQUO_FRAMEWORK_JS_API).withScriptFile(JQUERY_JS_API)
-					.withScriptFile(DOM_MODIFIER_JS_API)
+					.withScriptFile(DOM_MODIFIER_JS_API).withScriptFile(EQUO_COMMANDS_JS_API)
 					.withURLResolver(new EquoGenericURLResolver(EquoHttpProxyContribution.class.getClassLoader()))
-					.withFiltersAdapterHandler(new ContributionJsAdapterHandler())
-					.build();
+					.withFiltersAdapterHandler(new ContributionJsAdapterHandler()).build();
 		} else {
 			builder.withContributionName(PROXY_CONTRIBUTION_NAME).withScriptFile(LOGGER_API)
 					.withScriptFile(EQUO_FRAMEWORK_JS_API).withScriptFile(JQUERY_JS_API)
+					.withScriptFile(EQUO_COMMANDS_JS_API)
 					.withURLResolver(new EquoGenericURLResolver(EquoHttpProxyContribution.class.getClassLoader()))
-					.withFiltersAdapterHandler(new ContributionJsAdapterHandler())
-					.build();
+					.withFiltersAdapterHandler(new ContributionJsAdapterHandler()).build();
 		}
 	}
 
