@@ -21,11 +21,13 @@ export class EquoWebSocket extends WebSocket {
         if (event.data === undefined)
             return;
 
-        Logger.debug('event.data is...', event.data);
+        if (typeof Logger !== 'undefined')
+            Logger.debug('event.data is...', event.data);
     }
 
     onmessage = (event: any): void => {
-        Logger.debug('event.data is...', event.data);
+        if (typeof Logger !== 'undefined')
+            Logger.debug('event.data is...', event.data);
         if (event.data === undefined) {
             return;
         }
@@ -46,7 +48,8 @@ export class EquoWebSocket extends WebSocket {
     };
 
     onclose = (event: any): void => {
-        Logger.debug('event.data is...', event.data);
+        if (typeof Logger !== 'undefined')
+            Logger.debug('event.data is...', event.data);
     };
 
 
@@ -69,7 +72,8 @@ export class EquoWebSocket extends WebSocket {
         setTimeout(
             () => {
                 if (socket.readyState === socket.OPEN) {
-                    Logger.debug('Connection is made');
+                    if (typeof Logger !== 'undefined')
+                        Logger.debug('Connection is made');
                     if (callback != null) {
                         callback();
                     }
