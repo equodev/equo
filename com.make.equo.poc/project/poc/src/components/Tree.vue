@@ -93,7 +93,6 @@ export default {
     data(){ return {
                     contextMenuIsVisible: false,
                     nodeInspected : null,
-                    editor: undefined,
                     color: "green"
             }
     },

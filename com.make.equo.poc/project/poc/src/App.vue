@@ -11,7 +11,7 @@
     </equo-toolbar>
 
     <div class="contentDiv">
-      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" /></div>
+      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @setEditor="setEditor" /></div>
       <div  class="editorShellDiv">
         <div id="editor" class="editor"></div>
         <equo-shell class="shellDiv"/>
@@ -104,9 +104,13 @@ export default {
 
               contextMenuOptions:[
                       {title: "Open",eventHandler:function(path, tree){
-                        if (typeof tree.editor !== 'undefined')
-                          tree.editor.dispose();
-                        tree.editor = EquoMonaco.create(document.getElementById('editor'), path);
+                        let editor = EquoMonaco.create(document.getElementById('editor'), path);
+                        tree.$emit('setEditor', editor);
+                        try {
+                          editor.activateShortcuts();
+                        } catch(err) {
+                          console.log(err);
+                        }
                       }},
                       {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(){console.log("Cutting...")}},
                       {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(){console.log("Copying...")}},
@@ -144,9 +148,13 @@ export default {
         equo.find();
       },
       save(){
-        equo.save(function(response){
-          console.log(JSON.stringify(response));
-        });
+        if (typeof this.editor !== 'undefined')
+          this.editor.save();
+      },
+      setEditor(newEditor){
+        if (typeof this.editor !== 'undefined')
+          this.editor.dispose();
+        this.editor = newEditor;
       }
     }
         /* eslint-enable */
