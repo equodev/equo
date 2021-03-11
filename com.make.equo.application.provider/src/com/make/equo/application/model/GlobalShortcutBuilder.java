@@ -1,7 +1,6 @@
 package com.make.equo.application.model;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -31,11 +30,6 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 		this.userEvent = userEvent;
 	}
 
-	public GlobalShortcutBuilder(EquoApplicationBuilder equoApplicationBuilder) {
-		this(equoApplicationBuilder, "", () -> {
-		}, "");
-	}
-
 	public void addGlobalShortcut(String shortcut) {
 		MCommand newCommand = createCommandAndHandler(elementId + GLOBAL_SUFFIX + "." + shortcut.trim().toLowerCase());
 		MKeyBinding globalKeyBinding = createKeyBinding(newCommand, shortcut);
@@ -49,16 +43,6 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
 		MBindingTable parentPartBindingTable = equoApplicationBuilder.getViewBuilder().getBindingTable();
 		removeShortcutFromBindingTable(shortcut, parentPartBindingTable.getBindings());
 		parentPartBindingTable.getBindings().add(globalKeyBinding);
-	}
-
-	public void addGlobalShortcutToExistingCommand(MCommand command, String shortcut) {
-		if (!shortcut.equals("")) {
-			MKeyBinding globalKeyBinding = createKeyBinding(command, shortcut);
-			Optional<MBindingTable> bindingTable = getDefaultBindingTable(equoApplicationBuilder);
-			if (bindingTable.isPresent()) {
-				bindingTable.get().getBindings().add(globalKeyBinding);
-			}
-		}
 	}
 
 	public void removeShortcut(String shortcut) {

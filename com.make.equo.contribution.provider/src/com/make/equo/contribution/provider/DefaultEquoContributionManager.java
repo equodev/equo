@@ -1,10 +1,8 @@
 package com.make.equo.contribution.provider;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.make.equo.contribution.api.EquoContribution;
 import com.make.equo.contribution.api.IEquoContributionManager;
 import com.make.equo.contribution.api.ResolvedContribution;
-import com.make.equo.contribution.api.handler.ParameterizedHandler;
 
 @Component
 public class DefaultEquoContributionManager implements IEquoContributionManager {
@@ -59,15 +56,6 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 
 	public List<String> getContributionProxiedUris() {
 		return resolver.getContributionProxiedUris();
-	}
-
-	@Override
-	public List<ParameterizedHandler> getparameterizedHandlers() {
-		List<ParameterizedHandler> result = new ArrayList<>();
-		for (Entry<String, EquoContribution> entry : equoContributions.entrySet()) {
-			result.addAll(entry.getValue().getParameterizedHandlers());
-		}
-		return result;
 	}
 
 }

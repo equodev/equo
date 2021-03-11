@@ -68,12 +68,6 @@ public interface IConstants {
 
 	public static final String EQUO_WEBSOCKET_UPDATE_BROWSER = EQUO_WEBSOCKET_PREFIX + ".updatebrowser";
 
-	public static final String EQUO_WEBSOCKET_PARAMS_RESPONSE_ID = "responseId";
-
-	public static final String EQUO_WEBSOCKET_PARAMS_FILE_PATH = "filePath";
-
-	public static final String EQUO_WEBSOCKET_PARAMS_CONTENT = "content";
-
 	public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://com.make.equo.application.provider/com.make.equo.application.handlers.UpdateBrowserCommandHandler";
 
 	public static final String EQUO_PARTSTACK_ID = EQUO_APPLICATION_ID + ".partstack";
@@ -83,11 +77,11 @@ public interface IConstants {
 	public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
 	public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT = EQUO_WEBSOCKET_PREFIX + ".useremittedevent";
-
+	
 	public static final String DEFAULT_EXIT_LABEL = "Exit";
-
+	
 	public static final String DEFAULT_ABOUT_LABEL = "About";
-
+	
 	public static final String DEFAULT_PREFERENCES_LABEL = "Preferences";
 
 	public static final String MAC_OSX = "mac";

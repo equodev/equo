@@ -23,7 +23,6 @@ Export-Package: \
     org.eclipse.swt,\
     org.eclipse.jface,\
     org.eclipse.jface.source,\
-    org.eclipse.ui.workbench,\
     org.eclipse.e4.core.di,\
     org.eclipse.e4.core.di.source,\
     org.eclipse.e4.ui.workbench,\
@@ -67,7 +66,6 @@ Export-Package: \
     org.slf4j.api
 Private-Package: \
     com.make.equo.application.handlers,\
-	com.make.equo.application.handlers.filesystem,\
     com.make.equo.application.impl,\
     com.make.equo.application.model,\
     com.make.equo.application.parts,\
