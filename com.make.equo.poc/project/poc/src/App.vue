@@ -11,7 +11,7 @@
     </equo-toolbar>
 
     <div class="contentDiv">
-      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @openEditor="openEditor" @pasteFile="pasteFile" @removeFile="removeFile" /></div>
+      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @openEditor="openEditor" @pasteFile="pasteFile" @removeFile="removeFile" @transformResponseToTreeData="transformResponseToTreeData" /></div>
       <div  class="editorShellDiv">
         <div id="editor" class="editor"></div>
         <equo-shell class="shellDiv"/>
@@ -71,9 +71,9 @@ export default {
     },
     /* eslint-disable */
     methods:{
-      refreshTree(response){
+      transformResponseToTreeData(response, originalTree, originalTreeData, expandedNode){
         if (!response.err){
-          for(let i = 0; i < response.children.length;i++){
+          for(let i =0;i < response.children.length;i++){
             response.children[i].data = {path: response.children[i].path};
             if(response.children[i].isDirectory){
               response.children[i].isExpanded = false;
@@ -82,11 +82,24 @@ export default {
             }
             response.children[i].isLeaf = !response.children[i].isDirectory;
             response.children[i].title = response.children[i].name;
+
+            if (typeof expandedNode !== 'undefined'){
+              expandedNode.children.splice(expandedNode.children.length - 1,0,response.children[i])
+            }
           }
           response.isLeaf = !response.isDirectory;
           response.title = response.name;
-          this.nodes.splice(0,this.nodes.length);
-          Array.prototype.push.apply(this.nodes,response.children);
+          originalTree.splice(0, originalTree.length);
+          if (typeof originalTreeData !== 'undefined'){
+            Array.prototype.push.apply(originalTree, originalTreeData);
+          } else {
+            Array.prototype.push.apply(originalTree, response.children);
+          }
+        }
+      },
+      refreshTree(response){
+        if (!response.err){
+          this.transformResponseToTreeData(response, this.nodes);
           this.path = response.path;
         }
       },

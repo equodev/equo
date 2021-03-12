@@ -106,8 +106,8 @@ export default {
      nodeClick(node, event){
        console.log("Click",node.path, event);
      },
-     node2Click(node, event){
-       console.log("2Click", node, event)
+     node2Click(node){
+       this.$emit('openEditor', node.data.path);
      },
      getNode(nodes,path){
         if (path.length === 1) return nodes[path[0]];
@@ -115,6 +115,7 @@ export default {
      },
      
      toggle(node){
+        var tree = this;
         var originalTree = this.nodes;
         var treeData = originalTree.slice(0);
         var expandedNode = this.getNode(treeData,node.path);
@@ -122,24 +123,10 @@ export default {
         if(!expandedNode.data.wasExpandedBefore){
           /*eslint-disable*/
           equo.fileInfo(node.data.path,function(response){
-              expandedNode.data.wasExpandedBefore = true;
-              if (!response.err){
-                for(let i =0;i < response.children.length;i++){
-                  response.children[i].data = {path: response.children[i].path};
-                  if(response.children[i].isDirectory){
-                    response.children[i].isExpanded = false;
-                    response.children[i].data.wasExpandedBefore = false;
-                    response.children[i].children = [];
-                  }
-                  response.children[i].isLeaf = !response.children[i].isDirectory;
-                  response.children[i].title = response.children[i].name;
-                  expandedNode.children.splice(expandedNode.children.length - 1,0,response.children[i])
-                }
-                originalTree.splice(0,originalTree.length);
-                Array.prototype.push.apply(originalTree,treeData);               
-              }
-            });
-            /*eslint-enable*/
+            expandedNode.data.wasExpandedBefore = true;
+            tree.$emit('transformResponseToTreeData', response, originalTree, treeData, expandedNode);
+          });
+          /*eslint-enable*/
         }
      },
 
