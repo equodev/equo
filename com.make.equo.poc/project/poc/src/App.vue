@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <equo-toolbar>
+    <equo-toolbar :close-editor-function="closeEditor" :shouldShowClose='this.thereIsAnEditor()'>
       <!-- equo-toolitem icon use FontAwesome to its definition. take a look at www.fontawesome.com/icons to choose a icon -->
       <equo-toolitem tooltip="Open Folder" icon='folder-open' :eventHandler="this.openFolder"/>
       <equo-toolitem tooltip="Save" icon='save' :eventHandler="this.save"/>
@@ -106,14 +106,24 @@ export default {
       openFolder(){
         equo.openFolder(this.refreshTree);
       },
+      thereIsAnEditor(){
+        return typeof this.editor !== 'undefined';
+      },
       openEditor(path){
-        if (typeof this.editor !== 'undefined')
+        if (this.thereIsAnEditor()){
           this.editor.dispose();
+        }
         this.editor = EquoMonaco.create(document.getElementById('editor'), path);
         try {
           this.editor.activateShortcuts();
         } catch(err) {
           console.log(err);
+        }
+      },
+      closeEditor(){
+        if (this.thereIsAnEditor()){
+          this.editor.dispose();
+          this.editor = undefined;
         }
       },
       removeFile(path){
@@ -137,28 +147,28 @@ export default {
         }
       },
       find(){
-        if (typeof this.editor !== 'undefined'){
+        if (this.thereIsAnEditor()){
           this.editor.getEditor().getAction("actions.find").run();
         }
       },
       editorCut(){
-        if (typeof this.editor !== 'undefined'){
+        if (this.thereIsAnEditor()){
           this.editor.getEditor().getAction("editor.action.clipboardCutAction").run();
         }
       },
       editorCopy(){
-        if (typeof this.editor !== 'undefined'){
+        if (this.thereIsAnEditor()){
           this.editor.getEditor().getAction("editor.action.clipboardCopyAction").run();
         }
       },
       editorPaste(){
-        if (typeof this.editor !== 'undefined'){
+        if (this.thereIsAnEditor()){
           this.editor.getEditor().focus();
           document.execCommand("paste");
         }
       },
       save(){
-        if (typeof this.editor !== 'undefined')
+        if (this.thereIsAnEditor())
           this.editor.save();
       }
     }

@@ -3,9 +3,9 @@
         <v-toolbar height="35px" color="primary">
           <slot></slot>
           <v-spacer></v-spacer>
-          <v-btn dark icon text>
-          <font-awesome-icon :icon="['fas','times']" />
-        </v-btn>
+          <v-btn v-if="shouldShowClose" dark icon text @click="this.closeEditorFunction" v->
+            <font-awesome-icon :icon="['fas','times']" />
+          </v-btn>
         </v-toolbar>
     </div>
 </template>
@@ -26,7 +26,14 @@ export default {
     toolitems:{
       type: Array,
       default(){ return []} 
-      }
+      },
+    closeEditorFunction: {
+      type: Function
+    },
+    shouldShowClose:{
+      type: Boolean,
+      default() { return false }
+    }
   },
   data: () => ({
      
