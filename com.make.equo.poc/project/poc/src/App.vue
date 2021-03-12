@@ -27,6 +27,7 @@ import EquoToolitem from './components/Toolitem.vue'
 import EquoShell from './components/shell/Shell.vue'
 import vuetify from './plugins/vuetify'
 import { EquoMonaco } from '@equo/equo-monaco-editor'
+import { Menu } from '@equo/equo-application-menu'
 
 export default {
   name: 'App',
@@ -66,7 +67,9 @@ export default {
                         tree.$emit('removeFile', node.data.path);
                       }}
               ],
-              editor: undefined
+              editor: undefined,
+              menuWithoutEditor: undefined,
+              menuWithEditor: undefined
               }
     },
     /* eslint-disable */
@@ -114,6 +117,8 @@ export default {
           this.editor.dispose();
         }
         this.editor = EquoMonaco.create(document.getElementById('editor'), path);
+        this.menuWithEditor.setApplicationMenu();
+
         try {
           this.editor.activateShortcuts();
         } catch(err) {
@@ -124,6 +129,7 @@ export default {
         if (this.thereIsAnEditor()){
           this.editor.dispose();
           this.editor = undefined;
+          this.menuWithoutEditor.setApplicationMenu();
         }
       },
       removeFile(path){
@@ -171,6 +177,24 @@ export default {
         if (this.thereIsAnEditor())
           this.editor.save();
       }
+    },
+    created(){
+      this.menuWithoutEditor = Menu.create()
+        .withMainMenu("File")
+        .addMenuItem("Open folder").addShortcut("M1+O").onClick(this.openFolder)
+        .addMenuItem("Exit").addShortcut("M1+Q").onClick('_exitapp');
+
+      this.menuWithEditor = Menu.create()
+        .withMainMenu("File")
+          .addMenuItem("Open folder").addShortcut("M1+O").onClick(this.openFolder)
+          .addMenuItem("Save").addShortcut("M1+S").onClick(this.save)
+          .addMenuItem("Exit").addShortcut("M1+Q").onClick('_exitapp')
+        .withMainMenu("Edit")
+          .addMenuItem("Cut").addShortcut("M1+X").onClick(this.editorCut)
+          .addMenuItem("Copy").addShortcut("M1+C").onClick(this.editorCopy)
+          .addMenuItem("Paste").addShortcut("M1+V").onClick(this.editorPaste);
+
+      this.menuWithoutEditor.setApplicationMenu();
     }
     /* eslint-enable */
 }

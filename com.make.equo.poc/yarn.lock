@@ -859,6 +859,13 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@equo/equo-application-menu@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.dev.equoplatform.com/@equo%2fequo-application-menu/-/equo-application-menu-0.1.6.tgz#4521865606b5f263d79ad154c3854152fc98b889"
+  integrity sha512-J9R9n7qn5cqBQ0mZcQd94PvySBUoGbHH7zaHQQf0Eca1a2T7tFsT7BIV7uUWfBn+os/9hjykPWzj2yYcsdYYlg==
+  dependencies:
+    "@equo/websocket" "^0.1.2"
+
 "@equo/equo-monaco-editor@^0.1.4":
   version "0.1.4"
   resolved "https://registry.dev.equoplatform.com/@equo%2fequo-monaco-editor/-/equo-monaco-editor-0.1.4.tgz#769b861a84cc62d4297353407dc65c5f943f2a65"
