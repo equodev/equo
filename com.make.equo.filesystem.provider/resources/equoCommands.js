@@ -33,6 +33,10 @@ function sendFileSystemCommand(callback, commandId, filePath = null, content = n
         sendFileSystemCommand(callback, "_MoveFile", filePath, directoryDest);
     };
 
+    equo.copyFile = function (filePath, directoryDest, callback) {
+        sendFileSystemCommand(callback, "_CopyFile", filePath, directoryDest);
+    };
+
     equo.openFile = function (callback) {
         sendFileSystemCommand(callback, "_OpenFile");
     };

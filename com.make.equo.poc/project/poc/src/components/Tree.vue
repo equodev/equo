@@ -93,7 +93,9 @@ export default {
     data(){ return {
                     contextMenuIsVisible: false,
                     nodeInspected : null,
-                    color: "green"
+                    color: "green",
+                    selectedNode: undefined,
+                    cutSelection: false
             }
     },
    methods: {
@@ -154,8 +156,8 @@ export default {
        }
      },
      selectOption(event){
-       const path = this.nodeInspected.data.path;
-       event(path, this);
+       const node = this.nodeInspected;
+       event(node, this);
        this.nodeInspected = null;
      },
      getExtension(file){

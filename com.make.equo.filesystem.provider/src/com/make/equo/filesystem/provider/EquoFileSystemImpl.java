@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -132,6 +133,21 @@ public class EquoFileSystemImpl implements IEquoFileSystem {
 		}
 		fileDest.getParentFile().mkdirs();
 		return file.renameTo(fileDest);
+	}
+
+	@Override
+	public boolean copyFile(File file, File folderDest) {
+		File fileDest = new File(folderDest, file.getName());
+		try {
+			if (file.isDirectory()) {
+				FileUtils.copyDirectory(file, fileDest);
+			} else {
+				FileUtils.copyFile(file, fileDest);
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 }

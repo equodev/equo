@@ -34,4 +34,6 @@ public interface IEquoFileSystem {
 	public boolean renameFile(File file, String newName);
 
 	public boolean moveFile(File file, File folderDest);
+
+	public boolean copyFile(File file, File folderDest);
 }

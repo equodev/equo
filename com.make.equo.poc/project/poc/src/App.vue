@@ -3,15 +3,15 @@
     <equo-toolbar>
       <!-- equo-toolitem icon use FontAwesome to its definition. take a look at www.fontawesome.com/icons to choose a icon -->
       <equo-toolitem tooltip="Open Folder" icon='folder-open' :eventHandler="this.openFolder"/>
-      <equo-toolitem tooltip="Search" icon='search' :eventHandler="this.find"/>
-      <equo-toolitem tooltip="Copy" icon='copy' :eventHandler="this.openFolder"/>
       <equo-toolitem tooltip="Save" icon='save' :eventHandler="this.save"/>
-      <equo-toolitem tooltip="Run" icon='play' :eventHandler="this.openFolder"/>
-      <equo-toolitem tooltip="Debug" icon='bug' :eventHandler="this.openFolder"/>  
+      <equo-toolitem tooltip="Search" icon='search' :eventHandler="this.find"/>
+      <equo-toolitem tooltip="Cut" icon='cut' :eventHandler="this.editorCut"/>
+      <equo-toolitem tooltip="Copy" icon='copy' :eventHandler="this.editorCopy"/>
+      <equo-toolitem tooltip="Paste" icon='paste' :eventHandler="this.editorPaste"/>
     </equo-toolbar>
 
     <div class="contentDiv">
-      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @setEditor="setEditor" /></div>
+      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @openEditor="openEditor" @pasteFile="pasteFile" @removeFile="removeFile" /></div>
       <div  class="editorShellDiv">
         <div id="editor" class="editor"></div>
         <equo-shell class="shellDiv"/>
@@ -41,125 +41,115 @@ export default {
     data() { return {
               /* nodesData representa la informacion que se va trayendo de Java a medida que se va pidiendo con el expand de las folders 
                  (es hardcode hasta que se pueda interactuar con java, despues ya no existe mas) */
-              nodesData : [
-                    {title: 'Item1.js', isLeaf: true, data: { path: "js" }},
-                    {title: 'Item2.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder1', isExpanded:false},
-                    {
-                    title: 'Folder2', isExpanded: false, children: [
-                        {title: 'Item1-2.json', isLeaf: true},
-                        {title: 'Item2-2', isLeaf: true},
-                        {title: 'Folder7', isExpanded: false, children: [
-                          {title: 'Item1-7-2', isLeaf: true},
-                          {title: 'Item2-7-2', isLeaf: true}
-                          ]
-                        }
-                    ]},
-                    {title: 'Item3', isLeaf: true},
-                    {title: 'Item4.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder3',isExpanded : false},
-                    {
-                    title: 'Folder4', isExpanded: false, children: [
-                        {title: 'Item1-4', isLeaf: true},
-                        {title: 'Item2-4', isLeaf: true}
-                        ]
-                    },
-                    {title: 'Item5', isLeaf: true},
-                    {title: 'Item6.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder5', isExpanded: false},
-                    {
-                    title: 'Folder6', isExpanded: false, children: [
-                        {title: 'Item1-6', isLeaf: true},
-                        {title: 'Item2-6', isLeaf: true}
-                        ]
-                    }
-                    ],
-                    //nodes es la informacion actual que se tiene sobre las folders y subfolders del directorio ( se actualiza con los expands)
-                    nodes: [
-                    {title: 'Item1.js', isLeaf: true, data: { path: "js" }},
-                    {title: 'Item2.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder1', isExpanded:false},
-                    {
-                    title: 'Folder2', isExpanded: false},
-                    {title: 'Item3.html', isLeaf: true},
-                    {title: 'Item4.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder3', isExpanded: false},
-                    {
-                    title: 'Folder4', isExpanded: false},
-                    {title: 'Item5.gitignore', isLeaf: true},
-                    {title: 'Item6.vue', isLeaf: true, data: { path: "vue" }},
-                    {title: 'Folder5', isExpanded: false},
-                    {
-                    title: 'Folder6', isExpanded: false}
-                    ],
-              extensionIcons:[
-                  {icon:['fab','vuejs' ],extension:"vue",color:'lightgreen'},
-                  {icon:['fab','js' ],extension:"js"},
-                  {icon:'code' ,extension:"html", color:'orange'},
-                  {icon:['fas','cog' ],extension:"json"},
-                  {icon:['fas','code-branch' ],extension:"gitignore"},
-              ],
-              path: "/home/PoC",
+              nodesData : [],
+              //nodes es la informacion actual que se tiene sobre las folders y subfolders del directorio ( se actualiza con los expands)
+              nodes: [],
+              path: "",
                     //items de la toolbar
 
               contextMenuOptions:[
-                      {title: "Open",eventHandler:function(path, tree){
-                        let editor = EquoMonaco.create(document.getElementById('editor'), path);
-                        tree.$emit('setEditor', editor);
-                        try {
-                          editor.activateShortcuts();
-                        } catch(err) {
-                          console.log(err);
-                        }
+                      {title: "Open",eventHandler:function(node, tree){
+                        tree.$emit('openEditor', node.data.path);
                       }},
-                      {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(){console.log("Cutting...")}},
-                      {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(){console.log("Copying...")}},
-                      {title: "Remove", shortcut: "Supr",eventHandler:function(){console.log("Removing...")}},
-                      {title: "Rename",eventHandler:function(){console.log("Renaming...")}}
+                      {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(node, tree){
+                        tree.cutSelection = true;
+                        tree.selectedNode = node.data.path;
+                      }},
+                      {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(node, tree){
+                        tree.cutSelection = false;
+                        tree.selectedNode = node.data.path;
+                      }},
+                      {title: "Paste", shortcut: "Ctrl + V",eventHandler:function(node, tree){
+                        tree.$emit('pasteFile', node, tree);
+                      }},
+                      {title: "Remove", shortcut: "Supr",eventHandler:function(node, tree){
+                        tree.$emit('removeFile', node.data.path);
+                      }}
               ],
               editor: undefined
               }
     },
     /* eslint-disable */
     methods:{
-      openFolder(){
-        var treeData = this;
-        equo.openFolder(function(response){
-          if (!response.err){
-            for(let i = 0; i < response.children.length;i++){
-              response.children[i].data = {path: response.children[i].path};
-              if(response.children[i].isDirectory){
-                response.children[i].isExpanded = false;
-                response.children[i].data.wasExpandedBefore = false;
-                response.children[i].children = [];
-              }
-              response.children[i].isLeaf = !response.children[i].isDirectory;
-              response.children[i].title = response.children[i].name;
+      refreshTree(response){
+        if (!response.err){
+          for(let i = 0; i < response.children.length;i++){
+            response.children[i].data = {path: response.children[i].path};
+            if(response.children[i].isDirectory){
+              response.children[i].isExpanded = false;
+              response.children[i].data.wasExpandedBefore = false;
+              response.children[i].children = [];
             }
-            response.isLeaf = !response.isDirectory;
-            response.title = response.name;
-            treeData.nodes.splice(0,treeData.nodes.length);
-            Array.prototype.push.apply(treeData.nodes,response.children);
-            treeData.path = response.path;
+            response.children[i].isLeaf = !response.children[i].isDirectory;
+            response.children[i].title = response.children[i].name;
           }
+          response.isLeaf = !response.isDirectory;
+          response.title = response.name;
+          this.nodes.splice(0,this.nodes.length);
+          Array.prototype.push.apply(this.nodes,response.children);
+          this.path = response.path;
+        }
+      },
+      openFolder(){
+        equo.openFolder(this.refreshTree);
+      },
+      openEditor(path){
+        if (typeof this.editor !== 'undefined')
+          this.editor.dispose();
+        this.editor = EquoMonaco.create(document.getElementById('editor'), path);
+        try {
+          this.editor.activateShortcuts();
+        } catch(err) {
+          console.log(err);
+        }
+      },
+      removeFile(path){
+        var app = this;
+        equo.deleteFile(path, function(response){
+          equo.fileInfo(app.path, app.refreshTree);
         });
       },
+      pasteFile(node, tree){
+        var app = this;
+        if (!node.isLeaf){
+          if (tree.cutSelection){
+            equo.moveFile(tree.selectedNode, node.data.path, function(response){
+              equo.fileInfo(app.path, app.refreshTree);
+            });
+          } else {
+            equo.copyFile(tree.selectedNode, node.data.path, function(response){
+              equo.fileInfo(app.path, app.refreshTree);
+            });
+          }
+        }
+      },
       find(){
-        equo.find();
+        if (typeof this.editor !== 'undefined'){
+          this.editor.getEditor().getAction("actions.find").run();
+        }
+      },
+      editorCut(){
+        if (typeof this.editor !== 'undefined'){
+          this.editor.getEditor().getAction("editor.action.clipboardCutAction").run();
+        }
+      },
+      editorCopy(){
+        if (typeof this.editor !== 'undefined'){
+          this.editor.getEditor().getAction("editor.action.clipboardCopyAction").run();
+        }
+      },
+      editorPaste(){
+        if (typeof this.editor !== 'undefined'){
+          this.editor.getEditor().focus();
+          document.execCommand("paste");
+        }
       },
       save(){
         if (typeof this.editor !== 'undefined')
           this.editor.save();
-      },
-      setEditor(newEditor){
-        if (typeof this.editor !== 'undefined')
-          this.editor.dispose();
-        this.editor = newEditor;
       }
     }
-        /* eslint-enable */
-
-
+    /* eslint-enable */
 }
 
 </script>

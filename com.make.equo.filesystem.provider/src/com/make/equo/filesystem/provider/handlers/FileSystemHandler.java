@@ -29,10 +29,6 @@ public abstract class FileSystemHandler {
 		return payload.get(ICommandConstants.PARAM_FILE_PATH).getAsString();
 	}
 
-	protected String getNewPathParam(JsonObject payload) throws ClassCastException {
-		return payload.get(ICommandConstants.PARAM_NEW_PATH).getAsString();
-	}
-
 	protected String getContentParam(JsonObject payload) throws ClassCastException {
 		return payload.get(ICommandConstants.PARAM_CONTENT).getAsString();
 	}

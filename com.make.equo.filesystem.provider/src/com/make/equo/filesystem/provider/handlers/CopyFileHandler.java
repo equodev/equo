@@ -6,13 +6,13 @@ import com.google.gson.JsonObject;
 import com.make.equo.filesystem.provider.responses.ErrResponse;
 import com.make.equo.filesystem.provider.responses.OkResponse;
 
-public class MoveFileHandler extends FileSystemHandler {
+public class CopyFileHandler extends FileSystemHandler {
 
 	@Override
 	protected Object execute(JsonObject payload) {
 		File actualFile = new File(getPathParam(payload));
 		File folderDest = new File(getContentParam(payload));
-		if (equoFileSystem.moveFile(actualFile, folderDest)) {
+		if (equoFileSystem.copyFile(actualFile, folderDest)) {
 			return new OkResponse();
 		}
 		return new ErrResponse();
@@ -20,7 +20,7 @@ public class MoveFileHandler extends FileSystemHandler {
 
 	@Override
 	protected String getCommandName() {
-		return "_MoveFile";
+		return "_CopyFile";
 	}
 
 }

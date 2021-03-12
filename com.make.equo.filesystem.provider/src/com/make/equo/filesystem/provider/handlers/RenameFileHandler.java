@@ -10,7 +10,7 @@ public class RenameFileHandler extends FileSystemHandler {
 	@Override
 	protected Object execute(JsonObject payload) {
 		File actualFile = new File(getPathParam(payload));
-		String newName = getNewPathParam(payload);
+		String newName = getContentParam(payload);
 		if (equoFileSystem.renameFile(actualFile, newName)) {
 			return new OkResponse();
 		}
