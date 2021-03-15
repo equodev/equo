@@ -1,0 +1,65 @@
+task compileAspects() {
+  inputs.files {
+    project.files(sourceSets.main.java.srcDirs).getAsFileTree().matching {
+      include '**/*.aj'
+      exclude '**/*.java'
+    }.getFiles()
+  }
+
+  File aspectsDest = project.file('aspectsBin')
+
+  outputs.dir aspectsDest
+  outputs.cacheIf { 
+    true 
+  }
+
+  doLast {
+    println("Compiling Aspects")
+
+    def compileJava = tasks.getByName('compileJava')
+
+    repositories { mavenCentral() }
+    configurations { 
+      ajcTask
+      ajc
+    }
+
+    dependencies {
+      ajcTask 'org.aspectj:aspectjtools:1.9.5'
+      ajc 'org.aspectj:aspectjrt:1.9.5'
+    }
+
+    ant.taskdef(
+      resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+      classpath: configurations.ajcTask.asPath
+    )
+
+    ant.iajc(
+      source:    project.sourceCompatibility,
+      target:    project.targetCompatibility,
+      destDir:   aspectsDest,
+      fork:      "false",
+      classpath: configurations.compile.plus(configurations.ajc).asPath) {
+        sourceroots {
+          sourceSets.main.java.srcDirs.each {
+            pathelement(location:it.absolutePath)
+          }
+        }
+        include( name:'**/*.aj' )
+        exclude( name:'**/*.java' )
+      }
+
+    sourceSets {
+      main {
+        resources {
+          exclude '**/*.aj'
+        }
+      }
+    }
+    
+  }
+}
+
+processResources {
+  from compileAspects
+}
