@@ -25,8 +25,8 @@ task compileAspects() {
     }
 
     dependencies {
-      ajcTask 'org.aspectj:aspectjtools:1.9.5'
-      ajc 'org.aspectj:aspectjrt:1.9.5'
+      ajcTask 'org.aspectj:aspectjtools:1.9.6'
+      ajc 'org.aspectj:aspectjrt:1.9.6'
     }
 
     ant.taskdef(
@@ -34,12 +34,14 @@ task compileAspects() {
       classpath: configurations.ajcTask.asPath
     )
 
+    ant.lifecycleLogLevel = "DEBUG"
+
     ant.iajc(
       source:    project.sourceCompatibility,
       target:    project.targetCompatibility,
       destDir:   aspectsDest,
       fork:      "false",
-      classpath: configurations.compile.plus(configurations.ajc).asPath) {
+      classpath: configurations.compileClasspath.plus(configurations.ajc).asPath) {
         sourceroots {
           sourceSets.main.java.srcDirs.each {
             pathelement(location:it.absolutePath)
