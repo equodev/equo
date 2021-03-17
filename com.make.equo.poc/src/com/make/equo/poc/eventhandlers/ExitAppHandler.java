@@ -7,13 +7,13 @@ import com.make.equo.ws.api.actions.IActionHandler;
 
 @SuppressWarnings("serial")
 @Component
-public class SaveHandler implements IActionHandler<Payload> {
-
+public class ExitAppHandler implements IActionHandler<Payload> {
 
 	@Override
 	public Object call(Payload payload) {
-		System.out.println("EventHandler de Save recibio \"" + payload + "\" como busqueda");
+		System.exit(0);
 		return null;
 	}
 
+	
 }

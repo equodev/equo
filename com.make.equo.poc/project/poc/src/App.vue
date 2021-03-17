@@ -112,10 +112,7 @@ export default {
       thereIsAnEditor(){
         return typeof this.editor !== 'undefined';
       },
-      openEditor(path){
-        if (this.thereIsAnEditor()){
-          this.editor.dispose();
-        }
+      doOpenEditor(path){
         this.editor = EquoMonaco.create(document.getElementById('editor'), path);
         this.menuWithEditor.setApplicationMenu();
 
@@ -125,12 +122,49 @@ export default {
           console.log(err);
         }
       },
-      closeEditor(){
+      openEditor(path){
         if (this.thereIsAnEditor()){
-          this.editor.dispose();
-          this.editor = undefined;
-          this.menuWithoutEditor.setApplicationMenu();
+          let app = this;
+          this.closeExistingEditor(function(){
+            app.editor.dispose();
+            app.editor = undefined;
+            app.doOpenEditor(path);
+          });
+        }else{
+          this.doOpenEditor(path);
         }
+      },
+      closeExistingEditor(closingFunction){
+        if (this.thereIsAnEditor()){
+          if (this.editor.isDirty()){
+            let app = this;
+            equo.on("_savedialogresponse", function(response){
+              if (response.close){
+                if (response.save){
+                  app.editor.setActionDirtyState(function(){
+                    if (!app.editor.isDirty()){
+                      closingFunction();
+                    }
+                  });
+                  app.editor.save();
+                }else{
+                  closingFunction();
+                }
+              }
+            });
+            equo.send("savedialoghandler");
+          }else{
+            closingFunction();
+          }
+        }
+      },
+      closeEditor(){
+        let app = this;
+        this.closeExistingEditor(function(){
+          app.editor.dispose();
+          app.editor = undefined;
+          app.menuWithoutEditor.setApplicationMenu();
+        });
       },
       removeFile(path){
         var app = this;
@@ -182,13 +216,13 @@ export default {
       this.menuWithoutEditor = Menu.create()
         .withMainMenu("File")
         .addMenuItem("Open folder").addShortcut("M1+O").onClick(this.openFolder)
-        .addMenuItem("Exit").addShortcut("M1+Q").onClick('_exitapp');
+        .addMenuItem("Exit").addShortcut("M1+Q").onClick('exitapphandler');
 
       this.menuWithEditor = Menu.create()
         .withMainMenu("File")
           .addMenuItem("Open folder").addShortcut("M1+O").onClick(this.openFolder)
           .addMenuItem("Save").addShortcut("M1+S").onClick(this.save)
-          .addMenuItem("Exit").addShortcut("M1+Q").onClick('_exitapp')
+          .addMenuItem("Exit").addShortcut("M1+Q").onClick('exitapphandler')
         .withMainMenu("Edit")
           .addMenuItem("Cut").addShortcut("M1+X").onClick(this.editorCut)
           .addMenuItem("Copy").addShortcut("M1+C").onClick(this.editorCopy)

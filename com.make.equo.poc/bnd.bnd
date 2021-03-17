@@ -18,7 +18,8 @@ equoPassword=bHVzaXRhbm8yMDE4
 	com.make.equo.poc.payloads
 
 -runbundles.poc: \
-    com.make.equo.widgets.shell ,\
+    com.make.equo.aspects,\
+    com.make.equo.widgets.shell,\
     org.apache.commons.cli,\
     org.apache.commons.codec,\
     org.apache.commons.lang,\
@@ -29,4 +30,7 @@ equoPassword=bHVzaXRhbm8yMDE4
     com.make.equo.monaco,\
     io.netty.all,\
     org.eclipse.jface.text,\
-    org.eclipse.text
+    org.eclipse.text,\
+    org.aspectj.runtime;version='[1.9.6,1.9.7)',\
+    org.aspectj.weaver,\
+    org.eclipse.equinox.weaving.aspectj
