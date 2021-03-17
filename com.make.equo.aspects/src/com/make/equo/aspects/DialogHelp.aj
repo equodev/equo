@@ -1,5 +1,6 @@
 package com.make.equo.aspects;
 
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -19,9 +20,24 @@ public aspect DialogHelp {
 	args(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType,dialogButtonLabels, defaultIndex) &&
 	execution(org.eclipse.jface.dialogs.MessageDialog.new(Shell, String, Image, String , int , String[], int));
 
-	pointcut openMessage(MessageDialog message): 
-        execution(int org.eclipse.jface.dialogs.MessageDialog.open()) &&
-        target(message);
+	pointcut buildAnyMessageDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
+			int dialogImageType, int defaultIndex, String[] dialogButtonLabels): 
+		args(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, defaultIndex, dialogButtonLabels) &&
+		execution(org.eclipse.jface.dialogs.MessageDialog+.new(..));
+	
+	pointcut openMessage(org.eclipse.jface.window.Window window): 
+        execution(int org.eclipse.jface.window.Window+.open()) &&
+        target(window) &&
+        if (window instanceof org.eclipse.jface.dialogs.MessageDialog);
+
+	pointcut getReturnCode(org.eclipse.jface.window.Window window): 
+        execution(int org.eclipse.jface.window.Window+.getReturnCode()) &&
+        target(window) &&
+        if (window instanceof org.eclipse.jface.dialogs.MessageDialog);
+
+	pointcut createButtonsForButtonBar(Composite parent):
+		args(parent) &&
+		execution(* org.eclipse.jface.dialogs.MessageDialog+.createButtonsForButtonBar(Composite));
 
 	pointcut openInformation(Shell parent, String title, String message):
         args(parent, title, message) &&
@@ -55,17 +71,28 @@ public aspect DialogHelp {
 	// MessageDialog advices ----------------------
 
 	void around(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
+			int dialogImageType, int defaultIndex, String[] dialogButtonLabels): buildAnyMessageDialog(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
+			        dialogImageType, defaultIndex, dialogButtonLabels) {
+		this.dialog = new com.make.equo.ui.helper.provider.dialogs.MessageDialog(parentShell, dialogTitle,
+				dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
+	}
+
+	void around(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex): buildMessage(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
         dialogImageType,dialogButtonLabels, defaultIndex){
 		this.dialog = new com.make.equo.ui.helper.provider.dialogs.MessageDialog(parentShell, dialogTitle,
 				dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
 	}
 
-	int around(MessageDialog message): openMessage(message){
-		dialog.open();
-		// System.out.println("--------> " + thisJoinPoint);
-		System.out.println("It is not necessary use open() method to create the widget DialogMessage");
-		return 0;
+	int around(org.eclipse.jface.window.Window window): openMessage(window){
+		return dialog.open();
+	}
+
+	int around(org.eclipse.jface.window.Window window): getReturnCode(window){
+		return dialog.getResponse();
+	}
+
+	void around(Composite parent): createButtonsForButtonBar(parent) {
 	}
 
 	void around(Shell parent, String title, String message): openInformation(parent, title, message) {
