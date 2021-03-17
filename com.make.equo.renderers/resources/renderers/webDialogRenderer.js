@@ -34,11 +34,11 @@ $(document).ready(function () {
           </div>
           <div class="el-dialog__footer">
             <template v-for="button in buttons">
-                <template v-if="button.bLabel === 'Confirm' || button.bLabel === 'Yes'">
-                    <el-button type="primary" @click="callE4Command(button.action)"> {{ button.bLabel }} </el-button>
+                <template v-if="button.bLabel.startsWith('&')">
+                    <el-button type="primary" @click="callE4Command(button.action)"> {{ button.bLabel.replace('&', '') }} </el-button>
                 </template>
                 <template v-else>
-                    <el-button @click="callE4Command(button.action)"> {{ button.bLabel }} </el-button>
+                    <el-button @click="callE4Command(button.action)"> {{ button.bLabel.replace('&', '') }} </el-button>
                 </template>
             </template>
           </div>
