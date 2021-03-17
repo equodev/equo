@@ -168,9 +168,14 @@ export default {
       },
       removeFile(path){
         var app = this;
-        equo.deleteFile(path, function(response){
-          equo.fileInfo(app.path, app.refreshTree);
+        equo.on("_confirmremoveresponse", function(response){
+          if (response.proceed){
+            equo.deleteFile(path, function(secondResponse){
+              equo.fileInfo(app.path, app.refreshTree);
+            });
+          }
         });
+        equo.send("confirmremovehandler");
       },
       pasteFile(node, tree){
         var app = this;
