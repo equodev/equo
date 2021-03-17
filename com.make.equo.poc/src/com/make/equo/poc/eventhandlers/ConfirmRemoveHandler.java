@@ -21,8 +21,8 @@ public class ConfirmRemoveHandler {
 	public void configDialog() {
 		equoEventHandler.on("confirmremovehandler", (IEquoRunnable) voidParameter -> {
 			MessageDialog dialog = new MessageDialog(null, "Delete Resource", null,
-					"Are you sure you want to delete this resource?", MessageDialog.QUESTION, 0,
-					new String[] { "&Delete", "Cancel" });
+					"Are you sure you want to delete this resource?", MessageDialog.QUESTION, 1,
+					new String[] { "&Remove", "Cancel" });
 			int responseDialog = dialog.open();
 			HashMap<String, Boolean> response = new HashMap<>();
 			response.put("proceed", responseDialog == IDialogConstants.OK_ID);

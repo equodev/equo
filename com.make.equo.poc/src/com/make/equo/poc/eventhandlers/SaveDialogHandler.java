@@ -23,7 +23,7 @@ public class SaveDialogHandler {
 	public void configDialog() {
 		equoEventHandler.on("savedialoghandler", (IEquoRunnable) voidParameter -> {
 			MessageDialog dialog = new MessageDialog(null, "Save Resource", null, "Save changes?",
-					MessageDialog.QUESTION, 0, new String[]{"&Save", "Do&n't Save", "Cancel"});
+					MessageDialog.QUESTION, 2, new String[]{"&Save", "Do&n't Save", "Cancel"});
 			int responseDialog = dialog.open();
 			boolean close = responseDialog >= 0 && responseDialog != CANCEL_ID;
 			boolean save = responseDialog == IDialogConstants.OK_ID;
