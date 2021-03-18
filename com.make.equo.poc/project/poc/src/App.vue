@@ -11,7 +11,7 @@
     </equo-toolbar>
 
     <div class="contentDiv">
-      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @openEditor="openEditor" @pasteFile="pasteFile" @removeFile="removeFile" @transformResponseToTreeData="transformResponseToTreeData" /></div>
+      <div  class="treeDiv"><equo-treeview ref="tree" title="Explorer" v-bind:extensionicons="extensionIcons" :menuoptions="contextMenuOptions" :path="path" v-bind:nodes="nodes" @openEditor="openEditor" @pasteFile="pasteFile" @removeFile="removeFile" @placeResponseInModel="placeResponseInModel" /></div>
       <div  class="editorShellDiv">
         <div id="editor" class="editor"></div>
         <equo-shell class="shellDiv"/>
@@ -54,17 +54,17 @@ export default {
                       }},
                       {title: "Cut", shortcut: "Ctrl + X",eventHandler:function(node, tree){
                         tree.cutSelection = true;
-                        tree.selectedNode = node.data.path;
+                        tree.selectedNode = node;
                       }},
                       {title: "Copy", shortcut: "Ctrl + C",eventHandler:function(node, tree){
                         tree.cutSelection = false;
-                        tree.selectedNode = node.data.path;
+                        tree.selectedNode = node;
                       }},
                       {title: "Paste", shortcut: "Ctrl + V",eventHandler:function(node, tree){
                         tree.$emit('pasteFile', node, tree);
                       }},
                       {title: "Remove", shortcut: "Supr",eventHandler:function(node, tree){
-                        tree.$emit('removeFile', node.data.path);
+                        tree.$emit('removeFile', node, tree);
                       }}
               ],
               editor: undefined,
@@ -74,7 +74,7 @@ export default {
     },
     /* eslint-disable */
     methods:{
-      transformResponseToTreeData(response, originalTree, originalTreeData, expandedNode){
+      transformResponseToTreeData(response, expandedNode){
         if (!response.err){
           for(let i =0;i < response.children.length;i++){
             response.children[i].data = {path: response.children[i].path};
@@ -90,19 +90,33 @@ export default {
               expandedNode.children.splice(expandedNode.children.length - 1,0,response.children[i])
             }
           }
+          response.data = {path: response.path};
+          if (response.isDirectory){
+            response.isExpanded = false;
+            response.data.wasExpandedBefore = false;
+          }
           response.isLeaf = !response.isDirectory;
           response.title = response.name;
-          originalTree.splice(0, originalTree.length);
-          if (typeof originalTreeData !== 'undefined'){
-            Array.prototype.push.apply(originalTree, originalTreeData);
-          } else {
-            Array.prototype.push.apply(originalTree, response.children);
-          }
+          return response;
         }
+      },
+      placeResponseInModel(response, originalTreeNodes, treeComponent, expandedNode){
+          this.transformResponseToTreeData(response, expandedNode);
+          if (typeof treeComponent !== 'undefined'){
+            response.children.forEach(function(item){
+              treeComponent.$refs.sltree.insert({
+                node: expandedNode,
+                placement: 'inside'
+              }, item);
+            });
+          } else {
+            originalTreeNodes.splice(0, originalTreeNodes.length);
+            Array.prototype.push.apply(originalTreeNodes, response.children);
+          }
       },
       refreshTree(response){
         if (!response.err){
-          this.transformResponseToTreeData(response, this.nodes);
+          this.placeResponseInModel(response, this.nodes);
           this.path = response.path;
         }
       },
@@ -166,12 +180,15 @@ export default {
           app.menuWithoutEditor.setApplicationMenu();
         });
       },
-      removeFile(path){
+      removeFile(node, tree){
         var app = this;
+        let path = node.data.path;
         equo.on("_confirmremoveresponse", function(response){
           if (response.proceed){
             equo.deleteFile(path, function(secondResponse){
-              equo.fileInfo(app.path, app.refreshTree);
+              if (!secondResponse.err){
+                tree.$refs.sltree.remove([node.path]);
+              }
             });
           }
         });
@@ -180,14 +197,33 @@ export default {
       pasteFile(node, tree){
         var app = this;
         if (!node.isLeaf){
-          if (tree.cutSelection){
-            equo.moveFile(tree.selectedNode, node.data.path, function(response){
-              equo.fileInfo(app.path, app.refreshTree);
-            });
-          } else {
-            equo.copyFile(tree.selectedNode, node.data.path, function(response){
-              equo.fileInfo(app.path, app.refreshTree);
-            });
+          if (typeof tree.selectedNode !== 'undefined'){
+            if (tree.cutSelection){
+              equo.moveFile(tree.selectedNode.data.path, node.data.path, function(response){
+                if (!response.err){
+                  tree.$refs.sltree.remove([tree.selectedNode.path]);
+                  tree.selectedNode = undefined;
+                  equo.fileInfo(response.content, function(secondResponse){
+                    tree.$refs.sltree.insert({
+                      node: node,
+                      placement: 'inside'
+                    }, app.transformResponseToTreeData(secondResponse));
+                  });
+                }
+              });
+            } else {
+              equo.copyFile(tree.selectedNode.data.path, node.data.path, function(response){
+                tree.selectedNode = undefined;
+                if (!response.err){
+                  equo.fileInfo(response.content, function(secondResponse){
+                    tree.$refs.sltree.insert({
+                      node: node,
+                      placement: 'inside'
+                    }, app.transformResponseToTreeData(secondResponse));
+                  });
+                }
+              });
+            }
           }
         }
       },

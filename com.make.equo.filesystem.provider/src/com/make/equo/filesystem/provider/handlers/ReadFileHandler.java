@@ -19,8 +19,7 @@ public class ReadFileHandler extends FileSystemHandler {
 		if (content == null) {
 			return new ErrResponse();
 		}
-		ContentResponse response = new ContentResponse();
-		response.setContent(content);
+		ContentResponse response = new ContentResponse(content);
 		return response;
 	}
 

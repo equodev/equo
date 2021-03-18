@@ -124,7 +124,7 @@ export default {
           /*eslint-disable*/
           equo.fileInfo(node.data.path,function(response){
             expandedNode.data.wasExpandedBefore = true;
-            tree.$emit('transformResponseToTreeData', response, originalTree, treeData, expandedNode);
+            tree.$emit('placeResponseInModel', response, originalTree, tree, node);
           });
           /*eslint-enable*/
         }

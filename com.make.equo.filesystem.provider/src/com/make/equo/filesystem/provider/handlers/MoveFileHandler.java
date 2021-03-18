@@ -3,8 +3,8 @@ package com.make.equo.filesystem.provider.handlers;
 import java.io.File;
 
 import com.google.gson.JsonObject;
+import com.make.equo.filesystem.provider.responses.ContentResponse;
 import com.make.equo.filesystem.provider.responses.ErrResponse;
-import com.make.equo.filesystem.provider.responses.OkResponse;
 
 public class MoveFileHandler extends FileSystemHandler {
 
@@ -12,8 +12,9 @@ public class MoveFileHandler extends FileSystemHandler {
 	protected Object execute(JsonObject payload) {
 		File actualFile = new File(getPathParam(payload));
 		File folderDest = new File(getContentParam(payload));
-		if (equoFileSystem.moveFile(actualFile, folderDest)) {
-			return new OkResponse();
+		String response = equoFileSystem.moveFile(actualFile, folderDest);
+		if (response != null) {
+			return new ContentResponse(response);
 		}
 		return new ErrResponse();
 	}

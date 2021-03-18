@@ -31,9 +31,11 @@ public interface IEquoFileSystem {
 	 */
 	public String readFile(File file);
 
-	public boolean renameFile(File file, String newName);
+	public String renameFile(File file, String newName);
 
-	public boolean moveFile(File file, File folderDest);
+	public boolean deleteFile(File file);
 
-	public boolean copyFile(File file, File folderDest);
+	public String moveFile(File file, File folderDest);
+
+	public String copyFile(File file, File folderDest);
 }
