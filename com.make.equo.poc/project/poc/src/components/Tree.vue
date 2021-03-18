@@ -107,24 +107,24 @@ export default {
        console.log("Click",node.path, event);
      },
      node2Click(node){
-       this.$emit('openEditor', node.data.path);
+       if (node.isLeaf){
+        this.$emit('openEditor', node.data.path);
+       }
      },
      getNode(nodes,path){
         if (path.length === 1) return nodes[path[0]];
         return this.getNode(nodes[path[0]].children, path.slice(1));
      },
      
-     toggle(node){
+     toggle(expandedNode){
         var tree = this;
         var originalTree = this.nodes;
-        var treeData = originalTree.slice(0);
-        var expandedNode = this.getNode(treeData,node.path);
         expandedNode.isExpanded=!expandedNode.isExpanded; 
-        if(!expandedNode.data.wasExpandedBefore){
+        if(expandedNode.data.wasExpandedBefore === false){
           /*eslint-disable*/
-          equo.fileInfo(node.data.path,function(response){
-            expandedNode.data.wasExpandedBefore = true;
-            tree.$emit('placeResponseInModel', response, originalTree, tree, node);
+          equo.fileInfo(expandedNode.data.path,function(response){
+            tree.$refs.sltree.getNode(expandedNode.path).data.wasExpandedBefore = true;
+            tree.$emit('placeResponseInModel', response, originalTree, tree, expandedNode);
           });
           /*eslint-enable*/
         }

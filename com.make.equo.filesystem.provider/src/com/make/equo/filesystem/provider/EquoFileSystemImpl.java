@@ -144,6 +144,9 @@ public class EquoFileSystemImpl implements IEquoFileSystem {
 	@Override
 	public String copyFile(File file, File folderDest) {
 		File fileDest = new File(folderDest, file.getName());
+		if (fileDest.exists()) {
+			return null;
+		}
 		try {
 			if (file.isDirectory()) {
 				FileUtils.copyDirectory(file, fileDest);

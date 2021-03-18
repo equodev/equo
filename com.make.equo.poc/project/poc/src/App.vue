@@ -188,6 +188,9 @@ export default {
             equo.deleteFile(path, function(secondResponse){
               if (!secondResponse.err){
                 tree.$refs.sltree.remove([node.path]);
+                if (app.thereIsAnEditor() && app.editor.getFilePath() === node.data.path){
+                  app.closeEditor();
+                }
               }
             });
           }
@@ -202,19 +205,24 @@ export default {
               equo.moveFile(tree.selectedNode.data.path, node.data.path, function(response){
                 if (!response.err){
                   tree.$refs.sltree.remove([tree.selectedNode.path]);
+                  if (app.thereIsAnEditor() && app.editor.getFilePath() === tree.selectedNode.data.path){
+                    app.closeEditor();
+                  }
                   tree.selectedNode = undefined;
-                  equo.fileInfo(response.content, function(secondResponse){
-                    tree.$refs.sltree.insert({
-                      node: node,
-                      placement: 'inside'
-                    }, app.transformResponseToTreeData(secondResponse));
-                  });
+                  if (node.data.wasExpandedBefore === true){
+                    equo.fileInfo(response.content, function(secondResponse){
+                      tree.$refs.sltree.insert({
+                        node: node,
+                        placement: 'inside'
+                      }, app.transformResponseToTreeData(secondResponse));
+                    });
+                  }
                 }
               });
             } else {
               equo.copyFile(tree.selectedNode.data.path, node.data.path, function(response){
                 tree.selectedNode = undefined;
-                if (!response.err){
+                if (!response.err && node.data.wasExpandedBefore === true){
                   equo.fileInfo(response.content, function(secondResponse){
                     tree.$refs.sltree.insert({
                       node: node,
