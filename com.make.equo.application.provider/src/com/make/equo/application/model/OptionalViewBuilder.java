@@ -2,11 +2,15 @@ package com.make.equo.application.model;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.concurrent.Callable;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.workbench.modeling.IWindowCloseHandler;
 
 import com.make.equo.analytics.internal.api.AnalyticsService;
 import com.make.equo.application.api.IEquoApplication;
+import com.make.equo.application.handlers.AppStartupCompleteEventHandler;
 import com.make.equo.application.impl.EnterFullScreenModeRunnable;
 import com.make.equo.contribution.api.EquoContributionBuilder;
 import com.make.equo.server.api.IEquoServer;
@@ -150,6 +154,31 @@ public class OptionalViewBuilder {
 
 	public OptionalViewBuilder trustAnySSLCert(boolean trustAllServers) {
 		return this.viewBuilder.setSSLTrust(trustAllServers);
+	}
+
+	/**
+	 * Introduce some action before application closes and decide if continue
+	 * exiting or not.
+	 * 
+	 * @param beforeExitCallable The action to perform. Return 'true' to exit,
+	 *                           'false' to cancel
+	 * @return
+	 */
+	public OptionalViewBuilder beforeExit(Callable<Boolean> beforeExitCallable) {
+		IWindowCloseHandler handler = new IWindowCloseHandler() {
+			@Override
+			public boolean close(MWindow window) {
+				try {
+					return beforeExitCallable.call();
+				} catch (Exception e) {
+					return true;
+				}
+			}
+
+		};
+		AppStartupCompleteEventHandler.getInstance().setRunnable(
+				() -> equoApplicationBuilder.getmWindow().getContext().set(IWindowCloseHandler.class, handler));
+		return this;
 	}
 
 	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {

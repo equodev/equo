@@ -13,13 +13,16 @@ public class ExitAppHandler implements IActionHandler<Payload> {
 
 	@Override
 	public Object call(Payload payload) {
-		MessageDialog dialog = new MessageDialog(null, "Exit", null,
-				"Are you sure you want to exit?", MessageDialog.QUESTION, 1,
-				new String[] { "&Exit", "Cancel" });
-		if (dialog.open() == IDialogConstants.OK_ID) {
+		if (showDialog() == IDialogConstants.OK_ID) {
 			System.exit(0);
 		}
 		return null;
+	}
+
+	public int showDialog() {
+		MessageDialog dialog = new MessageDialog(null, "Confirm Exit", null, "Exit application?",
+				MessageDialog.QUESTION, 1, new String[] { "&Exit", "Cancel" });
+		return dialog.open();
 	}
 
 }
