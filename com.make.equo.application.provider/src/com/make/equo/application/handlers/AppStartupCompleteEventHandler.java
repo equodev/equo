@@ -23,7 +23,9 @@ public class AppStartupCompleteEventHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(final Event event) {
-		this.runnable.run();
+		if (this.runnable != null) {
+			this.runnable.run();
+		}
 	}
 
 	public void setRunnable(Runnable runnable) {
