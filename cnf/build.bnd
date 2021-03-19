@@ -35,11 +35,6 @@ Bundle-ActivationPolicy: lazy
         name = "Equinox Weaving"; \
         url = "https://download.eclipse.org/tools/ajdt/410/dev/update/"
 
--plugin.8.EquoMonaco: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = "Equinox Monaco Editor"; \
-        url = "https://equo-monaco-editor.ams3.digitaloceanspaces.com/rls/p2/"
-
 -plugin.2.Eclipse201912: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = "Eclipse201912"; \
