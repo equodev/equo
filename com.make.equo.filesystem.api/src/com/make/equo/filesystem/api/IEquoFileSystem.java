@@ -31,11 +31,20 @@ public interface IEquoFileSystem {
 	 */
 	public String readFile(File file);
 
+	/**
+	 * @return The absolute path of the renamed file. Null if there was an error
+	 */
 	public String renameFile(File file, String newName);
 
 	public boolean deleteFile(File file);
 
+	/**
+	 * @return The absolute path of the moved file. Null if there was an error
+	 */
 	public String moveFile(File file, File folderDest);
 
+	/**
+	 * @return The absolute path of the copied file. Null if there was an error
+	 */
 	public String copyFile(File file, File folderDest);
 }
