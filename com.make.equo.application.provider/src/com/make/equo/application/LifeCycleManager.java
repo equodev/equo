@@ -14,13 +14,15 @@ import com.make.equo.application.handlers.AppStartupCompleteEventHandler;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
 import com.make.equo.application.model.EquoApplicationModel;
+import com.make.equo.contribution.api.IEquoContributionManager;
 
 public class LifeCycleManager {
 
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
 			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
-			IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker)
+			IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker,
+			IEquoContributionManager equoContributionManager)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		IEquoCrashReporter equoCrashReporter = dependencyInjector.getEquoCrashReporter();
 		if (equoCrashReporter != null) {
@@ -32,7 +34,9 @@ public class LifeCycleManager {
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
 				equoApplicationModel, equoApplicationBuilder, equoApp);
 		equoApplicationBuilderConfigurator.configure();
-		eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, AppStartupCompleteEventHandler.getOrCreate());
+		AppStartupCompleteEventHandler appStartupHandler = AppStartupCompleteEventHandler.getInstance();
+		appStartupHandler.setEquoContributionManager(equoContributionManager);
+		eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
 		equoApp.buildApp(equoApplicationBuilder);
 
 	}

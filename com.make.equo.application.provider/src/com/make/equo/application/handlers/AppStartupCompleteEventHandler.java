@@ -3,18 +3,17 @@ package com.make.equo.application.handlers;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
+import com.make.equo.contribution.api.IEquoContributionManager;
+
 public class AppStartupCompleteEventHandler implements EventHandler {
 	private static AppStartupCompleteEventHandler instance = null;
 	private Runnable runnable = null;
+	private IEquoContributionManager equoContributionManager = null;
 
-	public static AppStartupCompleteEventHandler getOrCreate() {
+	public synchronized static AppStartupCompleteEventHandler getInstance() {
 		if (instance == null) {
 			instance = new AppStartupCompleteEventHandler();
 		}
-		return instance;
-	}
-
-	public static AppStartupCompleteEventHandler getInstance() {
 		return instance;
 	}
 
@@ -23,6 +22,11 @@ public class AppStartupCompleteEventHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(final Event event) {
+		if (this.equoContributionManager != null) {
+			for (Runnable runnable : this.equoContributionManager.getContributionStartProcedures()) {
+				runnable.run();
+			}
+		}
 		if (this.runnable != null) {
 			this.runnable.run();
 		}
@@ -30,6 +34,10 @@ public class AppStartupCompleteEventHandler implements EventHandler {
 
 	public void setRunnable(Runnable runnable) {
 		this.runnable = runnable;
+	}
+
+	public void setEquoContributionManager(IEquoContributionManager equoContributionManager) {
+		this.equoContributionManager = equoContributionManager;
 	}
 
 }

@@ -12,6 +12,8 @@ public interface IEquoContributionManager {
 
 	List<String> getContributionProxiedUris();
 
+	List<Runnable> getContributionStartProcedures();
+
 	boolean contains(String contributionName);
 
 	void addContribution(EquoContribution contribution);
