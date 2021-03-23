@@ -5,7 +5,6 @@ Bundle-ActivationPolicy:
 
 -buildpath: \
     com.make.equo.application.provider;version=latest,\
-    com.make.equo.renderers;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.make.equo.testing.common;version=latest,\
     org.eclipse.e4.ui.model.workbench,\
@@ -52,12 +51,9 @@ Bundle-ActivationPolicy:
     com.ibm.icu;version='[64.2.0,64.2.1)',\
     com.make.equo.aer.api;version=snapshot,\
     com.make.equo.aer.internal.api;version=snapshot,\
-    com.make.equo.aer.provider;version=snapshot,\
     com.make.equo.analytics.internal.api;version=snapshot,\
-    com.make.equo.analytics.internal.provider;version=snapshot,\
     com.make.equo.application.provider;version=snapshot,\
     com.make.equo.builders.tests;version=snapshot,\
-    com.make.equo.renderers;version=latest,\
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.contribution.provider;version=latest,\
     com.make.equo.server.api;version=snapshot,\
@@ -65,7 +61,6 @@ Bundle-ActivationPolicy:
     com.make.equo.server.provider;version=snapshot,\
     com.make.equo.testing.common;version=latest,\
     com.make.equo.testing.common.internal;version=latest,\
-    com.make.equo.ui.helper.provider;version=snapshot,\
     com.make.equo.ws.api;version=snapshot,\
     com.make.equo.ws.provider;version=snapshot,\
     io.netty.all;version='[4.0.44,4.0.45)',\

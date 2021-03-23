@@ -41,7 +41,7 @@ public class ViewBuilder {
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
 	private IEquoServer equoServer;
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
 	private volatile AnalyticsService analyticsService;
 
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
@@ -136,7 +136,9 @@ public class ViewBuilder {
 	}
 
 	public EquoApplicationBuilder start() {
-		analyticsService.registerLaunchApp();
+		if (analyticsService != null) {
+			analyticsService.registerLaunchApp();
+		}
 		mainAppBuilder.build();
 		return this.equoAppBuilder;
 	}

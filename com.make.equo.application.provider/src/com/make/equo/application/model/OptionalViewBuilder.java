@@ -148,7 +148,9 @@ public class OptionalViewBuilder {
 	}
 
 	public OptionalViewBuilder enableAnalytics() {
-		analyticsService.enableAnalytics();
+		if (analyticsService != null) {
+			analyticsService.enableAnalytics();
+		}
 		return this;
 	}
 
