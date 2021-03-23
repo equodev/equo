@@ -59,11 +59,14 @@ class EquoWebSocketServer extends WebSocketServer {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void onMessage(WebSocket conn, String message) {
-		// broadcast(message);
-		logger.debug(conn + ": " + message);
-		NamedActionMessage actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
+	private void receiveMessage(String message) {
+		NamedActionMessage actionMessage = null;
+		try {
+			actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
+		} catch (Exception e) {
+			return;
+		}
+
 		String action = actionMessage.getAction().toLowerCase();
 		if (eventHandlers.containsKey(action)) {
 			IEquoRunnableParser<?> equoRunnableParser = eventHandlers.get(action);
@@ -79,6 +82,13 @@ class EquoWebSocketServer extends WebSocketServer {
 			}
 			actions.get(action).call(parsedPayload);
 		}
+	}
+
+	@Override
+	public void onMessage(WebSocket conn, String message) {
+		// broadcast(message);
+		logger.debug(conn + ": " + message);
+		receiveMessage(message);
 	}
 
 	@Override
@@ -107,6 +117,7 @@ class EquoWebSocketServer extends WebSocketServer {
 	public void broadcast(String messageAsJson) {
 		if (firstClientConnected) {
 			super.broadcast(messageAsJson);
+			receiveMessage(messageAsJson);
 		} else {
 			synchronized (messagesToSend) {
 				messagesToSend.add(messageAsJson);

@@ -14,7 +14,7 @@ public class DeleteFileHandler extends FileSystemHandler {
 
 	@Override
 	protected Object execute(JsonObject payload) {
-		if (new File(getPathParam(payload)).delete())
+		if (equoFileSystem.deleteFile(new File(getPathParam(payload))))
 			return new OkResponse();
 		return new ErrResponse();
 	}

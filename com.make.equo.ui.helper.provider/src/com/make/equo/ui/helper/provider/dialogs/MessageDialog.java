@@ -230,35 +230,37 @@ public class MessageDialog {
 
    private void init(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
          int dialogImageType, int defaultIndex, String... dialogButtonLabels) {
-      this.title = dialogTitle;
-      this.message = dialogMessage;
-//      this.defaultButtonIndex = defaultIndex;
+		this.title = dialogTitle;
+		this.message = dialogMessage;
+//		this.defaultButtonIndex = defaultIndex;
 
-      initWebDialog(parentShell, title, message, dialogImageType, dialogButtonLabels);
-   }
+		initWebDialog(parentShell, title, message, dialogImageType, defaultIndex, dialogButtonLabels);
+	}
 
-   private void initWebDialog(Shell parentShell, String title, String message, int dialogImageType, String... dialogButtonLabels) {
-      if (thisDialog == null) {
-         thisDialog = WebdialogFactory.eINSTANCE.createMWebDialog();
-      }
-      thisDialog.setTitle(title);
-      thisDialog.setMessage(message);
-      thisDialog.setType(dialogImageType);
-      thisDialog.setParentShell(parentShell);
-      thisDialog.setBlocker(true);
-      thisDialog.setVisible(true);
-      thisDialog.setOnTop(true);
-      thisDialog.setToBeRendered(true);
-      
-      int i = 0;
-      for (String label : dialogButtonLabels) {
-         MButton button = WebdialogFactory.eINSTANCE.createMButton();
-         button.setLabel(label);
-         button.setAction(i);
-         thisDialog.getButtons().add(button);
-         i++;
-      }
-   }
+	private void initWebDialog(Shell parentShell, String title, String message, int dialogImageType, int defaultIndex,
+			String... dialogButtonLabels) {
+		if (thisDialog == null) {
+			thisDialog = WebdialogFactory.eINSTANCE.createMWebDialog();
+		}
+		thisDialog.setTitle(title);
+		thisDialog.setMessage(message);
+		thisDialog.setType(dialogImageType);
+		thisDialog.setResponse(defaultIndex);
+		thisDialog.setParentShell(parentShell);
+		thisDialog.setBlocker(true);
+		thisDialog.setVisible(true);
+		thisDialog.setOnTop(true);
+		thisDialog.setToBeRendered(true);
+
+		int i = 0;
+		for (String label : dialogButtonLabels) {
+			MButton button = WebdialogFactory.eINSTANCE.createMButton();
+			button.setLabel(label);
+			button.setAction(i);
+			thisDialog.getButtons().add(button);
+			i++;
+		}
+	}
 
    protected MWebDialog getDialog() {
       return thisDialog;

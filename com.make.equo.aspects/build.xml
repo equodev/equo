@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="Compile aspects" default="compile-aspects" basedir=".">
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="bin" />
+	<property name="gradle.caches.dir" location="${user.home}/.gradle/caches" />
+	<property name="target" value="11" />
+	<property name="source" value="11" />
+
+	<!-- Create a classpath container which can be later used in the ant task -->
+	<path id="ajc.classpath">
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.jface-3.18.0.v20191122-2109.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.jface.source-3.18.0.v20191122-2109.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.cocoa.macosx.x86_64-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.cocoa.macosx.x86_64.source-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.gtk.linux.x86_64-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.gtk.linux.x86_64.source-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.win32.win32.x86_64-3.113.0.v20191204-0601.jar" />
+		<pathelement location="${user.home}/.bnd/cache/eclipse201912/org.eclipse.swt.win32.win32.x86_64.source-3.113.0.v20191204-0601.jar" />
+		<pathelement location="../com.make.equo.ui.helper.provider/generated/com.make.equo.ui.helper.provider.jar" />
+		<fileset dir="${gradle.caches.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Include the tasks from the aspectjtools bundle -->
+	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties" classpathref="ajc.classpath" />
+
+	<!-- Compiles the aspects -->
+	<target name="compile-aspects">
+		<iajc source="${source}" target="${target}" destdir="${build.dir}" fork="false" classpathref="ajc.classpath" sourceroots="${src.dir}" includes="**/*.aj" excludes="**/*.java" />
+	</target>
+
+</project>

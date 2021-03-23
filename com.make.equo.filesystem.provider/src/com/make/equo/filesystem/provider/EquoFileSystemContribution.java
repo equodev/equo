@@ -35,6 +35,7 @@ public class EquoFileSystemContribution {
 		new FileInfoHandler().register(equoFileSystem, equoEventHandler);
 		new DeleteFileHandler().register(equoFileSystem, equoEventHandler);
 		new MoveFileHandler().register(equoFileSystem, equoEventHandler);
+		new CopyFileHandler().register(equoFileSystem, equoEventHandler);
 		new NewFolderHandler().register(equoFileSystem, equoEventHandler);
 		new OpenFileHandler().register(equoFileSystem, equoEventHandler);
 		new OpenFolderHandler().register(equoFileSystem, equoEventHandler);

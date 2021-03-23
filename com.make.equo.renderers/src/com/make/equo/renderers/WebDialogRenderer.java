@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.SWT;
@@ -26,6 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.make.equo.application.api.IEquoApplication;
+import com.make.equo.application.model.EquoApplicationModel;
 import com.make.equo.ui.helper.provider.dialogs.util.IDialogConstants;
 import com.make.equo.ui.helper.provider.model.MButton;
 import com.make.equo.ui.helper.provider.model.MButtonToggle;
@@ -253,6 +255,10 @@ public class WebDialogRenderer extends WBWRenderer implements IEquoRenderer {
 			if (parent == null) {
 				// If this is a top-level window, then there must not be any open modal windows.
 				parent = getModalChild(Display.getCurrent().getShells());
+				if (parent == null) {
+					parent = (Shell) EquoApplicationModel.getApplicaton().getMainApplication().getContext()
+							.get(IServiceConstants.ACTIVE_SHELL);
+				}
 			} else {
 				// If we picked a parent with a modal child, use the modal child instead
 				Shell modalChild = getModalChild(parent.getShells());

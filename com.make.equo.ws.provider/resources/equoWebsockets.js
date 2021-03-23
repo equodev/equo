@@ -5,6 +5,26 @@ window.equo = window.equo || {};
     let webSocket;
     let userEventCallbacks = {};
 
+    let receiveMessage = function(event){
+        if(event === undefined) {
+            return;
+        }
+        try {
+            let parsedPayload = JSON.parse(event);
+            let actionId = parsedPayload.action;
+            if (actionId in userEventCallbacks) {
+                let params = parsedPayload.params;
+                if (parsedPayload.params) {
+                    userEventCallbacks[actionId](params);
+                } else {
+                    userEventCallbacks[actionId]();
+                }
+            }
+        } catch(err) {
+
+        }
+    };
+
     const openSocket = function() {
         // Ensures only one connection is open at a time
         if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
@@ -29,23 +49,7 @@ window.equo = window.equo || {};
 
         webSocket.onmessage = function(event){
             Logger.debug('event.data is...', event.data);
-            if(event.data === undefined) {
-                return;
-            }
-            try {
-                let parsedPayload = JSON.parse(event.data);
-                let actionId = parsedPayload.action;
-                if (actionId in userEventCallbacks) {
-                    let params = parsedPayload.params;
-                    if (parsedPayload.params) {
-                        userEventCallbacks[actionId](params);
-                    } else {
-                        userEventCallbacks[actionId]();
-                    }
-                }
-            } catch(err) {
-
-            }
+            receiveMessage(event.data);
         };
 
         webSocket.onclose = function(event){
@@ -60,10 +64,12 @@ window.equo = window.equo || {};
     equo.sendToWebSocketServer = function(action, browserParams) {
         // Wait until the state of the socket is not ready and send the message when it is...
         waitForSocketConnection(webSocket, function(){
-            webSocket.send(JSON.stringify({
+            let event = JSON.stringify({
                 action: action,
                 params: browserParams
-            }));
+            });
+            webSocket.send(event);
+            receiveMessage(event);
         });
     };
 

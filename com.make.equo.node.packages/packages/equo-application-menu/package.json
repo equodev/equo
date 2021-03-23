@@ -1,6 +1,6 @@
 {
     "name": "@equo/equo-application-menu",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Application menu for Equo apps",
     "license": "UNLICENSED",
     "publishConfig": {
@@ -12,7 +12,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/websocket": "^0.1.1"
+        "@equo/websocket": "^0.1.2"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run build",

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -115,15 +116,21 @@ public class EquoFileSystemImpl implements IEquoFileSystem {
 	}
 
 	@Override
-	public boolean renameFile(File file, String newName) {
+	public String renameFile(File file, String newName) {
 		File fileDest = new File(file.getParentFile(), newName);
-		return internalMoveFile(file, fileDest);
+		if (internalMoveFile(file, fileDest)) {
+			return fileDest.getAbsolutePath();
+		}
+		return null;
 	}
 
 	@Override
-	public boolean moveFile(File file, File folderDest) {
+	public String moveFile(File file, File folderDest) {
 		File fileDest = new File(folderDest, file.getName());
-		return internalMoveFile(file, fileDest);
+		if (internalMoveFile(file, fileDest)) {
+			return fileDest.getAbsolutePath();
+		}
+		return null;
 	}
 
 	protected boolean internalMoveFile(File file, File fileDest) {
@@ -132,6 +139,38 @@ public class EquoFileSystemImpl implements IEquoFileSystem {
 		}
 		fileDest.getParentFile().mkdirs();
 		return file.renameTo(fileDest);
+	}
+
+	@Override
+	public String copyFile(File file, File folderDest) {
+		File fileDest = new File(folderDest, file.getName());
+		if (fileDest.exists()) {
+			return null;
+		}
+		try {
+			if (file.isDirectory()) {
+				FileUtils.copyDirectory(file, fileDest);
+			} else {
+				FileUtils.copyFile(file, fileDest);
+			}
+		} catch (IOException e) {
+			return null;
+		}
+		return fileDest.getAbsolutePath();
+	}
+
+	@Override
+	public boolean deleteFile(File file) {
+		try {
+			if (file.isDirectory()) {
+				FileUtils.deleteDirectory(file);
+			} else {
+				return FileUtils.deleteQuietly(file);
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 }

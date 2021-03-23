@@ -1,7 +1,7 @@
 Bundle-Version: ${version}.${tstamp}
 Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 -runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
--runee: JavaSE-1.8
+-runee: JavaSE-11
 -runrequires: \
 	bnd.identity;version='latest';id='com.make.equo.aer.api',\
 	bnd.identity;version='latest';id='com.make.equo.aer.internal.api',\
@@ -13,6 +13,7 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 	bnd.identity;version='latest';id='com.make.equo.analytics.internal.provider',\
 	bnd.identity;version='latest';id='com.make.equo.application.client',\
 	bnd.identity;version='latest';id='com.make.equo.application.provider',\
+    bnd.identity;version='latest';id='com.make.equo.aspects',\
 	bnd.identity;version='latest';id='com.make.equo.contribution.api',\
 	bnd.identity;version='latest';id='com.make.equo.contribution.media.provider',\
 	bnd.identity;version='latest';id='com.make.equo.contribution.provider',\
@@ -59,7 +60,8 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 	bnd.identity;id='org.aspectj.runtime',\
 	bnd.identity;id='org.eclipse.osgi',\
 	bnd.identity;id='org.eclipse.osgi.util',\
-	bnd.identity;id='org.eclipse.e4.ui.workbench.renderers.swt.cocoa'
+	bnd.identity;id='org.eclipse.e4.ui.workbench.renderers.swt.cocoa',\
+    bnd.identity;id='org.eclipse.equinox.weaving.aspectj'
 
 # org.eclipse.osgi added manually. It is not being resolved
 runbundles: \
@@ -89,6 +91,7 @@ runbundles: \
 	com.make.equo.analytics.internal.provider;version=snapshot,\
 	com.make.equo.application.client;version=snapshot,\
 	com.make.equo.application.provider;version=snapshot,\
+	com.make.equo.aspects;version=snapshot,\
 	com.make.equo.contribution.api;version=snapshot,\
 	com.make.equo.contribution.media.provider;version=snapshot,\
 	com.make.equo.contribution.provider;version=snapshot,\
@@ -108,8 +111,8 @@ runbundles: \
 	com.make.equo.ws.provider;version=snapshot,\
 	com.squareup.moshi;version='[1.4.0,1.4.1)',\
 	com.squareup.okhttp3.logging-interceptor;version='[3.9.1,3.9.2)',\
-	com.squareup.okhttp3.okhttp;version='[3.5.0,3.5.1)',\
-	com.squareup.okio;version='[1.11.0,1.11.1)',\
+	com.squareup.okhttp3.okhttp;version='[3.9.1,3.9.2)',\
+	com.squareup.okio;version='[1.13.0,1.13.1)',\
 	com.squareup.retrofit2.converter-moshi;version='[2.3.0,2.3.1)',\
 	com.squareup.retrofit2.retrofit;version='[2.3.0,2.3.1)',\
 	io.netty.all;version='[4.0.44,4.0.45)',\
@@ -124,6 +127,7 @@ runbundles: \
 	org.apache.batik.util;version='[1.11.0,1.11.1)',\
 	org.apache.commons.cli;version='[1.2.0,1.2.1)',\
 	org.apache.commons.codec;version='[1.10.0,1.10.1)',\
+	org.apache.commons.io;version='[2.6.0,2.6.1)',\
 	org.apache.commons.jxpath;version='[1.3.0,1.3.1)',\
 	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
 	org.apache.commons.lang3;version='[3.5.0,3.5.1)',\
@@ -133,6 +137,7 @@ runbundles: \
 	org.apache.log4j;version='[1.2.15,1.2.16)',\
 	org.apache.xmlgraphics;version='[2.3.0,2.3.1)',\
 	org.aspectj.runtime;version='[1.9.6,1.9.7)',\
+	org.aspectj.weaver;version='[1.9.6,1.9.7)',\
 	org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
 	org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
 	org.eclipse.core.commands;version='[3.9.600,3.9.601)',\
@@ -176,6 +181,7 @@ runbundles: \
 	org.eclipse.equinox.event;version='[1.5.300,1.5.301)',\
 	org.eclipse.equinox.preferences;version='[3.7.600,3.7.601)',\
 	org.eclipse.equinox.registry;version='[3.8.600,3.8.601)',\
+	org.eclipse.equinox.weaving.aspectj;version='[1.0.400,1.0.401)',\
 	org.eclipse.equinox.weaving.hook;version='[1.2.500,1.2.501)',\
 	org.eclipse.jface;version='[3.18.0,3.18.1)',\
 	org.eclipse.jface.databinding;version='[1.9.200,1.9.201)',\

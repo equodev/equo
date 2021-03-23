@@ -11,6 +11,26 @@ export class EquoWebSocket extends WebSocket {
         super(`ws://127.0.0.1:${port}`);
     }
 
+    private receiveMessage(event: any): void {
+        if (event === undefined) {
+            return;
+        }
+        try {
+            let parsedPayload = JSON.parse(event);
+            let actionId = parsedPayload.action;
+            if (actionId in this.userEventCallbacks) {
+                let params = parsedPayload.params;
+                if (parsedPayload.params) {
+                    this.userEventCallbacks[actionId](params);
+                } else {
+                    this.userEventCallbacks[actionId]();
+                }
+            }
+        } catch (err) {
+
+        }
+    }
+
     /**
      * Binds functions to the listeners for the websocket.
      */
@@ -28,23 +48,7 @@ export class EquoWebSocket extends WebSocket {
     onmessage = (event: any): void => {
         if (typeof Logger !== 'undefined')
             Logger.debug('event.data is...', event.data);
-        if (event.data === undefined) {
-            return;
-        }
-        try {
-            let parsedPayload = JSON.parse(event.data);
-            let actionId = parsedPayload.action;
-            if (actionId in this.userEventCallbacks) {
-                let params = parsedPayload.params;
-                if (parsedPayload.params) {
-                    this.userEventCallbacks[actionId](params);
-                } else {
-                    this.userEventCallbacks[actionId]();
-                }
-            }
-        } catch (err) {
-
-        }
+        this.receiveMessage(event.data);
     };
 
     onclose = (event: any): void => {
@@ -59,11 +63,14 @@ export class EquoWebSocket extends WebSocket {
 
     private sendToWebSocketServer(actionId: any, browserParams?: any): void {
         // Wait until the state of the socket is not ready and send the message when it is...
+        let receiveMessage = this.receiveMessage;
         this.waitForSocketConnection(this, () => {
-            super.send(JSON.stringify({
+            let event = JSON.stringify({
                 action: actionId,
                 params: browserParams
-            }));
+            });
+            super.send(event);
+            receiveMessage(event);
         });
     };
 
