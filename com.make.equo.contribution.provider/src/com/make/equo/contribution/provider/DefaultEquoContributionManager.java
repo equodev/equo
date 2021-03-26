@@ -1,5 +1,6 @@
 package com.make.equo.contribution.provider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,18 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 
 	public List<String> getContributionProxiedUris() {
 		return resolver.getContributionProxiedUris();
+	}
+
+	@Override
+	public List<Runnable> getContributionStartProcedures() {
+		List<Runnable> startProcedures = new ArrayList<>();
+		for (EquoContribution contribution : equoContributions.values()) {
+			Runnable runnable = contribution.getRunnableAtStart();
+			if (runnable != null) {
+				startProcedures.add(runnable);
+			}
+		}
+		return startProcedures;
 	}
 
 }

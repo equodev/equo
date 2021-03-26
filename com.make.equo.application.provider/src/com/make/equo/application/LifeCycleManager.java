@@ -14,23 +14,29 @@ import com.make.equo.application.handlers.AppStartupCompleteEventHandler;
 import com.make.equo.application.model.EquoApplicationBuilder;
 import com.make.equo.application.model.EquoApplicationBuilderConfigurator;
 import com.make.equo.application.model.EquoApplicationModel;
-import com.make.equo.ui.helper.provider.model.ModelElementInjector;
+import com.make.equo.contribution.api.IEquoContributionManager;
 
 public class LifeCycleManager {
 
 	@ProcessAdditions
 	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
 			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
-			IEquoCrashReporter equoCrashReporter, EModelService modelService, IEventBroker eventBroker)
+			IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker,
+			IEquoContributionManager equoContributionManager)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Platform.addLogListener(new LogListener(equoCrashReporter));
-		mainApplication.getContext().get(ModelElementInjector.class);
+		IEquoCrashReporter equoCrashReporter = dependencyInjector.getEquoCrashReporter();
+		if (equoCrashReporter != null) {
+			Platform.addLogListener(new LogListener(equoCrashReporter));
+		}
+//		mainApplication.getContext().get(ModelElementInjector.class);
 		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
 		equoApplicationModel.setMainApplication(mainApplication);
 		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
 				equoApplicationModel, equoApplicationBuilder, equoApp);
 		equoApplicationBuilderConfigurator.configure();
-		eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, AppStartupCompleteEventHandler.getOrCreate());
+		AppStartupCompleteEventHandler appStartupHandler = AppStartupCompleteEventHandler.getInstance();
+		appStartupHandler.setEquoContributionManager(equoContributionManager);
+		eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
 		equoApp.buildApp(equoApplicationBuilder);
 
 	}

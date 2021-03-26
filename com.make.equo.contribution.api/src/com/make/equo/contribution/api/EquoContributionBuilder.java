@@ -42,6 +42,8 @@ public class EquoContributionBuilder {
 
 	private IHttpRequestFilter filter;
 
+	private Runnable runnableAtStart;
+
 	public EquoContributionBuilder() {
 		this.proxiedUris = new ArrayList<String>();
 		this.contributedScripts = new ArrayList<String>();
@@ -54,6 +56,7 @@ public class EquoContributionBuilder {
 		});
 		this.contributionName = "";
 		this.contributedHtmlName = "";
+		this.runnableAtStart = null;
 	}
 
 	/**
@@ -218,6 +221,17 @@ public class EquoContributionBuilder {
 	}
 
 	/**
+	 * Adds a procedure that will run when the application starts
+	 * 
+	 * @param startProcedure
+	 * @return this
+	 */
+	public EquoContributionBuilder withStartProcedure(Runnable startProcedure) {
+		this.runnableAtStart = startProcedure;
+		return this;
+	}
+
+	/**
 	 * Builds the contribution defined by this builder.
 	 * 
 	 * @return an EquoContribution instance.
@@ -225,7 +239,7 @@ public class EquoContributionBuilder {
 	public EquoContribution build() {
 		return new EquoContribution(manager, urlResolver, filtersAdapterHandler, contributedHtmlName, contributionName,
 				proxiedUris, contributedScripts, contributedStyles, excludedResources, pathsToScripts, pathsToStyles,
-				filter);
+				filter, runnableAtStart);
 	}
 
 }

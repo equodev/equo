@@ -14,7 +14,6 @@ stages:
       - cnf/equoapp.bnd
       - cnf/equobuild.bnd
       - cnf/release
-      - cnf/cache
       - cnf/build
       - build
       - build-cache

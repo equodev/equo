@@ -33,11 +33,13 @@ public class EquoContribution {
 
 	private final IHttpRequestFilter filter;
 
+	private final Runnable runnableAtStart;
+
 	public EquoContribution(IEquoContributionManager manager, IEquoContributionUrlResolver urlResolver,
 			IFiltersAdapterHandler filtersAdapterHandler, String contributedHtmlName, String contributionName,
 			List<String> proxiedUris, List<String> contributedScripts, List<String> contributedStyles,
 			List<String> excludedResources, Map<String, String> pathsToScripts, Map<String, String> pathsToStyles,
-			IHttpRequestFilter filter) {
+			IHttpRequestFilter filter, Runnable runnableAtStart) {
 		this.manager = manager;
 		this.urlResolver = urlResolver;
 		this.filtersAdapterHandler = filtersAdapterHandler;
@@ -50,6 +52,7 @@ public class EquoContribution {
 		this.pathsToScripts = pathsToScripts;
 		this.pathsToStyles = pathsToStyles;
 		this.filter = filter;
+		this.runnableAtStart = runnableAtStart;
 		addToManager();
 	}
 
@@ -112,6 +115,10 @@ public class EquoContribution {
 		if (manager != null) {
 			manager.addContribution(this);
 		}
+	}
+
+	public Runnable getRunnableAtStart() {
+		return runnableAtStart;
 	}
 
 }

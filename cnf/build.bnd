@@ -7,9 +7,9 @@ Bundle-ActivationPolicy: lazy
 #        runbundles = ${build}/equoapp.all.bnd
 
 -plugin.1.Testing: \
-    aQute.bnd.repository.osgi.OSGiRepository; \
+    aQute.bnd.repository.p2.provider.P2Repository; \
         name = "Equo Testing"; \
-        locations = "https://testing-core.ams3.digitaloceanspaces.com/0.2.0/repo/index.xml.gz"; \
+        url = "https://testing-core.ams3.digitaloceanspaces.com/0.2.0/repo/"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo-testing
 

@@ -1,5 +1,0 @@
-Bundle-Version: ${version}.${tstamp}
-Export-Package: com.make.equo.aer.client.api
--buildpath: \
-    com.google.gson,\
-    osgi.cmpn
