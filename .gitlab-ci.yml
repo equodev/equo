@@ -48,6 +48,8 @@ before_script:
 start-windows-pipeline:
   stage: build
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
     - if: $CI_COMMIT_BRANCH != 'master'
