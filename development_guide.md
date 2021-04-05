@@ -43,11 +43,11 @@ To setup the development environment of Equo Framework, Eclipse Installer is sug
 
       ```
       -plugin.1.Equo: \
-      aQute.bnd.repository.osgi.OSGiRepository; \
-          name = Equo; \
-          locations = "http://www.equo.maketechnology.io/framework/rls/repo/index.xml.gz"; \
-          poll.time = -1; \
-          cache = ~/.bnd/cache/equo
+      aQute.bnd.repository.p2.provider.P2Repository; \
+        name = Equo; \
+        url = "https://equo-framework.ams3.digitaloceanspaces.com/VERSIONPLACEHOLDER/repo/"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/equo
       ```
     - **Uncomment** the following code, and update the _locations_ field to your index.xml.gz file. The index.xml.gz file is located inside the cnf bundle of the Equo Framework. Then, go to the cnf bundle, open it, then go to the _release_ folder, and there you will find the index.xml.gz file. Get the absolute path of this file and put it into the _locations_ field.
 

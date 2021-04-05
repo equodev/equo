@@ -147,7 +147,7 @@
       xsi:type="setup:RedirectionTask"
       id="setup.redirect"
       disabled="true"
-      sourceURL="https://dl.maketechnology.io/framework/rls/EquoFramework.setup"
+      sourceURL="https://equo-framework.ams3.digitaloceanspaces.com/rls/EquoFramework.setup"
       targetURL="${workspace.location|uri}/git/cnf/EquoFramework.setup">
     <description>
       Redirects setup from public https://github.com/maketechnology
@@ -160,7 +160,7 @@
     <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.equo.framework"
-        value="=https://dl.maketechnology.io/framework/rls/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
+        value="=https://equo-framework.ams3.digitaloceanspaces.com/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
         vm="true">
       <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
     </setupTask>

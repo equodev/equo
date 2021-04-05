@@ -5,8 +5,8 @@ equo {
 task generateEquoAppToUpload(type: Copy){
     from 'cnf/equoapp.bnd'
     into '/tmp/auxequoapp'
-    filter { line -> line.replaceAll('-include: ', "-include: https://dl.maketechnology.io/framework/${equo.channel}/") }
-    filter { line -> line.replaceAll('file:\\$\\{\\.\\}', "https://dl.maketechnology.io/framework/${equo.channel}") }
+    filter { line -> line.replaceAll('-include: ', "-include: https://equo-framework.ams3.digitaloceanspaces.com/${equo.channel}/") }
+    filter { line -> line.replaceAll('file:\\$\\{\\.\\}', "https://equo-framework.ams3.digitaloceanspaces.com/${equo.channel}") }
 }
 
 task replaceVersionOnEquoBuild(type: Copy){
