@@ -1,5 +1,5 @@
 Bundle-Version: ${version}.${tstamp}
-Export-Package: com.make.equo.aer.client.api
+Export-Package: com.make.equo.logging.client.api
 -buildpath: \
-    com.google.gson,\
-    osgi.cmpn
+	osgi.cmpn,\
+	org.eclipse.osgi

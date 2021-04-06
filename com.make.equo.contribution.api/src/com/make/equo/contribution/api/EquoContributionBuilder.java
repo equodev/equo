@@ -11,6 +11,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.contribution.api.handler.IFiltersAdapterHandler;
 import com.make.equo.contribution.api.resolvers.IEquoContributionUrlResolver;
+import com.make.equo.logging.client.api.ILoggingApi;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 /**
@@ -20,7 +21,7 @@ import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
  * own contribution.
  * 
  */
-@Component(scope = ServiceScope.PROTOTYPE, service = EquoContributionBuilder.class)
+@Component(scope = ServiceScope.PROTOTYPE, service = EquoContributionBuilder.class, reference = @Reference(name = "logger", service = ILoggingApi.class))
 public class EquoContributionBuilder {
 
 	@Reference

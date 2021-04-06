@@ -130,6 +130,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.server.provider;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.make.equo.ws.provider;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
+    com.make.equo.logging.client.core.provider;version=latest,\
     io.netty.all;version='[4.0.44,4.0.45)',\
     javax.activation;version='[1.1.0,1.1.1)',\
     javax.annotation;version='[1.2.0,1.2.1)',\
