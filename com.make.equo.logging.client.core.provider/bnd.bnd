@@ -5,5 +5,4 @@ Export-Package: com.make.equo.logging.client.core.provider
 	com.make.equo.logging.client.api;version=latest,\
 	org.slf4j.api,\
 	ch.qos.logback.core,\
-	ch.qos.logback.classic,\
-	ch.qos.logback.slf4j
+	ch.qos.logback.classic
