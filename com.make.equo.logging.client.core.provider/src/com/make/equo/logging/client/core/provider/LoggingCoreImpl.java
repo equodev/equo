@@ -2,14 +2,19 @@ package com.make.equo.logging.client.core.provider;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.slf4j.LoggerFactory;
 
 import com.make.equo.logging.client.api.AbstractLogger;
+import com.make.equo.logging.client.api.Level;
 import com.make.equo.logging.client.api.Logger;
+
+import ch.qos.logback.classic.LoggerContext;
 
 @Component(scope = ServiceScope.PROTOTYPE, service = Logger.class, property = { "service.ranking:Integer=-100" })
 public class LoggingCoreImpl extends AbstractLogger {
 
-	private org.slf4j.Logger logger;
+	private ch.qos.logback.classic.Logger logger;
+	private Level privateLevel = null;
 
 	@Override
 	public void debug(String message) {
@@ -114,6 +119,24 @@ public class LoggingCoreImpl extends AbstractLogger {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void init(Class clazz) {
-		this.logger = org.slf4j.LoggerFactory.getLogger(clazz);
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		this.logger = loggerContext.getLogger(clazz);
 	}
+
+	@Override
+	public Level getLoggerLevel() {
+		return privateLevel;
+	}
+
+	@Override
+	public void setLoggerLevel(Level level) {
+		this.privateLevel = level;
+		if (level != null) {
+			this.logger.setLevel(ch.qos.logback.classic.Level.toLevel(level.toString()));
+		} else {
+			this.logger.setLevel(null);
+		}
+	}
+	
+	
 }

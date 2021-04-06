@@ -42,4 +42,22 @@ public interface Logger {
 
 	public boolean isTraceEnabled();
 
+	/**
+	 * 
+	 * @return current custom level for this logger or {@code null} if there isn't
+	 *         any custom level (common case, when the global level obtained with
+	 *         {@link com.make.equo.logging.client.api.LoggerConfiguration
+	 *         LoggerConfiguration} is used).
+	 */
+	public Level getLoggerLevel();
+
+	/**
+	 * Set a custom level for this logger. Once setted, the logger will ignore
+	 * global level and use the configured one.
+	 * 
+	 * @param level The new custom level for this logger. {@code null} to disable it
+	 *              (and use the global level again).
+	 */
+	public void setLoggerLevel(Level level);
+
 }
