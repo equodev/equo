@@ -4,11 +4,11 @@ import java.io.File;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.eclipse.e4.ui.workbench.IWorkbench;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.application.api.IEquoApplication;
 import com.make.equo.application.client.EquoBundleManager;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public class Equo {
 	protected static final Logger logger = LoggerFactory.getLogger(Equo.class);

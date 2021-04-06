@@ -27,20 +27,21 @@ Bundle-NativeCode: /libjss4.so; osname=linux; processor=x86_64, *
 	org.eclipse.osgi,\
 	com.make.equo.aer.api;version=latest,\
 	com.make.equo.contribution.api;version=latest,\
-	com.google.guava;version=20.0,\
-	com.google.guava.source;version=20.0,\
-	com.github.ganskef:littleproxy-mitm;version=1.1,\
-	org.bouncycastle.bcpkix;version=1.64,\
-	org.slf4j.api;version=1.7,\
-	org.bouncycastle.bcprov;version=1.64,\
-	org.littleshoot:dnssec4j;version=0.1,\
-	external:jss4;version=4.7,\
-	org.apache.commons.cli;version=1.2,\
-	com.sun.jdmk:jmxtools;version=1.2,\
-	org.glassfish.main.javaee-api.javax.jms;version=3.1,\
-	org.apache.commons.lang;version=2.6,\
-	junit:junit;version=4.13,\
-	org.xbill.dns;version=2.0,\
+	com.google.guava;version='20.0',\
+	com.google.guava.source;version='20.0',\
+	com.github.ganskef:littleproxy-mitm;version='1.1',\
+	org.bouncycastle.bcpkix;version='1.64',\
+	org.slf4j.api;version='1.7',\
+	org.bouncycastle.bcprov;version='1.64',\
+	org.littleshoot:dnssec4j;version='0.1',\
+	external:jss4;version='4.7',\
+	org.apache.commons.cli;version='1.2',\
+	com.sun.jdmk:jmxtools;version='1.2',\
+	org.glassfish.main.javaee-api.javax.jms;version='3.1',\
+	org.apache.commons.lang;version='2.6',\
+	junit:junit;version='4.13',\
+	org.xbill.dns;version='2.0',\
 	org.hamcrest,\
-	org.littleshoot:littleproxy;version=1.1,\
-    org.slf4j.api
+	org.littleshoot:littleproxy;version='1.1',\
+	org.slf4j.api,\
+	com.make.equo.logging.client.api;version=latest

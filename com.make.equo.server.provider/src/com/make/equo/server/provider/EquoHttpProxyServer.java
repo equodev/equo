@@ -25,11 +25,11 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ServiceScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.aer.api.IEquoLoggingService;
 import com.make.equo.contribution.api.handler.IEquoContributionRequestHandler;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.server.offline.api.IEquoOfflineServer;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;

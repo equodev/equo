@@ -9,14 +9,14 @@ import java.util.Map;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.make.equo.ws.api.IEquoRunnable;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.NamedActionMessage;
 import com.make.equo.ws.api.actions.IActionHandler;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 class EquoWebSocketServer extends WebSocketServer {
 	protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServer.class);

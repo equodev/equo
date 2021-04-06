@@ -13,8 +13,8 @@ public class LoggerFactory {
 	  }
 	
 	@SuppressWarnings("rawtypes")
-	public static ILoggingApi getLogger(final Class clazz) {
-		ILoggingApi logger = getService(ILoggingApi.class);
+	public static Logger getLogger(final Class clazz) {
+		Logger logger = getService(Logger.class);
 		if (logger instanceof AbstractLogger) {
 			((AbstractLogger) logger).init(clazz);
 		}

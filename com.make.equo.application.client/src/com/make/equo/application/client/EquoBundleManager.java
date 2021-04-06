@@ -20,8 +20,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public enum EquoBundleManager {
 

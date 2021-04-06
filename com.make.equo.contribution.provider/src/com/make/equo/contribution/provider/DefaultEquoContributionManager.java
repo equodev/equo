@@ -7,14 +7,14 @@ import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.contribution.api.EquoContribution;
 import com.make.equo.contribution.api.IEquoContributionManager;
 import com.make.equo.contribution.api.ResolvedContribution;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
-@Component
+@Component(reference = @Reference(name = "logger", service = Logger.class))
 public class DefaultEquoContributionManager implements IEquoContributionManager {
 	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
 

@@ -13,4 +13,5 @@ Export-Package: com.make.equo.application.client.api
 	org.eclipse.equinox.common.source,\
 	org.apache.commons.io,\
 	org.apache.commons.io.source,\
-    org.slf4j.api
+	org.slf4j.api,\
+	com.make.equo.logging.client.api;version=latest

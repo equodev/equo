@@ -8,10 +8,10 @@ import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.commands.MParameter;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.application.util.IConstants;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public class ItemShortcutBuilder implements KeyBindingBuilder {
 	protected static final Logger logger = LoggerFactory.getLogger(ItemShortcutBuilder.class);

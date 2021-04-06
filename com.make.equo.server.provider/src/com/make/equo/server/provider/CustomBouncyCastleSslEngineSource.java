@@ -34,11 +34,11 @@ import org.littleshoot.proxy.SslEngineSource;
 import org.littleshoot.proxy.mitm.MergeTrustManager;
 import org.littleshoot.proxy.mitm.RootCertificateException;
 import org.littleshoot.proxy.mitm.SubjectAlternativeNameHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
 	private static final Logger LOG = LoggerFactory.getLogger(CustomBouncyCastleSslEngineSource.class);
