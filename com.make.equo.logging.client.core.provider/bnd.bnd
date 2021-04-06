@@ -2,4 +2,5 @@ Bundle-Version: ${version}.${tstamp}
 Export-Package: com.make.equo.logging.client.core.provider
 -buildpath: \
 	osgi.cmpn,\
-	com.make.equo.logging.client.api;version=latest
+	com.make.equo.logging.client.api;version=latest,\
+	org.slf4j.api

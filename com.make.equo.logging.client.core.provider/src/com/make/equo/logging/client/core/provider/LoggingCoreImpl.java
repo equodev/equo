@@ -9,129 +9,111 @@ import com.make.equo.logging.client.api.Logger;
 @Component(scope = ServiceScope.PROTOTYPE, service = Logger.class, property = { "service.ranking:Integer=-100" })
 public class LoggingCoreImpl extends AbstractLogger {
 
+	private org.slf4j.Logger logger;
+
 	@Override
 	public void debug(String message) {
-		// TODO Auto-generated method stub
-		
+		logger.debug(message);
 	}
 
 	@Override
 	public void debug(String message, Object... args) {
-		// TODO Auto-generated method stub
-		
+		logger.debug(message, args);
 	}
 
 	@Override
 	public void debug(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		logger.debug(message, throwable);
 	}
 
 	@Override
 	public void info(String message) {
-		// TODO Auto-generated method stub
-		
+		logger.info(message);
 	}
 
 	@Override
 	public void info(String message, Object... args) {
-		// TODO Auto-generated method stub
-		
+		logger.info(message, args);
 	}
 
 	@Override
 	public void info(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		logger.info(message, throwable);
 	}
 
 	@Override
 	public void warn(String message) {
-		// TODO Auto-generated method stub
-		
+		logger.warn(message);
 	}
 
 	@Override
 	public void warn(String message, Object... args) {
-		// TODO Auto-generated method stub
-		
+		logger.warn(message, args);
 	}
 
 	@Override
 	public void warn(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		logger.warn(message, throwable);
 	}
 
 	@Override
 	public void error(String message) {
-		// TODO Auto-generated method stub
-		
+		logger.error(message);
 	}
 
 	@Override
 	public void error(String message, Object... args) {
-		// TODO Auto-generated method stub
-		
+		logger.error(message, args);
 	}
 
 	@Override
 	public void error(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		logger.error(message, throwable);
 	}
 
 	@Override
 	public void trace(String message) {
-		// TODO Auto-generated method stub
-		
+		logger.trace(message);
 	}
 
 	@Override
 	public void trace(String message, Object... args) {
-		// TODO Auto-generated method stub
-		
+		logger.trace(message, args);
 	}
 
 	@Override
 	public void trace(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		logger.trace(message, throwable);
 	}
 
 	@Override
 	public boolean isDebugEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return logger.isDebugEnabled();
 	}
 
 	@Override
 	public boolean isInfoEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return logger.isInfoEnabled();
 	}
 
 	@Override
 	public boolean isWarnEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return logger.isWarnEnabled();
 	}
 
 	@Override
 	public boolean isErrorEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return logger.isErrorEnabled();
 	}
 
 	@Override
 	public boolean isTraceEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return logger.isTraceEnabled();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void init(Class clazz) {
-		// TODO Auto-generated method stub
-		
+		this.logger = org.slf4j.LoggerFactory.getLogger(clazz);
 	}
 }
