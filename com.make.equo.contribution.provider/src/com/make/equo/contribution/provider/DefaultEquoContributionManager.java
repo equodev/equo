@@ -14,7 +14,7 @@ import com.make.equo.contribution.api.ResolvedContribution;
 import com.make.equo.logging.client.api.Logger;
 import com.make.equo.logging.client.api.LoggerFactory;
 
-@Component(reference = @Reference(name = "logger", service = Logger.class))
+@Component
 public class DefaultEquoContributionManager implements IEquoContributionManager {
 	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
 

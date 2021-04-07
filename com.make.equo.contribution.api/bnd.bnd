@@ -10,7 +10,6 @@ Export-Package: \
     com.google.gson,\
     com.google.gson.source,\
     com.make.equo.server.offline.api;version=latest,\
-    com.make.equo.logging.client.api;version=latest,\
     io.netty.all,\
     io.netty.all.source,\
     osgi.cmpn,\
