@@ -1,5 +1,7 @@
 package com.make.equo.logging.client.api;
 
+import java.util.Optional;
+
 public interface Logger {
 
 	public void debug(String message);
@@ -49,7 +51,7 @@ public interface Logger {
 	 *         {@link com.make.equo.logging.client.api.LoggerConfiguration
 	 *         LoggerConfiguration} is used).
 	 */
-	public Level getLoggerLevel();
+	public Optional<Level> getLoggerLevel();
 
 	/**
 	 * Set a custom level for this logger. Once setted, the logger will ignore

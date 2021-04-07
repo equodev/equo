@@ -1,5 +1,7 @@
 package com.make.equo.logging.client.core.provider;
 
+import java.util.Optional;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.slf4j.LoggerFactory;
@@ -124,8 +126,8 @@ public class LoggingCoreImpl extends AbstractLogger {
 	}
 
 	@Override
-	public Level getLoggerLevel() {
-		return privateLevel;
+	public Optional<Level> getLoggerLevel() {
+		return Optional.ofNullable(privateLevel);
 	}
 
 	@Override
@@ -137,6 +139,5 @@ public class LoggingCoreImpl extends AbstractLogger {
 			this.logger.setLevel(null);
 		}
 	}
-	
-	
+
 }

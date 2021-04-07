@@ -12,6 +12,9 @@ public class LoggerConfiguration {
 	}
 
 	public static void setGlobalLevel(Level level) {
+		if (level == null) {
+			return;
+		}
 		ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory
 				.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		root.setLevel(ch.qos.logback.classic.Level.toLevel(level.toString()));

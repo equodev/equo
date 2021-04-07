@@ -60,6 +60,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.make.equo.ws.api;version=latest,\
     com.make.equo.ws.provider;version=latest,\
     com.make.equo.analytics.client.api;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
+    com.make.equo.logging.client.core.provider;version=latest,\
     com.make.equo.testing.common;version=latest,\
     com.make.equo.testing.common.internal;version=latest,\
     org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\
