@@ -39,6 +39,8 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 				}
 				if (equoCrashReporter != null) {
 					registerEvent(status);
+				} else {
+					log(status);
 				}
 			} else {
 				log(status);
