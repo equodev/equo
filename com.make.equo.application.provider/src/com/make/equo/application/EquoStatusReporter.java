@@ -6,19 +6,21 @@ import java.io.StringWriter;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.internal.workbench.swt.WorkbenchStatusReporter;
 
 import com.google.gson.JsonObject;
 import com.make.equo.aer.internal.api.IEquoCrashReporter;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public class EquoStatusReporter extends WorkbenchStatusReporter {
 
 	@Inject
+	private IDependencyInjector dependencyInjector;
+
 	private IEquoCrashReporter equoCrashReporter;
 
-	@Inject
-	Logger logger;
+	protected static final Logger logger = LoggerFactory.getLogger(EquoStatusReporter.class);
 
 	@Override
 	public void report(IStatus status, int style, Object... information) {
@@ -32,6 +34,9 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 		}
 		if (style != IGNORE) {
 			if ((action & (SHOW | BLOCK)) != 0) {
+				if (equoCrashReporter == null) {
+					equoCrashReporter = dependencyInjector.getEquoCrashReporter();
+				}
 				if (equoCrashReporter != null) {
 					registerEvent(status);
 				}
@@ -43,11 +48,11 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 
 	private void log(IStatus status) {
 		if (status.matches(ERROR)) {
-			logger.error(status.getException(), status.getMessage());
+			logger.error(status.getMessage(), status.getException());
 		} else if (status.matches(WARNING)) {
-			logger.warn(status.getException(), status.getMessage());
+			logger.warn(status.getMessage(), status.getException());
 		} else if (status.matches(INFO)) {
-			logger.info(status.getException(), status.getMessage());
+			logger.info(status.getMessage(), status.getException());
 		}
 	}
 

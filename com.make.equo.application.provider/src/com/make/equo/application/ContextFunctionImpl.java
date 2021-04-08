@@ -7,7 +7,7 @@ import org.eclipse.e4.core.contexts.IContextFunction;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.osgi.service.component.annotations.Component;
 
-@Component(property = { "service.context.key:String=org.eclipse.e4.core.services.statusreporter.StatusReporter" })
+@Component(property = { "service.context.key:String=org.eclipse.e4.core.services.statusreporter.StatusReporter", "service.ranking:Integer=100" })
 public class ContextFunctionImpl extends ContextFunction implements IContextFunction {
 
 	@Override
