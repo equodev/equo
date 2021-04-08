@@ -9,10 +9,10 @@ import org.osgi.framework.ServiceReference;
 public class LoggerFactory {
 	private static boolean loaded = false;
 
-	static <T extends Object> T getService(final Class<T> clazz){
+	static <T extends Object> T getService(final Class<T> clazz) {
 		final BundleContext bundleContext = FrameworkUtil.getBundle(clazz).getBundleContext();
 		if (!loaded) {
-			String bundleName = System.getProperty("logger.bundle", "com.make.equo.logging.client.core.provider");
+			String bundleName = System.getProperty(IConstants.LOGGER_BUNDLE_PROPERTY, IConstants.DEFAULT_LOGGER);
 			for (Bundle bundle : bundleContext.getBundles()) {
 				if (bundle.getSymbolicName().startsWith(bundleName)) {
 					try {
@@ -29,7 +29,7 @@ public class LoggerFactory {
 		final ServiceReference<T> ref = bundleContext.getServiceReference(clazz);
 		return bundleContext.getServiceObjects(ref).getService();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public static Logger getLogger(final Class clazz) {
 		Logger logger = getService(Logger.class);

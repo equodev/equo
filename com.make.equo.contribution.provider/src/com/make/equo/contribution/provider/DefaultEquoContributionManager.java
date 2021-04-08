@@ -16,7 +16,7 @@ import com.make.equo.logging.client.api.LoggerFactory;
 
 @Component
 public class DefaultEquoContributionManager implements IEquoContributionManager {
-	protected static final Logger logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
+	protected static Logger logger;
 
 	@Reference
 	private EquoContributionResolver resolver;
@@ -28,6 +28,9 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 		try {
 			equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
 			resolve(contribution);
+			if (logger == null) {
+				logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
+			}
 			logger.info("Equo Contribution added: " + contribution.getContributionName());
 		} catch (IllegalStateException e) {
 			equoContributions.remove(contribution.getContributionName().toLowerCase());
