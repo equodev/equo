@@ -43,17 +43,13 @@ window.equo = window.equo || {};
             // Leave a comment if you know the answer.
             if(event.data === undefined)
                 return;
-
-            //equo.logDebug('event.data is...', event.data);
         };
 
         webSocket.onmessage = function(event){
-            //equo.logDebug('event.data is...', event.data);
             receiveMessage(event.data);
         };
 
         webSocket.onclose = function(event){
-            //equo.logDebug('event.data is...', event.data);
         };
     }();
 
@@ -90,7 +86,6 @@ window.equo = window.equo || {};
         setTimeout(
             function () {
                 if (socket.readyState === 1) {
-                    //equo.logDebug('Connection is made');
                     if(callback != null){
                         callback();
                     }
@@ -100,7 +95,6 @@ window.equo = window.equo || {};
 		            try{
 		                openSocket();
                     }catch(err){}
-                    //equo.logDebug('wait for connection...')
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
