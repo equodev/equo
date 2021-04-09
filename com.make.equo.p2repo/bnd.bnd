@@ -11,6 +11,8 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 	bnd.identity;version='latest';id='com.make.equo.contribution.api',\
 	bnd.identity;version='latest';id='com.make.equo.contribution.media.provider',\
 	bnd.identity;version='latest';id='com.make.equo.contribution.provider',\
+	bnd.identity;version='latest';id='com.make.equo.logging.client.api',\
+	bnd.identity;version='latest';id='com.make.equo.logging.client.core.provider',\
 	bnd.identity;version='latest';id='com.make.equo.node.packages',\
 	bnd.identity;version='latest';id='com.make.equo.server.api',\
 	bnd.identity;version='latest';id='com.make.equo.server.offline.api',\
@@ -77,6 +79,8 @@ runbundles: \
 	com.make.equo.contribution.api;version=snapshot,\
 	com.make.equo.contribution.media.provider;version=snapshot,\
 	com.make.equo.contribution.provider;version=snapshot,\
+    com.make.equo.logging.client.api;version=snapshot,\
+    com.make.equo.logging.client.core.provider;version=snapshot,\
 	com.make.equo.node.packages;version=snapshot,\
 	com.make.equo.server.api;version=snapshot,\
 	com.make.equo.server.offline.api;version=snapshot,\
