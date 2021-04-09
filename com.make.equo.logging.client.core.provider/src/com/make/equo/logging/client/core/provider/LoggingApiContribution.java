@@ -13,20 +13,12 @@ public class LoggingApiContribution {
 	private static final String LOGGING_CONTRIBUTION_NAME = "equologging";
 	private static final String LOGGING_JS_API = "loggingApi.js";
 
+	@Reference
 	private EquoContributionBuilder builder;
 
 	@Activate
 	protected void activate() {
 		builder.withContributionName(LOGGING_CONTRIBUTION_NAME).withScriptFile(LOGGING_JS_API)
 				.withURLResolver(new EquoGenericURLResolver(LoggingApiContribution.class.getClassLoader())).build();
-	}
-
-	@Reference
-	void setEquoBuilder(EquoContributionBuilder builder) {
-		this.builder = builder;
-	}
-
-	void unsetEquoBuilder(EquoContributionBuilder builder) {
-		this.builder = null;
 	}
 }

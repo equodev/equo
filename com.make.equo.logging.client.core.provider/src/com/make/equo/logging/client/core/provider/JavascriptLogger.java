@@ -22,12 +22,8 @@ public class JavascriptLogger {
 	private static final String LOGGING_EVENT_KEY = "loggingEvent";
 	private static final String LOGGING_RESPONSE_EVENT_KEY = "loggingResponseEvent";
 
-	private IEquoEventHandler equoEventHandler;
-
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	void setEquoEventHandler(IEquoEventHandler equoEventHandler) {
-		this.equoEventHandler = equoEventHandler;
-	}
+	private IEquoEventHandler equoEventHandler;
 
 	@Activate
 	public void start() {
