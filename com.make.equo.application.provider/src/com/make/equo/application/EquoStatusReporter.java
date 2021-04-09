@@ -34,9 +34,7 @@ public class EquoStatusReporter extends WorkbenchStatusReporter {
 		}
 		if (style != IGNORE) {
 			if ((action & (SHOW | BLOCK)) != 0) {
-				if (equoCrashReporter == null) {
-					equoCrashReporter = dependencyInjector.getEquoCrashReporter();
-				}
+				equoCrashReporter = dependencyInjector.getEquoCrashReporter();
 				if (equoCrashReporter != null) {
 					registerEvent(status);
 				} else {
