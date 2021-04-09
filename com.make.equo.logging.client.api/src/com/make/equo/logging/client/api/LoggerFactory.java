@@ -7,6 +7,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 public class LoggerFactory {
+	private static org.slf4j.Logger factoryLogger = org.slf4j.LoggerFactory.getLogger(LoggerFactory.class);
 	private static boolean loaded = false;
 
 	static <T extends Object> T getService(final Class<T> clazz) {
@@ -18,7 +19,7 @@ public class LoggerFactory {
 					try {
 						bundle.start();
 					} catch (BundleException e) {
-						e.printStackTrace();
+						factoryLogger.error("Error activating Equo Logger", e);
 					}
 					break;
 				}
