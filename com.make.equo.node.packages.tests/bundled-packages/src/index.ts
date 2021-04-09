@@ -1,4 +1,6 @@
 // @ts-ignore
+import { EquoLoggingService } from '@equo/logging';
+// @ts-ignore
 import { EquoFramework } from '@equo/framework';
 // @ts-ignore
 import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket';
@@ -8,6 +10,33 @@ import { Menu, MenuBuilder } from '@equo/equo-application-menu';
 var websocket: EquoWebSocket = EquoWebSocketService.get();
 
 EquoFramework.openBrowser('');
+
+websocket.on("_makeLogs", () => {
+    EquoLoggingService.logInfo('testInfo');
+    EquoLoggingService.logWarn('testWarn');
+    EquoLoggingService.logError('testError');
+	EquoLoggingService.logDebug('testDebug');
+	EquoLoggingService.logTrace('testTrace');
+
+	EquoLoggingService.getJsLoggerLevel((response: any) => {
+		EquoLoggingService.logInfo('Current is ' + response);
+
+		EquoLoggingService.setJsLoggerLevel(EquoLoggingService.LOG_LEVEL_DEBUG);
+		EquoLoggingService.getJsLoggerLevel((response: any) => {
+			EquoLoggingService.logInfo('Current is ' + response);
+
+			EquoLoggingService.setGlobalLoggerLevel(EquoLoggingService.LOG_LEVEL_TRACE);
+			EquoLoggingService.getGlobalLoggerLevel((response: any) => {
+				EquoLoggingService.logInfo('Global is ' + response);
+
+				EquoLoggingService.setGlobalLoggerLevel(EquoLoggingService.LOG_LEVEL_INFO);
+				EquoLoggingService.getGlobalLoggerLevel((response: any) => {
+					EquoLoggingService.logInfo('Global is ' + response);
+				});
+			});
+		});
+	});
+});
 
 function inicMenu(elementMenu : MenuBuilder, func?: Function) {
     elementMenu.withMainMenu("Menu1")

@@ -1,6 +1,7 @@
 package com.make.equo.node.packages.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,7 +30,9 @@ import com.make.equo.application.model.CustomDeserializer;
 import com.make.equo.application.model.EquoMenuItem;
 import com.make.equo.application.model.EquoMenuItemSeparator;
 import com.make.equo.application.model.Menu;
+import com.make.equo.logging.client.api.Logger;
 import com.make.equo.node.packages.tests.common.ChromiumSetup;
+import com.make.equo.node.packages.tests.mocks.LoggingServiceMock;
 import com.make.equo.server.api.IEquoServer;
 import com.make.equo.testing.common.util.EquoRule;
 import com.make.equo.ws.api.IEquoEventHandler;
@@ -44,6 +47,9 @@ public class PackagesIntegrationTest {
 
 	@Inject
 	protected IEquoServer equoServer;
+
+	@Inject
+	protected Logger loggingServiceMock;
 
 	@Inject
 	protected IEquoWebSocketService websocketService;
@@ -274,5 +280,16 @@ public class PackagesIntegrationTest {
 		});
 		handler.send("_customActionOnClick");
 		await().until(() -> wasCorrectly.get());
+	}
+
+	@Test
+	public void loggingMessagesAreReceivedCorrectlyByTheService() {
+		handler.send("_makeLogs");
+		await().untilAsserted(() -> {
+			assertThat(loggingServiceMock).isInstanceOf(LoggingServiceMock.class).extracting("receivedMessages")
+					.asInstanceOf(list(String.class)).contains("testInfo", "testWarn", "testError",
+							"testTrace", "testDebug", "Current is NOT CONFIGURED", "Changed to DEBUG",
+							"Current is DEBUG", "Global is INFO", "Global is TRACE", "Equo Contribution added: equologging");
+		});
 	}
 }

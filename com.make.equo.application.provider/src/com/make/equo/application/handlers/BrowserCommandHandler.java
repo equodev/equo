@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.application.util.IConstants;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public interface BrowserCommandHandler {
 	default Optional<MPart> existingBrowserFor(MApplication mApplication, BrowserParams browserParams,

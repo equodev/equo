@@ -1,0 +1,8 @@
+Bundle-Version: ${version}.${tstamp}
+Export-Package: com.make.equo.logging.client.api
+-buildpath: \
+	osgi.cmpn,\
+	org.eclipse.osgi,\
+	ch.qos.logback.core,\
+	ch.qos.logback.classic,\
+	org.slf4j.api

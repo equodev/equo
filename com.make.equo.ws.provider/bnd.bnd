@@ -16,4 +16,5 @@ Private-Package: com.make.equo.ws.provider
 	osgi.cmpn,\
 	Java-WebSocket,\
 	org.littleshoot:littleproxy;version='1.1',\
-	org.slf4j.api
+	org.slf4j.api,\
+	com.make.equo.logging.client.api;version=latest

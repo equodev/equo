@@ -11,10 +11,10 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.GsonBuilder;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 import com.make.equo.ws.api.IEquoRunnableParser;
 import com.make.equo.ws.api.IEquoWebSocketService;
 import com.make.equo.ws.api.NamedActionMessage;

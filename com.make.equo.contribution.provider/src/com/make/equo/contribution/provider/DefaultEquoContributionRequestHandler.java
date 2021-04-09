@@ -9,8 +9,6 @@ import java.util.Optional;
 import org.littleshoot.proxy.HttpFilters;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.make.equo.contribution.api.EquoContribution;
 import com.make.equo.contribution.api.IEquoContributionManager;
@@ -19,6 +17,8 @@ import com.make.equo.contribution.api.handler.IEquoContributionRequestHandler;
 import com.make.equo.contribution.api.resolvers.EquoGenericURLResolver;
 import com.make.equo.contribution.provider.filter.ContributionFileRequestFiltersAdapter;
 import com.make.equo.contribution.provider.filter.DefaultContributionRequestFiltersAdapter;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 import com.make.equo.server.offline.api.filters.IHttpRequestFilter;
 
 import io.netty.handler.codec.http.HttpRequest;

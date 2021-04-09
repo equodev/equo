@@ -24,7 +24,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=ch.qos.logback.slf4j)',\
     osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=20.0.0)(!(version>=21.0.0)))',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.64b)',\
-    osgi.identity;filter:='(osgi.identity=com.make.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.application.provider)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.api)',\
     osgi.identity;filter:='(osgi.identity=com.make.equo.contribution.provider)',\
@@ -119,7 +118,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.aer.internal.api;version=latest,\
     com.make.equo.analytics.client.api;version=latest,\
     com.make.equo.analytics.internal.api;version=latest,\
-    com.make.equo.application.client;version=latest,\
     com.make.equo.application.provider;version=latest,\
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.contribution.media.provider;version=latest,\
@@ -130,6 +128,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     com.make.equo.server.provider;version=latest,\
     com.make.equo.ws.api;version=latest,\
     com.make.equo.ws.provider;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
+    com.make.equo.logging.client.core.provider;version=latest,\
     io.netty.all;version='[4.0.44,4.0.45)',\
     javax.activation;version='[1.1.0,1.1.1)',\
     javax.annotation;version='[1.2.0,1.2.1)',\

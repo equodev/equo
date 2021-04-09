@@ -28,7 +28,7 @@ window.equo = window.equo || {};
     const openSocket = function() {
         // Ensures only one connection is open at a time
         if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
-            Logger.debug('WebSocket is already opened.');
+            //equo.logDebug('WebSocket is already opened.');
             return;
         }
         let wsPort = '%d';
@@ -43,17 +43,13 @@ window.equo = window.equo || {};
             // Leave a comment if you know the answer.
             if(event.data === undefined)
                 return;
-
-            Logger.debug('event.data is...', event.data);
         };
 
         webSocket.onmessage = function(event){
-            Logger.debug('event.data is...', event.data);
             receiveMessage(event.data);
         };
 
         webSocket.onclose = function(event){
-            Logger.debug('event.data is...', event.data);
         };
     }();
 
@@ -90,7 +86,6 @@ window.equo = window.equo || {};
         setTimeout(
             function () {
                 if (socket.readyState === 1) {
-                    Logger.debug('Connection is made');
                     if(callback != null){
                         callback();
                     }
@@ -100,7 +95,6 @@ window.equo = window.equo || {};
 		            try{
 		                openSocket();
                     }catch(err){}
-                    Logger.debug('wait for connection...')
                     waitForSocketConnection(socket, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...

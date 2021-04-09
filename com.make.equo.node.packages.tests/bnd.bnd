@@ -12,6 +12,8 @@ cef.fragment: com.make.chromium.cef.${ws}.${chromiumos}.x86_64
 chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${cef.fragment}},\${chromium.fragment}
 
+-runproperties.logging: logger.bundle=com.make.equo.node.packages.tests
+
 -buildpath: \
     com.google.gson;version='[2.8.2,2.8.3)',\
     com.make.equo.aer.api;version=latest,\
@@ -19,6 +21,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.make.equo.analytics.internal.api;version=latest,\
     com.make.equo.application.provider;version=latest,\
     com.make.equo.contribution.api;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
+    com.make.equo.logging.client.core.provider;version=latest,\
     com.make.equo.server.api;version=latest,\
     com.make.equo.testing.common;version=latest,\
     com.make.equo.ws.api;version=latest,\
@@ -38,6 +42,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
 -privatepackage: \
     com.make.equo.node.packages.tests,\
     com.make.equo.node.packages.tests.common,\
+    com.make.equo.node.packages.tests.mocks,\
     com.make.equo.node.packages.tests.util
 
 -runrequires: \
@@ -60,6 +65,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.make.equo.ws.api;version=latest,\
     com.make.equo.ws.provider;version=latest,\
     com.make.equo.analytics.client.api;version=latest,\
+    com.make.equo.logging.client.api;version=latest,\
+    com.make.equo.logging.client.core.provider;version=latest,\
     com.make.equo.testing.common;version=latest,\
     com.make.equo.testing.common.internal;version=latest,\
     org.eclipse.e4.ui.workbench.renderers.swt;version='[0.14.900,0.14.901)',\

@@ -54,8 +54,9 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.SubjectAlternativeNameHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public final class CertificateHelper {
 

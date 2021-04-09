@@ -9,12 +9,12 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.make.equo.application.parts.SinglePagePart;
 import com.make.equo.application.util.IConstants;
+import com.make.equo.logging.client.api.Logger;
+import com.make.equo.logging.client.api.LoggerFactory;
 
 public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
 	protected static final Logger logger = LoggerFactory.getLogger(UpdateBrowserCommandHandler.class);
