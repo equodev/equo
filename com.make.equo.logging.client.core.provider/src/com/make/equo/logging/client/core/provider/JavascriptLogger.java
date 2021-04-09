@@ -35,14 +35,14 @@ public class JavascriptLogger {
 		private static final long serialVersionUID = 1L;
 		private static final String MESSAGE_LOG = "message";
 		private static final String TYPE_LOG = "type";
-		
+
 		// Logging messages types
 		private static final String TYPE_DEBUG = "debug";
 		private static final String TYPE_INFO = "info";
 		private static final String TYPE_WARNING = "warning";
 		private static final String TYPE_ERROR = "error";
 		private static final String TYPE_TRACE = "trace";
-		
+
 		// Logging configuration types
 		private static final String TYPE_GET_LEVEL = "getLevel";
 		private static final String TYPE_SET_LEVEL = "setLevel";
@@ -94,6 +94,8 @@ public class JavascriptLogger {
 			case TYPE_GET_GLOBAL_LEVEL:
 				equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, LoggerConfiguration.getGlobalLevel().toString());
 				break;
+			default:
+				logger.error("Incorrect log type from Equo Logging Javascript API");
 			}
 		}
 	}
