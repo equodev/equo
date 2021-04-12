@@ -15,7 +15,7 @@
 #-runsystemcapabilities: ${native_capability}
 #-runprogramargs: 
 vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
--runvm: ${vmargs}
+-runvm.macflag: ${vmargs}
 
 -runrequires.equo: \
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
@@ -205,11 +205,11 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
     org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
     org.xbill.dns;version='[2.0.8,2.0.9)'
-#-runbundles.debug: \    
+#-runbundles.debug: \
 #    org.eclipse.equinox.console,\
 #    org.apache.felix.gogo.command,\
 #    org.apache.felix.gogo.runtime,\
-#    org.apache.felix.gogo.shell,\
+#    org.apache.felix.gogo.shell
 
 app.bundle: ${basename;${dir;${p_sourcepath}}}
 -runrequires: \

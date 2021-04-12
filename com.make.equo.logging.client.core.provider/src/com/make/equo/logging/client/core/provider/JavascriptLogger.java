@@ -43,6 +43,8 @@ public class JavascriptLogger {
 		private static final String TYPE_ERROR = "error";
 		private static final String TYPE_TRACE = "trace";
 
+		private static final String TYPE_JS_ERROR = "jserror";
+
 		// Logging configuration types
 		private static final String TYPE_GET_LEVEL = "getLevel";
 		private static final String TYPE_SET_LEVEL = "setLevel";
@@ -59,7 +61,10 @@ public class JavascriptLogger {
 						"A \"type\" nor \"message\" member which identified the event name must be defined in the Logging object.");
 			}
 			String type = typeJsonElement.getAsString();
-			String message = messageJsonElement.getAsString();
+			String message = "";
+			if (messageJsonElement.isJsonPrimitive()) {
+				message = messageJsonElement.getAsString();
+			}
 			switch (type) {
 			case TYPE_DEBUG:
 				logger.debug(message);
@@ -93,6 +98,15 @@ public class JavascriptLogger {
 				break;
 			case TYPE_GET_GLOBAL_LEVEL:
 				equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, LoggerConfiguration.getGlobalLevel().toString());
+				break;
+			case TYPE_JS_ERROR:
+				final JsonObject messageJsonObject = messageJsonElement.getAsJsonObject();
+				final String msg = messageJsonObject.get("msg").getAsString();
+				final String url = messageJsonObject.get("url").getAsString();
+				final String lineNo = messageJsonObject.get("lineNo").getAsString();
+				final String columnNo = messageJsonObject.get("columnNo").getAsString();
+//				final JsonObject error = messageJsonObject.get("error").getAsJsonObject();
+				logger.error(msg + ". URL: " + url + ". Line: " + lineNo + " Column: " + columnNo);
 				break;
 			default:
 				logger.error("Incorrect log type from Equo Logging Javascript API");
