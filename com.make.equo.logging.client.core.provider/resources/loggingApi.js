@@ -1,3 +1,35 @@
+let oldOnError = window.onerror;
+let console=(function(oldCons){
+    return {
+        log: function(text){
+            oldCons.log(text);
+            equo.logDebug(text);
+        },
+        info: function (text) {
+            oldCons.info(text);
+            equo.logInfo(text);
+        },
+        warn: function (text) {
+            oldCons.warn(text);
+            equo.logWarn(text);
+        },
+        error: function (text) {
+            oldCons.error(text);
+            equo.logError(text);
+        }
+    };
+}(window.console));
+
+
+window.console = console;
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+	equo.error(msg, url, lineNo, columnNo, error);
+	if (oldOnError) {
+		return oldOnError(msg, url, lineNo, columnNo, error);
+	}
+	return false;
+}
+
 window.equo = window.equo || {};
 
 (function(equo) {
@@ -60,6 +92,10 @@ window.equo = window.equo || {};
 
 	equo.setGlobalLoggerLevel = function(level) {
 		sendLog(level, 'setGlobalLevel');
+	}
+
+	equo.error = function (msg, url, lineNo, columnNo, error) {
+		sendLog({ "msg": msg, "url": url, "lineNo": lineNo, "columnNo": columnNo, "error": error }, 'jserror');
 	}
 
 }(equo));
