@@ -1,5 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
-Export-Package: com.make.equo.logging.client.api
+Export-Package: com.make.equo.logging.client.api,\
+				com.make.equo.logging.client.api.impl
 -buildpath: \
 	osgi.cmpn,\
 	org.eclipse.osgi,\

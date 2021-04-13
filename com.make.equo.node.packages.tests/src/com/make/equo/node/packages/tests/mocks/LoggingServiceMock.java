@@ -9,7 +9,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import com.make.equo.logging.client.api.Level;
 import com.make.equo.logging.client.api.Logger;
-import com.make.equo.logging.client.core.provider.LoggingCoreImpl;
+import com.make.equo.logging.client.api.impl.LoggingCoreImpl;
 
 @Component(scope = ServiceScope.PROTOTYPE, service = Logger.class, property = { "service.ranking:Integer=100000" })
 public class LoggingServiceMock extends LoggingCoreImpl {
