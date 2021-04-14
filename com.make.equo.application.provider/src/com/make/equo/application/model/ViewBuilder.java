@@ -1,5 +1,6 @@
 package com.make.equo.application.model;
 
+import static com.make.equo.application.util.IConstants.DEV_APP_URL;
 import static com.make.equo.application.util.IConstants.MAIN_URL_KEY;
 import static com.make.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 import static com.make.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
@@ -62,6 +63,11 @@ public class ViewBuilder {
 	OptionalViewBuilder withBaseHtml(String baseHtmlFile) throws URISyntaxException {
 		mainAppBuilder.withContributionName("plainequoapp");
 		this.url = "http://plainequoapp/";
+		String developmentUrl = System.getProperty(DEV_APP_URL);
+		if (developmentUrl != null) {
+			this.url = normalizeUrl("http://" + developmentUrl);
+			addUrlToProxyServer(this.url);
+		}
 		part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
 		part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
 		return optionalViewBuilder.withBaseHtml(baseHtmlFile);
