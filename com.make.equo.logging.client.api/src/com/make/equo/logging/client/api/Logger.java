@@ -46,7 +46,7 @@ public interface Logger {
 
 	/**
 	 * 
-	 * @return current custom level for this logger or {@code null} if there isn't
+	 * @return current custom level for this logger or {@code Optional.empty()} if there isn't
 	 *         any custom level (common case, when the global level obtained with
 	 *         {@link com.make.equo.logging.client.api.LoggerConfiguration
 	 *         LoggerConfiguration} is used).
