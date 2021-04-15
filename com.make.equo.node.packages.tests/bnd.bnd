@@ -22,7 +22,6 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.make.equo.application.provider;version=latest,\
     com.make.equo.contribution.api;version=latest,\
     com.make.equo.logging.client.api;version=latest,\
-    com.make.equo.logging.client.core.provider;version=latest,\
     com.make.equo.server.api;version=latest,\
     com.make.equo.testing.common;version=latest,\
     com.make.equo.ws.api;version=latest,\

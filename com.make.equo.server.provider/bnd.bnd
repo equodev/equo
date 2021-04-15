@@ -11,10 +11,7 @@ Export-Package: \
     org.littleshoot.proxy.impl
 
 -includeresource: \
-    resources,\
-    libjss4.so=${def;maven.repo.local;~/.m2/}/repository/external/libjss4/4.7.2/libjss4-4.7.2.so
-
-Bundle-NativeCode: /libjss4.so; osname=linux; processor=x86_64, *
+    resources
 
 -buildpath: \
 	com.make.equo.server.api;version=latest,\
@@ -34,7 +31,6 @@ Bundle-NativeCode: /libjss4.so; osname=linux; processor=x86_64, *
 	org.slf4j.api;version='1.7',\
 	org.bouncycastle.bcprov;version='1.64',\
 	org.littleshoot:dnssec4j;version='0.1',\
-	external:jss4;version='4.7',\
 	org.apache.commons.cli;version='1.2',\
 	com.sun.jdmk:jmxtools;version='1.2',\
 	org.glassfish.main.javaee-api.javax.jms;version='3.1',\

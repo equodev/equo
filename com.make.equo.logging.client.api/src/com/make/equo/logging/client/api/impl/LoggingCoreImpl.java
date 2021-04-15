@@ -1,4 +1,4 @@
-package com.make.equo.logging.client.core.provider;
+package com.make.equo.logging.client.api.impl;
 
 import java.util.Optional;
 

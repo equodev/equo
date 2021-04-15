@@ -18,7 +18,6 @@ import io.netty.handler.codec.http.HttpHeaders.Names;
 import io.netty.handler.codec.http.HttpRequest;
 
 public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
-
 	private IEquoContributionRequestHandler contributionRequestHandler;
 	private IEquoOfflineServer equoOfflineServer;
 
@@ -83,12 +82,12 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 	@Override
 	public int getMaximumResponseBufferSizeInBytes() {
-		return 10 * 1024 * 1024;
+		return 20 * 1024 * 1024;
 	}
 
 	@Override
 	public int getMaximumRequestBufferSizeInBytes() {
-		return 10 * 1024 * 1024;
+		return 20 * 1024 * 1024;
 	}
 
 	private boolean isConnectionLimited() {

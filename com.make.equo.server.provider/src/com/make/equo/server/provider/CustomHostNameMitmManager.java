@@ -14,6 +14,7 @@ import org.littleshoot.proxy.mitm.SubjectAlternativeNameHolder;
 import io.netty.handler.codec.http.HttpRequest;
 
 public class CustomHostNameMitmManager implements MitmManager {
+	private static final String DEV_APP_URL = "dev.app.url";
 	private CustomBouncyCastleSslEngineSource sslEngineSource;
 
 	public CustomHostNameMitmManager(boolean trustAllServers) throws RootCertificateException {
@@ -52,6 +53,16 @@ public class CustomHostNameMitmManager implements MitmManager {
 
 	void changeTrust(boolean trustAllServers) throws GeneralSecurityException, IOException {
 		sslEngineSource.initializeSSLContext(trustAllServers);
+	}
+
+	@Override
+	public boolean accepts(HttpRequest httpRequest) {
+		boolean isDevelopUrl = false;
+		String developmentUrl = System.getProperty(DEV_APP_URL);
+		if (developmentUrl != null) {
+			isDevelopUrl = httpRequest.getUri().startsWith(developmentUrl);
+		}
+		return !isDevelopUrl;
 	}
 
 }

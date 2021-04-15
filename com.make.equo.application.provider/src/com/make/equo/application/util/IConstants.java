@@ -94,4 +94,6 @@ public interface IConstants {
 
 	public static final String ITEM_ACTION = "itemaction";
 
+	public static final String DEV_APP_URL = "dev.app.url";
+
 }
