@@ -2,8 +2,8 @@ Bundle-Version: ${version}.${tstamp}
 Private-Package: com.make.equo.ws.provider
 -includeresource: resources/
 -buildpath: \
-	com.google.guava;version='20.0',\
-	com.google.guava.source;version='20.0',\
+	com.google.guava;version='27.0',\
+	com.google.guava.source;version='27.0',\
 	com.google.gson,\
 	com.google.gson.source,\
 	com.make.equo.ws.api;version=latest,\
