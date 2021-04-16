@@ -57,18 +57,20 @@ window.equo = window.equo || {};
    */
   equo.playVideoWhenClick = (domElement) => {
     $(document).on('click', domElement, function (event) {
-      Logger.debug('this is... ', this);
+      equo.logDebug('this is... ' + JSON.stringify(this));
       if (typeof getCurrentMediaTitleFunction !== 'undefined') {
         let mediaTitle = getCurrentMediaTitleFunction(this);
-        Logger.debug('media playing is... ', mediaTitle);
+        equo.logDebug('media playing is... ' + mediaTitle);
         event.preventDefault();
-        equo.registerEvent({
-          key: 'movies_played',
-          segmentation: {
-            title: mediaTitle,
-            country: "Germany"
-          }
-        });
+		if (equo.registerEvent) {
+	        equo.registerEvent({
+	          key: 'movies_played',
+	          segmentation: {
+	            title: mediaTitle,
+	            country: "Germany"
+	          }
+	        });
+		}
       }
     });
   };
