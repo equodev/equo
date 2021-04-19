@@ -2,6 +2,7 @@
 .directory
 bin/
 bin_test/
+build/
 target/
 generated/
 .DS_Store

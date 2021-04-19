@@ -6,9 +6,9 @@ The bundles that provide the core functionality of the framework:
 
 | Bundle | Description |
 | ----------- | ----------- |
-| com.make.equo.aer.api | API for Advanced Error Reporting. This API defines how the framework user will report errors to App Manager. It does nothing without the SDK running |
+| com.make.equo.aer.api | API for Advanced Error Reporting. This API defines how an application developer will report errors to App Manager. It does nothing without the SDK running |
 | com.make.equo.aer.internal.api | Internal API for AER. This API is intended to be used only by Equo framework and not the user. It does nothing without the SDK running | 
-| com.make.equo.analytics.client.api | API for Analytics. Defines how the user will register events to App Manager. It does nothing without the SDK running | 
+| com.make.equo.analytics.client.api | API for Analytics. Defines how the developer will register events to App Manager. It does nothing without the SDK running | 
 | com.make.equo.analytics.internal.api | Internal Analytics API. Used by the framework to register internal framework events. It does nothing without the SDK running | 
 | com.make.equo.application.provider | The main API entry point of the Equo Framework. Here we have the app structure, with Equo builders to create it, and its model (which includes the main window, toolbars, shortcuts, menus, etc). We also have the app lifecycle and Eclipse handlers to manage the E4 app | 
 | com.make.equo.contribution.api | API defined to allow other bundles to contribute resources to the app such as css, js scripts, startup scripts, and more | 

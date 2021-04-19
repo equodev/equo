@@ -35,10 +35,14 @@ To develop the framework you must:
 * Import the project in Eclipse (the one configured before) into a new workspace.
 * Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](docs/Develop app in parallel.md) to test the changes
 
+## List of Framework Core bundles
+
+You can see the list of bundles in [this document](docs/Bundles.md)
+
 ## How to debug
 
 Follow [this guide](docs/Debugging.md) to know how to debug the framework by doing remote debugging to an Equo app
 
-## List of Framework Core bundles
+## Integration tests
 
-You can see the list of bundles in [this document](docs/Bundles.md)
+[Guide](docs/Integration tests.md) to create integration tests for the Equo framework
