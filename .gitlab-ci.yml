@@ -50,9 +50,9 @@ start-windows-pipeline:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'master' || $CI_COMMIT_BRANCH == 'develop'
       when: always
-    - if: $CI_COMMIT_BRANCH != 'master'
+    - if: $CI_COMMIT_BRANCH != 'master' && $CI_COMMIT_BRANCH != 'develop'
       when: manual
       allow_failure: true 
   trigger:
@@ -115,14 +115,26 @@ full.coverage.report:
   only:
     - master
 
+.release_steps: &release_steps
+  - gradle --no-daemon release
+  - gradle $gradle_opt run.p2
+  - gradle $gradle_opt publish
+  - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
+
+release.develop:
+  extends: .all
+  stage: release
+  script:
+    - *release_steps
+  only:
+    - develop
+
 release:
   extends: .all
   stage: release
   script:
-    - gradle --no-daemon release
-    - gradle $gradle_opt run.p2
-    - gradle $gradle_opt publish
-    - gradle com.make.equo.node.packages:yarnPublish --rerun-tasks
+    - find . -type f -name "lerna.json" -exec sed -i "s/registry.dev.equoplatform.com/registry.equoplatform.com/g" "{}" \;
+    - *release_steps
   only:
     - master
 
