@@ -25,7 +25,7 @@ The core provides:
 
 ## How to develop an Equo app
 
-Refere to [website documentation](https://docs.dev.equoplatform.com) to know how to develop Equo apps
+Refere to [website documentation](https://docs.equoplatform.com) to know how to develop Equo apps
 
 ## Developing the Equo Framework
 
@@ -33,16 +33,16 @@ To develop the framework you must:
 * [Setup the development environment](docs/Setup environment.md).
 * After that, clone this project. Open a terminal in the framework folder and build it with Gradle for the first time with `./gradlew assemble`
 * Import the project in Eclipse (the one configured before) into a new workspace.
-* Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](docs/Develop app in parallel.md) to test the changes
+* Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](docs/develop-app-in-parallel.md) to test the changes
 
 ## List of Framework Core bundles
 
-You can see the list of bundles in [this document](docs/Bundles.md)
+You can see the list of bundles in [this document](docs/bundles.md)
 
 ## How to debug
 
-Follow [this guide](docs/Debugging.md) to know how to debug the framework by doing remote debugging to an Equo app
+Follow [this guide](docs/debugging.md) to know how to debug the framework by doing remote debugging to an Equo app
 
 ## Integration tests
 
-[Guide](docs/Integration tests.md) to create integration tests for the Equo framework
+[Guide](docs/Integration-tests.md) to create integration tests for the Equo framework
