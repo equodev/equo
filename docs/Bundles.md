@@ -37,6 +37,7 @@ This bundles contain integration tests or provide the necessary elements for the
 ### Release bundle
 
 Finally, there's the bundle `com.make.equo.p2repo`, which is responsible of the p2 repository generation of the framework for its release.
+
 This special bundle only has two files:
 * `bnd.bnd`: Which has a _runrequires_ list with the needed bundles to run an app with the framework and a _runbundles_ variable with that requirements resolved by Bndtools
 * `p2.bndrun`: A bndrun file configured to generate a p2 repository with all the bundles listed in _bnd.bnd_ file. It executes on `./gradlew run.p2`

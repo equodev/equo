@@ -11,6 +11,7 @@ Remote debug may be useful to debug the framework when running an app in another
 ## How to install OSGi Console
 
 The OSGi console is a useful tool that allows to track the state and behavior of your Bundles and Components related to OSGi framework.
+
 To install it, follow the next steps:
   1.  Open equoapp.bnd file contained in `cnf` folder (see it in Package Explorer view)
   2.  In the section `-runproperties.equo` add the following line at the end of the section: 
@@ -30,6 +31,7 @@ To install it, follow the next steps:
 ### How to find the unsatisfied requirement using OSGi Console
 
 Using the **list** command you will get the list of all bundles together with their **IDs**.
+
 Using the **bundle ID** or **list ID** command for verify bundle status and requeriments. Additionally use **info NAMEBUNDLE** for obtain more info about it.
 
 You can also use the **help** command to view the available commands if you need it.

@@ -23,6 +23,10 @@ The core provides:
 * Equo server and proxy to add custom resources into the app
 * Equo websockets to stablish a two-way communication between Java and Javascript
 
+## How to develop an Equo app
+
+Refere to [website documentation](https://docs.dev.equoplatform.com) to know how to develop Equo apps
+
 ## Developing the Equo Framework
 
 To develop the framework you must:
