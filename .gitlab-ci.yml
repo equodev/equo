@@ -133,10 +133,12 @@ release:
   extends: .all
   stage: release
   script:
+    - echo $'\n'"deployingrelease=true" >> gradle.properties
     - find . -type f -name "lerna.json" -exec sed -i "s/registry.dev.equoplatform.com/registry.equoplatform.com/g" "{}" \;
     - *release_steps
   only:
     - master
+  when: manual
 
 pages:
   stage: release
