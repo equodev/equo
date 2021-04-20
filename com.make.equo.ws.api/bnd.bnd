@@ -1,4 +1,4 @@
-Bundle-Version: ${version}.${tstamp}
+Bundle-Version: ${bundleversion}
 -buildpath: \
 	com.make.equo.logging.client.api;version=latest,\
 	com.google.gson,\
