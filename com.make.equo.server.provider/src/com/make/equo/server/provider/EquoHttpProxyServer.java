@@ -75,7 +75,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
 		int port = getPortForServer();
 		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
-				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=127.0.0.1;--ignore-certificate-errors");
+				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;--ignore-certificate-errors");
 
 		DefaultHostResolver serverResolver = new DefaultHostResolver() {
 			@Override
