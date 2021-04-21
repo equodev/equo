@@ -7,6 +7,7 @@ Bundle-Version: ${version}.${tstamp}
     osgi.cmpn
 Export-Package: \
 	com.make.equo.ws.api,\
+	com.make.equo.ws.api.annotations,\
 	com.make.equo.ws.api.lambda,\
 	com.make.equo.ws.api.actions
 	
