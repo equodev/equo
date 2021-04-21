@@ -69,11 +69,16 @@ public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
 		return equoWebSocketServer.getPort();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
-		this.actionHandlers.put(actionHandler.getClass().getSimpleName().toLowerCase(), actionHandler);
+	public void setActionHandler(IActionHandler actionHandler) {
+		this.actionHandlers.put(actionHandler.getEventName(), actionHandler);
+		Map<String, IActionHandler> events = actionHandler.getExtraEvents();
+		for (Map.Entry<String, IActionHandler> extraEvent : events.entrySet()) {
+			this.actionHandlers.put(extraEvent.getKey(), extraEvent.getValue());
+		}
 	}
-	
+
 	public void unsetActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
 		this.actionHandlers.clear();
 	}

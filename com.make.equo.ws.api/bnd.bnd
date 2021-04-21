@@ -1,5 +1,6 @@
 Bundle-Version: ${version}.${tstamp}
 -buildpath: \
+	com.make.equo.logging.client.api;version=latest,\
 	com.google.gson,\
 	com.google.gson.source,\
 	org.eclipse.osgi,\
@@ -7,6 +8,7 @@ Bundle-Version: ${version}.${tstamp}
     osgi.cmpn
 Export-Package: \
 	com.make.equo.ws.api,\
+	com.make.equo.ws.api.annotations,\
 	com.make.equo.ws.api.lambda,\
 	com.make.equo.ws.api.actions
 	
