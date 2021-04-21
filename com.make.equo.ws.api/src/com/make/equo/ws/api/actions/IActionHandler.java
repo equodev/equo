@@ -7,7 +7,8 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.make.equo.ws.api.annotations.EquoHandler;
+import com.make.equo.logging.client.api.LoggerFactory;
+import com.make.equo.ws.api.annotations.EventName;
 
 public interface IActionHandler<T> extends IEquoCallable<T>{
 
@@ -22,7 +23,7 @@ public interface IActionHandler<T> extends IEquoCallable<T>{
 
 	default public String getEventName() {
 		Class<?> clazz = getClass();
-		EquoHandler equoHandler = clazz.getAnnotation(EquoHandler.class);
+		EventName equoHandler = clazz.getAnnotation(EventName.class);
 		if (equoHandler != null) {
 			String eventName = equoHandler.value();
 			if (eventName != null && !eventName.isEmpty()) {
@@ -37,7 +38,7 @@ public interface IActionHandler<T> extends IEquoCallable<T>{
 		Map<String, IActionHandler<T>> result = new HashMap<>();
 		Class<?> clazz = getClass();
 		for (Method method: clazz.getDeclaredMethods()) {
-			EquoHandler equoHandler = method.getAnnotation(EquoHandler.class);
+			EventName equoHandler = method.getAnnotation(EventName.class);
 			if (equoHandler != null) {
 				String eventName = equoHandler.value();
 				if (eventName != null && !eventName.isEmpty()) {
@@ -48,7 +49,8 @@ public interface IActionHandler<T> extends IEquoCallable<T>{
 							try {
 								return method.invoke(original, payload);
 							} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-								e1.printStackTrace();
+								LoggerFactory.getLogger(clazz)
+										.error("Error calling handler for " + eventName + " event", e1);
 							}
 						}
 						return null;
