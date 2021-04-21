@@ -1,4 +1,4 @@
-Bundle-Version: ${bundleversion}
+Bundle-Version: 0.3.0${bundleversion}
 Export-Package: com.make.equo.logging.client.api,\
 				com.make.equo.logging.client.api.impl
 -buildpath: \

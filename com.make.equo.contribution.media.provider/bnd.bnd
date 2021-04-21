@@ -1,4 +1,4 @@
-Bundle-Version: ${bundleversion}
+Bundle-Version: 0.3.0${bundleversion}
 Private-Package: com.make.equo.contribution.media.provider
 -includeresource: resources/
 -buildpath: \

@@ -1,6 +1,6 @@
 -include: ${workspace}/gradle.properties
 
-bundleversion: ${if;${is;${deployingrelease};true};${version};${version}.${tstamp}}
+bundleversion: ${if;${is;${deployingrelease};true};;.${tstamp}}
 
 -plugin.1.AppLaunch: \
     aQute.bnd.repository.osgi.OSGiRepository; \
