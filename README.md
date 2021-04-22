@@ -25,7 +25,7 @@ The core provides:
 
 ## How to develop an Equo app
 
-Refere to [website documentation](https://docs.equoplatform.com) to know how to develop Equo apps
+Refer to [website documentation](https://docs.equoplatform.com) to know how to develop Equo apps
 
 ## Developing the Equo Framework
 
