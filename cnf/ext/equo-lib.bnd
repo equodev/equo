@@ -1,6 +1,6 @@
 -include: ${workspace}/gradle.properties
 
-bundleversion: ${if;${is;${deployingrelease};true};;.${tstamp}}
+bundleversion: ${if;${is;${developvariable};true};.${tstamp};}
 
 -plugin.1.AppLaunch: \
     aQute.bnd.repository.osgi.OSGiRepository; \
@@ -22,5 +22,6 @@ bundleversion: ${if;${is;${deployingrelease};true};;.${tstamp}}
         local = ${build}/release; \
         type = R5
 
+-baseline: *
 -releaserepo: Release
-#-baselinerepo: Release
+-baselinerepo: Release

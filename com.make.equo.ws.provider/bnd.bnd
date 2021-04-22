@@ -1,4 +1,5 @@
 Bundle-Version: 1.0.0${bundleversion}
+Import-Package: !java.lang.*, *
 Private-Package: com.make.equo.ws.provider
 -includeresource: resources/
 -buildpath: \
