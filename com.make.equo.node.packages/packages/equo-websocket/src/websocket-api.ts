@@ -3,7 +3,11 @@ import { EquoService } from '@equo/service-manager'
 export class EquoWebSocket extends WebSocket {
 
     private userEventCallbacks: any = {};
-
+    /**
+     * @name EquoWebSocket
+     * @extends WebSocket
+     * @class
+     */
     constructor(port: number) {
         super(`ws://127.0.0.1:${port}`);
     }
@@ -28,9 +32,8 @@ export class EquoWebSocket extends WebSocket {
         }
     }
 
-    /**
-     * Binds functions to the listeners for the websocket.
-     */
+
+    // Binds functions to the listeners for the websocket.
     onopen = (event: any): void => {
         // For reasons I can't determine, onopen gets called twice
         // and the first time event.data is undefined.
@@ -78,17 +81,33 @@ export class EquoWebSocket extends WebSocket {
                 }
             }, 5); // wait 5 milisecond for the connection...
     };
-
+    /**
+     * Send action to execute in Framework.
+     * @param {string} actionId
+     * @param {JSON} [payload] - Optional
+     * @returns {void}
+     */
     public send(actionId: any, payload?: any): void {
         this.sendToWebSocketServer(actionId, payload);
     };
-
+    /**
+     * Manage user events.
+     * @param {string} userEvent
+     * @param {Function} callback
+     * @returns {void}
+     */
     public on(userEvent: any, callback: Function) {
         this.userEventCallbacks[userEvent] = callback;
     };
 
 }
-
+/** 
+ * @namespace
+ * @description Websocket API for usage within the Equo Framework.
+ * 
+ * This document specifies the usage methods for equo-websocket.
+ * See [more](how-to-include-equo-components.md) about how to include Equo component in your projects.
+ */
 export namespace EquoWebSocketService {
     const WebsocketServiceId: string = 'equo-websocket';
     const queryParams: URLSearchParams = new URLSearchParams(window.location.search);
@@ -98,13 +117,24 @@ export namespace EquoWebSocketService {
     if (port === 0) {
         throw new Error("WebSocket port could not be found.");
     }
-
+    /**
+     * Create a EquoWebSocketService instance.
+     * @function
+     * @name create
+     * @returns {EquoService<EquoWebSocket>}
+     */
     export function create(): EquoService<EquoWebSocket> {
         return {
             id: WebsocketServiceId,
             service: new EquoWebSocket(port)
         };
     }
+    /**
+     * Obtain existing instance service for EquoWebSocket or create new instance if not exists. 
+     * @function
+     * @name get
+     * @returns {EquoWebSocket}
+     */
     export function get(): EquoWebSocket {
         return EquoService.get<EquoWebSocket>(WebsocketServiceId, create);
     }
