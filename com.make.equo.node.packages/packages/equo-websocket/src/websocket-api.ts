@@ -82,7 +82,7 @@ export class EquoWebSocket extends WebSocket {
             }, 5); // wait 5 milisecond for the connection...
     };
     /**
-     * Send action to execute in Framework.
+     * Sends an action to execute in Framework.
      * @param {string} actionId
      * @param {JSON} [payload] - Optional
      * @returns {void}
@@ -91,7 +91,7 @@ export class EquoWebSocket extends WebSocket {
         this.sendToWebSocketServer(actionId, payload);
     };
     /**
-     * Manage user events.
+     * Listens for an event with the given name.
      * @param {string} userEvent
      * @param {Function} callback
      * @returns {void}
@@ -106,7 +106,6 @@ export class EquoWebSocket extends WebSocket {
  * @description Websocket API for usage within the Equo Framework.
  * 
  * This document specifies the usage methods for equo-websocket.
- * See [more](how-to-include-equo-components.md) about how to include Equo component in your projects.
  */
 export namespace EquoWebSocketService {
     const WebsocketServiceId: string = 'equo-websocket';
@@ -118,7 +117,7 @@ export namespace EquoWebSocketService {
         throw new Error("WebSocket port could not be found.");
     }
     /**
-     * Create a EquoWebSocketService instance.
+     * Creates an EquoWebSocketService instance.
      * @function
      * @name create
      * @returns {EquoService<EquoWebSocket>}
@@ -130,7 +129,7 @@ export namespace EquoWebSocketService {
         };
     }
     /**
-     * Obtain existing instance service for EquoWebSocket or create new instance if not exists. 
+     * Obtains existing EquoWebSocket service instance or else create a new one.
      * @function
      * @name get
      * @returns {EquoWebSocket}

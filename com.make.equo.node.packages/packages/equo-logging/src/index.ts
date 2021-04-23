@@ -75,7 +75,7 @@ export namespace EquoLoggingService {
 	}
 
 	/**
-   * Handler for the ***info*** level.
+   * Log a message with ***info*** level.
    * @function
    * @name logInfo
 	 * @param {string} message
@@ -85,7 +85,7 @@ export namespace EquoLoggingService {
 		sendLog(message, 'info');
 	};
 	/**
-   * Handler for the ***error*** level.
+   * Log a message with ***error*** level.
    * @function
    * @name logError
 	 * @param {string} message
@@ -95,7 +95,7 @@ export namespace EquoLoggingService {
 		sendLog(message, 'error');
 	};
 	/**
-   * Handler for the ***warn*** level.
+   * Log a message with ***warn*** level.
    * @function
    * @name logWarn
 	 * @param {string} message
@@ -105,7 +105,7 @@ export namespace EquoLoggingService {
 		sendLog(message, 'warning');
 	};
 	/**
-   * Handler for the ***debug*** level.
+   * Log a message with ***debug*** level.
    * @function
    * @name logDebug
 	 * @param {string} message
@@ -115,7 +115,7 @@ export namespace EquoLoggingService {
 		sendLog(message, 'debug');
 	};
 	/**
-   * Handler for the ***trace*** level.
+   * Log a message with ***trace*** level.
    * @function
    * @name logTrace
 	 * @param {string} message
@@ -125,7 +125,7 @@ export namespace EquoLoggingService {
 		sendLog(message, 'trace');
 	};
 	/**
-   * Get local log level.
+   * Gets a custom level for javascript logs.
    * @function
    * @name getJsLoggerLevel
 	 * @param {Function} callback
@@ -136,7 +136,9 @@ export namespace EquoLoggingService {
 		sendLog('', 'getLevel');
 	};
 	/**
-   * Set local log level.
+   * Sets a custom level for javascript logs.
+	 * Javascrips logs will use this level instead the global one. Disabled by default.
+	 * @default LOG_LEVEL_NOT_CONFIGURED
    * @function
    * @name setJsLoggerLevel
 	 * @param {string} level - Use constant log level.
@@ -146,7 +148,7 @@ export namespace EquoLoggingService {
 		sendLog(level, 'setLevel');
 	};
 	/**
-   * Get global log level.
+   * Gets a global log level.
    * @function
    * @name getGlobalLoggerLevel
 	 * @param {Function} callback
@@ -157,7 +159,7 @@ export namespace EquoLoggingService {
 		sendLog('', 'getGlobalLevel');
 	};
 	/**
-   * Set global log level.
+   * Sets a global log level.
    * @function
    * @name setGlobalLoggerLevel
 	 * @param {string} level - Use constant log level.

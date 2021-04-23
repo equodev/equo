@@ -2,12 +2,12 @@ import { EquoWebSocket, EquoWebSocketService } from '@equo/websocket';
 /**
  * @namespace
  * @description Equo Framework Javascript API.
- * Use el paquete ***framework***  para el manejo basico del browser.
+ * Use the ***framework*** package for basic browser management.
  */
 export namespace EquoFramework {
     var websocket: EquoWebSocket = EquoWebSocketService.get();
     /**
-     * Initialize and open browser.
+     * Initializes and opens a browser.
      * @function
      * @name openBrowser
      * @param {string[]} browserParams - url, name, position.
@@ -17,7 +17,7 @@ export namespace EquoFramework {
         websocket.send('openBrowser', browserParams);
     };
     /**
-     * Update browser.
+     * Updates a browser.
      * @function
      * @name updateBrowser
      * @param {string[]} browserParams - url, name.

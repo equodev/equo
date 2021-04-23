@@ -1,6 +1,6 @@
 {
     "name": "@equo/websocket",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Websocket API for usage within the Equo Framework",
     "license": "UNLICENSED",
     "publishConfig": {
