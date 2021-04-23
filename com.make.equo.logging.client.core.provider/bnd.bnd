@@ -1,4 +1,5 @@
-Bundle-Version: ${version}.${tstamp}
+Bundle-Version: 1.0.0.${tstamp}
+Import-Package: !java.lang.*, *
 Export-Package: com.make.equo.logging.client.core.provider
 -includeresource: resources/
 -buildpath: \

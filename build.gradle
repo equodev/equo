@@ -1,5 +1,9 @@
 equo {
-    channel = version
+    if (project.hasProperty('deployingrelease')) {
+        channel = version
+    } else {
+        channel = "develop"
+    }
 }
 
 task generateEquoAppToUpload(type: Copy){
@@ -12,7 +16,7 @@ task generateEquoAppToUpload(type: Copy){
 task replaceVersionOnEquoBuild(type: Copy){
     from 'cnf/equobuild.bnd'
     into '/tmp/auxequobuild'
-    filter { line -> line.replaceAll('VERSIONPLACEHOLDER', "${version}") }
+    filter { line -> line.replaceAll('VERSIONPLACEHOLDER', "${equo.channel}") }
 }
 
 task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppToUpload) {
