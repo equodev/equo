@@ -1,7 +1,5 @@
 -include: ${workspace}/gradle.properties
 
-bundleversion: ${if;${is;${developvariable};true};.${tstamp};}
-
 -plugin.1.AppLaunch: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = "Applaunch"; \
