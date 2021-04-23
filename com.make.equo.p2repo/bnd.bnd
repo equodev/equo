@@ -31,8 +31,6 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 	bnd.identity;id='org.eclipse.swt.gtk.linux.x86_64',\
 	bnd.identity;id='org.eclipse.swt.win32.win32.x86_64',\
 	bnd.identity;id='javax.activation',\
-	bnd.identity;id='biz.aQute.bndlib',\
-	bnd.identity;id='biz.aQute.launcher',\
 	bnd.identity;id='bndtools.runtime.eclipse.applaunch',\
 	bnd.identity;id='org.bouncycastle.bcpkix',\
 	bnd.identity;id='org.bouncycastle.bcprov',\
@@ -54,8 +52,6 @@ Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
 # org.eclipse.osgi and osgi.cmpn added manually. There are not being resolved
 runbundles: \
 	Java-WebSocket;version='[1.5.1,1.5.2)',\
-	biz.aQute.bndlib;version='[3.5.0,3.5.1)',\
-	biz.aQute.launcher;version='[3.5.0,3.5.1)',\
 	bndtools.runtime.eclipse.applaunch;version='[0.1.0,0.1.1)',\
 	ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.core;version='[1.1.2,1.1.3)',\
@@ -87,7 +83,7 @@ runbundles: \
 	com.make.equo.testing.common.internal;version=snapshot,\
 	com.make.equo.ws.api;version=snapshot,\
 	com.make.equo.ws.provider;version=snapshot,\
-	io.netty.all;version='[4.0.44,4.0.45)',\
+	io.netty.all;version='[4.1.33,4.1.34)',\
 	javax.activation;version='[1.1.0,1.1.1)',\
 	javax.annotation;version='[1.2.0,1.2.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
@@ -161,6 +157,7 @@ runbundles: \
 	org.eclipse.swt.chromium.gtk.linux.x86_64;version='[76.0.8,77.0.0)',\
 	org.eclipse.swt.chromium.win32.win32.x86_64;version='[76.0.8,77.0.0)',\
 	org.eclipse.swt.cocoa.macosx.x86_64;version='[3.113.0,3.113.1)',\
+	org.eclipse.swt.gtk.linux.ppc64le;version='[3.113.0,3.113.1)',\
 	org.eclipse.swt.gtk.linux.x86_64;version='[3.113.0,3.113.1)',\
 	org.eclipse.swt.win32.win32.x86_64;version='[3.113.0,3.113.1)',\
 	org.slf4j.api;version='[1.7.10,1.7.11)',\
@@ -168,6 +165,5 @@ runbundles: \
 	org.w3c.dom.events;version='[3.0.0,3.0.1)',\
 	org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
 	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
-	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	osgi.cmpn;version='[6.0.0,6.1.0)',\
-	slf4j.api;version='[1.7.25,1.7.26)'
+	org.xbill.dns;version='[2.0.8,2.0.9)'
