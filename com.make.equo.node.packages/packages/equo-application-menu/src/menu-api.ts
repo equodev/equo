@@ -49,16 +49,14 @@ export class Linker{
 export class MenuItemSeparatorBuilder{
   private linker: Linker;
   /**
-   * @summary Create a MenuItemSeparatorBuilder.
    * @name MenuItemSeparatorBuilder
    * @class
-   * @param {Linker} linker
    */
   constructor(linker: Linker) {
     this.linker = linker;
   }
   /**
-   * Add a new menu that will contain other sub menus.
+   * Adds a new menu that will contain other sub menus.
    * @param {string} label - Menu title.
    * @return {MenuBuilder}
    */
@@ -66,7 +64,7 @@ export class MenuItemSeparatorBuilder{
     return this.linker.getMenuItemBuilder().addMenu(label);
   }
   /**
-   * Add a new menu that will contain other menus.
+   * Adds a new menu item that will not contain other menus.
    * @param {string} label - Menu title.
    * @return {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' will return null.
    */
@@ -81,10 +79,8 @@ export class MenuBuilder{
   private linker: Linker;
   private indexToAddItem!: number;
   /**
-   * @summary Create a MenuBuilder.
    * @name MenuBuilder
    * @class
-   * @param {Linker} linker
    */
   constructor(linker: Linker) {
     this.linker = linker;
@@ -93,7 +89,7 @@ export class MenuBuilder{
       this.bindEquoFunctions();
   }
   /**
-   * Create a root menu, visible in the bar.
+   * Creates a root menu, visible in the bar.
    * @param {string} label - Menu title.
    * @return {MenuBuilder}
    */
@@ -118,7 +114,7 @@ export class MenuBuilder{
     return this;
   }
   /**
-   * Add a new menu that will contain other sub menus.
+   * Adds a new menu that will contain other sub menus.
    * @param {string} label - Menu title.
    * @return {MenuBuilder}
    */
@@ -135,7 +131,7 @@ export class MenuBuilder{
     return this;
   }
   /**
-   * Add a new menu that will contain other menus.
+   * Adds a new menu item that will not contain other menus.
    * @param {string} label - Menu title.
    * @return {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' will return null.
    */
@@ -165,8 +161,13 @@ export class MenuBuilder{
     this.webSocket.send("_getMenu", {});
   }
   /**
-   * Set the application menu to the current app menu. Optionally, pass a function parameter for custom actions called once the operation has been done.
-   * @param {Function} [callback]
+   * @callback setApplicationMenuCallback
+   * @param {EquoWebSocket} ws - EquoWebSocket instance.
+   * @param {JSON} json - Json menu.
+   */
+  /**
+   * Sets the application menu to the current app menu. Optionally, pass a function parameter for custom actions called once the operation has been done.
+   * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
   public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void): void {
@@ -178,7 +179,7 @@ export class MenuBuilder{
     }
   }
   /**
-   * Set the application menu from a json format to the current model.
+   * Sets the application menu from a json format to the current model.
    * @param {JSON} json - Json menu
    * @returns {void}
    */
@@ -186,14 +187,14 @@ export class MenuBuilder{
     this.webSocket.send("_setMenu", json);
   }
   /**
-   * Get all Equo menus from the under construction Menu.
+   * Gets the all Equo menus from the under construction Menu.
    * @returns {EquoMenu[]}
    */
   public getMenus(): Array<EquoMenu>{
       return this.menus;
   }
   /**
-   * Add a new menu that will contain other menus.
+   * Appends a new menu item that will not contain other menus.
    * @param {string} menuPath - Path to add menu.
    * @param {number} indexToAddItem - Index to add item.
    * @param {string} menuItemName - Menu title.
@@ -206,7 +207,7 @@ export class MenuBuilder{
     return null;
   }
   /**
-   * Append menu using path location.
+   * Appends the menu using path location.
    * @param {string} menuPath - Path to add menu.
    * @param {number} indexToAddItem - Index to add item.
    * @param {string} menuName - Menu title.
@@ -226,7 +227,7 @@ export class MenuBuilder{
     return this.searchByPathMenuRecursively(this.menus, path, equoMenu);
   }
   /**
-   * Append menu item at the end.
+   * Appends the menu item at the end.
    * @param {string} menuElementPath - Path to menu element to add.
    * @param {string} menuItemName - Menu title.
    * @returns {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' or menuPath does not exists will return null.
@@ -235,7 +236,7 @@ export class MenuBuilder{
     return this.appendMenuItem(menuElementPath,-1, menuItemName);
   }
   /**
-   * Append menu at the end.
+   * Appends the menu at the end.
    * @param {string} menuElementPath - Path to menu element to add.
    * @param {string} menuName - Menu title.
    * @returns {MenuBuilder|null} Returns null if menuElementPath does not exists
@@ -277,7 +278,7 @@ export class MenuBuilder{
     return inserted;
   }
   /**
-   * Add a new EquoMenu to the model using the parent menu id. If the parent menu id exists in the constructor, it will be added at the specified parent index.
+   * Adds a new EquoMenu to the model using the parent menu id. If the parent menu id exists in the constructor, it will be added at the specified parent index.
    * @param {string} parentMenuId - Parent ID to be added to.
    * @param {number} index - Index to add item.
    * @param {EquoMenu} menuItem - Menu element to add.
@@ -307,7 +308,7 @@ export class MenuBuilder{
     return added;
   }
   /**
-   * Remove menu element by id.
+   * Removes the menu element by id.
    * @param {string} menuToRemoveId - ID from menu to remove.
    * @returns {boolean} Returns true if the menu was found and removed, false otherwise.
    */
@@ -333,7 +334,7 @@ export class MenuBuilder{
     return removed;
   }
   /**
-   * Remove menu element by path. If the element exists, it will be removed.
+   * Removes the menu element by path. If the element exists, it will be removed.
    * @param {string} menuNamePathToRemove - Path|name from menu to remove.
    * @returns {MenuBuilder}
    */
@@ -373,16 +374,14 @@ export class MenuBuilder{
 export class MenuItemBuilder {
   private linker: Linker;
   /**
-   * @summary Create a MenuItemBuilder.
    * @name MenuItemBuilder
    * @class
-   * @param {Linker} linker
    */
   constructor(linker: Linker) {
     this.linker = linker;
   }
   /**
-   * Create a root menu, visible in the bar.
+   * Creates a root menu, visible in the bar.
    * @param {string} label - Menu title.
    * @return {MenuBuilder}
    */
@@ -390,7 +389,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().withMainMenu(label);
   }
   /**
-   * Add a new menu that will contain other menus.
+   * Adds a new menu item that will not contain other menus.
    * @param {string} label - Menu title.
    * @return {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' will return null.
    */
@@ -398,7 +397,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().addMenuItem(label);
   }
   /**
-   * Add action in menu element.
+   * Adds the action in menu element.
    * @param {string|function} action - Define onclick action.
    * @returns {MenuItemBuilder}
    */
@@ -411,7 +410,7 @@ export class MenuItemBuilder {
     return this;
   }
   /**
-   * Add shortcut in menu element.
+   * Adds the shortcut in menu element.
    * @param {string} shortcut - Define shortcut.
    * @returns {MenuItemBuilder}
    */
@@ -420,7 +419,7 @@ export class MenuItemBuilder {
     return this;
   }
   /**
-   * Add a new menu that will contain other sub menus.
+   * Adds a new menu that will contain other sub menus.
    * @param {string} label - Menu title.
    * @return {MenuBuilder}
    */
@@ -428,7 +427,7 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().addMenu(label);
   }
   /**
-   * Add separator between menus.
+   * Adds a separator between menus.
    * @returns {MenuItemSeparatorBuilder}
    */
   public addMenuSeparator(): MenuItemSeparatorBuilder {
@@ -438,8 +437,8 @@ export class MenuItemBuilder {
     return this.linker.getMenuItemSeparatorBuilder();
   }
   /**
-   * * Set the application menu to the current app menu. Optionally, pass a function parameter for custom actions called once the operation has been done.
-   * @param {Function} [callback]
+   * Sets the application menu to the current app menu. Optionally, pass a function parameter for custom actions called once the operation has been done.
+   * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
   public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void):void {
@@ -476,7 +475,6 @@ export class EquoMenu{
   private action!: string;
   private id: string;
   /**
-   * @summary Create EquoMenu element.
    * @name EquoMenu
    * @class
    */
@@ -484,7 +482,7 @@ export class EquoMenu{
     this.id = Math.random().toString(36).substr(2, 9).trim();
   }
   /**
-   * Initialize EquoMenu from json.
+   * Initializes the EquoMenu from json.
    * @param {JSON} json - Json with menu.
    * @returns {void}
    */
@@ -509,7 +507,7 @@ export class EquoMenu{
     }
   }
   /**
-   * Set specific runnable for menu action.
+   * Sets the specific runnable for menu action.
    * @param {Function} runnable 
    * @returns {void}
    */
@@ -518,7 +516,7 @@ export class EquoMenu{
     this.setAction(this.id);
   }
   /**
-   * Set the menu type. Valid types are EquoMenu or EquoMenuItem.
+   * Sets the menu type. Valid types are EquoMenu or EquoMenuItem.
    * @param {string} type - Valid types: EquoMenu | EquoMenuItem
    * @returns {void}
    */
@@ -528,7 +526,7 @@ export class EquoMenu{
     this.type = type;
   }
   /**
-   * Set title for menu.
+   * Sets the title for menu.
    * @param {string} title - Menu title
    * @returns {void} 
    */
@@ -536,7 +534,7 @@ export class EquoMenu{
     this.title = title;
   }
   /**
-   * Set action id for menu.
+   * Sets the action id for menu.
    * @param {string} action - Action ID.
    * @returns {void}
    */
@@ -544,7 +542,7 @@ export class EquoMenu{
     this.action = action;
   }
   /**
-   * Set shortcut for menu.
+   * Sets the shortcut for menu.
    * @param {string} shortcut
    * @returns {void}
    */
@@ -552,7 +550,7 @@ export class EquoMenu{
     this.shortcut = shortcut;
   }
   /**
-   * Add children in EquoMenu at the end. It will not be added if there is another child with the same title. Returns -1 if it is not added or the index to which it was added.
+   * Adds the children in EquoMenu at the end. It will not be added if there is another child with the same title. Returns -1 if it is not added or the index to which it was added.
    * @param {EquoMenu} children
    * @returns {void}
    */
@@ -571,7 +569,7 @@ export class EquoMenu{
     return position;
   }
   /**
-   * Set childrens for menu.
+   * Sets the childrens for menu.
    * @param {EquoMenu[]} childrens
    * @returns {void}
    */
@@ -579,49 +577,49 @@ export class EquoMenu{
     this.children = childrens;
   }
   /**
-   * Get menu type. Returns EquoMenu or EquoMenuItem.
+   * Gets the menu type. Returns EquoMenu or EquoMenuItem.
    * @returns {string} 
    */
   public getType():string {
     return this.type;
   }
   /**
-   * Get menu title.
+   * Gets the menu title.
    * @returns {string}
    */
   public getTitle():string {
     return this.title;
   }
   /**
-   * Get action id from menu.
+   * Gets the action id from menu.
    * @returns {string}
    */
   public getAction():string {
     return this.action;
   }
   /**
-   * Get shortcut from menu.
+   * Gets the shortcut from menu.
    * @returns {string}
    */
   public getShortcut():string {
     return this.shortcut;
   }
   /**
-   * Get childrens from menu.
+   * Gets the childrens from menu.
    * @returns {EquoMenu[]}
    */
   public getChildren(): Array<EquoMenu> {
     return this.children;
   }
   /**
-   * Get menu id.
+   * Gets the menu id.
    * @returns {string}
    */
   public getId(): string {
     return this.id;
   }
   /**
-   * Add children in EquoMenu at the index. It will not be added if there is another child with the same title.
+   * Adds the children in EquoMenu at the index. It will not be added if there is another child with the same title.
    * @param {number} index - Index to add item.
    * @param {EquoMenu} children - Menu element to add.
    * @returns {boolean}
@@ -643,7 +641,7 @@ export class EquoMenu{
     return !exist;
   }
   /**
-   * Remove children at the index.
+   * Removes the children at the index.
    * @param {number} index - Index to remove item.
    * @returns {void}
    */
@@ -651,7 +649,7 @@ export class EquoMenu{
     this.children.splice(index,1);
   }
   /**
-   * Remove children by id.
+   * Removes the children by id.
    * @param {string} menuItemId - ID from menu to remove.
    * @returns {void}
    */
@@ -666,7 +664,7 @@ export class EquoMenu{
     });
   }
   /**
-   * Get all menu titles in the EquoMenu from all childrends.
+   * Gets the all menu titles in the EquoMenu from all childrends.
    * @returns {string[]}
    */
   public getTitleMenus(): Array<string>{
@@ -685,13 +683,11 @@ export class EquoMenu{
  * @namespace
  * @description Equo-Application-Menu is a node package with the name '@equo/equo-application-menu' that allows through an api a native constructor of menus for Equo applications, in a chained way.
  * 
- * This document specifies the full usage methods for Equo-Application-Menu and full examples for each of them.
-
- *see [more](how-to-include-equo-components.md) about how to include Equo component in your projects.
+ * This document specifies the usage methods for Equo-Application-Menu.
  */
 export namespace Menu{
   /**
-   * Create a menu instance.
+   * Creates a menu instance.
    * @function
    * @name create
    * @returns {MenuBuilder}
@@ -700,7 +696,7 @@ export namespace Menu{
     return new Linker().getMenuBuilder();
   }
   /**
-   * Get current app menu model in callback's parameter. You can build a new menu model from the one established in your application.
+   * Gets the current app menu model in callback's parameter. You can build a new menu model from the one established in your application.
    * @function
    * @name getCurrentModel
    * @param  {Function} callback
