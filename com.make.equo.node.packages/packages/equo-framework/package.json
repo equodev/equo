@@ -1,6 +1,6 @@
 {
     "name": "@equo/framework",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Equo Framework Javascript API",
     "license": "UNLICENSED",
     "publishConfig": {
@@ -13,12 +13,16 @@
     ],
     "dependencies": {
         "@equo/service-manager": "^0.1.0",
-        "@equo/websocket": "^0.1.4"
+        "@equo/websocket": "^0.1.5"
+    },
+    "devDependencies": {
+        "jsdoc-to-markdown": "^6.0.0"
     },
     "scripts": {
-        "prepare": "yarn run clean && yarn run build",
+        "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
         "clean": "rimraf lib",
         "build": "yarn run compile",
-        "compile": "tsc"
+        "compile": "tsc",
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-framework-doc.md"
     }
 }

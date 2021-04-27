@@ -3,3 +3,4 @@ lib/
 node_modules/
 dist/
 yarn-error.log
+equo-*-doc.md
