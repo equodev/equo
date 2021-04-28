@@ -9,6 +9,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 
 import com.make.equo.application.util.IConstants;
 
+/**
+ * 
+ * Equo menu builder for Java.
+ *
+ */
 public class MenuBuilder {
 
 	private OptionalViewBuilder optionalFieldBuilder;
@@ -29,6 +34,12 @@ public class MenuBuilder {
 		this.optionalFieldBuilder = menuBuilder.optionalFieldBuilder;
 	}
 
+	/**
+	 * Adds a new menu that will contain other menus.
+	 * 
+	 * @param label the menu title.
+	 * @return the MenuBuilder instance.
+	 */
 	public MenuBuilder addMenu(String label) {
 		for (MMenuElement children : parentMenu.getChildren()) {
 			// If already exists a menu with this label, return that one
@@ -44,6 +55,13 @@ public class MenuBuilder {
 		return newMenuBuilder;
 	}
 
+	/**
+	 * Removes the current menu construction from the UI model. If it does not
+	 * exist, it will remove a current model in the user interface already
+	 * established.
+	 * 
+	 * @return the MenuBuilder instance.
+	 */
 	public MenuBuilder remove() {
 		if (menu == null) {
 			List<MMenuElement> children = parentMenu.getChildren();
@@ -83,6 +101,12 @@ public class MenuBuilder {
 		element.setVisible(false);
 	}
 
+	/**
+	 * Removes a menu children by title.
+	 * 
+	 * @param label the menu title.
+	 * @return the MenuBuilder instance.
+	 */
 	public MenuBuilder removeChildren(String label) {
 		List<MMenuElement> childrens = menu.getChildren();
 		MMenuElement itemToDelete = null;
@@ -107,34 +131,88 @@ public class MenuBuilder {
 		return newMenu;
 	}
 
+	/**
+	 * Adds new menu item.
+	 * 
+	 * @param label the menu title.
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder addMenuItem(String label) {
 		return new MenuItemBuilder(this).addMenuItem(label);
 	}
 
+	/**
+	 * Adds a Exit menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application.
+	 * 
+	 * @param label    the menu title.
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onBeforeExit(String label, Runnable runnable) {
 		return new MenuItemBuilder(this).onBeforeExit(label, runnable);
 	}
 
+	/**
+	 * Executes the run method of this runnable before exiting the application.
+	 * 
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onBeforeExit(Runnable runnable) {
 		return new MenuItemBuilder(this).onBeforeExit(runnable);
 	}
 
+	/**
+	 * Adds a Preferences menu item only if needed (Not needed in OSx) and executes
+	 * the runnable when the item is accessed.
+	 * 
+	 * @param label    the menu title.
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onPreferences(String label, Runnable runnable) {
 		return new MenuItemBuilder(this).onPreferences(label, runnable);
 	}
 
+	/**
+	 * Executes the run method of this runnable when the item is accessed.
+	 * 
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onPreferences(Runnable runnable) {
 		return new MenuItemBuilder(this).onPreferences(runnable);
 	}
 
+	/**
+	 * Adds About menu item only if needed (Not needed in OSx) and executes the
+	 * runnable before exiting the application.
+	 * 
+	 * @param label    the menu title.
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onAbout(String label, Runnable runnable) {
 		return new MenuItemBuilder(this).onAbout(label, runnable);
 	}
 
+	/**
+	 * Executes the run method of this runnable when the item is accessed.
+	 * 
+	 * @param runnable
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder onAbout(Runnable runnable) {
 		return new MenuItemBuilder(this).onAbout(runnable);
 	}
 
+	/**
+	 * Adds new menu item with full screen mode.
+	 * 
+	 * @param menuItemLabel the menu title.
+	 * @return the MenuItemBuilder instance.
+	 */
 	public MenuItemBuilder addFullScreenModeMenuItem(String menuItemLabel) {
 		return new MenuItemBuilder(this).addFullScreenModeMenuItem(menuItemLabel);
 	}
