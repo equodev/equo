@@ -14,6 +14,11 @@ import com.make.equo.ws.api.ObjectPayloadParser;
 import com.make.equo.ws.api.StringPayloadEquoRunnable;
 import com.make.equo.ws.api.StringPayloadParser;
 
+/**
+ * 
+ * Implements the handler actions for send and received websocket events using equoWebSocketService instance.
+ *
+ */
 @Component
 public class EquoEventHandler implements IEquoEventHandler {
 
