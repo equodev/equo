@@ -45,21 +45,13 @@
 	org.eclipse.osgi.util;version='[3.5.300,3.5.301)',\
 	org.tukaani.xz;version='[1.8.0,1.8.1)'
 
-#Because version ranges use the comma as a delimiter, we need to make a few replacements to avoid confusing it as a list separator:
-#replace "," for "°"
-stringBundles: ${sjoin;°;${runbundles}}
-#replace "°" (previous ",") in ranges (those that are between two numbers) for "¬"
-replace1: ${subst;${stringBundles};(\\d)°(\\d);$1¬$2}
 #remove "version=" part. Separator between bundle name and version changed to "@"
-replace2: ${subst;${replace1};°version=;@}
+bundlesVers.all: ${subst;${runbundles};version=;}
 
-#replace the separator between bundles for "," again to make a list of bundles "bundle.name@'[minVer¬maxVer)'"
-bundlesVers.all: ${subst;${replace2};°;,}
+#remove quotes from version
+getVer: ${subst;${1};'(.*)';$1}
 
-getBsn: ${first;${split;@;${1}}}
-calcVer: ${subst;${get;1;${split;@;${1}}};'(.*)';$1}
-getVer: ${subst;${calcVer;${1}};¬;,}
-param2jar: ${repo;${getBsn;${1}};${getVer;${1}}}
+param2jar: ${repo;${1};${getVer;${2}}}
 alljars: ${map;param2jar;${bundlesVers.all}}
 
 -runproperties: \

@@ -7,6 +7,12 @@ import com.make.equo.application.util.IConstants;
 
 import com.google.gson.JsonObject;
 
+/**
+ * 
+ * Equo menu. Represents a menu item model for building Menu from JavaScript
+ * api.
+ *
+ */
 public class EquoMenuItem extends AbstractEquoMenu {
 	private Runnable runnable = null;
 	private String action = null;
@@ -17,16 +23,34 @@ public class EquoMenuItem extends AbstractEquoMenu {
 		super(parent, title);
 	}
 
+	/**
+	 * Adds the runnable in menu element.
+	 * 
+	 * @param runnable the runable action.
+	 * @return the EquoMenuItem instance.
+	 */
 	public EquoMenuItem onClick(Runnable runnable) {
 		this.runnable = runnable;
 		return this;
 	}
 
+	/**
+	 * Adds the shortcut in menu element.
+	 * 
+	 * @param shortcut the shortcut command.
+	 * @return the EquoMenuItem instance.
+	 */
 	public EquoMenuItem withShortcut(String shortcut) {
 		this.shortcut = shortcut;
 		return this;
 	}
 
+	/**
+	 * Adds the action in menu element.
+	 * 
+	 * @param runnable the string action.
+	 * @return the EquoMenuItem instance.
+	 */
 	public EquoMenuItem onClick(String action) {
 		this.action = action;
 		return this;

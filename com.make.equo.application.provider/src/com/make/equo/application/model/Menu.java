@@ -11,12 +11,19 @@ import org.eclipse.swt.widgets.Display;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+/**
+ * 
+ * Represents a complete model of the menu built from the javascript api and
+ * deserealized using the CustomDesearializer class
+ *
+ */
 public class Menu implements IEquoMenu {
 	private List<EquoMenu> menus = new ArrayList<>();
 
 	Menu() {
 	}
 
+	@Override
 	public EquoMenu withMainMenu(String title) {
 		EquoMenu menu = getExistingMenu(title);
 		if (menu == null) {
@@ -26,6 +33,14 @@ public class Menu implements IEquoMenu {
 		return menu;
 	}
 
+	/**
+	 * Appends the menu item using path location.
+	 * 
+	 * @param parentMenuPath the path to add menu.
+	 * @param indexToAddItem the index to add item.
+	 * @param newItemTitle   the menu title.
+	 * @return the EquoMenuItem instance.
+	 */
 	public EquoMenuItem appendMenuItem(String parentMenuPath, int indexToAddItem, String newItemTitle) {
 		AbstractEquoMenu item = get(parentMenuPath);
 		if (!(item instanceof EquoMenu)) {
@@ -35,10 +50,25 @@ public class Menu implements IEquoMenu {
 		return parent.addMenuItem(indexToAddItem, newItemTitle);
 	}
 
+	/**
+	 * Appends the menu item at the end.
+	 * 
+	 * @param parentMenuPath the path to add menu.
+	 * @param newItemTitle   the menu title.
+	 * @return the EquoMenuItem instance.
+	 */
 	public EquoMenuItem appendMenuItemAtTheEnd(String parentMenuPath, String newItemTitle) {
 		return appendMenuItem(parentMenuPath, -1, newItemTitle);
 	}
 
+	/**
+	 * Appends the menu using path location.
+	 * 
+	 * @param parentMenuPath the path to add menu.
+	 * @param indexToAddMenu the index to add item.
+	 * @param newMenuTitle   the menu title.
+	 * @return the EquoMenu instance.
+	 */
 	public EquoMenu appendMenu(String parentMenuPath, int indexToAddMenu, String newMenuTitle) {
 		AbstractEquoMenu item = get(parentMenuPath);
 		if (!(item instanceof EquoMenu)) {
@@ -48,10 +78,24 @@ public class Menu implements IEquoMenu {
 		return parent.addMenu(indexToAddMenu, newMenuTitle);
 	}
 
+	/**
+	 * Appends the menu at the end.
+	 * 
+	 * @param parentMenuPath the path to add menu.
+	 * @param newMenuTitle   the menu title.
+	 * @return the EquoMenu instance.
+	 */
 	public EquoMenu appendMenuAtTheEnd(String parentMenuPath, String newMenuTitle) {
 		return appendMenu(parentMenuPath, -1, newMenuTitle);
 	}
 
+	/**
+	 * Removes the menu element by path. If the element exists, it will be removed.
+	 * 
+	 * @param pathElementToRemove the path to remove the element, separated by "/".
+	 *                            If the element it's under File -> New -> Project,
+	 *                            then the argument must be "File/New/Project"
+	 */
 	public void removeMenuElementByPath(String pathElementToRemove) {
 		AbstractEquoMenu item = get(pathElementToRemove);
 		if (item == null) {
@@ -88,7 +132,7 @@ public class Menu implements IEquoMenu {
 	 * @param path The path to get the element, separated by "/". If the element
 	 *             it's under File -> New -> Project, then the argument must be
 	 *             "File/New/Project"
-	 * @return
+	 * @return a menu instance if the path is correct. Void for any other case.
 	 */
 	public AbstractEquoMenu get(String path) {
 		String[] steps = path.split("/");
@@ -110,6 +154,11 @@ public class Menu implements IEquoMenu {
 		return currentItem;
 	}
 
+	/**
+	 * Serializes the menu and its children recursively in a JsonObject.
+	 * 
+	 * @return the menu and its children recursively in a JsonObject.
+	 */
 	public JsonObject serialize() {
 		JsonArray jArr = new JsonArray();
 		for (EquoMenu menu : menus) {
@@ -141,14 +190,19 @@ public class Menu implements IEquoMenu {
 		});
 	}
 
+	/**
+	 * Creates a new Menu instance.
+	 * 
+	 * @return a new Menu instance.
+	 */
 	public static Menu create() {
 		return new Menu();
 	}
 
 	/**
-	 * Gets the menu model that is currently shown
+	 * Gets the menu model that is currently shown.
 	 * 
-	 * @return
+	 * @return the menu model that is currently shown.
 	 */
 	public static Menu getActiveMenu() {
 		Menu model = new Menu();

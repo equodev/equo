@@ -1,6 +1,7 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include: https://testing-core.ams3.digitaloceanspaces.com/0.2.0/testbundle.bnd,https://testing-core.ams3.digitaloceanspaces.com/0.2.0/testbundlecoverage.bnd
+-include: https://testing-core.ams3.digitaloceanspaces.com/${testing_core_version}/testbundle.bnd,\
+    https://testing-core.ams3.digitaloceanspaces.com/${testing_core_version}/testbundlecoverage.bnd
 
 -includeresource: \
     resources/

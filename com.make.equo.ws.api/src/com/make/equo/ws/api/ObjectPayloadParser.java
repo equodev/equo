@@ -7,6 +7,11 @@ public class ObjectPayloadParser<T> implements IEquoRunnableParser<T> {
 	private IEquoRunnable<T> objectPayloadEquoRunnable;
 	private Gson gson;
 
+	/**
+	 * Creates the payload parser for object of type T.
+	 * 
+	 * @param objectPayloadEquoRunnable the runnable of type T.
+	 */
 	public ObjectPayloadParser(IEquoRunnable<T> objectPayloadEquoRunnable) {
 		this.objectPayloadEquoRunnable = objectPayloadEquoRunnable;
 		this.gson = new Gson();

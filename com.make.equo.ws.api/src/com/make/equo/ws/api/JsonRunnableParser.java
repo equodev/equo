@@ -10,6 +10,11 @@ public class JsonRunnableParser implements IEquoRunnableParser<JsonObject> {
 	private IEquoRunnable<JsonObject> jsonPayloadEquoRunnable;
 	private Gson gson;
 
+	/**
+	 * Creates the payload parser for object of type Json.
+	 * 
+	 * @param objectPayloadEquoRunnable the runnable of type Json.
+	 */
 	public JsonRunnableParser(IEquoRunnable<JsonObject> jsonPayloadEquoRunnable) {
 		this.jsonPayloadEquoRunnable = jsonPayloadEquoRunnable;
 		this.jsonParser = new JsonParser();

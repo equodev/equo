@@ -8,7 +8,6 @@
       "push": false
     },
     "publish": {
-      "registry": "https://registry.dev.equoplatform.com/",
       "gitReset": false
     }
   }

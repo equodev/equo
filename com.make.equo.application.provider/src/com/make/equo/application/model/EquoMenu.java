@@ -9,6 +9,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+/**
+ * 
+ * Equo menu. Represents a menu model for building Menu from JavaScript api.
+ *
+ */
 public class EquoMenu extends AbstractEquoMenu {
 	private List<AbstractEquoMenu> children;
 	public static final String CLASSNAME = "EquoMenu";
@@ -78,6 +83,12 @@ public class EquoMenu extends AbstractEquoMenu {
 		return separator;
 	}
 
+	/**
+	 * Gets a menu by the title.
+	 * 
+	 * @param itemTitle the title menu.
+	 * @return a menu by the title. If it does not exist, it returns null.
+	 */
 	public AbstractEquoMenu getItem(String itemTitle) {
 		for (AbstractEquoMenu item : children) {
 			if (item.getTitle().equals(itemTitle))

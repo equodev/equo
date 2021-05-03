@@ -28,7 +28,8 @@ public class OptionalViewBuilder {
 	private EquoContributionBuilder offlineSupportBuilder;
 
 	OptionalViewBuilder(ViewBuilder viewBuilder, IEquoServer equoServer, AnalyticsService analyticsService,
-			EquoContributionBuilder mainAppBuilder, EquoContributionBuilder offlineSupportBuilder, IEquoApplication equoApp) {
+			EquoContributionBuilder mainAppBuilder, EquoContributionBuilder offlineSupportBuilder,
+			IEquoApplication equoApp) {
 		this.viewBuilder = viewBuilder;
 		this.equoServer = equoServer;
 		this.analyticsService = analyticsService;
@@ -37,10 +38,25 @@ public class OptionalViewBuilder {
 		this.equoApplicationBuilder = viewBuilder.getEquoApplicationBuilder();
 	}
 
+	/**
+	 * Add the shortcut with a custom runnable.
+	 * 
+	 * @param keySequence the shortcut command.
+	 * @param runnable    the runnable.
+	 * @return this.
+	 */
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable) {
 		return addShortcut(keySequence, runnable, null);
 	}
 
+	/**
+	 * Adds the shortcut for the user event and custom runnable.
+	 * 
+	 * @param keySequence the shortcut command.
+	 * @param runnable    the runnable.
+	 * @param userEvent   the user event.
+	 * @return this.
+	 */
 	public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
 		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
 		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable, userEvent)
@@ -48,10 +64,23 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds the shortcut for the user event.
+	 * 
+	 * @param keySequence the shortcut command.
+	 * @param userEvent   the user event.
+	 * @return this.
+	 */
 	public OptionalViewBuilder addShortcut(String keySequence, String userEvent) {
 		return addShortcut(keySequence, null, userEvent);
 	}
 
+	/**
+	 * Removes the shortcut command.
+	 * 
+	 * @param keySequence the shortcut command.
+	 * @return this.
+	 */
 	public OptionalViewBuilder removeShortcut(String keySequence) {
 		EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
 		new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), null, null)
@@ -84,7 +113,6 @@ public class OptionalViewBuilder {
 		mainAppBuilder.withScriptFile(scriptPath);
 		return this;
 	}
-
 
 	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
 		mainAppBuilder.withStyleFile(stylePath);
@@ -122,10 +150,21 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Starts Equo application.
+	 * 
+	 * @return the EquoApplicationBuilder instance.
+	 */
 	public EquoApplicationBuilder start() {
 		return this.viewBuilder.start();
 	}
 
+	/**
+	 * Creates a root menu, visible in the bar.
+	 * 
+	 * @param menuLabel the menu title.
+	 * @return the MenuBuilder instance.
+	 */
 	public MenuBuilder withMainMenu(String menuLabel) {
 		inicMainMenu();
 		return new MenuBuilder(this).addMenu(menuLabel);
@@ -143,6 +182,12 @@ public class OptionalViewBuilder {
 		return mainMenu;
 	}
 
+	/**
+	 * Adds new menu item with full screen mode.
+	 * 
+	 * @param label the menu title.
+	 * @return this.
+	 */
 	public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
@@ -188,8 +233,13 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds a toolbar to current builder instance.
+	 * 
+	 * @return the ToolbarBuilder instance.
+	 */
 	public ToolbarBuilder withToolbar() {
-		return new ToolbarBuilder(this,equoApplicationBuilder.getmWindow()).addToolbar();
-	}	
+		return new ToolbarBuilder(this, equoApplicationBuilder.getmWindow()).addToolbar();
+	}
 
 }

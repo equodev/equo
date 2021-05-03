@@ -7,6 +7,11 @@ public class StringPayloadParser implements IEquoRunnableParser<String> {
 	private IEquoRunnable<String> stringPayloadEquoRunnable;
 	private Gson gson;
 
+	/**
+	 * Creates the payload parser for object of type String.
+	 * 
+	 * @param objectPayloadEquoRunnable the runnable of type String.
+	 */
 	public StringPayloadParser(IEquoRunnable<String> StringPayloadEquoRunnable) {
 		stringPayloadEquoRunnable = StringPayloadEquoRunnable;
 		this.gson = new Gson();
