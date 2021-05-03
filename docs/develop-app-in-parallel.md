@@ -14,37 +14,37 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
 
 5. This apps run by default with the released version of the framework, consumed online from Equo repositories. To **use a local version of the framework** (the one you are working on) you need to **make two changes**:
 
-    - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local framework build repository** (`cnf/buildrepo/index.xml.gz` index file inside the framework). The modified file will be something like this, with the first plugin being the new one we just added:
+    - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local framework build repository** (`cnf/release/index.xml.gz` index file inside the framework). The modified file will be something like this, with the first plugin being the new one we just added:
 
       ```
       -plugin.1.EquoLocal: \
         aQute.bnd.repository.osgi.OSGiRepository; \
           name = "EquoLocal"; \
-          locations = "file:///home/username/Equo/framework/cnf/buildrepo/index.xml.gz"; \
+          locations = "file:///home/username/Equo/framework/cnf/release/index.xml.gz"; \
           poll.time = -1
 
       -plugin.1.Equo: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = Equo; \
-          url = "file:///home/elias/equo-framework-master/ws/git/cnf/release/"; \
+        url = "https://equo-framework.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoExtras: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoSdk; \
-        url = "https://equo-framework-extras.ams3.digitaloceanspaces.com/0.2.0/repo/"; \
+        url = "https://equo-framework-extras.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoSdk: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoExtras; \
-        url = "https://equo-framework-sdk.ams3.digitaloceanspaces.com/0.2.0/repo/"; \
+        url = "https://equo-framework-sdk.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoRenderers: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoRenderers; \
-        url = "https://equo-framework-renderers.ams3.digitaloceanspaces.com/0.2.0/repo/"; \
+        url = "https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
           poll.time = -1
       ```
 
@@ -54,10 +54,10 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
 
       ```
       -include: /home/username/Equo/framework/cnf/equoapp.bnd,\
-        https://equo-framework-sdk.ams3.digitaloceanspaces.com/0.2.0/sdk.bnd,\
-        https://equo-framework-extras.ams3.digitaloceanspaces.com/0.2.0/extras.bnd,\
-        https://equo-framework-renderers.ams3.digitaloceanspaces.com/0.2.0/renderers.bnd,\
-        https://equo-framework-renderers.ams3.digitaloceanspaces.com/0.2.0/aspects.bnd
+        https://equo-framework-sdk.ams3.digitaloceanspaces.com/1.0.0/sdk.bnd,\
+        https://equo-framework-extras.ams3.digitaloceanspaces.com/1.0.0/extras.bnd,\
+        https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/renderers.bnd,\
+        https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/aspects.bnd
       Bundle-Version: ${version}.${tstamp}
       Private-Package: com.make.equo.testapp
       ```
