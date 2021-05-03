@@ -1,5 +1,5 @@
 equo {
-    if (project.hasProperty('deployingrelease')) {
+    if (System.getProperty('deployingProd', '').equals("true")) {
         channel = version
     } else {
         channel = "develop"
