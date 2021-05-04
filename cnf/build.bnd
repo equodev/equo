@@ -40,4 +40,3 @@ Bundle-ActivationPolicy: lazy
 
 javac.source:           1.8
 javac.target:           1.8
--noee: true
