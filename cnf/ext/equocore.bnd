@@ -1,14 +1,9 @@
 #variables  
-
--buildpath.graphics: ${if;${matches;${tolower;${os.name}};.*win.*};org.eclipse.swt.win32.win32.x86_64;${if;${matches;${tolower;${os.name}};.*mac.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.gtk.linux.x86_64}}
-
 -runproperties.core: \
     equinox.use.ds=true,\
     ds.delayed.keepInstances=true,\
     equinox.scr.dontDisposeInstances=true,\
     osgi.compatibility.bootdelegation=true
-
--runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 
 -runblacklist.core: \
     bnd.identity;id='org.eclipse.rap.*'

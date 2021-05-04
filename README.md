@@ -32,7 +32,7 @@ Refer to [website documentation](https://docs.equoplatform.com) to know how to d
 To develop the framework you must:
 * [Setup the development environment](docs/Setup environment.md).
 * After that, clone this project. Open a terminal in the framework folder and build it with Gradle for the first time with `./gradlew assemble`
-* Import the project in Eclipse (the one configured before) into a new workspace.
+* Import the project in Eclipse (the one configured before) into a new workspace. Configure compilance compatibility to generate _.class_ files for Java 1.8 (Window -> Preferences -> Java -> Compiler)
 * Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](docs/develop-app-in-parallel.md) to test the changes
 
 ## List of Framework Core bundles
