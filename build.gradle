@@ -34,6 +34,11 @@ task uploadEquoCore(type: com.make.equo.UploadFileTask) {
     file file('cnf/ext/equocore.bnd')
 }
 
+task uploadFrameworkBnd(type: com.make.equo.UploadFileTask) {
+    key "${equo.channel}/framework.bnd"
+    file file('cnf/framework.bnd')
+}
+
 task uploadLogback(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/logback.xml"
     file file('cnf/logback.xml')
@@ -77,7 +82,7 @@ task uploadEquoFrameworkConfigSetup(type: com.make.equo.UploadFileTask) {
 task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadLogback, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
+task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadFrameworkBnd, uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadLogback, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
 }
 
 allprojects {

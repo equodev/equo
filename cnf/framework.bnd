@@ -1,0 +1,47 @@
+Bundle-ActivationPolicy: lazy
+
+javac.source:           1.8
+javac.target:           1.8
+
+-include: ${workspace}/gradle.properties
+-buildpath.graphics: ${if;${matches;${tolower;${os.name}};.*win.*};org.eclipse.swt.win32.win32.x86_64;${if;${matches;${tolower;${os.name}};.*mac.*};org.eclipse.swt.cocoa.macosx.x86_64;org.eclipse.swt.gtk.linux.x86_64}}
+
+-plugin.1.BuildRepo: \
+    aQute.bnd.deployer.repository.LocalIndexedRepo; \
+        name = BuildRepo; \
+        local = ${build}/release; \
+        type = R5
+
+-plugin.2.AppLaunch: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Applaunch"; \
+        locations = "https://equo-bndp2.ams3.digitaloceanspaces.com/rls/repo/index.xml.gz"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/applaunch
+
+-plugin.3.P2Plugins: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = "P2Plugins"; \
+        url = "https://p2plugins.fra1.digitaloceanspaces.com/repository/"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/p2plugins
+
+-plugin.4.Eclipse201912: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Eclipse201912"; \
+        expand-bcp = true; \
+        locations = "https://p2repo-osgi-index.fra1.digitaloceanspaces.com/2019-12/index.xml.gz"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/eclipse201912
+
+-plugin.5.Testing: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = "Equo Testing"; \
+        url = "https://testing-core.ams3.digitaloceanspaces.com/${testing_core_version}/repo/"; \
+        poll.time = -1; \
+        cache = ~/.bnd/cache/equo-testing
+
+-buildrepo: BuildRepo
+-releaserepo: BuildRepo
+
+-runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
