@@ -108,3 +108,4 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     org.eclipse.swt.chromium.64b,\
     com.make.equo.aer.internal.api;version=latest,\
     com.make.equo.application.provider;version=latest
+Bundle-Version: 0.0.1.${tstamp}

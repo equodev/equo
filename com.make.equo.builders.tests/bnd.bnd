@@ -99,3 +99,4 @@ Bundle-ActivationPolicy:
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.jface)',\
     osgi.identity;filter:='(osgi.identity=osgi.cmpn)'
     
+Bundle-Version: 0.0.1.${tstamp}

@@ -1,7 +1,5 @@
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 Bundle-SymbolicName: com.make.equo.p2repo;singleton:=true
--runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
--runee: JavaSE-11
 -runrequires: \
 	bnd.identity;version='latest';id='com.make.equo.aer.api',\
 	bnd.identity;version='latest';id='com.make.equo.aer.internal.api',\
