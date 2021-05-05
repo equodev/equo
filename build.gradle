@@ -36,7 +36,7 @@ task uploadEquoCore(type: com.make.equo.UploadFileTask) {
 
 task uploadFrameworkBnd(type: com.make.equo.UploadFileTask) {
     key "${equo.channel}/framework.bnd"
-    file file('cnf/framework.bnd')
+    file file('cnf/ext/framework.bnd')
 }
 
 task uploadLogback(type: com.make.equo.UploadFileTask) {

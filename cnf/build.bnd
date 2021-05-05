@@ -1,28 +1,22 @@
--include: ${build}/framework.bnd
+Bundle-ActivationPolicy: lazy
 
--plugin.1.ChromiumSWT: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumSWT; \
-        url = "https://equo-chromium-swt-ee.ams3.digitaloceanspaces.com/${chromium_swt_version}/repository"; \
-        location = ~/.bnd/cache/chromium.swt
-
--plugin.2.ChromiumCEF: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumCEF; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_cef_version}/repository"; \
-        location = ~/.bnd/cache/cefbinaries
-
--plugin.3.ChromiumDEVTools: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumDEVTools; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_devtools_version}/repository"; \
-        location = ~/.bnd/cache/devtools
-
--plugin.4.Release: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = "Release"; \
-        url = "https://equo-framework.ams3.digitaloceanspaces.com/${previous_version}/repo/"; \
+-plugin.1.Baseline: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "Baseline"; \
+        locations = "https://equo-framework.ams3.digitaloceanspaces.com/${previous_version}/repo/index.xml.gz"; \
         poll.time = -1
 
+-plugin.2.BuildRepo: \
+    aQute.bnd.deployer.repository.LocalIndexedRepo; \
+        name = BuildRepo; \
+        local = ${build}/release; \
+        type = R5
+
 -baseline: *
--baselinerepo: Release
+
+-buildrepo: BuildRepo
+-releaserepo: BuildRepo
+-baselinerepo: Baseline
+
+-groupid: com.equo
+-pom: true
