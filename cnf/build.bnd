@@ -8,8 +8,6 @@ Bundle-ActivationPolicy: lazy
 
 -baseline: *
 
--buildrepo: BuildRepo
--releaserepo: BuildRepo
 -baselinerepo: Baseline
 
 -groupid: com.equo
