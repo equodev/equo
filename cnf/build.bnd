@@ -6,12 +6,6 @@ Bundle-ActivationPolicy: lazy
         locations = "https://equo-framework.ams3.digitaloceanspaces.com/${previous_version}/repo/index.xml.gz"; \
         poll.time = -1
 
--plugin.2.BuildRepo: \
-    aQute.bnd.deployer.repository.LocalIndexedRepo; \
-        name = BuildRepo; \
-        local = ${build}/release; \
-        type = R5
-
 -baseline: *
 
 -buildrepo: BuildRepo

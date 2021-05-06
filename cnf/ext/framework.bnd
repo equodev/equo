@@ -50,3 +50,10 @@ javac.target: 1.8
         name = ChromiumDEVTools; \
         url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_devtools_version}/repository"; \
         location = ~/.bnd/cache/devtools
+
+# Local OSGi repository common to all framework projects
+-plugin.8.BuildRepo: \
+    aQute.bnd.deployer.repository.LocalIndexedRepo; \
+        name = BuildRepo; \
+        local = ${build}/release; \
+        type = R5
