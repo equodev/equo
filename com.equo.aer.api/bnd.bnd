@@ -1,0 +1,5 @@
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: com.equo.aer.api
+-buildpath: \
+    com.google.gson,\
+    org.eclipse.e4.core.contexts

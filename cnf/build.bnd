@@ -3,25 +3,25 @@
 -plugin.1.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "https://equo-chromium-swt-ee.ams3.digitaloceanspaces.com/${chromium_swt_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/${chromium_swt_version}/repository"; \
         location = ~/.bnd/cache/chromium.swt
 
 -plugin.2.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumCEF; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_cef_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-cef/${chromium_cef_version}/repository"; \
         location = ~/.bnd/cache/cefbinaries
 
 -plugin.3.ChromiumDEVTools: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumDEVTools; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_devtools_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-cef/${chromium_devtools_version}/repository"; \
         location = ~/.bnd/cache/devtools
 
 -plugin.4.Release: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = "Release"; \
-        url = "https://equo-framework.ams3.digitaloceanspaces.com/${previous_version}/repo/"; \
+        url = "https://dl.equoplatform.com/framework/${previous_version}/repo/"; \
         poll.time = -1
 
 -baseline: *

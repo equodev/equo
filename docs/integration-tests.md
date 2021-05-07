@@ -13,7 +13,7 @@ The following steps describe how to create and run a OSGi test:
 
 3- In the `bnd.bnd` file, add the required bundles for your tests in both _buildpath_ and _runrequires_ instructions. Resolve run requirements to get the _runbundles_ list.
 
-4- Add bundle `com.make.equo.testing.common` to the buildpath and runbundles.
+4- Add bundle `com.equo.testing.common` to the buildpath and runbundles.
 
 5- It is important to add that if you need (and it is too much possible that you need it) create an instance of a specific class or component in the framework, you use a Rule created to the automatic injection of this instances, called EquoRule.
 
@@ -31,4 +31,4 @@ Moreover, you have to add the @Inject Anotation before of the attribute definiti
 6- When you are ready to run your test class, you have to run as `Bnd OSGi Test Launcher (JUnit)`: 
 Right-click on the class on Package Explorer -> Run As -> Bnd OSGi Test Launcher (JUnit)
 
-**If you need a functional example of an Integration Test, take a look at com.make.equo.builders.tests bundle on Equo framework project.**
+**If you need a functional example of an Integration Test, take a look at com.equo.builders.tests bundle on Equo framework project.**
