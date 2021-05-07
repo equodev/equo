@@ -59,7 +59,7 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
         https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/renderers.bnd,\
         https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/aspects.bnd
       Bundle-Version: ${version}.${tstamp}
-      Private-Package: com.make.equo.testapp
+      Private-Package: com.equo.testapp
       ```
 
 6. Rebuild the entire workspace: Project -> clean -> clean all.

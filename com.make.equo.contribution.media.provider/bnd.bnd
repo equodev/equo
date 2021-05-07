@@ -1,6 +1,0 @@
-Bundle-Version: 1.0.0.${tstamp}
-Private-Package: com.make.equo.contribution.media.provider
--includeresource: resources/
--buildpath: \
-    osgi.cmpn,\
-    com.make.equo.contribution.api;version=latest

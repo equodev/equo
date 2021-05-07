@@ -1,0 +1,11 @@
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: \
+    com.equo.server.api
+-buildpath: \
+    org.eclipse.osgi,\
+    org.eclipse.osgi.source,\
+    com.equo.server.offline.api;version=latest,\
+    io.netty.all,\
+    io.netty.all.source,\
+    osgi.cmpn,\
+    org.littleshoot:littleproxy;version=1.1
