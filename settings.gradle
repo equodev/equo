@@ -2,11 +2,11 @@ buildscript {
     ext.repos = {
         gradlePluginPortal()
         maven {
-            url "https://equo-gradle.ams3.digitaloceanspaces.com/0.3.1/"
+            url "https://dl.equoplatform.com/gradle/0.4.0/"
         }
     }
     ext.deps = {
-        classpath "com.make.equo:com.make.equo.gradle.plugin:0.3.1" 
+        classpath "com.equo:com.equo.gradle.plugin:0.4.0" 
         classpath "com.moowork.gradle:gradle-node-plugin:1.3.1"
     }
     repositories repos
@@ -27,4 +27,4 @@ buildCache {
     }
 }
 
-apply plugin: "com.make.equo"
+apply plugin: "com.equo"

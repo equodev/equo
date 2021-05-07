@@ -3,8 +3,14 @@ Bundle-ActivationPolicy: lazy
 -plugin.1.Baseline: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = "Baseline"; \
-        locations = "https://equo-framework.ams3.digitaloceanspaces.com/${previous_version}/repo/index.xml.gz"; \
+        locations = "https://dl.equoplatform.com/framework/${previous_version}/repo/index.xml.gz"; \
         poll.time = -1
+
+-plugin.2.Chromium: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = Chromium; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/equo/p2"; \
+        location = ~/.bnd/cache/chromium
 
 -baseline: *
 

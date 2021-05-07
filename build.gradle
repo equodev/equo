@@ -19,70 +19,70 @@ task replaceVersionOnEquoBuild(type: Copy){
     filter { line -> line.replaceAll('VERSIONPLACEHOLDER', "${equo.channel}") }
 }
 
-task uploadEquoApp(type: com.make.equo.UploadFileTask, dependsOn: generateEquoAppToUpload) {
+task uploadEquoApp(type: com.equo.UploadFileTask, dependsOn: generateEquoAppToUpload) {
     key "${equo.channel}/equoapp.bnd"
     file file('/tmp/auxequoapp/equoapp.bnd')
 }
 
-task uploadEquoBuild(type: com.make.equo.UploadFileTask, dependsOn: replaceVersionOnEquoBuild) {
+task uploadEquoBuild(type: com.equo.UploadFileTask, dependsOn: replaceVersionOnEquoBuild) {
     key "${equo.channel}/equobuild.bnd"
     file file('/tmp/auxequobuild/equobuild.bnd')
 }
 
-task uploadEquoCore(type: com.make.equo.UploadFileTask) {
+task uploadEquoCore(type: com.equo.UploadFileTask) {
     key "${equo.channel}/ext/equocore.bnd"
     file file('cnf/ext/equocore.bnd')
 }
 
-task uploadFrameworkBnd(type: com.make.equo.UploadFileTask) {
+task uploadFrameworkBnd(type: com.equo.UploadFileTask) {
     key "${equo.channel}/framework.bnd"
     file file('cnf/ext/framework.bnd')
 }
 
-task uploadLogback(type: com.make.equo.UploadFileTask) {
+task uploadLogback(type: com.equo.UploadFileTask) {
     key "${equo.channel}/logback.xml"
     file file('cnf/logback.xml')
 }
 
-task uploadEquoCi(type: com.make.equo.UploadFileTask) {
+task uploadEquoCi(type: com.equo.UploadFileTask) {
     key "${equo.channel}/equoci.yml"
     file file('cnf/equoci.yml')
 }
 
-task uploadEquoAppSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoAppSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoApp.setup"
     file file('cnf/EquoApp.setup')
 }
 
-task uploadEquoIDEAppConfigSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoIDEAppConfigSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoIDEAppConfig.setup"
     file file('cnf/EquoIDEAppConfig.setup')
 }
 
-task uploadEquoOrgProjectsSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoOrgProjectsSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoOrgProjects.setup"
     file file('cnf/EquoOrgProjects.setup')
 }
 
-task uploadEquoOwnerAppSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoOwnerAppSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoOwnerApp.setup"
     file file('cnf/EquoOwnerApp.setup')
 }
 
-task uploadEquoFrameworkSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoFrameworkSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoFramework.setup"
     file file('cnf/EquoFramework.setup')
 }
 
-task uploadEquoFrameworkConfigSetup(type: com.make.equo.UploadFileTask) {
+task uploadEquoFrameworkConfigSetup(type: com.equo.UploadFileTask) {
     key "${setupsChannel}/EquoFrameworkConfig.setup"
     file file('cnf/EquoFrameworkConfig.setup')
 }
 
-task uploadMetadata(type: com.make.equo.UploadMetadataTask) {
+task uploadMetadata(type: com.equo.UploadMetadataTask) {
 }
 
-task publish(type: com.make.equo.UploadRepoTask, dependsOn: [uploadFrameworkBnd, uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadLogback, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
+task publish(type: com.equo.UploadRepoTask, dependsOn: [uploadFrameworkBnd, uploadEquoApp, uploadEquoBuild, uploadEquoCore, uploadLogback, uploadEquoCi, uploadEquoAppSetup, uploadEquoIDEAppConfigSetup, uploadEquoOrgProjectsSetup, uploadEquoOwnerAppSetup, uploadEquoFrameworkSetup, uploadEquoFrameworkConfigSetup, uploadMetadata]) {
 }
 
 allprojects {
