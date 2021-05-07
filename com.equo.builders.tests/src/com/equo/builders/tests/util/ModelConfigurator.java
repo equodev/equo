@@ -21,7 +21,7 @@ public class ModelConfigurator {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		ApplicationPackageImpl.init();
 		URI uri = URI.createURI(
-				"../com.equo.application.provider/resources/Application.e4xmi");
+				"../com.equo.application.client/resources/Application.e4xmi");
 		
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("e4xmi", new E4XMIResourceFactory());
 		Resource res = resourceSet.getResource(uri, true);

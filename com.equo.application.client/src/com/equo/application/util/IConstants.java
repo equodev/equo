@@ -46,19 +46,19 @@ public interface IConstants {
 
 	public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openbrowser";
 
-	public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.handlers.ParameterizedCommandHandler";
+	public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.handlers.ParameterizedCommandHandler";
 
-	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.handlers.OpenBrowserCommandHandler";
+	public static final String OPEN_BROWSER_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.handlers.OpenBrowserCommandHandler";
 
-	public static final String SINGLE_PART_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.parts.SinglePagePart";
+	public static final String SINGLE_PART_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.parts.SinglePagePart";
 
 	public static final String EQUO_OPEN_BROWSER_AS_WINDOW = EQUO_APPLICATION_ID + ".openbrowseraswindow";
 
-	public static final String OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.handlers.OpenBrowserAsWindowCommandHandler";
+	public static final String OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.handlers.OpenBrowserAsWindowCommandHandler";
 
 	public static final String EQUO_OPEN_BROWSER_AS_SIDE_PART = EQUO_APPLICATION_ID + ".openbrowserassidepart";
 
-	public static final String OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.handlers.OpenBrowserAsSidePartCommandHandler";
+	public static final String OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.handlers.OpenBrowserAsSidePartCommandHandler";
 
 	public static final String EQUO_BROWSER_WINDOW_NAME = EQUO_APPLICATION_ID + ".browser.window.name";
 
@@ -68,7 +68,7 @@ public interface IConstants {
 
 	public static final String EQUO_WEBSOCKET_UPDATE_BROWSER = EQUO_WEBSOCKET_PREFIX + ".updatebrowser";
 
-	public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://com.equo.application.provider/com.equo.application.handlers.UpdateBrowserCommandHandler";
+	public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://com.equo.application.client/com.equo.application.handlers.UpdateBrowserCommandHandler";
 
 	public static final String EQUO_PARTSTACK_ID = EQUO_APPLICATION_ID + ".partstack";
 

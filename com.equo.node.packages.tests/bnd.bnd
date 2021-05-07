@@ -20,7 +20,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.equo.aer.api;version=latest,\
     com.equo.analytics.client.api;version=latest,\
     com.equo.analytics.internal.api;version=latest,\
-    com.equo.application.provider;version=latest,\
+    com.equo.application.client;version=latest,\
     com.equo.contribution.api;version=latest,\
     com.equo.logging.client.api;version=latest,\
     com.equo.server.api;version=latest,\
@@ -46,7 +46,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.equo.node.packages.tests.util
 
 -runrequires: \
-    bnd.identity;version='latest';id='com.equo.application.provider',\
+    bnd.identity;version='latest';id='com.equo.application.client',\
     osgi.identity;filter:='(osgi.identity=com.equo.node.packages.tests)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.64b)'
 
@@ -107,4 +107,4 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     org.xbill.dns;version='[2.0.8,2.0.9)',\
     org.eclipse.swt.chromium.64b,\
     com.equo.aer.internal.api;version=latest,\
-    com.equo.application.provider;version=latest
+    com.equo.application.client;version=latest

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_cParoJWREeejT9iXCdYVRA" elementId="com.equo.application">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_ZrHcsKk2EeeouNGhrCi_PQ" elementId="com.equo.trimmedwindow.mainpage" width="1024" height="768"/>
-  <handlers xmi:id="_Q7ZAcAUgEeiOMIu6XCOPmA" elementId="com.equo.application.handlers.ExitHandler" contributionURI="bundleclass://com.equo.application.provider/com.equo.application.handlers.ExitHandler" command="_9_KnAAUfEeiOMIu6XCOPmA"/>
-  <handlers xmi:id="_FDE1YPS0Eei60uCQm0HoPA" elementId="com.equo.application.handlers.AboutHandler" contributionURI="bundleclass://com.equo.application.provider/com.equo.application.handlers.AboutHandler" command="_V6CLcPS0Eei60uCQm0HoPA"/>
-  <handlers xmi:id="_RHZ0APTiEei60uCQm0HoPA" elementId="com.equo.application.handlers.PropertiesHandler" contributionURI="bundleclass://com.equo.application.provider/com.equo.application.handlers.PreferencesHandler" command="_N2Pv0PTjEei60uCQm0HoPA"/>
+  <handlers xmi:id="_Q7ZAcAUgEeiOMIu6XCOPmA" elementId="com.equo.application.handlers.ExitHandler" contributionURI="bundleclass://com.equo.application.client/com.equo.application.handlers.ExitHandler" command="_9_KnAAUfEeiOMIu6XCOPmA"/>
+  <handlers xmi:id="_FDE1YPS0Eei60uCQm0HoPA" elementId="com.equo.application.handlers.AboutHandler" contributionURI="bundleclass://com.equo.application.client/com.equo.application.handlers.AboutHandler" command="_V6CLcPS0Eei60uCQm0HoPA"/>
+  <handlers xmi:id="_RHZ0APTiEei60uCQm0HoPA" elementId="com.equo.application.handlers.PropertiesHandler" contributionURI="bundleclass://com.equo.application.client/com.equo.application.handlers.PreferencesHandler" command="_N2Pv0PTjEei60uCQm0HoPA"/>
   <commands xmi:id="_9_KnAAUfEeiOMIu6XCOPmA" elementId="org.eclipse.ui.file.exit" commandName="Exit" description="Close the Application">
      <parameters xmi:id="_sNxziHdaEemsw_Za0xitxA" elementId="mayPrompt" name="may prompt"/>
   </commands>

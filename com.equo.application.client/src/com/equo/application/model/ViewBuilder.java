@@ -85,7 +85,7 @@ public class ViewBuilder {
 
 		mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
 		mainPartBindingTable.setBindingContext(mBindingContext);
-		mainPartBindingTable.setElementId("com.equo.application.provider.bindingtable.mainpart");
+		mainPartBindingTable.setElementId("com.equo.application.client.bindingtable.mainpart");
 		equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
 
 		equoAppBuilder.getmWindow().getChildren().add(part);

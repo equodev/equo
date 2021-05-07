@@ -3,4 +3,4 @@ Export-Package: \
     com.equo.testing.common.internal.components
 
 -buildpath: \
-    com.equo.application.provider;version=latest
+    com.equo.application.client;version=latest

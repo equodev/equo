@@ -7,7 +7,7 @@ Bundle-SymbolicName: com.equo.p2repo;singleton:=true
 	bnd.identity;version='latest';id='com.equo.aer.internal.api',\
 	bnd.identity;version='latest';id='com.equo.analytics.client.api',\
 	bnd.identity;version='latest';id='com.equo.analytics.internal.api',\
-	bnd.identity;version='latest';id='com.equo.application.provider',\
+	bnd.identity;version='latest';id='com.equo.application.client',\
 	bnd.identity;version='latest';id='com.equo.contribution.api',\
 	bnd.identity;version='latest';id='com.equo.contribution.media.provider',\
 	bnd.identity;version='latest';id='com.equo.contribution.provider',\
@@ -69,7 +69,7 @@ runbundles: \
 	com.equo.aer.internal.api;version=snapshot,\
 	com.equo.analytics.client.api;version=snapshot,\
 	com.equo.analytics.internal.api;version=snapshot,\
-	com.equo.application.provider;version=snapshot,\
+	com.equo.application.client;version=snapshot,\
 	com.equo.contribution.api;version=snapshot,\
 	com.equo.contribution.media.provider;version=snapshot,\
 	com.equo.contribution.provider;version=snapshot,\

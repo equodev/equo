@@ -10,7 +10,7 @@ The bundles that provide the core functionality of the framework:
 | com.equo.aer.internal.api | Internal API for AER. This API is intended to be used only by Equo framework and not the user. It does nothing without the SDK running | 
 | com.equo.analytics.client.api | API for Analytics. Defines how the developer will register events to App Manager. It does nothing without the SDK running | 
 | com.equo.analytics.internal.api | Internal Analytics API. Used by the framework to register internal framework events. It does nothing without the SDK running | 
-| com.equo.application.provider | The main API entry point of the Equo Framework. Here we have the app structure, with Equo builders to create it, and its model (which includes the main window, toolbars, shortcuts, menus, etc). We also have the app lifecycle and Eclipse handlers to manage the E4 app | 
+| com.equo.application.client | The main API entry point of the Equo Framework. Here we have the app structure, with Equo builders to create it, and its model (which includes the main window, toolbars, shortcuts, menus, etc). We also have the app lifecycle and Eclipse handlers to manage the E4 app | 
 | com.equo.contribution.api | API defined to allow other bundles to contribute resources to the app such as css, js scripts, startup scripts, and more | 
 | com.equo.contribution.media.provider | A contribution to enhance the app with a Equo media API | 
 | com.equo.contribution.provider | Contributions API implementation. It has the manager and resolver to process contributions in runtime | 

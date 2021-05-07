@@ -5,7 +5,7 @@ Bundle-ActivationPolicy:
     https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
 
 -buildpath: \
-    com.equo.application.provider;version=latest,\
+    com.equo.application.client;version=latest,\
     com.equo.ws.api;version=latest,\
     com.equo.testing.common;version=latest,\
     org.eclipse.e4.ui.model.workbench,\
@@ -52,7 +52,7 @@ Bundle-ActivationPolicy:
     com.equo.aer.api;version=snapshot,\
     com.equo.aer.internal.api;version=snapshot,\
     com.equo.analytics.internal.api;version=snapshot,\
-    com.equo.application.provider;version=snapshot,\
+    com.equo.application.client;version=snapshot,\
     com.equo.builders.tests;version=snapshot,\
     com.equo.contribution.api;version=latest,\
     com.equo.contribution.provider;version=latest,\

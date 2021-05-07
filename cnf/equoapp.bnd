@@ -1,7 +1,7 @@
 -include: ext/equocore.bnd
 
 -buildpath: \
-    com.equo.application.provider;version=latest,\
+    com.equo.application.client;version=latest,\
     io.netty.all;version=latest,\
     com.equo.server.offline.api;version=latest,\
     com.equo.ws.api;version=latest,\
@@ -24,7 +24,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=ch.qos.logback.slf4j)',\
     osgi.identity;filter:='(&(osgi.identity=com.google.guava)(version>=27.0.0)(!(version>=28.0.0)))',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.swt.chromium.64b)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.application.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.api)',\
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.logging.client.api)',\
@@ -66,10 +66,10 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.gtk.*)'
 
 -runproperties.equo: \
-    applicationCSS=platform:/plugin/com.equo.application.provider/default.css,\
-    applicationXMI=com.equo.application.provider/Application.e4xmi,\
+    applicationCSS=platform:/plugin/com.equo.application.client/default.css,\
+    applicationXMI=com.equo.application.client/Application.e4xmi,\
     eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
-    lifeCycleURI=bundleclass://com.equo.application.provider/com.equo.application.LifeCycleManager,\
+    lifeCycleURI=bundleclass://com.equo.application.client/com.equo.application.LifeCycleManager,\
     eclipse.consoleLog=true,\
     launch.keep=false,\
     launch.storage.dir=.rt/cfg,\
@@ -122,7 +122,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
 	com.equo.aer.internal.api;version=latest,\
 	com.equo.analytics.client.api;version=latest,\
 	com.equo.analytics.internal.api;version=latest,\
-	com.equo.application.provider;version=latest,\
+	com.equo.application.client;version=latest,\
 	com.equo.contribution.api;version=latest,\
 	com.equo.contribution.media.provider;version=latest,\
 	com.equo.contribution.provider;version=latest,\
