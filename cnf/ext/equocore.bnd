@@ -1,4 +1,4 @@
-#variables 
+#variables
 -runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
 -runproperties.core: \
     equinox.use.ds=true,\

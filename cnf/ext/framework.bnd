@@ -36,19 +36,19 @@ javac.target: 1.8
 -plugin.5.ChromiumSWT: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumSWT; \
-        url = "https://equo-chromium-swt-ee.ams3.digitaloceanspaces.com/${chromium_swt_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/${chromium_swt_version}/repository"; \
         location = ~/.bnd/cache/chromium.swt
 
 -plugin.6.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumCEF; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_cef_version}/repository"; \
+        url = "https://dl.equoplatform.com/equo-chromium-cef/${chromium_cef_version}/repository"; \
         location = ~/.bnd/cache/cefbinaries
 
 -plugin.7.ChromiumDEVTools: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumDEVTools; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_devtools_version}/repository"; \
+        url = "https://dl.equoplatform.com/equo-chromium-cef/${chromium_devtools_version}/repository"; \
         location = ~/.bnd/cache/devtools
 
 # Local OSGi repository common to all framework projects
