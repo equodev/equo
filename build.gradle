@@ -89,29 +89,26 @@ allprojects {
 
     apply plugin: "java"
     apply plugin: "jacoco"
-    
-    
+
     repositories {
         jcenter()
     }
-    
+
     jacoco {
         toolVersion = '0.8.6'
     }
-      
-}
 
+}
 
 def enabledHtml = hasProperty('reportHtml') ? reportHtml : "false"
 
 /* Additional configuration for the Bnd projects */
 subprojects {
-	
-  	
+
   if (plugins.hasPlugin('biz.aQute.bnd')) {
     // additional configuration for Bnd projects
   }
-  
+
   //jacoco configuration for every subproyect
   jacocoTestReport {
         sourceDirectories = files(sourceSets.main.allSource.srcDirs)
@@ -122,9 +119,7 @@ subprojects {
             csv.enabled = false
         }
     }
-    
 }
-
 
 //taks to build jacoco report with results of all subprojects
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
@@ -146,4 +141,3 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         })
     }
 }
-
