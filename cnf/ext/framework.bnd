@@ -42,13 +42,13 @@ javac.target: 1.8
 -plugin.6.ChromiumCEF: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumCEF; \
-        url = "https://dl.equoplatform.com/equo-chromium-cef/${chromium_cef_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-cef/${chromium_cef_version}/repository"; \
         location = ~/.bnd/cache/cefbinaries
 
 -plugin.7.ChromiumDEVTools: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = ChromiumDEVTools; \
-        url = "https://dl.equoplatform.com/equo-chromium-cef/${chromium_devtools_version}/repository"; \
+        url = "https://dl.equoplatform.com/chromium-cef/${chromium_devtools_version}/repository"; \
         location = ~/.bnd/cache/devtools
 
 # Local OSGi repository common to all framework projects
