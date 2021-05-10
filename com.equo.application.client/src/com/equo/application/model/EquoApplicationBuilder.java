@@ -52,14 +52,14 @@ public class EquoApplicationBuilder {
 	}
 
 	/**
-	 * Build an Equo Plain App with a starting point in the HTML file given by
+	 * Build an Equo App with the UI starting point in the HTML file given by
 	 * parameter.
 	 * 
 	 * @param baseHtmlFile Path to HTML file, relative to 'resources' folder
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
+	public OptionalViewBuilder withUI(String baseHtmlFile) throws URISyntaxException {
 		optionalViewBuilder = this.getViewBuilder().withBaseHtml(baseHtmlFile);
 		return optionalViewBuilder;
 	}
