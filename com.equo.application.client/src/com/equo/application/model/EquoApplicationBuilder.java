@@ -40,7 +40,7 @@ public class EquoApplicationBuilder {
 	private IEquoEventHandler equoEventHandler;
 	private OptionalViewBuilder optionalViewBuilder;
 
-	public OptionalViewBuilder webWrapper(String url) {
+	public OptionalViewBuilder wrap(String url) {
 		optionalViewBuilder = this.getViewBuilder().withSingleView(url);
 		return optionalViewBuilder;
 	}
