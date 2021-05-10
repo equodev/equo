@@ -41,9 +41,9 @@ public class EquoApplicationBuilder {
 	private OptionalViewBuilder optionalViewBuilder;
 
 	/**
-	 * Build an Equo Web Wrapper app on the url given by parameter.
+	 * Builds an Equo application by wrapping up an existing web app.
 	 * 
-	 * @param url Site to be wrapped
+	 * @param url the website to be wrapped
 	 * @return
 	 */
 	public OptionalViewBuilder wrap(String url) {
@@ -52,10 +52,10 @@ public class EquoApplicationBuilder {
 	}
 
 	/**
-	 * Build an Equo App with the UI starting point in the HTML file given by
+	 * Builds an Equo App with the UI starting point in the HTML file given by
 	 * parameter.
 	 * 
-	 * @param baseHtmlFile Path to HTML file, relative to 'resources' folder
+	 * @param baseHtmlFile path to HTML file, relative to 'resources' folder
 	 * @return
 	 * @throws URISyntaxException
 	 */

@@ -200,7 +200,7 @@ public class OptionalViewBuilder {
 	}
 
 	/**
-	 * Load https sites even if they don't have a trusted SSL certificate.
+	 * Loads https sites even if they don't have a trusted SSL certificate.
 	 * 
 	 * @param trustAllServers {@code true} to always trust any SSL cert.
 	 *                        {@code false} to only load secure sites.
