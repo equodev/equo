@@ -40,11 +40,25 @@ public class EquoApplicationBuilder {
 	private IEquoEventHandler equoEventHandler;
 	private OptionalViewBuilder optionalViewBuilder;
 
+	/**
+	 * Build an Equo Web Wrapper app on the url given by parameter.
+	 * 
+	 * @param url Site to be wrapped
+	 * @return
+	 */
 	public OptionalViewBuilder wrap(String url) {
 		optionalViewBuilder = this.getViewBuilder().withSingleView(url);
 		return optionalViewBuilder;
 	}
 
+	/**
+	 * Build an Equo Plain App with a starting point in the HTML file given by
+	 * parameter.
+	 * 
+	 * @param baseHtmlFile Path to HTML file, relative to 'resources' folder
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	public OptionalViewBuilder plainApp(String baseHtmlFile) throws URISyntaxException {
 		optionalViewBuilder = this.getViewBuilder().withBaseHtml(baseHtmlFile);
 		return optionalViewBuilder;
