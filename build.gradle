@@ -17,6 +17,27 @@ allprojects {
 
 def enabledHtml = hasProperty('reportHtml') ? reportHtml : "false"
 
+project(":com.equo.p2repo") {
+    task index(type: aQute.bnd.gradle.Index) {
+        tasks.named("run.p2").get().finalizedBy index
+        destinationDirectory = file("${bnd.build}/release/")
+        repositoryName = "equo.${rootProject.name}"
+        gzip = true
+        bundles = fileTree(destinationDirectory.file("plugins")) {
+            include '**/*.jar'
+            exclude '**/*-sources.jar'
+            exclude '**/*-javadoc.jar'
+        }
+        doLast {
+            def props = new Properties()
+            props.setProperty("version", "1")
+            props.setProperty("metadata.repository.factory.order", "content.xml,!")
+            props.setProperty("artifact.repository.factory.order", "artifacts.xml,!")
+            file(destinationDirectory.file("p2.index")).withWriter { props.store(it, "Generated for v${version}") }
+        }
+    }
+}
+
 /* Additional configuration for the Bnd projects */
 subprojects {
 	
