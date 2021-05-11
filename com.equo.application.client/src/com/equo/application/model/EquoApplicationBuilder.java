@@ -65,11 +65,11 @@ public class EquoApplicationBuilder {
 	}
 
 	/**
-	 * Configure the Equo application builder. This method is intended to be called
+	 * Configures the Equo application builder. This method is intended to be called
 	 * by the Equo Framework, it should not be called by clients/users applications.
 	 * 
 	 * @param equoApplicationModel
-	 * @param modelService
+	 * @param equoApp
 	 * @return
 	 */
 	OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel, IEquoApplication equoApp) {
