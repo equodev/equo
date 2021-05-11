@@ -199,6 +199,13 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Loads https sites even if they don't have a trusted SSL certificate.
+	 * 
+	 * @param trustAllServers {@code true} to always trust any SSL cert.
+	 *                        {@code false} to only load secure sites.
+	 * @return
+	 */
 	public OptionalViewBuilder trustAnySSLCert(boolean trustAllServers) {
 		return this.viewBuilder.setSSLTrust(trustAllServers);
 	}
