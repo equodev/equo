@@ -132,7 +132,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
 	com.equo.server.provider;version=latest,\
 	com.equo.ws.api;version=latest,\
 	com.equo.ws.provider;version=latest,\
-	io.netty.all;version='[4.0.44,4.0.45)',\
+	io.netty.all;version='[4.1.33,4.1.34)',\
 	javax.activation;version='[1.1.0,1.1.1)',\
 	javax.annotation;version='[1.2.0,1.2.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
