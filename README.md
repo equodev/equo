@@ -12,6 +12,7 @@ embedded browser and powerful Eclipse platform.
 The current project is the Framework Core project, which is the main one. There are also the following ones:
 * [Sdk](https://gitlab.com/maketechnology/equo/framework-sdk)
 * [Renderers](https://gitlab.com/maketechnology/equo/framework-renderers)
+* [Offline support](https://gitlab.com/maketechnology/equo/framework-offline)
 * [Extras](https://gitlab.com/maketechnology/equo/framework-extras)
 
 ## Framework Core
