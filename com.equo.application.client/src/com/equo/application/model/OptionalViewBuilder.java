@@ -39,7 +39,7 @@ public class OptionalViewBuilder {
 	}
 
 	/**
-	 * Add the shortcut with a custom runnable.
+	 * Adds the shortcut with a custom runnable.
 	 * 
 	 * @param keySequence the shortcut command.
 	 * @param runnable    the runnable.
@@ -89,7 +89,7 @@ public class OptionalViewBuilder {
 	}
 
 	/**
-	 * Add a Javascript script that can modify the html content of the application.
+	 * Adds a Javascript script that can modify the html content of the application.
 	 * This script is added to the main page of the Equo application.
 	 * 
 	 * Uses cases a custom Javascript script include the removal, addition, and
@@ -114,13 +114,27 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds a CSS style that can modify the html content of the application. This
+	 * style is added to the main page of the Equo application.
+	 * 
+	 * @param stylePath the path to the CSS style or a URL. Note that this argument
+	 *                  can be either a path which is relative to the source folder
+	 *                  where the style is defined or a well formed URL. For
+	 *                  example, if a style 'x.css' is defined inside a folder 'y'
+	 *                  which is defined inside a source folder 'resources', the
+	 *                  path to the script will be 'y/x.css'.
+	 * @return this.
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
 	public OptionalViewBuilder withCustomStyle(String stylePath) throws IOException, URISyntaxException {
 		mainAppBuilder.withStyleFile(stylePath);
 		return this;
 	}
 
 	/**
-	 * Enable an offline cache which will be used when there is no internet
+	 * Enables an offline cache which will be used when there is no internet
 	 * connection or a limited one. This functionality will only work if and only if
 	 * the application was run at least once with a working internet connection.
 	 * 
@@ -131,13 +145,20 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * adds a custom filter for the query response. This filter is called before any
+	 * resource handling is attempted by the framework.
+	 * 
+	 * @param httpRequestFilter the filter for the request.
+	 * @return this.
+	 */
 	public OptionalViewBuilder addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
 		equoServer.addOfflineSupportFilter(httpRequestFilter);
 		return this;
 	}
 
 	/**
-	 * Add a limited or no connection custom page for the case that there is no
+	 * Adds a limited or no connection custom page for the case that there is no
 	 * internet connection or a limited one. If an offline cache is enabled, see
 	 * {@link #enableOfflineSupport()}, then this method has no effect.
 	 * 
@@ -192,6 +213,11 @@ public class OptionalViewBuilder {
 		return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
 	}
 
+	/**
+	 * Enables Analytics. Enables metric logging for the project.
+	 * 
+	 * @return this.
+	 */
 	public OptionalViewBuilder enableAnalytics() {
 		if (analyticsService != null) {
 			analyticsService.enableAnalytics();
@@ -199,17 +225,24 @@ public class OptionalViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Loads https sites even if they don't have a trusted SSL certificate.
+	 * 
+	 * @param trustAllServers {@code true} to always trust any SSL cert.
+	 *                        {@code false} to only load secure sites.
+	 * @return
+	 */
 	public OptionalViewBuilder trustAnySSLCert(boolean trustAllServers) {
 		return this.viewBuilder.setSSLTrust(trustAllServers);
 	}
 
 	/**
-	 * Introduce some action before application closes and decide if continue
+	 * Introduces some action before application closes and decide if continue.
 	 * exiting or not.
 	 * 
 	 * @param beforeExitCallable The action to perform. Return 'true' to exit,
 	 *                           'false' to cancel
-	 * @return
+	 * @return this.
 	 */
 	public OptionalViewBuilder beforeExit(Callable<Boolean> beforeExitCallable) {
 		IWindowCloseHandler handler = new IWindowCloseHandler() {

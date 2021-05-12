@@ -11,7 +11,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 	public void should_Create_Toolbar_With_Two_ItemEventShortcut() throws Exception {
 		String tooltip1 = "text1";
 		String shortcut1 = "Alt + T";
-		ToolbarItemBuilder toolItemBuilder1 = appBuilder.plainApp("/").withToolbar().addToolItem("text", tooltip1)
+		ToolbarItemBuilder toolItemBuilder1 = appBuilder.withUI("/").withToolbar().addToolItem("text", tooltip1)
 				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcut1);
 
 		String tooltip2 = "text2";
@@ -30,7 +30,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 	public void should_Create_Menu_With_Two_ItemEventShortcut() throws Exception {
 		String label1 = "item1";
 		String shortcut1 = "Alt + M";
-		MenuItemBuilder menuItemBuilder1 = appBuilder.plainApp("/").withMainMenu("Menu1").addMenuItem(label1)
+		MenuItemBuilder menuItemBuilder1 = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label1)
 				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcut1);
 
 		String label2 = "item2";
@@ -50,7 +50,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 
 		String tooltip1 = "text1";
 		String shortcutToolbar1 = "Alt + T";
-		ToolbarItemBuilder toolItemBuilder1 = appBuilder.plainApp("/").withToolbar().addToolItem("text", tooltip1)
+		ToolbarItemBuilder toolItemBuilder1 = appBuilder.withUI("/").withToolbar().addToolItem("text", tooltip1)
 				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar1);
 
 		String tooltip2 = "text2";
@@ -86,7 +86,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 
 		String label1 = "item1";
 		String shortcutMenu1 = "Alt + M";
-		MenuItemBuilder menuItemBuilder1 = appBuilder.plainApp("/").withMainMenu("Menu1").addMenuItem(label1)
+		MenuItemBuilder menuItemBuilder1 = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label1)
 				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu1);
 
 		String label2 = "item2";
