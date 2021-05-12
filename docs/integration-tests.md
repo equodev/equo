@@ -9,7 +9,7 @@ The following steps describe how to create and run a OSGi test:
 
 2- Add the dependencies related to Equo testing in `bnd.bnd` of the new bundle created:
 
-`-include: https://testing-core.ams3.digitaloceanspaces.com/0.2.0/testbundle.bnd`
+`-include: https://dl.equoplatform.com/testing-core/1.0.0/testbundle.bnd`
 
 3- In the `bnd.bnd` file, add the required bundles for your tests in both _buildpath_ and _runrequires_ instructions. Resolve run requirements to get the _runbundles_ list.
 

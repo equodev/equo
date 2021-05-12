@@ -15,7 +15,6 @@ Export-Package: \
 -buildpath: \
 	com.equo.server.api;version=latest,\
 	com.equo.server.offline.api;version=latest,\
-	com.equo.server.offline.provider;version=latest,\
 	io.netty.all,\
 	io.netty.all.source,\
 	javax.activation,\

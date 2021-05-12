@@ -26,38 +26,45 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
       -plugin.1.Equo: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = Equo; \
-        url = "https://equo-framework.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
+        url = "https://dl.equoplatform.com/framework/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoExtras: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoSdk; \
-        url = "https://equo-framework-extras.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
+        url = "https://dl.equoplatform.com/framework-extras/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoSdk: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoExtras; \
-        url = "https://equo-framework-sdk.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
+        url = "https://dl.equoplatform.com/framework-sdk/1.0.0/repo/"; \
           poll.time = -1
 
       -plugin.1.EquoRenderers: \
         aQute.bnd.repository.p2.provider.P2Repository; \
           name = EquoRenderers; \
-        url = "https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/repo/"; \
+        url = "https://dl.equoplatform.com/framework-renderers/1.0.0/repo/"; \
+          poll.time = -1
+
+      -plugin.1.EquoOffline: \
+        aQute.bnd.repository.p2.provider.P2Repository; \
+          name = EquoOffline; \
+        url = "https://dl.equoplatform.com/framework-offline/1.0.0/repo/"; \
           poll.time = -1
       ```
 
-      You can add more local repositories for each component of the framework that you are developing ([Extras](https://gitlab.com/maketechnology/equo/framework-extras), [Renderers](https://gitlab.com/maketechnology/equo/framework-renderers), [Sdk](https://gitlab.com/maketechnology/equo/framework-sdk))
+      You can add more local repositories for each component of the framework that you are developing ([Extras](https://gitlab.com/maketechnology/equo/framework-extras), [Renderers](https://gitlab.com/maketechnology/equo/framework-renderers), [Sdk](https://gitlab.com/maketechnology/equo/framework-sdk), [Offline support](https://gitlab.com/maketechnology/equo/framework-offline))
 
     - Open the `<app_to_run_bundle>/bnd.bnd` file and modify the first `-include` sentence so that it points to the `equoapp.bnd` file of your local Equo Framework (or to your local sdk/renderers/extras bnd file) instead of consuming it online. After your change, it should look like this:
 
       ```
       -include: /home/username/Equo/framework/cnf/equoapp.bnd,\
-        https://equo-framework-sdk.ams3.digitaloceanspaces.com/1.0.0/sdk.bnd,\
-        https://equo-framework-extras.ams3.digitaloceanspaces.com/1.0.0/extras.bnd,\
-        https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/renderers.bnd,\
-        https://equo-framework-renderers.ams3.digitaloceanspaces.com/1.0.0/aspects.bnd
+        https://dl.equoplatform.com/framework-sdk/1.0.0/sdk.bnd,\,\
+        https://dl.equoplatform.com/framework-offline/1.0.0/offline.bnd
+        https://dl.equoplatform.com/framework-extras/1.0.0/extras.bnd,\
+        https://dl.equoplatform.com/framework-renderers/1.0.0/renderers.bnd,\
+        https://dl.equoplatform.com/framework-renderers/1.0.0/aspects.bnd
       Bundle-Version: ${version}.${tstamp}
       Private-Package: com.equo.testapp
       ```

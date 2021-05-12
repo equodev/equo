@@ -3,7 +3,7 @@ javac.debug:            on
 -plugin.1.Equo: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = Equo; \
-        url = "https://equo-framework.ams3.digitaloceanspaces.com/VERSIONPLACEHOLDER/repo/"; \
+        url = "https://dl.equoplatform.com/framework/VERSIONPLACEHOLDER/repo/"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
 
