@@ -61,4 +61,5 @@ alljars: ${map;param2jar;${bundlesVers.all}}
     -metadataRepository, file:${workspace}/cnf/release, \
     -bundles, "${alljars}", \
     -publishArtifacts, \
+    -compress, \
     -overwriteArtifacts
