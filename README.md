@@ -1,49 +1,47 @@
-## Overview
+# Overview
 
-The Equo Framework allows to build cross platform desktop apps with Java, JavaScript, HTML, and CSS.
+Equo Framework is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.
 
-> It's a modern Java/HTML Application framework based on latest Chromium 
-embedded browser and powerful Eclipse platform. 
+Regarding desktop environments, it provides an SDK to create modern **native** cross-platform desktop applications with Java and web technologies like JavaScript, HTML, and CSS. It brings the web to the desktop.
 
-> From the creators of SWT Chromium widget.
+## Related Projects
 
-> Bringing the web to eclipse.
-
-The current project is the Framework Core project, which is the main one. There are also the following ones:
-* [Sdk](https://gitlab.com/maketechnology/equo/framework-sdk)
-* [Renderers](https://gitlab.com/maketechnology/equo/framework-renderers)
-* [Offline support](https://gitlab.com/maketechnology/equo/framework-offline)
-* [Extras](https://gitlab.com/maketechnology/equo/framework-extras)
+| Name | Repo | Version |
+| ---- | ---- | ------- |
+| **SDK** | [equo/framework-sdk](https://gitlab.com/maketechnology/equo/framework-sdk) | 1.0.0 |
+| **Renderers** | [equo/framework-renderers](https://gitlab.com/maketechnology/equo/framework-renderers) | 1.0.0 |
+| **Offline support** | [equo/framework-offline](https://gitlab.com/maketechnology/equo/framework-offline) | 1.0.0 |
+| **Extras** | [equo/framework-extras](https://gitlab.com/maketechnology/equo/framework-extras) | 1.0.0 |
 
 ## Framework Core
 
-Equo Framework is divided in different projects. The current one is the Framework Core, which is the essential one to run Equo apps.
+The Equo Framework is divided in different projects. The current one is the Framework Core, which is the essential one to run Equo apps.
+
 The core provides:
-* App structure and fluent API to build an app
-* Contributions support for each bundle to contribute resources into the app (as css or js scripts)
+
+* App structure and a fluent API to build an app
+* Contributions support for multi-module apps to contribute resources into the app (as css or js scripts)
 * Equo server and proxy to add custom resources into the app
-* Equo websockets to stablish a two-way communication between Java and Javascript
+* Equo Websockets to establish a real-time two-way communication between Java and Javascript
 
-## How to develop an Equo app
+## Getting Started
 
-Refer to [website documentation](https://docs.equoplatform.com) to know how to develop Equo apps
+If you are interested in creating an Equo application, please visit the [documentation website](https://docs.equoplatform.com). This README is more useful for those who are interested in contributing to the core SDK.
 
-## Developing the Equo Framework
+## Contributing
 
-To develop the framework you must:
-* [Setup the development environment](docs/Setup environment.md).
-* After that, clone this project. Open a terminal in the framework folder and build it with Gradle for the first time with `./gradlew assemble`
-* Import the project in Eclipse (the one configured before) into a new workspace. Configure compilance compatibility to generate _.class_ files for Java 1.8 (Window -> Preferences -> Java -> Compiler)
-* Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](docs/develop-app-in-parallel.md) to test the changes
+Thanks you to all the people who are contributing to Equo Framework! Please, read our [Contributors Guide](docs/CONTRIBUTING.md) and then look through our issues.
+
+By contributing you agree to our [Code of Conduct](docs/CODE_OF_CONDUCT.md)'s terms.
 
 ## List of Framework Core bundles
 
-You can see the list of bundles in [this document](docs/bundles.md)
+You can see the list of bundles in [this document](docs/bundles.md).
 
-## How to debug
+## Debugging
 
-Follow [this guide](docs/debugging.md) to know how to debug the framework by doing remote debugging to an Equo app
+Follow [this guide](docs/debugging.md) to know how to debug the framework by doing remote debugging to an Equo app.
 
 ## Integration tests
 
-[Guide](docs/Integration-tests.md) to create integration tests for the Equo framework
+[Guide](docs/integration-tests.md) to create integration tests for the Equo framework.
