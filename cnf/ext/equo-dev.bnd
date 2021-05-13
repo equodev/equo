@@ -1,4 +1,4 @@
-javac.debug:            on
+javac.debug: on
 
 -plugin.1.Mvn: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
@@ -23,6 +23,12 @@ javac.debug:            on
         name = "Equo Central"; \
         readOnly = true; \
         cache = ~/.bnd/cache/mvnequo
+
+-plugin.4.Chromium: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = Chromium; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/equo/p2/76/"; \
+        location = ~/.bnd/cache/chromium
 
 # JUnit
 junit: org.apache.servicemix.bundles.junit; version=4.12

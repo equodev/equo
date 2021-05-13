@@ -64,6 +64,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.win32.*)',\
     osgi.identity;filter:='(osgi.identity=com.make.chromium.cef.dev.gtk.*)'
 
+#Using org.osgi.framework.bootdelegation to delegate org.w3c class resolution to Java's default classloader
+# Without this, OSGi fails to resolve some classes such as org.w3c.dom.css.DocumentCSS
 -runproperties.equo: \
     applicationCSS=platform:/plugin/com.equo.application.client/default.css,\
     applicationXMI=com.equo.application.client/Application.e4xmi,\
@@ -75,7 +77,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
     org.eclipse.swt.chromium.remote-debugging-port=8888,\
-    swt.chromium.debug=true
+    swt.chromium.debug=true,\
+    org.osgi.framework.bootdelegation=org.w3c.*
 
 -runproperties.app: \
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
@@ -213,8 +216,8 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment}
 #    org.apache.felix.gogo.runtime,\
 #    org.apache.felix.gogo.shell
 
-app.bundle: ${basename;${dir;${p_sourcepath}}}
--runrequires: \
-    osgi.identity;filter:='(osgi.identity=${app.bundle})'
+#app.bundle: ${basename;${dir;${p_sourcepath}}}
+#-runrequires: \
+#    osgi.identity;filter:='(osgi.identity=${app.bundle})'
 #-runbundles: \
 #    ${app.bundle}

@@ -1,9 +1,6 @@
 #Runs the FeatuersAndPublished app to a create a P2 repository of the framework
 -include ./bnd.bnd
 
--runfw: org.eclipse.osgi;version='[3.15.100.v20191114-1701,3.15.100.v20191114-1701]'
--runee: JavaSE-1.8
-
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=bndtools.runtime.eclipse.applaunch)',\
     osgi.identity;filter:='(&(osgi.identity=org.eclipse.osgi.services)(version>=3.6.0))',\
