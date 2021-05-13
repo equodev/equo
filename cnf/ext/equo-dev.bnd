@@ -18,7 +18,7 @@ javac.debug: on
 
 -plugin.3.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
-        releaseUrl = "https://equo-central.ams3.digitaloceanspaces.com/release"; \
+        releaseUrl = "https://dl.equoplatform.com/central/release"; \
         index = ${.}/equo.mvn; \
         name = "Equo Central"; \
         readOnly = true; \

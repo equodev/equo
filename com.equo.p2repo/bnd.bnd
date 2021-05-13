@@ -16,7 +16,6 @@ Bundle-SymbolicName: com.equo.p2repo;singleton:=true
 	bnd.identity;version='latest';id='com.equo.node.packages',\
 	bnd.identity;version='latest';id='com.equo.server.api',\
 	bnd.identity;version='latest';id='com.equo.server.offline.api',\
-	bnd.identity;version='latest';id='com.equo.server.offline.provider',\
 	bnd.identity;version='latest';id='com.equo.server.provider',\
 	bnd.identity;version='latest';id='com.equo.testing.common.internal',\
 	bnd.identity;version='latest';id='com.equo.ws.api',\
@@ -78,7 +77,6 @@ runbundles: \
 	com.equo.node.packages;version=snapshot,\
 	com.equo.server.api;version=snapshot,\
 	com.equo.server.offline.api;version=snapshot,\
-	com.equo.server.offline.provider;version=snapshot,\
 	com.equo.server.provider;version=snapshot,\
 	com.equo.testing.common.internal;version=snapshot,\
 	com.equo.ws.api;version=snapshot,\

@@ -18,8 +18,7 @@ The bundles that provide the core functionality of the framework:
 | com.equo.logging.client.core.provider | Provides the Javascript logging API | 
 | com.equo.node.packages | Bundle with all the Node packages variants for the core Equo APIs. Includes websockets, menu builders, logging, and a main framework API | 
 | com.equo.server.api | API for the server running in Equo apps | 
-| com.equo.server.offline.api | API of the offline server support | 
-| com.equo.server.offline.provider | Provides offline server implementation. Makes requests caching when it's online to serve them later when the app runs offline | 
+| com.equo.server.offline.api | API of the offline server support |
 | com.equo.server.provider | Provides a modified Littleproxy server. This server runs at start and it's responsable to inject custom resources on the Equo app. Here the browser is configured to use the server as proxy for its requests | 
 | com.equo.ws.api | API of the websockets service. Contains the EquoEventHandler API (the interface with which to use the service) and different payload types and runnables to send/receive messages  | 
 | com.equo.ws.provider | Provider for the websocket service. Provides the websocket server, websocket javascript API, and Event Handler implementations | 
