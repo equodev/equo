@@ -1,6 +1,6 @@
-javac.debug:            on
+javac.debug: on
 
--plugin.4.Mvn: \
+-plugin.1.Mvn: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
         releaseUrl = "https://repo1.maven.org/maven2"; \
         index = ${.}/central.mvn; \
@@ -8,7 +8,7 @@ javac.debug:            on
         readOnly = true; \
         cache = ~/.bnd/cache/mvncentral
 
--plugin.4.Wso2: \
+-plugin.2.Wso2: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
         releaseUrl = "https://dist.wso2.org/maven2"; \
         index = ${.}/wso2.mvn; \
@@ -16,13 +16,19 @@ javac.debug:            on
         readOnly = true; \
         cache = ~/.bnd/cache/wso2central
 
--plugin.4.Equo-Central: \
+-plugin.3.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
         releaseUrl = "https://equo-central.ams3.digitaloceanspaces.com/release"; \
         index = ${.}/equo.mvn; \
         name = "Equo Central"; \
         readOnly = true; \
         cache = ~/.bnd/cache/mvnequo
+
+-plugin.4.Chromium: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = Chromium; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/equo/p2/76/"; \
+        location = ~/.bnd/cache/chromium
 
 # JUnit
 junit: org.apache.servicemix.bundles.junit; version=4.12

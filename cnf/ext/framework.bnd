@@ -33,26 +33,8 @@ javac.target: 1.8
         poll.time = -1; \
         cache = ~/.bnd/cache/equo-testing
 
--plugin.5.ChromiumSWT: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumSWT; \
-        url = "https://dl.equoplatform.com/chromium-swt-ee/${chromium_swt_version}/repository"; \
-        location = ~/.bnd/cache/chromium.swt
-
--plugin.6.ChromiumCEF: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumCEF; \
-        url = "https://dl.equoplatform.com/chromium-cef/${chromium_cef_version}/repository"; \
-        location = ~/.bnd/cache/cefbinaries
-
--plugin.7.ChromiumDEVTools: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumDEVTools; \
-        url = "https://dl.equoplatform.com/chromium-cef/${chromium_devtools_version}/repository"; \
-        location = ~/.bnd/cache/devtools
-
 # Local OSGi repository common to all framework projects
--plugin.8.BuildRepo: \
+-plugin.5.BuildRepo: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
         name = BuildRepo; \
         local = ${build}/release; \
