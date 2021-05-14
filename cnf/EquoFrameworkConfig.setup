@@ -26,7 +26,7 @@
       <repository
           url="https://dl.bintray.com/tha/eclipserepo/"/>
       <repository
-          url="https://dl.equoplatform.com/monaco-editor/rls/p2/"/>
+          url="https://dl.equoplatform.com/monaco-editor/rls/repo/"/>
     </setupTask>
     <productVersion
         href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
