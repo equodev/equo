@@ -1,0 +1,3 @@
+-includeresource:
+-resourceonly: true
+-pom: false

@@ -1,6 +1,0 @@
-Bundle-Version: 1.0.0.${tstamp}
-Export-Package: com.make.equo.analytics.internal.api
--buildpath: \
-	com.google.gson,\
-	com.google.gson.source,\
-	osgi.cmpn

@@ -1,39 +1,14 @@
 Bundle-ActivationPolicy: lazy
 
-#-plugin.6.P2Repo: \
-#    com.make.bnd.p2release.P2RepoContentProvider; \
-#        name = Release; \
-#        includeAllDependencies = true; \
-#        runbundles = ${build}/equoapp.all.bnd
-
--plugin.1.Testing: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = "Equo Testing"; \
-        url = "https://testing-core.ams3.digitaloceanspaces.com/${testing_core_version}/repo/"; \
-        poll.time = -1; \
-        cache = ~/.bnd/cache/equo-testing
-
--plugin.4.ChromiumSWT: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumSWT; \
-        url = "https://equo-chromium-swt-ee.ams3.digitaloceanspaces.com/${chromium_swt_version}/repository"; \
-        location = ~/.bnd/cache/chromium.swt
--plugin.5.ChromiumCEF: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumCEF; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_cef_version}/repository"; \
-        location = ~/.bnd/cache/cefbinaries
-
--plugin.4.ChromiumDEVTools: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = ChromiumDEVTools; \
-        url = "https://equo-chromium-cef.ams3.digitaloceanspaces.com/${chromium_devtools_version}/repository"; \
-        location = ~/.bnd/cache/devtools
-
--plugin.2.Eclipse201912: \
+-plugin.1.Baseline: \
     aQute.bnd.repository.osgi.OSGiRepository; \
-        name = "Eclipse201912"; \
-        expand-bcp = true; \
-        locations = "https://p2repo-osgi-index.fra1.digitaloceanspaces.com/2019-12/index.xml.gz"; \
-        poll.time = -1; \
-        cache = ~/.bnd/cache/eclipse201912
+        name = "Baseline"; \
+        locations = "https://dl.equoplatform.com/framework/${previous_version}/repo/index.xml.gz"; \
+        poll.time = -1
+
+-baseline: *
+
+-baselinerepo: Baseline
+
+-groupid: com.equo
+-pom: true
