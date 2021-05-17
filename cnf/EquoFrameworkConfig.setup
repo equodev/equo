@@ -16,15 +16,11 @@
       <requirement
           name="org.sf.feeling.decompiler.feature.group"/>
       <requirement
-          name="org.freejava.javasourceattacher.feature.feature.group"/>
-      <requirement
           name="com.equo.monaco.feature.feature.group"/>
       <repository
           url="https://bndtools.jfrog.io/bndtools/update-latest"/>
       <repository
           url="https://ecd-plugin.github.io/update"/>
-      <repository
-          url="https://dl.bintray.com/tha/eclipserepo/"/>
       <repository
           url="https://dl.equoplatform.com/monaco-editor/rls/repo/"/>
     </setupTask>
