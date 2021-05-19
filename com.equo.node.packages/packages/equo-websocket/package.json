@@ -22,6 +22,7 @@
         "clean": "rimraf lib",
         "build": "yarn run compile",
         "compile": "tsc",
-        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-websocket-doc.md"
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-websocket-doc.md && yarn run setTitle",
+        "setTitle": "mdName=equo-websocket && echo '#' $mdName'\n' | cat - $mdName-doc.md > temp && mv temp $mdName-doc.md"
     }
 }
