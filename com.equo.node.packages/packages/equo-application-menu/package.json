@@ -22,6 +22,7 @@
         "clean": "rimraf lib",
         "build": "yarn run compile",
         "compile": "tsc",
-        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md" 
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md && yarn run setTitle",
+        "setTitle": "mdName=equo-application-menu && echo '#' $mdName'\n' | cat - $mdName-doc.md > temp && mv temp $mdName-doc.md"
     }
 }
