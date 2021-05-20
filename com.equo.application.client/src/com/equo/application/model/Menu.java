@@ -13,8 +13,7 @@ import com.google.gson.JsonObject;
 
 /**
  * 
- * Represents a complete model of the menu built from the javascript api and
- * deserealized using the CustomDesearializer class
+ * Represents a complete model of an application menu
  *
  */
 public class Menu implements IEquoMenu {
@@ -170,6 +169,9 @@ public class Menu implements IEquoMenu {
 		return jOb;
 	}
 
+	/**
+	 * Sets the current model as the application menu.
+	 */
 	@Override
 	public void setApplicationMenu() {
 		final EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();

@@ -27,4 +27,30 @@ export namespace EquoFramework {
         websocket.send('updateBrowser', browserParams);
     };
 
+    /**
+     * Adds a global shortcut binded to the given callback
+     * @param shortcut 
+     * @param callback 
+     */
+    export function addShortcut(shortcut: string, callback: Function) {
+		let payload = {
+            shortcut: shortcut,
+		    event: "_exec_shotcut_" + shortcut
+        }
+        websocket.on(payload.event, callback);
+        websocket.send('_addShortcut', payload);
+    };
+
+    /**
+     * Adds a global shortcut binded to a websocket event
+     * @param shortcut 
+     * @param event 
+     */
+    export function addShortcutToEvent(shortcut: string, event: string) {
+		let payload = {
+            shortcut: shortcut,
+		    event: event
+        }
+        websocket.send('_addShortcut', payload);
+    };
 }

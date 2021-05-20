@@ -107,10 +107,10 @@ public class EquoApplicationBuilder {
 		addAppLevelCommands(getmApplication());
 
 		getmApplication().getBindingTables().add(mainWindowBindingTable);
-		configureJavascriptApi();
+		configureJavascriptApis();
 	}
 
-	private void configureJavascriptApi() {
+	private void configureJavascriptApis() {
 		equoEventHandler.on("_setMenu", (JsonPayloadEquoRunnable) payload -> {
 
 			CustomDeserializer deserializer = new CustomDeserializer();
@@ -123,6 +123,13 @@ public class EquoApplicationBuilder {
 
 		equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
 			equoEventHandler.send("_doGetMenu", Menu.getActiveMenu().serialize());
+		});
+
+		equoEventHandler.on("_addShortcut", (JsonPayloadEquoRunnable) payload -> {
+			final String shortcut = payload.get("shortcut").getAsString();
+			final String event = payload.get("event").getAsString();
+			new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, event)
+					.addGlobalShortcut(shortcut);
 		});
 	}
 

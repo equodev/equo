@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 /**
  * 
- * Equo menu. Represents a menu model for building Menu from JavaScript api.
+ * Equo menu. Represents a menu model.
  *
  */
 public class EquoMenu extends AbstractEquoMenu {
