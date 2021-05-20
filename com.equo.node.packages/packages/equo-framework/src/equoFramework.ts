@@ -10,27 +10,30 @@ export namespace EquoFramework {
      * Initializes and opens a browser.
      * @function
      * @name openBrowser
-     * @param {string[]} browserParams - url, name, position.
+     * @param {BrowserParams} browserParams
      * @returns {void}
      */
-    export function openBrowser(browserParams: any): void {
+    export function openBrowser(browserParams: BrowserParams): void {
         websocket.send('openBrowser', browserParams);
     };
     /**
      * Updates a browser.
      * @function
      * @name updateBrowser
-     * @param {string[]} browserParams - url, name.
+     * @param {BrowserParams} browserParams
      * @returns {void}
      */
-    export function updateBrowser(browserParams: any): void {
+    export function updateBrowser(browserParams: BrowserParams): void {
         websocket.send('updateBrowser', browserParams);
     };
 
     /**
      * Adds a global shortcut binded to the given callback
-     * @param shortcut 
-     * @param callback 
+     * @function
+     * @name addShortcut
+     * @param {string} shortcut 
+     * @param {Function} callback 
+     * @returns {void}
      */
     export function addShortcut(shortcut: string, callback: Function) {
 		let payload = {
@@ -43,8 +46,11 @@ export namespace EquoFramework {
 
     /**
      * Adds a global shortcut binded to a websocket event
-     * @param shortcut 
-     * @param event 
+     * @function
+     * @name addShortcutToEvent
+     * @param {string} shortcut 
+     * @param {string} event 
+     * @returns {void}
      */
     export function addShortcutToEvent(shortcut: string, event: string) {
 		let payload = {
@@ -53,4 +59,28 @@ export namespace EquoFramework {
         }
         websocket.send('_addShortcut', payload);
     };
+}
+
+export class BrowserParams {
+    private url: string;
+    private name: string;
+    private position: string;
+
+    constructor(url: string, name: string, position: string) {
+      this.url = url;
+      this.name = name;
+      this.position = position;
+    };
+
+    public getUrl(): string {
+        return this.url;
+    };
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getPosition(): string {
+        return this.position;
+    }
 }
