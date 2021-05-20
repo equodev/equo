@@ -17,40 +17,16 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
     - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local framework build repository** (`cnf/release/index.xml.gz` index file inside the framework). The modified file will be something like this, with the first plugin being the new one we just added:
 
       ```
+      -include: https://dl.equoplatform.com/framework/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-offline/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-extras/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-sdk/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-renderers/1.0.0/equobuild.bnd
+
       -plugin.1.EquoLocal: \
         aQute.bnd.repository.osgi.OSGiRepository; \
           name = "EquoLocal"; \
           locations = "file:///home/username/Equo/framework/cnf/release/index.xml.gz"; \
-          poll.time = -1
-
-      -plugin.1.Equo: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = Equo; \
-        url = "https://dl.equoplatform.com/framework/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoExtras: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoSdk; \
-        url = "https://dl.equoplatform.com/framework-extras/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoSdk: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoExtras; \
-        url = "https://dl.equoplatform.com/framework-sdk/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoRenderers: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoRenderers; \
-        url = "https://dl.equoplatform.com/framework-renderers/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoOffline: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoOffline; \
-        url = "https://dl.equoplatform.com/framework-offline/1.0.0/repo/"; \
           poll.time = -1
       ```
 
