@@ -1,4 +1,4 @@
-package com.equo.builders.mocks;
+package com.equo.builders.tests.mocks;
 
 import java.net.URI;
 import java.nio.ByteBuffer;

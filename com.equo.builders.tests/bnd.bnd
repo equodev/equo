@@ -20,9 +20,9 @@ Bundle-ActivationPolicy:
     org.awaitility
     
 -privatepackage: \
-    com.equo.builders.mocks,\
-    com.equo.builders.tests,\
-    com.equo.builders.tests.util
+	com.equo.builders.tests,\
+	com.equo.builders.tests.util,\
+	com.equo.builders.tests.mocks
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=com.equo.ws.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.analytics.internal.provider)',\
