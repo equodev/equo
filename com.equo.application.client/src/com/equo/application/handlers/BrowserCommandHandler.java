@@ -12,7 +12,19 @@ import com.equo.application.util.IConstants;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
 
+/**
+ * Interface of a handler for browser commands such as change browser URL or
+ * open a new browser.
+ */
 public interface BrowserCommandHandler {
+  /**
+   * Check if a browser with the given name already exists.
+   * @param  mApplication  model of the current application
+   * @param  browserParams params of the request to open/update a browser
+   * @param  modelService  Eclipse model service
+   * @return               an optional with the application Part of the browser,
+   *                       or an empty optional if it does not exists
+   */
 	default Optional<MPart> existingBrowserFor(MApplication mApplication, BrowserParams browserParams,
 			EModelService modelService) {
 		Logger logger = LoggerFactory.getLogger(BrowserCommandHandler.class);

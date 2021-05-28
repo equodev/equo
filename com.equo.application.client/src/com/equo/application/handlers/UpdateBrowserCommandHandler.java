@@ -16,10 +16,21 @@ import com.equo.application.parts.SinglePagePart;
 import com.equo.application.util.IConstants;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
+import com.google.gson.Gson;
 
+/**
+ * Handler for update browser command.
+ */
 public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
-	protected static final Logger logger = LoggerFactory.getLogger(UpdateBrowserCommandHandler.class);
+  protected static final Logger logger = LoggerFactory.getLogger(UpdateBrowserCommandHandler.class);
 
+  /**
+   * Executes the handler.
+   * @param browserParams params of the request to open a browser
+   * @param mApplication  model of the current application
+   * @param modelService  Eclipse model service
+   * @param sync          toolkit to synchronize back into the UI-Thread
+   */
 	@Execute
 	public void execute(@Named(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER) String browserParams,
 			MApplication mApplication, EModelService modelService, UISynchronize sync) {

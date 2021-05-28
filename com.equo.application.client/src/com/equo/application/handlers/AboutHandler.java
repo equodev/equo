@@ -5,14 +5,22 @@ import org.eclipse.e4.ui.model.application.MApplication;
 
 import com.equo.application.util.ICommandConstants;
 
+/**
+ * Handler for 'about' menu option.
+ */
 public class AboutHandler {
 
-	@Execute
-	public void execute(MApplication mApplication) {
-		Runnable runnable = (Runnable) mApplication.getTransientData().get(ICommandConstants.ABOUT_COMMAND);
-		if (runnable != null) {
-			runnable.run();
-		}
-	}
+  /**
+   * Executes this handler.
+   * @param mApplication model of current application
+   */
+  @Execute
+  public void execute(MApplication mApplication) {
+    Runnable runnable =
+        (Runnable) mApplication.getTransientData().get(ICommandConstants.ABOUT_COMMAND);
+    if (runnable != null) {
+      runnable.run();
+    }
+  }
 
 }

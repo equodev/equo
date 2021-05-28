@@ -13,40 +13,46 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * Main part for Equo apps, where the browser with the web front-end is placed.
+ */
 public class SinglePagePart {
 
-	@Inject
-	private MPart thisPart;
+  @Inject
+  private MPart thisPart;
 
-	private Browser browser;
+  private Browser browser;
 
-	@Inject
-	public SinglePagePart(Composite parent) {
-//	    Chromium.setCommandLine(new String[][] {
-//	            new String[] {"proxy-server", "localhost:9896"},
-//	            new String[] {"ignore-certificate-errors", null},
-//	            new String[] {"allow-file-access-from-files", null},
-//	            new String[] {"disable-web-security", null},
-//	            new String[] {"enable-widevine-cdm", null},
-//	            new String[] {"proxy-bypass-list", "127.0.0.1"}
-//	    });
-	}
+  @Inject
+  public SinglePagePart(Composite parent) {
+    //      Chromium.setCommandLine(new String[][] {
+    //              new String[] {"proxy-server", "localhost:9896"},
+    //              new String[] {"ignore-certificate-errors", null},
+    //              new String[] {"allow-file-access-from-files", null},
+    //              new String[] {"disable-web-security", null},
+    //              new String[] {"enable-widevine-cdm", null},
+    //              new String[] {"proxy-bypass-list", "127.0.0.1"}
+    //      });
+  }
 
-	@PostConstruct
-	public void createControls(Composite parent) {
-		String equoAppUrl = thisPart.getProperties().get(MAIN_URL_KEY);
-		String equoWsPort = thisPart.getProperties().get(MAIN_URL_WS_PORT);
-		if (equoAppUrl != null) {
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite.setLayout(GridLayoutFactory.fillDefaults().create());
-			browser = new Browser(composite, SWT.NONE);
-			browser.setUrl(equoAppUrl + String.format("?equowsport=%s", equoWsPort));
-			browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		}
-	}
+  /**
+   * Method called to construct the part.
+   */
+  @PostConstruct
+  public void createControls(Composite parent) {
+    String equoAppUrl = thisPart.getProperties().get(MAIN_URL_KEY);
+    String equoWsPort = thisPart.getProperties().get(MAIN_URL_WS_PORT);
+    if (equoAppUrl != null) {
+      Composite composite = new Composite(parent, SWT.NONE);
+      composite.setLayout(GridLayoutFactory.fillDefaults().create());
+      browser = new Browser(composite, SWT.NONE);
+      browser.setUrl(equoAppUrl + String.format("?equowsport=%s", equoWsPort));
+      browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    }
+  }
 
-	public void loadUrl(String newUrl) {
-		browser.setUrl(newUrl);
-	}
+  public void loadUrl(String newUrl) {
+    browser.setUrl(newUrl);
+  }
 
 }

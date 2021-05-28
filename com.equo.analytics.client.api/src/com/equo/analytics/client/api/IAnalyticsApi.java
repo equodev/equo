@@ -17,36 +17,36 @@ import com.google.gson.JsonObject;
  */
 public interface IAnalyticsApi {
 
-	/**
-	 * Register an event in which the default value of mandatory field
-	 * {<code>count</code> is 1.
-	 * 
-	 * @param eventKey
-	 */
-	public void registerEvent(String eventKey);
+  /**
+   * Register an event in which the default value of mandatory field
+   * {<code>count</code> is 1.
+   * 
+   * @param eventKey event key to register
+   */
+  public void registerEvent(String eventKey);
 
-	/**
-	 * Register an event with segmentation in which the default value of the
-	 * mandatory field {<code>count</code> is 1.
-	 * 
-	 * @param eventKey
-	 * @param segmentation
-	 */
-	public void registerEvent(String eventKey, JsonObject segmentation);
+  /**
+   * Register an event with segmentation in which the default value of the
+   * mandatory field {<code>count</code> is 1.
+   * 
+   * @param eventKey     event key to register
+   * @param segmentation segmentation
+   */
+  public void registerEvent(String eventKey, JsonObject segmentation);
 
-	/**
-	 * Register an event with segmentation in which the default value of the
-	 * mandatory field {<code>count</code> is 1.
-	 * 
-	 * @param eventKey
-	 * @param segmentationAsString
-	 */
-	public void registerEvent(String eventKey, String segmentationAsString);
+  /**
+   * Register an event with segmentation in which the default value of the
+   * mandatory field {<code>count</code> is 1.
+   * 
+   * @param eventKey             event key to register
+   * @param segmentationAsString segmentation
+   */
+  public void registerEvent(String eventKey, String segmentationAsString);
 
-	public void registerEvent(String eventKey, int count);
+  public void registerEvent(String eventKey, int count);
 
-	public void registerEvent(String eventKey, int count, JsonObject segmentation);
+  public void registerEvent(String eventKey, int count, JsonObject segmentation);
 
-	public void registerEvent(String eventKey, int count, String segmentationAsString);
+  public void registerEvent(String eventKey, int count, String segmentationAsString);
 
 }

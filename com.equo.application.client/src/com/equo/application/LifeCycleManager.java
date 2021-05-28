@@ -16,28 +16,33 @@ import com.equo.application.model.EquoApplicationBuilderConfigurator;
 import com.equo.application.model.EquoApplicationModel;
 import com.equo.contribution.api.IEquoContributionManager;
 
+/**
+ * Controls the application life cycle.
+ *
+ */
 public class LifeCycleManager {
 
-	@ProcessAdditions
-	void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
-			IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
-			IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker,
-			IEquoContributionManager equoContributionManager)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		IEquoCrashReporter equoCrashReporter = dependencyInjector.getEquoCrashReporter();
-		if (equoCrashReporter != null) {
-			Platform.addLogListener(new LogListener(equoCrashReporter));
-		}
-//		mainApplication.getContext().get(ModelElementInjector.class);
-		EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
-		equoApplicationModel.setMainApplication(mainApplication);
-		EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator = new EquoApplicationBuilderConfigurator(
-				equoApplicationModel, equoApplicationBuilder, equoApp);
-		equoApplicationBuilderConfigurator.configure();
-		AppStartupCompleteEventHandler appStartupHandler = AppStartupCompleteEventHandler.getInstance();
-		appStartupHandler.setEquoContributionManager(equoContributionManager);
-		eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
-		equoApp.buildApp(equoApplicationBuilder);
+  @ProcessAdditions
+  void postContextCreate(IApplicationContext applicationContext, MApplication mainApplication,
+      IEquoApplication equoApp, EquoApplicationBuilder equoApplicationBuilder,
+      IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker,
+      IEquoContributionManager equoContributionManager)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    IEquoCrashReporter equoCrashReporter = dependencyInjector.getEquoCrashReporter();
+    if (equoCrashReporter != null) {
+      Platform.addLogListener(new LogListener(equoCrashReporter));
+    }
+    //    mainApplication.getContext().get(ModelElementInjector.class);
+    EquoApplicationModel equoApplicationModel = new EquoApplicationModel();
+    equoApplicationModel.setMainApplication(mainApplication);
+    EquoApplicationBuilderConfigurator equoApplicationBuilderConfigurator =
+        new EquoApplicationBuilderConfigurator(equoApplicationModel, equoApplicationBuilder,
+            equoApp);
+    equoApplicationBuilderConfigurator.configure();
+    AppStartupCompleteEventHandler appStartupHandler = AppStartupCompleteEventHandler.getInstance();
+    appStartupHandler.setEquoContributionManager(equoContributionManager);
+    eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
+    equoApp.buildApp(equoApplicationBuilder);
 
-	}
+  }
 }
