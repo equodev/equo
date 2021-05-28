@@ -18,9 +18,7 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
 
       ```
       -include: https://dl.equoplatform.com/framework/1.0.0/equobuild.bnd,\
-                https://dl.equoplatform.com/framework-offline/1.0.0/equobuild.bnd,\
                 https://dl.equoplatform.com/framework-extras/1.0.0/equobuild.bnd,\
-                https://dl.equoplatform.com/framework-sdk/1.0.0/equobuild.bnd,\
                 https://dl.equoplatform.com/framework-renderers/1.0.0/equobuild.bnd
 
       -plugin.1.EquoLocal: \
@@ -30,14 +28,12 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
           poll.time = -1
       ```
 
-      You can add more local repositories for each component of the framework that you are developing ([Extras](https://github.com/equoplatform/framework-extras), [Renderers](https://github.com/equoplatform/framework-renderers), [Sdk](https://github.com/equoplatform/framework-sdk), [Offline support](https://github.com/equoplatform/framework-offline))
+      You can add more local repositories for each component of the framework that you are developing ([Extras](https://github.com/equoplatform/framework-extras), [Renderers](https://github.com/equoplatform/framework-renderers))
 
     - Open the `<app_to_run_bundle>/bnd.bnd` file and modify the first `-include` sentence so that it points to the `equoapp.bnd` file of your local Equo Framework (or to your local sdk/renderers/extras bnd file) instead of consuming it online. After your change, it should look like this:
 
       ```
       -include: /home/username/Equo/framework/cnf/equoapp.bnd,\
-        https://dl.equoplatform.com/framework-sdk/1.0.0/sdk.bnd,\,\
-        https://dl.equoplatform.com/framework-offline/1.0.0/offline.bnd
         https://dl.equoplatform.com/framework-extras/1.0.0/extras.bnd,\
         https://dl.equoplatform.com/framework-renderers/1.0.0/renderers.bnd,\
         https://dl.equoplatform.com/framework-renderers/1.0.0/aspects.bnd
