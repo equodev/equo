@@ -8,10 +8,10 @@ Regarding desktop environments, it provides an SDK to create modern **native** c
 
 | Name | Repo | Version |
 | ---- | ---- | ------- |
-| **SDK** | [equo/framework-sdk](https://gitlab.com/maketechnology/equo/framework-sdk) | 1.0.0 |
-| **Renderers** | [equo/framework-renderers](https://gitlab.com/maketechnology/equo/framework-renderers) | 1.0.0 |
-| **Offline support** | [equo/framework-offline](https://gitlab.com/maketechnology/equo/framework-offline) | 1.0.0 |
-| **Extras** | [equo/framework-extras](https://gitlab.com/maketechnology/equo/framework-extras) | 1.0.0 |
+| **SDK** | [equo/framework-sdk](https://github.com/equoplatform/framework-sdk) | 1.0.0 |
+| **Renderers** | [equo/framework-renderers](https://github.com/equoplatform/framework-renderers) | 1.0.0 |
+| **Offline support** | [equo/framework-offline](https://github.com/equoplatform/framework-offline) | 1.0.0 |
+| **Extras** | [equo/framework-extras](https://github.com/equoplatform/framework-extras) | 1.0.0 |
 
 ## Framework Core
 
