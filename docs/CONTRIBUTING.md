@@ -29,7 +29,7 @@ Then, to develop and contribute to the framework you must:
 
 * [Setup the development environment](setup-environment.md).
 * After that, clone this project. Open a terminal in the framework folder and build it with Gradle for the first time with `./gradlew assemble`.
-* Import the project in Eclipse (the one configured before in the setup phase) into a new workspace. Configure compilance compatibility to generate _.class_ files for Java 1.8 (Window -> Preferences -> Java -> Compiler).
+* Import the project in Eclipse (the one configured before in the setup phase) into a new workspace.
 * Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](develop-app-in-parallel.md) to test the changes.
 
 ## Coding Style
