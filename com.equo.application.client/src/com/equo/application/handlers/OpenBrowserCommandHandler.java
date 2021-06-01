@@ -15,10 +15,10 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
-import com.google.gson.Gson;
 import com.equo.application.model.browser.BrowserParams;
 import com.equo.application.model.browser.IPositionConstants;
 import com.equo.application.util.IConstants;
+import com.google.gson.Gson;
 
 /**
  * Handler for open browser command.

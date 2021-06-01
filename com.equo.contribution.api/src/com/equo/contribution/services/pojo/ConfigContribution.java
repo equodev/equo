@@ -3,58 +3,65 @@ package com.equo.contribution.services.pojo;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * POJO for each contribution of the JSON contribution config.
+ */
 public class ConfigContribution {
 
-	private String contributionName;
-	private String contributionHtmlName;
-	private List<String> proxiedUris;
-	private List<String> contributedScripts;
-	private Map<String, String> pathsWithScripts;
+  private String contributionName;
+  private String contributionHtmlName;
+  private List<String> proxiedUris;
+  private List<String> contributedScripts;
+  private Map<String, String> pathsWithScripts;
 
-	public String getContributionName() {
-		return contributionName;
-	}
+  public String getContributionName() {
+    return contributionName;
+  }
 
-	public void setContributionName(String contributionName) {
-		this.contributionName = contributionName;
-	}
+  public void setContributionName(String contributionName) {
+    this.contributionName = contributionName;
+  }
 
-	public String getContributionHtmlName() {
-		return contributionHtmlName;
-	}
+  public String getContributionHtmlName() {
+    return contributionHtmlName;
+  }
 
-	public void setContributionHtmlName(String contributionHtmlName) {
-		this.contributionHtmlName = contributionHtmlName;
-	}
+  public void setContributionHtmlName(String contributionHtmlName) {
+    this.contributionHtmlName = contributionHtmlName;
+  }
 
-	public List<String> getProxiedUris() {
-		return proxiedUris;
-	}
+  public List<String> getProxiedUris() {
+    return proxiedUris;
+  }
 
-	public void setProxiedUris(List<String> proxiedUris) {
-		this.proxiedUris = proxiedUris;
-	}
+  public void setProxiedUris(List<String> proxiedUris) {
+    this.proxiedUris = proxiedUris;
+  }
 
-	public List<String> getContributedScripts() {
-		return contributedScripts;
-	}
+  public List<String> getContributedScripts() {
+    return contributedScripts;
+  }
 
-	public void setContributedScripts(List<String> contributedScripts) {
-		this.contributedScripts = contributedScripts;
-	}
+  public void setContributedScripts(List<String> contributedScripts) {
+    this.contributedScripts = contributedScripts;
+  }
 
-	public Map<String, String> getPathsWithScripts() {
-		return pathsWithScripts;
-	}
+  public Map<String, String> getPathsWithScripts() {
+    return pathsWithScripts;
+  }
 
-	public void setPathsWithScripts(Map<String, String> pathsWithScripts) {
-		this.pathsWithScripts = pathsWithScripts;
-	}
+  public void setPathsWithScripts(Map<String, String> pathsWithScripts) {
+    this.pathsWithScripts = pathsWithScripts;
+  }
 
-	public boolean isEmpty() {
-		return ((this.getContributionName() == null) && (this.getContributionHtmlName() == null)
-				&& (this.getProxiedUris() == null) && (this.getContributedScripts() == null)
-				&& (this.getPathsWithScripts() == null));
-	}
+  /**
+   * Verifies that there is content in the contribution.
+   * @return true if there is no content (empty), false otherwise
+   */
+  public boolean isEmpty() {
+    return ((this.getContributionName() == null) && (this.getContributionHtmlName() == null)
+        && (this.getProxiedUris() == null) && (this.getContributedScripts() == null)
+        && (this.getPathsWithScripts() == null));
+  }
 
 }

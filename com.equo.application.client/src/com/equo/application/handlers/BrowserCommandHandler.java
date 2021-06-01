@@ -25,22 +25,23 @@ public interface BrowserCommandHandler {
    * @return               an optional with the application Part of the browser,
    *                       or an empty optional if it does not exists
    */
-	default Optional<MPart> existingBrowserFor(MApplication mApplication, BrowserParams browserParams,
-			EModelService modelService) {
-		Logger logger = LoggerFactory.getLogger(BrowserCommandHandler.class);
-		String browserName = browserParams.getName();
-		if (browserName != null) {
-			String browserIdSuffix = browserName.toLowerCase();
-			String browserId = IConstants.EQUO_BROWSER_IN_PARTSTACK_ID + "." + browserIdSuffix;
-			if (IConstants.MAIN_PART_ID.equals(browserName)) {
-				browserId = IConstants.MAIN_PART_ID;
-			}
-			logger.debug("The browser id is " + browserId);
-			List<MPart> partElements = modelService.findElements(mApplication, browserId, MPart.class, null);
-			if (!partElements.isEmpty()) {
-				return Optional.of(partElements.get(0));
-			}
-		}
-		return Optional.empty();
-	}
+  default Optional<MPart> existingBrowserFor(MApplication mApplication, BrowserParams browserParams,
+      EModelService modelService) {
+    Logger logger = LoggerFactory.getLogger(BrowserCommandHandler.class);
+    String browserName = browserParams.getName();
+    if (browserName != null) {
+      String browserIdSuffix = browserName.toLowerCase();
+      String browserId = IConstants.EQUO_BROWSER_IN_PARTSTACK_ID + "." + browserIdSuffix;
+      if (IConstants.MAIN_PART_ID.equals(browserName)) {
+        browserId = IConstants.MAIN_PART_ID;
+      }
+      logger.debug("The browser id is " + browserId);
+      List<MPart> partElements =
+          modelService.findElements(mApplication, browserId, MPart.class, null);
+      if (!partElements.isEmpty()) {
+        return Optional.of(partElements.get(0));
+      }
+    }
+    return Optional.empty();
+  }
 }

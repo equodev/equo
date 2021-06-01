@@ -8,9 +8,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
+import com.equo.contribution.api.EquoContribution;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.equo.contribution.api.EquoContribution;
 
 public class EquoContributionConfigServiceTest {
 

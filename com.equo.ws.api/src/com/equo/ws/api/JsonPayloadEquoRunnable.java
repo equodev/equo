@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
  */
 public interface JsonPayloadEquoRunnable extends IEquoRunnable<JsonObject> {
 
-	@Override
-	public void run(JsonObject payload);
+  @Override
+  public void run(JsonObject payload);
 
 }

@@ -10,48 +10,56 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 
+/**
+ * Interface for handlers that makes modifiable responses.
+ */
 public interface IModifiableResponse {
 
-	default FullHttpResponse generateModifiedResponse() {
-		FullHttpResponse originalFullHttpResponse = getOriginalFullHttpResponse();
-		String contentTypeHeader = originalFullHttpResponse.headers().get("Content-Type");
-		ContentType contentType = ContentType.parse(contentTypeHeader);
-		Charset charset = contentType.getCharset();
+  /**
+   * Generates a modified response in which includes the contributed scripts and
+   * style into the original response content.
+   * @return modified response
+   */
+  default FullHttpResponse generateModifiedResponse() {
+    FullHttpResponse originalFullHttpResponse = getOriginalFullHttpResponse();
+    String contentTypeHeader = originalFullHttpResponse.headers().get("Content-Type");
+    ContentType contentType = ContentType.parse(contentTypeHeader);
+    Charset charset = contentType.getCharset();
 
-		ByteBuf content = originalFullHttpResponse.content();
+    ByteBuf content = originalFullHttpResponse.content();
 
-		byte[] data = new byte[content.readableBytes()];
-		content.readBytes(data);
+    byte[] data = new byte[content.readableBytes()];
+    content.readBytes(data);
 
-		String responseToTransform = createStringFromData(data, charset);
+    String responseToTransform = createStringFromData(data, charset);
 
-		String transformedResponse = modifyOriginalResponse(responseToTransform);
+    String transformedResponse = modifyOriginalResponse(responseToTransform);
 
-		byte[] bytes = createDataFromString(transformedResponse, charset);
-		ByteBuf transformedContent = Unpooled.buffer(bytes.length);
-		transformedContent.writeBytes(bytes);
+    byte[] bytes = createDataFromString(transformedResponse, charset);
+    ByteBuf transformedContent = Unpooled.buffer(bytes.length);
+    transformedContent.writeBytes(bytes);
 
-		DefaultFullHttpResponse transformedHttpResponse = new DefaultFullHttpResponse(
-				originalFullHttpResponse.getProtocolVersion(), originalFullHttpResponse.getStatus(),
-				transformedContent);
-		transformedHttpResponse.headers().set(originalFullHttpResponse.headers());
-		HttpHeaders.setContentLength(transformedHttpResponse, bytes.length);
+    DefaultFullHttpResponse transformedHttpResponse =
+        new DefaultFullHttpResponse(originalFullHttpResponse.getProtocolVersion(),
+            originalFullHttpResponse.getStatus(), transformedContent);
+    transformedHttpResponse.headers().set(originalFullHttpResponse.headers());
+    HttpHeaders.setContentLength(transformedHttpResponse, bytes.length);
 
-		return transformedHttpResponse;
-	}
+    return transformedHttpResponse;
+  }
 
-	static String createStringFromData(byte[] data, Charset charset) {
-		return (charset == null) ? new String(data) : new String(data, charset);
-	}
+  static String createStringFromData(byte[] data, Charset charset) {
+    return (charset == null) ? new String(data) : new String(data, charset);
+  }
 
-	static byte[] createDataFromString(String string, Charset charset) {
-		return (charset == null) ? string.getBytes() : string.getBytes(charset);
-	}
+  static byte[] createDataFromString(String string, Charset charset) {
+    return (charset == null) ? string.getBytes() : string.getBytes(charset);
+  }
 
-	FullHttpResponse getOriginalFullHttpResponse();
+  FullHttpResponse getOriginalFullHttpResponse();
 
-	boolean isModifiable();
+  boolean isModifiable();
 
-	String modifyOriginalResponse(String responseToTransform);
+  String modifyOriginalResponse(String responseToTransform);
 
 }

@@ -42,6 +42,9 @@ public class EquoContributionBuilder {
 
   private Runnable runnableAtStart;
 
+  /**
+   * Builder constructor.
+   */
   public EquoContributionBuilder() {
     this.proxiedUris = new ArrayList<String>();
     this.contributedScripts = new ArrayList<String>();
@@ -57,12 +60,6 @@ public class EquoContributionBuilder {
     this.runnableAtStart = null;
   }
 
-  /**
-   * Changes the IEquoServer of the contribution. Can be used to add the server
-   * outside of OSGi services life-cycle.
-   * @param  server
-   * @return        this
-   */
   public EquoContributionBuilder withManager(IEquoContributionManager manager) {
     this.manager = manager;
     return this;
@@ -82,7 +79,7 @@ public class EquoContributionBuilder {
   /**
    * Adds an URI to the contribution. These URIs will be proxied by the EquoServer
    * when accessed, adding all contributed scripts to it.
-   * @param  proxiedUri
+   * @param  proxiedUri URI to be proxied
    * @return            this
    */
   public EquoContributionBuilder withProxiedUri(String proxiedUri) {
@@ -173,10 +170,10 @@ public class EquoContributionBuilder {
   /**
    * Changes the URL resolver of the contribution. The URL resolver is required by
    * the framework to process file requests to the contribution.
-   * @param  urlResolver
+   * @param  urlResolver the new URL resolver
    * @return             this
    */
-  public EquoContributionBuilder withURLResolver(IEquoContributionUrlResolver urlResolver) {
+  public EquoContributionBuilder withUrlResolver(IEquoContributionUrlResolver urlResolver) {
     this.urlResolver = urlResolver;
     return this;
   }
@@ -185,7 +182,7 @@ public class EquoContributionBuilder {
    * Changes the custom filter of the contribution. Default is a no-op filter.
    * This filter is called before any resource handling is attempted by the
    * framework.
-   * @param  filter
+   * @param  filter the new request filter
    * @return        this
    */
   public EquoContributionBuilder withFilter(IHttpRequestFilter filter) {
@@ -197,7 +194,7 @@ public class EquoContributionBuilder {
    * Changes the adapter handler of the contribution. The handler is called by the
    * framework with the original request to be proxied and the request's response
    * is delegated to the adapter returned by this handler.
-   * @param  filtersAdapterHandler
+   * @param  filtersAdapterHandler the new adapter handler
    * @return                       this
    */
   public EquoContributionBuilder
@@ -207,8 +204,8 @@ public class EquoContributionBuilder {
   }
 
   /**
-   * Adds a procedure that will run when the application starts
-   * @param  startProcedure
+   * Adds a procedure that will run when the application starts.
+   * @param  startProcedure the new procedure to run at application start
    * @return                this
    */
   public EquoContributionBuilder withStartProcedure(Runnable startProcedure) {

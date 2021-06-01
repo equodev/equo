@@ -5,7 +5,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.equo.contribution.api.EquoContributionBuilder;
-import com.equo.contribution.api.resolvers.EquoGenericURLResolver;
+import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
 
 @Component
 public class NodePackagesContribution {
@@ -19,7 +19,7 @@ public class NodePackagesContribution {
 				.withContributionName("testBundles") //
 				.withBaseHtmlResource("index.html") //
 				.withPathWithScript("", "index.bundle.js") //
-				.withURLResolver(new EquoGenericURLResolver(NodePackagesContribution.class.getClassLoader())) //
+				.withUrlResolver(new EquoGenericUrlResolver(NodePackagesContribution.class.getClassLoader())) //
 				.build();
 	}
 

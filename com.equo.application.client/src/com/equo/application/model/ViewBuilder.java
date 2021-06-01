@@ -19,7 +19,7 @@ import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
 import com.equo.application.util.IConstants;
 import com.equo.contribution.api.EquoContributionBuilder;
-import com.equo.contribution.api.resolvers.EquoGenericURLResolver;
+import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
 import com.equo.server.api.IEquoServer;
 import com.equo.ws.api.IEquoWebSocketService;
 
@@ -92,11 +92,11 @@ public class ViewBuilder {
 
     equoAppBuilder.getmWindow().getChildren().add(part);
 
-    EquoGenericURLResolver equoAppUrlResolver =
-        new EquoGenericURLResolver(equoApp.getClass().getClassLoader());
-    mainAppBuilder.withURLResolver(equoAppUrlResolver);
+    EquoGenericUrlResolver equoAppUrlResolver =
+        new EquoGenericUrlResolver(equoApp.getClass().getClassLoader());
+    mainAppBuilder.withUrlResolver(equoAppUrlResolver);
     offlineSupportBuilder.withContributionName(OFFLINE_SUPPORT_CONTRIBUTION_NAME);
-    offlineSupportBuilder.withURLResolver(equoAppUrlResolver);
+    offlineSupportBuilder.withUrlResolver(equoAppUrlResolver);
     optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService,
         mainAppBuilder, offlineSupportBuilder, equoApp);
 

@@ -8,14 +8,17 @@ import com.equo.contribution.api.ResolvedContribution;
 
 import io.netty.handler.codec.http.HttpRequest;
 
+/**
+ * Interface for request handlers.
+ */
 public interface IEquoContributionRequestHandler {
 
-	HttpFilters handle(HttpRequest request);
+  HttpFilters handle(HttpRequest request);
 
-	HttpFilters handleOffline(HttpRequest request);
+  HttpFilters handleOffline(HttpRequest request);
 
-	ResolvedContribution getResolvedContributions();
+  ResolvedContribution getResolvedContributions();
 
-	List<String> getContributionProxiedUris();
+  List<String> getContributionProxiedUris();
 
 }

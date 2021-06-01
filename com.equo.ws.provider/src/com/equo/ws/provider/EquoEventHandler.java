@@ -15,41 +15,47 @@ import com.equo.ws.api.StringPayloadEquoRunnable;
 import com.equo.ws.api.StringPayloadParser;
 
 /**
- * 
- * Implements the handler actions for send and received websocket events using equoWebSocketService instance.
- *
+ * Implements the handler actions for send and received websocket events using
+ * equoWebSocketService instance.
  */
 @Component
 public class EquoEventHandler implements IEquoEventHandler {
 
-	private IEquoWebSocketService equoWebSocketService;
+  private IEquoWebSocketService equoWebSocketService;
 
-	public void send(String userEvent) {
-		this.send(userEvent, null);
-	}
+  @Override
+  public void send(String userEvent) {
+    this.send(userEvent, null);
+  }
 
-	public void send(String userEvent, Object payload) {
-		equoWebSocketService.send(userEvent, payload);
-	}
+  @Override
+  public void send(String userEvent, Object payload) {
+    equoWebSocketService.send(userEvent, payload);
+  }
 
-	public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
-		equoWebSocketService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
-	}
+  @Override
+  public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
+    equoWebSocketService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
+  }
 
-	public void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable) {
-		equoWebSocketService.addEventHandler(eventId, new StringPayloadParser(stringPayloadEquoRunnable));
-	}
+  @Override
+  public void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable) {
+    equoWebSocketService.addEventHandler(eventId,
+        new StringPayloadParser(stringPayloadEquoRunnable));
+  }
 
-	public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
-		equoWebSocketService.addEventHandler(eventId, new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
-	}
+  @Override
+  public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
+    equoWebSocketService.addEventHandler(eventId,
+        new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
+  }
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	void setWebsocketService(IEquoWebSocketService equoWebSocketService) {
-		this.equoWebSocketService = equoWebSocketService;
-	}
+  @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+  void setWebsocketService(IEquoWebSocketService equoWebSocketService) {
+    this.equoWebSocketService = equoWebSocketService;
+  }
 
-	void unsetWebsocketService(IEquoWebSocketService equoWebSocketService) {
-		this.equoWebSocketService = null;
-	}
+  void unsetWebsocketService(IEquoWebSocketService equoWebSocketService) {
+    this.equoWebSocketService = null;
+  }
 }
