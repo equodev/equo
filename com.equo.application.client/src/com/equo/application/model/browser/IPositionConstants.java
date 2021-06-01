@@ -1,4 +1,4 @@
-package com.equo.application.util;
+package com.equo.application.model.browser;
 
 public interface IPositionConstants {
 

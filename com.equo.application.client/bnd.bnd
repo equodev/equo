@@ -2,6 +2,7 @@ Bundle-Version: 1.0.0.${tstamp}
 Export-Package: \
     com.equo.application.api,\
     com.equo.application.model,\
+    com.equo.application.model.browser,\
     org.osgi.service.component.annotations
 -includeresource: resources/
 -buildpath: \

@@ -11,6 +11,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
 import com.google.gson.Gson;
+import com.equo.application.model.browser.BrowserParams;
 import com.equo.application.parts.SinglePagePart;
 import com.equo.application.util.IConstants;
 import com.equo.logging.client.api.Logger;
@@ -24,6 +25,9 @@ public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
 			MApplication mApplication, EModelService modelService, UISynchronize sync) {
 		Gson gsonParser = new Gson();
 		BrowserParams params = gsonParser.fromJson(browserParams, BrowserParams.class);
+		if (params.getName() == null) {
+			params.setName(IConstants.MAIN_PART_ID);
+		}
 		Optional<MPart> existingBrowser = existingBrowserFor(mApplication, params, modelService);
 		if (existingBrowser.isPresent()) {
 			MPart mPart = existingBrowser.get();
