@@ -22,15 +22,22 @@
 
 package com.equo.ws.api.lambda;
 
+import static java.util.Arrays.asList;
+
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Objects;
 
-import static java.util.Arrays.asList;
-
+/**
+ * Interface with functionalities to reflectively find the method of a lambda
+ * function.
+ */
 public interface MethodFinder extends Serializable {
+  /**
+   * Gets a serialization of current lambda class.
+   */
   default SerializedLambda serialized() {
     try {
       Method replaceMethod = getClass().getDeclaredMethod("writeReplace");
@@ -41,6 +48,9 @@ public interface MethodFinder extends Serializable {
     }
   }
 
+  /**
+   * Gets the class in which the lambda has been created.
+   */
   default Class<?> getContainingClass() {
     try {
       String className = serialized().getImplClass().replaceAll("/", ".");
@@ -50,6 +60,10 @@ public interface MethodFinder extends Serializable {
     }
   }
 
+  /**
+   * Reflectively gets the implementation method for the lambda class from the
+   * container class.
+   */
   default Method method() {
     SerializedLambda lambda = serialized();
     Class<?> containingClass = getContainingClass();
@@ -66,6 +80,10 @@ public interface MethodFinder extends Serializable {
     return DefaultValue.ofType(parameter(n).getType());
   }
 
+  /**
+   * Exception thrown when there is an error to get the implementation method for
+   * the lambda.
+   */
   @SuppressWarnings("serial")
   class UnableToGuessMethodException extends RuntimeException {
   }

@@ -25,9 +25,12 @@ package com.equo.ws.api.lambda;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Default value for each data type.
+ */
 public class DefaultValue {
   private static Map<Class<?>, Object> defaultValues = new HashMap<>();
-  
+
   static {
     defaultValues.put(int.class, 0);
     defaultValues.put(Integer.class, 0);

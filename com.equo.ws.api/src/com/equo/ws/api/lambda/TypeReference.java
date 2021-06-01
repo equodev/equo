@@ -24,10 +24,15 @@ package com.equo.ws.api.lambda;
 
 import java.util.function.Consumer;
 
+/**
+ * Interface that allows to obtain the class of the data type with which it was
+ * parameterized (example: allows to obtain the {@code Runnable} class from an
+ * instance of {@code TypeReference<Runnable>}).
+ */
 public interface TypeReference<T> extends Newable<T> {
-	T typeIs(T t);
+  T typeIs(T t);
 
-	default Consumer<T> consumer() {
-		return this::typeIs;
-	}
+  default Consumer<T> consumer() {
+    return this::typeIs;
+  }
 }

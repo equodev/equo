@@ -22,17 +22,24 @@
 
 package com.equo.ws.api.lambda;
 
+/**
+ * Interface for all the Equo payload handlers that can be created with lambda
+ * functions.
+ */
 public interface Newable<T> extends MethodFinder {
-	@SuppressWarnings("unchecked")
-	default Class<T> type() {
-		return (Class<T>) parameter(0).getType();
-	}
+  @SuppressWarnings("unchecked")
+  default Class<T> type() {
+    return (Class<T>) parameter(0).getType();
+  }
 
-	default T newInstance() {
-		try {
-			return type().newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+  /**
+   * Gets a new instance of the payload data class.
+   */
+  default T newInstance() {
+    try {
+      return type().newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
