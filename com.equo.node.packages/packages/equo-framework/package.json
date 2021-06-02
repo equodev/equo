@@ -1,6 +1,6 @@
 {
     "name": "@equo/framework",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Equo Framework Javascript API",
     "license": "UNLICENSED",
     "publishConfig": {

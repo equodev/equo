@@ -11,12 +11,12 @@ javac.target: 1.8
         poll.time = -1; \
         cache = ~/.bnd/cache/applaunch
 
--plugin.2.P2Plugins: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name = "P2Plugins"; \
-        url = "https://p2plugins.fra1.digitaloceanspaces.com/repository/"; \
+-plugin.2.osgified: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = "OSGified"; \
+        locations = "https://dl.equoplatform.com/osgified/repository/index.xml.gz"; \
         poll.time = -1; \
-        cache = ~/.bnd/cache/p2plugins
+        cache = ~/.bnd/cache/osgified
 
 -plugin.3.Eclipse201912: \
     aQute.bnd.repository.osgi.OSGiRepository; \

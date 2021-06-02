@@ -22,6 +22,6 @@
         "clean": "rimraf lib",
         "build": "yarn run compile",
         "compile": "tsc",
-        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md" 
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md"
     }
 }

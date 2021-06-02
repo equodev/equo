@@ -1,10 +1,10 @@
 ## Developing an Equo application and the Equo Framework in parallel
 
-As it's useful to have a sample application to develop the Equo Framework, we are developing simple apps like the ones in [testapps](https://gitlab.com/maketechnology/equo/testapps) project, the [Netflix application](https://gitlab.com/maketechnology/equo/netflix-app) or the [PoC](https://gitlab.com/maketechnology/equo/poc). This apps are Equo applications which allows us to develop against the Equo Framework, to use its features, to test it, to show how the Equo framework works, and to innovate in ways we don't think before.
+As it's useful to have a sample application to develop the Equo Framework, we are developing simple apps like the ones in [testapps](https://github.com/equoplatform/testapps) project, the [Netflix application](https://github.com/equoplatform/netflix-app) or the [PoC](https://github.com/equoplatform/poc). This apps are Equo applications which allows us to develop against the Equo Framework, to use its features, to test it, to show how the Equo framework works, and to innovate in ways we don't think before.
 
 To develop this apps and continue developing the Equo Framework in parallel, follow the next steps:
 
-1. Clone the apps repository: https://gitlab.com/maketechnology/equo/testapps or https://gitlab.com/maketechnology/equo/netflix-app or https://gitlab.com/maketechnology/equo/poc.
+1. Clone the apps repository: https://github.com/equoplatform/testapps or https://github.com/equoplatform/netflix-app or https://github.com/equoplatform/poc.
 
 2. Open another Eclipse instance, besides the one opened with the framework. Then, you will have two instances of the same Eclipse for both the Equo Framework and the Equo app, but they will run in different workspaces.
 
@@ -17,51 +17,23 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
     - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local framework build repository** (`cnf/release/index.xml.gz` index file inside the framework). The modified file will be something like this, with the first plugin being the new one we just added:
 
       ```
+      -include: https://dl.equoplatform.com/framework/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-extras/1.0.0/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-renderers/1.0.0/equobuild.bnd
+
       -plugin.1.EquoLocal: \
         aQute.bnd.repository.osgi.OSGiRepository; \
           name = "EquoLocal"; \
           locations = "file:///home/username/Equo/framework/cnf/release/index.xml.gz"; \
           poll.time = -1
-
-      -plugin.1.Equo: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = Equo; \
-        url = "https://dl.equoplatform.com/framework/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoExtras: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoSdk; \
-        url = "https://dl.equoplatform.com/framework-extras/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoSdk: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoExtras; \
-        url = "https://dl.equoplatform.com/framework-sdk/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoRenderers: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoRenderers; \
-        url = "https://dl.equoplatform.com/framework-renderers/1.0.0/repo/"; \
-          poll.time = -1
-
-      -plugin.1.EquoOffline: \
-        aQute.bnd.repository.p2.provider.P2Repository; \
-          name = EquoOffline; \
-        url = "https://dl.equoplatform.com/framework-offline/1.0.0/repo/"; \
-          poll.time = -1
       ```
 
-      You can add more local repositories for each component of the framework that you are developing ([Extras](https://gitlab.com/maketechnology/equo/framework-extras), [Renderers](https://gitlab.com/maketechnology/equo/framework-renderers), [Sdk](https://gitlab.com/maketechnology/equo/framework-sdk), [Offline support](https://gitlab.com/maketechnology/equo/framework-offline))
+      You can add more local repositories for each component of the framework that you are developing ([Extras](https://github.com/equoplatform/framework-extras), [Renderers](https://github.com/equoplatform/framework-renderers))
 
     - Open the `<app_to_run_bundle>/bnd.bnd` file and modify the first `-include` sentence so that it points to the `equoapp.bnd` file of your local Equo Framework (or to your local sdk/renderers/extras bnd file) instead of consuming it online. After your change, it should look like this:
 
       ```
       -include: /home/username/Equo/framework/cnf/equoapp.bnd,\
-        https://dl.equoplatform.com/framework-sdk/1.0.0/sdk.bnd,\,\
-        https://dl.equoplatform.com/framework-offline/1.0.0/offline.bnd
         https://dl.equoplatform.com/framework-extras/1.0.0/extras.bnd,\
         https://dl.equoplatform.com/framework-renderers/1.0.0/renderers.bnd,\
         https://dl.equoplatform.com/framework-renderers/1.0.0/aspects.bnd

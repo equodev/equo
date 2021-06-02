@@ -1,3 +1,25 @@
+/****************************************************************************
+**
+** Copyright (C) 2021 Equo
+**
+** This file is part of Equo Framework.
+**
+** Commercial License Usage
+** Licensees holding valid commercial Equo licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Equo. For licensing terms
+** and conditions see https://www.equoplatform.com/terms.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3 as published by the Free Software
+** Foundation. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
+**
+****************************************************************************/
+
 package com.equo.server.provider;
 
 import java.io.IOException;
@@ -35,166 +57,176 @@ import com.equo.server.offline.api.IEquoOfflineServer;
 import com.equo.server.offline.api.filters.IHttpRequestFilter;
 import com.equo.server.provider.filters.EquoHttpFiltersSourceAdapter;
 
+/**
+ * Server implementation. Manages the proxy lifecycle.
+ */
 @Component(scope = ServiceScope.SINGLETON)
 public class EquoHttpProxyServer implements IEquoServer {
-	protected static final Logger logger = LoggerFactory.getLogger(EquoHttpProxyServer.class);
+  protected static final Logger logger = LoggerFactory.getLogger(EquoHttpProxyServer.class);
 
-	private static final List<String> proxiedUrls = new ArrayList<String>();
+  private static final List<String> proxiedUrls = new ArrayList<String>();
 
-	private static boolean enableOfflineCache = false;
+  private static boolean enableOfflineCache = false;
 
-	private static volatile HttpProxyServer proxyServer;
-	private ScheduledExecutorService internetConnectionChecker;
+  private static volatile HttpProxyServer proxyServer;
+  private ScheduledExecutorService internetConnectionChecker;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
-	private volatile IEquoOfflineServer equoOfflineServer;
+  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
+  private volatile IEquoOfflineServer equoOfflineServer;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
-	private volatile IEquoLoggingService equoLoggingService;
+  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC)
+  private volatile IEquoLoggingService equoLoggingService;
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-	private IEquoContributionRequestHandler contributionRequestHandler;
+  @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
+  private IEquoContributionRequestHandler contributionRequestHandler;
 
-	private static EquoHttpProxyServer equoHttpProxyServer = null;
-	private EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter;
-	private CustomHostNameMitmManager customHostNameMitmManager = null;
+  private static EquoHttpProxyServer equoHttpProxyServer = null;
+  private EquoHttpFiltersSourceAdapter httpFiltersSourceAdapter;
+  private CustomHostNameMitmManager customHostNameMitmManager = null;
 
-	@Override
-	@Activate
-	public void start() {
-		if (proxyServer == null) {
-			startServer();
-		}
-	}
+  @Override
+  @Activate
+  public void start() {
+    if (proxyServer == null) {
+      startServer();
+    }
+  }
 
-	@Override
-	public void startServer() {
-		equoHttpProxyServer = this;
-		httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(contributionRequestHandler, equoOfflineServer,
-				proxiedUrls);
+  @Override
+  public void startServer() {
+    equoHttpProxyServer = this;
+    httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(contributionRequestHandler,
+        equoOfflineServer, proxiedUrls);
 
-		int port = getPortForServer();
-		System.setProperty("swt.chromium.args", "--proxy-server=localhost:" + port
-				+ ";--allow-running-insecure-content;--allow-file-access-from-files;--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;--ignore-certificate-errors");
+    int port = getPortForServer();
+    System.setProperty("swt.chromium.args",
+        "--proxy-server=localhost:" + port
+            + ";--allow-running-insecure-content;--allow-file-access-from-files;"
+            + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
+            + "--ignore-certificate-errors");
 
-		DefaultHostResolver serverResolver = new DefaultHostResolver() {
-			@Override
-			public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
-				if (!isInternetReachable()) { // <- enable offline
-					return new InetSocketAddress(host, port);
-				}
-				return super.resolve(host, port);
-			}
-		};
+    DefaultHostResolver serverResolver = new DefaultHostResolver() {
+      @Override
+      public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
+        if (!isInternetReachable()) { // <- enable offline
+          return new InetSocketAddress(host, port);
+        }
+        return super.resolve(host, port);
+      }
+    };
 
-		try {
-			customHostNameMitmManager = new CustomHostNameMitmManager(false);
-			proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port).withTransparent(false)
-					.withFiltersSource(httpFiltersSourceAdapter).withServerResolver(serverResolver)
-					.withManInTheMiddle(customHostNameMitmManager).start();
-		} catch (RootCertificateException e) {
-			e.printStackTrace();
-		}
-	}
+    try {
+      customHostNameMitmManager = new CustomHostNameMitmManager(false);
+      proxyServer = DefaultHttpProxyServer.bootstrap().withPort(port).withTransparent(false)
+          .withFiltersSource(httpFiltersSourceAdapter).withServerResolver(serverResolver)
+          .withManInTheMiddle(customHostNameMitmManager).start();
+    } catch (RootCertificateException e) {
+      e.printStackTrace();
+    }
+  }
 
-	private int getPortForServer() {
-		int port = 9896;
-		try {
-			ServerSocket socketPortReserve = new ServerSocket(0);
-			socketPortReserve.setReuseAddress(true);
-			port = socketPortReserve.getLocalPort();
-			socketPortReserve.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return port;
-	}
+  private int getPortForServer() {
+    int port = 9896;
+    try {
+      ServerSocket socketPortReserve = new ServerSocket(0);
+      socketPortReserve.setReuseAddress(true);
+      port = socketPortReserve.getLocalPort();
+      socketPortReserve.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return port;
+  }
 
-	@Deactivate
-	public void stop() {
-		logger.info("Stopping proxy...");
-		if (internetConnectionChecker != null) {
-			internetConnectionChecker.shutdownNow();
-		}
-		if (proxyServer != null) {
-			proxyServer.stop();
-		}
-	}
+  /**
+   * Stops the proxy when the server is deactivated.
+   */
+  @Deactivate
+  public void stop() {
+    logger.info("Stopping proxy...");
+    if (internetConnectionChecker != null) {
+      internetConnectionChecker.shutdownNow();
+    }
+    if (proxyServer != null) {
+      proxyServer.stop();
+    }
+  }
 
-	@Override
-	public void addUrl(String url) {
-		if (!proxiedUrls.contains(url)) {
-			proxiedUrls.add(url);
-		} else if (equoLoggingService != null) {
-			equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
-		}
-	}
+  @Override
+  public void addUrl(String url) {
+    if (!proxiedUrls.contains(url)) {
+      proxiedUrls.add(url);
+    } else if (equoLoggingService != null) {
+      equoLoggingService.logWarning("The url " + url + " was already added to the Proxy server.");
+    }
+  }
 
-	public static boolean isOfflineCacheSupported() {
-		return (equoHttpProxyServer == null) ? false
-				: equoHttpProxyServer.isOfflineServerSupported() && enableOfflineCache;
-	}
+  public static boolean isOfflineCacheSupported() {
+    return (equoHttpProxyServer == null) ? false
+        : equoHttpProxyServer.isOfflineServerSupported() && enableOfflineCache;
+  }
 
-	private boolean isOfflineServerSupported() {
-		return equoOfflineServer != null;
-	}
+  private boolean isOfflineServerSupported() {
+    return equoOfflineServer != null;
+  }
 
-	@Override
-	public void enableOfflineCache() {
-		EquoHttpProxyServer.enableOfflineCache = true;
-		if (isOfflineCacheSupported()) {
-			equoOfflineServer.setProxiedUrls(proxiedUrls);
-		}
+  @Override
+  public void enableOfflineCache() {
+    EquoHttpProxyServer.enableOfflineCache = true;
+    if (isOfflineCacheSupported()) {
+      equoOfflineServer.setProxiedUrls(proxiedUrls);
+    }
 
-		Runnable internetConnectionRunnable = new Runnable() {
-			@Override
-			public void run() {
-				if (!isInternetReachable()) {
-					httpFiltersSourceAdapter.setConnectionLimited();
-				} else {
-					httpFiltersSourceAdapter.setConnectionUnlimited();
-				}
-			}
-		};
+    Runnable internetConnectionRunnable = new Runnable() {
+      @Override
+      public void run() {
+        if (!isInternetReachable()) {
+          httpFiltersSourceAdapter.setConnectionLimited();
+        } else {
+          httpFiltersSourceAdapter.setConnectionUnlimited();
+        }
+      }
+    };
 
-		internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
-		internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5, TimeUnit.SECONDS);
-	}
+    internetConnectionChecker = Executors.newSingleThreadScheduledExecutor();
+    internetConnectionChecker.scheduleAtFixedRate(internetConnectionRunnable, 0, 5,
+        TimeUnit.SECONDS);
+  }
 
-	@Override
-	public void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
-		if (isOfflineCacheSupported()) {
-			equoOfflineServer.addHttpRequestFilter(httpRequestFilter);
-		}
-	}
+  @Override
+  public void addOfflineSupportFilter(IHttpRequestFilter httpRequestFilter) {
+    if (isOfflineCacheSupported()) {
+      equoOfflineServer.addHttpRequestFilter(httpRequestFilter);
+    }
+  }
 
-	private boolean isInternetReachable() {
-		if (proxiedUrls.isEmpty()) {
-			return false;
-		}
-		return isAddressReachable(proxiedUrls.get(0));
-	}
+  private boolean isInternetReachable() {
+    if (proxiedUrls.isEmpty()) {
+      return false;
+    }
+    return isAddressReachable(proxiedUrls.get(0));
+  }
 
-	@Override
-	public boolean isAddressReachable(String appUrl) {
-		try (Socket socket = new Socket()) {
-			URI uri = new URI(appUrl);
-			String host = uri.getHost();
-			socket.connect(new InetSocketAddress(host, 80));
-			return true;
-		} catch (IOException | URISyntaxException e) {
-			return false; // Either timeout or unreachable or failed DNS lookup.
-		}
-	}
+  @Override
+  public boolean isAddressReachable(String appUrl) {
+    try (Socket socket = new Socket()) {
+      URI uri = new URI(appUrl);
+      String host = uri.getHost();
+      socket.connect(new InetSocketAddress(host, 80));
+      return true;
+    } catch (IOException | URISyntaxException e) {
+      return false; // Either timeout or unreachable or failed DNS lookup.
+    }
+  }
 
-	@Override
-	public void setTrust(boolean trustAllServers) {
-		if (customHostNameMitmManager != null) {
-			try {
-				customHostNameMitmManager.changeTrust(trustAllServers);
-			} catch (GeneralSecurityException | IOException e) {
-				logger.error("Error changing SSL trust", e);
-			}
-		}
-	}
+  @Override
+  public void setTrust(boolean trustAllServers) {
+    if (customHostNameMitmManager != null) {
+      try {
+        customHostNameMitmManager.changeTrust(trustAllServers);
+      } catch (GeneralSecurityException | IOException e) {
+        logger.error("Error changing SSL trust", e);
+      }
+    }
+  }
 }
