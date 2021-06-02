@@ -32,12 +32,6 @@ Then, to develop and contribute to the framework you must:
 * Import the project in Eclipse (the one configured before in the setup phase) into a new workspace.
 * Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](develop-app-in-parallel.md) to test the changes.
 
-## Coding Style
-
-* 2 spaces for indentation rather than tabs.
-* 80 character line length.
-* Format the code using the Eclipse formatter command before pushing your code.
-
 ## License
 
 By contributing to Equo Framework, you agree that your contributions will be licensed
