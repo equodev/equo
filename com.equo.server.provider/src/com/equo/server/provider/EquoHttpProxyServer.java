@@ -98,8 +98,13 @@ public class EquoHttpProxyServer implements IEquoServer {
     httpFiltersSourceAdapter = new EquoHttpFiltersSourceAdapter(contributionRequestHandler,
         equoOfflineServer, proxiedUrls);
 
+    if (!isInternetReachable()) {
+      httpFiltersSourceAdapter.setConnectionLimited();
+    }
+
     int port = getPortForServer();
-    System.setProperty("swt.chromium.args",
+    System
+        .setProperty("swt.chromium.args",
         "--proxy-server=localhost:" + port
             + ";--allow-running-insecure-content;--allow-file-access-from-files;"
             + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
@@ -202,7 +207,7 @@ public class EquoHttpProxyServer implements IEquoServer {
 
   private boolean isInternetReachable() {
     if (proxiedUrls.isEmpty()) {
-      return false;
+      return isAddressReachable("http://google.com");
     }
     return isAddressReachable(proxiedUrls.get(0));
   }

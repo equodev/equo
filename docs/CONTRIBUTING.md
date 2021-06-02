@@ -32,6 +32,12 @@ Then, to develop and contribute to the framework you must:
 * Import the project in Eclipse (the one configured before in the setup phase) into a new workspace.
 * Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](develop-app-in-parallel.md) to test the changes.
 
+## Coding Style
+
+You can check code style compliance inside the IDE configured in the previous section, or by running `./gradlew checkstyleMain` in the root of the project.
+
+It's necessary that you comply with the project's code style for your contribution to be accepted.
+
 ## License
 
 By contributing to Equo Framework, you agree that your contributions will be licensed

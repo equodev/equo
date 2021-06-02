@@ -27,6 +27,8 @@ import static com.equo.application.util.IConstants.MAIN_URL_KEY;
 import static com.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 import static com.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
+import java.util.Optional;
+
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
@@ -41,12 +43,13 @@ import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
 import com.equo.application.util.IConstants;
 import com.equo.contribution.api.EquoContributionBuilder;
+import com.equo.contribution.api.IEquoContributionManager;
 import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
 import com.equo.server.api.IEquoServer;
 import com.equo.ws.api.IEquoWebSocketService;
 
 /**
- * Builder for app toolbars.
+ * Builder for Equo apps view.
  */
 @Component(service = ViewBuilder.class)
 public class ViewBuilder {
@@ -57,10 +60,11 @@ public class ViewBuilder {
   private String url;
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-  private EquoContributionBuilder mainAppBuilder;
+  private IEquoContributionManager equoContributionManager;
 
-  @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-  private EquoContributionBuilder offlineSupportBuilder;
+  private EquoContributionBuilder mainAppBuilder = new EquoContributionBuilder();
+
+  private EquoContributionBuilder offlineSupportBuilder = new EquoContributionBuilder();
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
   private IEquoServer equoServer;
@@ -116,9 +120,15 @@ public class ViewBuilder {
 
     EquoGenericUrlResolver equoAppUrlResolver =
         new EquoGenericUrlResolver(equoApp.getClass().getClassLoader());
-    mainAppBuilder.withUrlResolver(equoAppUrlResolver);
+    mainAppBuilder.withManager(equoContributionManager).withUrlResolver(equoAppUrlResolver);
+    offlineSupportBuilder.withManager(equoContributionManager);
     offlineSupportBuilder.withContributionName(OFFLINE_SUPPORT_CONTRIBUTION_NAME);
     offlineSupportBuilder.withUrlResolver(equoAppUrlResolver);
+    Optional<String> contributedLimitedConnectionPage =
+        equoContributionManager.getContributedLimitedConnectionPage();
+    if (contributedLimitedConnectionPage.isPresent()) {
+      offlineSupportBuilder.withBaseHtmlResource(contributedLimitedConnectionPage.get());
+    }
     optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService,
         mainAppBuilder, offlineSupportBuilder, equoApp);
 
@@ -173,6 +183,7 @@ public class ViewBuilder {
     if (analyticsService != null) {
       analyticsService.registerLaunchApp();
     }
+    offlineSupportBuilder.build();
     mainAppBuilder.build();
     return this.equoAppBuilder;
   }

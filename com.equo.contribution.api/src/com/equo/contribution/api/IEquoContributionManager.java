@@ -23,6 +23,7 @@
 package com.equo.contribution.api;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface for contribution manager. The manager will concentrate all the
@@ -43,5 +44,9 @@ public interface IEquoContributionManager {
   boolean contains(String contributionName);
 
   void addContribution(EquoContribution contribution);
+
+  Optional<String> getContributedLimitedConnectionPage();
+
+  void setContributedLimitedConnectionPage(Optional<String> limitedConnectionPage);
 
 }

@@ -22,6 +22,7 @@
 
 package com.equo.contribution.services.pojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,17 @@ import java.util.List;
  */
 public class ContributionSet {
 
-  List<ConfigContribution> contributions;
+  String limitedConnectionPagePath;
+
+  List<ConfigContribution> contributions = new ArrayList<>();
+
+  public String getLimitedConnectionPagePath() {
+    return limitedConnectionPagePath;
+  }
+
+  public void setLimitedConnectionPagePath(String limitedConnectionPagePath) {
+    this.limitedConnectionPagePath = limitedConnectionPagePath;
+  }
 
   public List<ConfigContribution> getContributions() {
     return contributions;
