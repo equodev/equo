@@ -1,3 +1,25 @@
+/****************************************************************************
+**
+** Copyright (C) 2021 Equo
+**
+** This file is part of Equo Framework.
+**
+** Commercial License Usage
+** Licensees holding valid commercial Equo licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Equo. For licensing terms
+** and conditions see https://www.equoplatform.com/terms.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3 as published by the Free Software
+** Foundation. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
+**
+****************************************************************************/
+
 package com.equo.logging.client.core.provider;
 
 import java.util.Optional;
@@ -7,111 +29,114 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.equo.logging.client.api.Level;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerConfiguration;
 import com.equo.logging.client.api.LoggerFactory;
 import com.equo.ws.api.IEquoEventHandler;
 import com.equo.ws.api.JsonPayloadEquoRunnable;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+/**
+ * Handles the logs made from javascript code.
+ */
 @Component
 public class JavascriptLogger {
-	protected static final Logger logger = LoggerFactory.getLogger(JavascriptLogger.class);
-	private static final String LOGGING_EVENT_KEY = "loggingEvent";
-	private static final String LOGGING_RESPONSE_EVENT_KEY = "loggingResponseEvent";
+  protected static final Logger logger = LoggerFactory.getLogger(JavascriptLogger.class);
+  private static final String LOGGING_EVENT_KEY = "loggingEvent";
+  private static final String LOGGING_RESPONSE_EVENT_KEY = "loggingResponseEvent";
 
-	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	private IEquoEventHandler equoEventHandler;
+  @Reference(cardinality = ReferenceCardinality.MANDATORY)
+  private IEquoEventHandler equoEventHandler;
 
-	@Activate
-	public void start() {
-		equoEventHandler.on(LOGGING_EVENT_KEY, new LoggingEventPayloadRunnable());
-	}
+  @Activate
+  public void start() {
+    equoEventHandler.on(LOGGING_EVENT_KEY, new LoggingEventPayloadRunnable());
+  }
 
-	private class LoggingEventPayloadRunnable implements JsonPayloadEquoRunnable {
+  private class LoggingEventPayloadRunnable implements JsonPayloadEquoRunnable {
 
-		private static final long serialVersionUID = 1L;
-		private static final String MESSAGE_LOG = "message";
-		private static final String TYPE_LOG = "type";
+    private static final long serialVersionUID = 1L;
+    private static final String MESSAGE_LOG = "message";
+    private static final String TYPE_LOG = "type";
 
-		// Logging messages types
-		private static final String TYPE_DEBUG = "debug";
-		private static final String TYPE_INFO = "info";
-		private static final String TYPE_WARNING = "warning";
-		private static final String TYPE_ERROR = "error";
-		private static final String TYPE_TRACE = "trace";
+    // Logging messages types
+    private static final String TYPE_DEBUG = "debug";
+    private static final String TYPE_INFO = "info";
+    private static final String TYPE_WARNING = "warning";
+    private static final String TYPE_ERROR = "error";
+    private static final String TYPE_TRACE = "trace";
 
-		private static final String TYPE_JS_ERROR = "jserror";
+    private static final String TYPE_JS_ERROR = "jserror";
 
-		// Logging configuration types
-		private static final String TYPE_GET_LEVEL = "getLevel";
-		private static final String TYPE_SET_LEVEL = "setLevel";
-		private static final String TYPE_GET_GLOBAL_LEVEL = "getGlobalLevel";
-		private static final String TYPE_SET_GLOBAL_LEVEL = "setGlobalLevel";
+    // Logging configuration types
+    private static final String TYPE_GET_LEVEL = "getLevel";
+    private static final String TYPE_SET_LEVEL = "setLevel";
+    private static final String TYPE_GET_GLOBAL_LEVEL = "getGlobalLevel";
+    private static final String TYPE_SET_GLOBAL_LEVEL = "setGlobalLevel";
 
-		@Override
-		public void run(JsonObject payload) {
-			JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
-			JsonElement typeJsonElement = payload.get(TYPE_LOG);
+    @Override
+    public void run(JsonObject payload) {
+      JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
+      JsonElement typeJsonElement = payload.get(TYPE_LOG);
 
-			if ((typeJsonElement == null) || (messageJsonElement == null)) {
-				throw new RuntimeException(
-						"A \"type\" nor \"message\" member which identified the event name must be defined in the Logging object.");
-			}
-			String type = typeJsonElement.getAsString();
-			String message = "";
-			if (messageJsonElement.isJsonPrimitive()) {
-				message = messageJsonElement.getAsString();
-			}
-			switch (type) {
-			case TYPE_DEBUG:
-				logger.debug(message);
-				break;
-			case TYPE_INFO:
-				logger.info(message);
-				break;
-			case TYPE_WARNING:
-				logger.warn(message);
-				break;
-			case TYPE_ERROR:
-				logger.error(message);
-				break;
-			case TYPE_TRACE:
-				logger.trace(message);
-				break;
+      if ((typeJsonElement == null) || (messageJsonElement == null)) {
+        throw new RuntimeException("A \"type\" nor \"message\" member which identified"
+            + "the event name must be defined in the Logging object.");
+      }
+      String type = typeJsonElement.getAsString();
+      String message = "";
+      if (messageJsonElement.isJsonPrimitive()) {
+        message = messageJsonElement.getAsString();
+      }
+      switch (type) {
+        case TYPE_DEBUG:
+          logger.debug(message);
+          break;
+        case TYPE_INFO:
+          logger.info(message);
+          break;
+        case TYPE_WARNING:
+          logger.warn(message);
+          break;
+        case TYPE_ERROR:
+          logger.error(message);
+          break;
+        case TYPE_TRACE:
+          logger.trace(message);
+          break;
 
-			case TYPE_SET_LEVEL:
-				logger.setLoggerLevel(Level.toLevel(message, null));
-				break;
-			case TYPE_GET_LEVEL:
-				String level = "NOT CONFIGURED";
-				Optional<Level> loggerLevel = logger.getLoggerLevel();
-				if (loggerLevel.isPresent()) {
-					level = loggerLevel.get().toString();
-				}
-				equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, level);
-				break;
-			case TYPE_SET_GLOBAL_LEVEL:
-				LoggerConfiguration.setGlobalLevel(Level.toLevel(message, null));
-				break;
-			case TYPE_GET_GLOBAL_LEVEL:
-				equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, LoggerConfiguration.getGlobalLevel().toString());
-				break;
-			case TYPE_JS_ERROR:
-				final JsonObject messageJsonObject = messageJsonElement.getAsJsonObject();
-				final String msg = messageJsonObject.get("msg").getAsString();
-				final String url = messageJsonObject.get("url").getAsString();
-				final String lineNo = messageJsonObject.get("lineNo").getAsString();
-				final String columnNo = messageJsonObject.get("columnNo").getAsString();
-//				final JsonObject error = messageJsonObject.get("error").getAsJsonObject();
-				logger.error(msg + ". URL: " + url + ". Line: " + lineNo + " Column: " + columnNo);
-				break;
-			default:
-				logger.error("Incorrect log type from Equo Logging Javascript API");
-			}
-		}
-	}
+        case TYPE_SET_LEVEL:
+          logger.setLoggerLevel(Level.toLevel(message, null));
+          break;
+        case TYPE_GET_LEVEL:
+          String level = "NOT CONFIGURED";
+          Optional<Level> loggerLevel = logger.getLoggerLevel();
+          if (loggerLevel.isPresent()) {
+            level = loggerLevel.get().toString();
+          }
+          equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, level);
+          break;
+        case TYPE_SET_GLOBAL_LEVEL:
+          LoggerConfiguration.setGlobalLevel(Level.toLevel(message, null));
+          break;
+        case TYPE_GET_GLOBAL_LEVEL:
+          equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY,
+              LoggerConfiguration.getGlobalLevel().toString());
+          break;
+        case TYPE_JS_ERROR:
+          final JsonObject messageJsonObject = messageJsonElement.getAsJsonObject();
+          final String msg = messageJsonObject.get("msg").getAsString();
+          final String url = messageJsonObject.get("url").getAsString();
+          final String lineNo = messageJsonObject.get("lineNo").getAsString();
+          final String columnNo = messageJsonObject.get("columnNo").getAsString();
+          logger.error(msg + ". URL: " + url + ". Line: " + lineNo + " Column: " + columnNo);
+          break;
+        default:
+          logger.error("Incorrect log type from Equo Logging Javascript API");
+      }
+    }
+  }
 
 }

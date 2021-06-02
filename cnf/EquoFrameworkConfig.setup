@@ -17,12 +17,16 @@
           name="org.sf.feeling.decompiler.feature.group"/>
       <requirement
           name="com.equo.monaco.feature.feature.group"/>
+      <requirement
+          name="net.sf.eclipsecs.feature.group"/>
       <repository
           url="https://bndtools.jfrog.io/bndtools/update-latest"/>
       <repository
           url="https://ecd-plugin.github.io/update"/>
       <repository
           url="https://dl.equoplatform.com/monaco-editor/rls/repo/"/>
+      <repository
+          url="https://checkstyle.org/eclipse-cs-update-site"/>
     </setupTask>
     <productVersion
         href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.java']/@versions[name='latest.released']"/>
