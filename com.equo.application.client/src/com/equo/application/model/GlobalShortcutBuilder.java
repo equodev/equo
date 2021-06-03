@@ -56,7 +56,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
   }
 
   /**
-   * Adds a global sortcut to the app.
+   * Adds a global shortcut to the app.
    * @param shortcut string format of the shortcut
    */
   public void addGlobalShortcut(String shortcut) {

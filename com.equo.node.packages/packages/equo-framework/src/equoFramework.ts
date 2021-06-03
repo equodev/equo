@@ -81,6 +81,20 @@ export namespace EquoFramework {
         }
         websocket.send('_addShortcut', payload);
     };
+
+    /**
+     * Removes a global shortcut
+     * @function
+     * @name removeShortcut
+     * @param {string} shortcut
+     * @returns {void}
+     */
+    export function removeShortcut(shortcut: string) {
+		let payload = {
+            shortcut: shortcut
+        }
+        websocket.send('_removeShortcut', payload);
+    };
 }
 
 export class BrowserParams {

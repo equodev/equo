@@ -33,7 +33,7 @@ import com.equo.ws.api.IEquoEventHandler;
 import com.google.gson.Gson;
 
 /**
- * API to perform window actions such as open new browsers.
+ * API to perform window actions such as open new browsers or manage shortcuts.
  */
 @Component(service = WindowManager.class)
 public class WindowManager {
@@ -66,19 +66,40 @@ public class WindowManager {
     eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
+  /**
+   * Adds a global shortcut with a custom runnable.
+   * @param keySequence string format of the shortcut.
+   * @param runnable    the runnable.
+   */
   public void addShortcut(String keySequence, Runnable runnable) {
     addShortcut(keySequence, runnable, null);
   }
 
+  /**
+   * Adds a global shortcut which calls the given event name.
+   * @param keySequence string format of the shortcut.
+   * @param userEvent   the user event name to call.
+   */
   public void addShortcut(String keySequence, String userEvent) {
     addShortcut(keySequence, null, userEvent);
   }
 
   private void addShortcut(String keySequence, Runnable runnable, String userEvent) {
-    EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();
-    new GlobalShortcutBuilder(currentBuilder,
-        currentBuilder.getViewBuilder().getPart().getElementId(), runnable, userEvent)
+    EquoApplicationBuilder equoAppBuilder = EquoApplicationBuilder.getCurrentBuilder();
+    new GlobalShortcutBuilder(equoAppBuilder,
+        equoAppBuilder.getViewBuilder().getPart().getElementId(), runnable, userEvent)
             .addGlobalShortcut(keySequence);
+  }
+
+  /**
+   * Removes a global shortcut from the app.
+   * @param keySequence string format of the shortcut.
+   */
+  public void removeShortcut(String keySequence) {
+    EquoApplicationBuilder equoAppBuilder = EquoApplicationBuilder.getCurrentBuilder();
+    new GlobalShortcutBuilder(equoAppBuilder,
+        equoAppBuilder.getViewBuilder().getPart().getElementId(), null, null)
+            .removeShortcut(keySequence);
   }
 
   /**
