@@ -1,8 +1,12 @@
 # Overview
 
-Equo Framework is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.
+[Equo Framework](https://www.equoplatform.com/framework) is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.
 
 Regarding desktop environments, it provides an SDK to create modern **native** cross-platform desktop applications with Java and web technologies like JavaScript, HTML, and CSS. It brings the web to the desktop.
+
+## License
+
+[Equo Framework](https://www.equoplatform.com/framework) is dual-licensed under commercial and open source licenses (GPLv3). This repository is licensed under GPLv3. To get a commercial license and to not worry about the obligations associated with the GPLv3 license please contact the [Equo Platform support team](https://www.equoplatform.com/request-a-demo).
 
 ## Related Projects
 
