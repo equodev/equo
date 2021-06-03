@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.application.model.browser;
+package com.equo.application.util;
 
 /**
  * Constants for the positions at which a new browser can be opened.

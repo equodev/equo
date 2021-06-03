@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.application.model.browser;
+package com.equo.application.model;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -28,6 +28,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.equo.application.handlers.BrowserParams;
 import com.equo.ws.api.IEquoEventHandler;
 import com.google.gson.Gson;
 
@@ -63,6 +64,21 @@ public class WindowManager {
   public void updateBrowser(String url, String browserName) {
     BrowserParams browserParams = new BrowserParams(url, browserName);
     eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+  }
+
+  public void addShortcut(String keySequence, Runnable runnable) {
+    addShortcut(keySequence, runnable, null);
+  }
+
+  public void addShortcut(String keySequence, String userEvent) {
+    addShortcut(keySequence, null, userEvent);
+  }
+
+  private void addShortcut(String keySequence, Runnable runnable, String userEvent) {
+    EquoApplicationBuilder currentBuilder = EquoApplicationBuilder.getCurrentBuilder();
+    new GlobalShortcutBuilder(currentBuilder,
+        currentBuilder.getViewBuilder().getPart().getElementId(), runnable, userEvent)
+            .addGlobalShortcut(keySequence);
   }
 
   /**
