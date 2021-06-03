@@ -40,5 +40,4 @@ It's necessary that you comply with the project's code style for your contributi
 
 ## License
 
-By contributing to Equo Framework, you agree that your contributions will be licensed
-under <<placeholder to our license>>.
+By contributing to Equo Framework, you agree that your contributions will be licensed under GPLv3.
