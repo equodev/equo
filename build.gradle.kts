@@ -3,5 +3,5 @@ allprojects {
         mavenCentral()
     }
 
-    apply plugin: 'checkstyle'
+    apply(plugin = "checkstyle")
 }
