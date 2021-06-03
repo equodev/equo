@@ -37,8 +37,3 @@ Then, to develop and contribute to the framework you must:
 You can check code style compliance inside the IDE configured in the previous section, or by running `./gradlew checkstyleMain` in the root of the project.
 
 It's necessary that you comply with the project's code style for your contribution to be accepted.
-
-## License
-
-By contributing to Equo Framework, you agree that your contributions will be licensed
-under <<placeholder to our license>>.
