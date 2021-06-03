@@ -40,11 +40,28 @@ public class WindowManager {
   @Reference
   private IEquoEventHandler eventHandler;
 
-  public void openBrowser(BrowserParams browserParams) {
+  public void openBrowser(String url) {
+    BrowserParams browserParams = new BrowserParams(url);
     eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
-  public void updateBrowser(BrowserParams browserParams) {
+  public void openBrowser(String url, String browserName) {
+    BrowserParams browserParams = new BrowserParams(url, browserName);
+    eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+  }
+
+  public void openBrowser(String url, String browserName, String position) {
+    BrowserParams browserParams = new BrowserParams(url, browserName, position);
+    eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+  }
+
+  public void updateBrowser(String url) {
+    BrowserParams browserParams = new BrowserParams(url);
+    eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+  }
+
+  public void updateBrowser(String url, String browserName) {
+    BrowserParams browserParams = new BrowserParams(url, browserName);
     eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
