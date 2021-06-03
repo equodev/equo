@@ -1,4 +1,4 @@
-# Overview
+# Equo Framework Community Edition
 
 [Equo Framework](https://www.equoplatform.com/framework) is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.
 
