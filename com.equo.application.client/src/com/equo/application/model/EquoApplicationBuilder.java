@@ -150,6 +150,12 @@ public class EquoApplicationBuilder {
       new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, event)
           .addGlobalShortcut(shortcut);
     });
+
+    equoEventHandler.on("_removeShortcut", (JsonPayloadEquoRunnable) payload -> {
+      final String shortcut = payload.get("shortcut").getAsString();
+      new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, null)
+          .removeShortcut(shortcut);
+    });
   }
 
   private void addAppLevelCommands(MApplication mApplication) {

@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.application.model.browser;
+package com.equo.application.handlers;
 
 /**
  * Encapsulation of parameters required to open a new browser.

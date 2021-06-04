@@ -36,8 +36,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindowElement;
 
-import com.equo.application.model.browser.IPositionConstants;
 import com.equo.application.util.IConstants;
+import com.equo.application.util.IPositionConstants;
 
 /**
  * Handler for open a new browser in a side part.
