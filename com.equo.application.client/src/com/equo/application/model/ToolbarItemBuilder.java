@@ -89,7 +89,7 @@ public class ToolbarItemBuilder extends ItemBuilder {
     return new ToolbarBuilder(this.toolbarBuilder).addToolbar();
   }
 
-  ToolbarBuilder getToolbarBuilder() {
+  public ToolbarBuilder getToolbarBuilder() {
     return toolbarBuilder;
   }
 }
