@@ -85,7 +85,7 @@ public class PackagesIntegrationTest {
 	private static Gson gson;
 
 	@Rule
-	public EquoRule rule = new EquoRule(this).runInNonUIThread();
+	public EquoRule rule = new EquoRule(this).runInNonUiThread();
 
 	@BeforeClass
 	public static void inicialize() {
