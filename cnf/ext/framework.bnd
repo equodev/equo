@@ -33,6 +33,11 @@ javac.target: 1.8
         poll.time = -1; \
         cache = ~/.bnd/cache/equo-testing
 
+-plugin.5.Reedeer: \
+    aQute.bnd.repository.p2.provider.P2Repository; \
+        name = "Reddeer"; \
+        url = "https://download.eclipse.org/reddeer/releases/2.9.0"
+
 # Local OSGi repository common to all framework projects
 -plugin.5.BuildRepo: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \

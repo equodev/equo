@@ -10,3 +10,4 @@ org.glassfish.main.javaee-api:javax.jms:jar:3.1.2.2
 junit:junit:jar:4.13
 org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1
 org.mockito:mockito-all:1.10.19
+org.hamcrest:hamcrest:2.2
