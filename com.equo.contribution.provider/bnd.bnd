@@ -13,8 +13,6 @@ Export-Package: \
 	io.netty.all,\
 	io.netty.all.source,\
 	osgi.cmpn,\
-	${junit},\
-	assertj-core;version='3.15',\
 	org.littleshoot:littleproxy;version='1.1',\
 	org.slf4j.api,\
 	com.equo.logging.client.api;version=latest
