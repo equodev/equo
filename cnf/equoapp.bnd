@@ -1,6 +1,6 @@
 -include: ext/equocore.bnd
 
--buildpath: \
+-buildpath.equo: \
     com.equo.application.client;version=latest,\
     io.netty.all;version=latest,\
     com.equo.server.offline.api;version=latest,\
