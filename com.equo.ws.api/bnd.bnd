@@ -11,4 +11,3 @@ Export-Package: \
 	com.equo.ws.api.annotations,\
 	com.equo.ws.api.lambda,\
 	com.equo.ws.api.actions
-	

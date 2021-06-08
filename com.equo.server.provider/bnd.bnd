@@ -33,9 +33,7 @@ Export-Package: \
 	com.sun.jdmk:jmxtools;version='1.2',\
 	org.glassfish.main.javaee-api.javax.jms;version='3.1',\
 	org.apache.commons.lang;version='2.6',\
-	junit:junit;version='4.13',\
 	org.xbill.dns;version='2.0',\
-	org.hamcrest,\
 	org.littleshoot:littleproxy;version='1.1',\
 	org.slf4j.api,\
 	com.equo.logging.client.api;version=latest
