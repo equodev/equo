@@ -65,7 +65,7 @@ Bundle-ActivationPolicy:
     com.equo.testing.common.internal;version=latest,\
     com.equo.ws.api;version=snapshot,\
     com.equo.ws.provider;version=snapshot,\
-    io.netty.all;version='[4.0.44,4.0.45)',\
+    io.netty.all;version='4.1.33',\
     javax.inject;version='[1.0.0,1.0.1)',\
     org.apache.batik.constants;version='[1.11.0,1.11.1)',\
     org.apache.batik.css;version='[1.11.0,1.11.1)',\
