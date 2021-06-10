@@ -18,11 +18,11 @@ Bundle-ActivationPolicy:
     Java-WebSocket,\
     org.mockito.mockito-all,\
     org.awaitility
-    
+
 -privatepackage: \
-	com.equo.builders.tests,\
-	com.equo.builders.tests.util,\
-	com.equo.builders.tests.mocks
+    com.equo.builders.tests,\
+    com.equo.builders.tests.util,\
+    com.equo.builders.tests.mocks
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=com.equo.ws.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.analytics.internal.provider)',\
@@ -92,10 +92,9 @@ Bundle-ActivationPolicy:
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
     org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
     org.xbill.dns;version='[2.0.8,2.0.9)'
-    
+
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt.osgi)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.rap.jface)',\
     osgi.identity;filter:='(osgi.identity=osgi.cmpn)'
-    
