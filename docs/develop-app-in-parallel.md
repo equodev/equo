@@ -60,7 +60,7 @@ fix it by installing libconf-2.so.4:
 apt install libgconf2-4
 ```
 
-Now you can start coding both the Equo Framework and the Equo application in parallel. When you perform code changes in the Equo Framework and want it to be reflected on your application, you have to repeat the step 2 of the [Developing the Equo Framework](#Developing-the-Equo-Framework) section (`./gradlew release run.p2`). Then, clean both the Equo Framework workspace and the App one.
+Now you can start coding both the Equo Framework and the Equo application in parallel. When you perform code changes in the Equo Framework and want it to be reflected on your application, you have to repeat the step 7.
 
 Happy coding!
 
@@ -69,6 +69,6 @@ Happy coding!
 * If you find any compilation or build problem after you get changes from the remote repository try to clean the workspace. If not, apply the following actions:
 
   1. Open the Repositories view of Bnd.
-  2. **Refresh** the repositories that are involved (i.e. ChromiumSWT and Release). if you are unsure refresh all off them.
+  2. **Refresh** the repositories that are involved (i.e. ChromiumSWT and EquoLocal). if you are unsure refresh all off them.
   3. Reload the file cnf/build.bnd.
   4. Project -> clean to all projects.

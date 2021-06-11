@@ -29,7 +29,6 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 
-import com.equo.application.model.browser.BrowserParams;
 import com.equo.application.util.IConstants;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;

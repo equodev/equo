@@ -25,6 +25,7 @@ package com.equo.contribution.provider;
 import static com.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,8 +109,10 @@ public class DefaultEquoContributionRequestHandler implements IEquoContributionR
           offlineContribution.getContributedResourceName());
     } else {
       return new DefaultContributionRequestFiltersAdapter(request,
-          new ResolvedContribution(null, null, null, null),
-          new EquoGenericUrlResolver(DefaultEquoContributionRequestHandler.class.getClassLoader()),
+          new ResolvedContribution(Collections.emptyList(), Collections.emptyList(),
+              Collections.emptyMap(), Collections.emptyMap()),
+          new EquoGenericUrlResolver(
+              DefaultEquoContributionRequestHandler.class.getClassLoader()),
           limitedConnectionGenericPageFilePath);
     }
 

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -46,6 +47,7 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
   @Reference
   private EquoContributionResolver resolver;
 
+  private Optional<String> limitedConnectionPagePath = Optional.empty();
   private Map<String, EquoContribution> equoContributions = new HashMap<String, EquoContribution>();
 
   @Override
@@ -65,12 +67,18 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 
   @Override
   public EquoContribution getContribution(String contributionName) {
-    return equoContributions.get(contributionName);
+    if (contributionName == null) {
+      return null;
+    }
+    return equoContributions.get(contributionName.toLowerCase());
   }
 
   @Override
   public boolean contains(String contributionName) {
-    return equoContributions.containsKey(contributionName);
+    if (contributionName == null) {
+      return false;
+    }
+    return equoContributions.containsKey(contributionName.toLowerCase());
   }
 
   @Override
@@ -97,6 +105,16 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
       }
     }
     return startProcedures;
+  }
+
+  @Override
+  public Optional<String> getContributedLimitedConnectionPage() {
+    return limitedConnectionPagePath;
+  }
+
+  @Override
+  public void setContributedLimitedConnectionPage(Optional<String> limitedConnectionPage) {
+    this.limitedConnectionPagePath = limitedConnectionPage;
   }
 
 }

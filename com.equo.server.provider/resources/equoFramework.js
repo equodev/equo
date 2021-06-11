@@ -53,4 +53,11 @@ window.equo = window.equo || {};
         equo.sendToWebSocketServer('_addShortcut', payload);
     };
 
+    equo.removeShortcut = function(shortcut, event) {
+		let payload = {
+            shortcut: shortcut
+        }
+        equo.sendToWebSocketServer('_removeShortcut', payload);
+    };
+
 }(equo));

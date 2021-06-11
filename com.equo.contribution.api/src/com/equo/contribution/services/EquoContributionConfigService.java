@@ -25,6 +25,7 @@ package com.equo.contribution.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWiring;
@@ -46,6 +47,7 @@ import com.google.gson.JsonObject;
 @Component
 public class EquoContributionConfigService implements IContributionConfigService {
 
+  @Reference
   private IEquoContributionManager manager;
 
   /**
@@ -55,6 +57,8 @@ public class EquoContributionConfigService implements IContributionConfigService
     ArrayList<EquoContribution> contributions = new ArrayList<EquoContribution>();
     Gson parser = new Gson();
     ContributionSet configSet = parser.fromJson(configJson, ContributionSet.class);
+    manager.setContributedLimitedConnectionPage(
+        Optional.ofNullable(configSet.getLimitedConnectionPagePath()));
     for (ConfigContribution configCont : configSet.getContributions()) {
       contributions.add(parseContributionJsonConfig(configCont, bundle));
     }
@@ -101,15 +105,6 @@ public class EquoContributionConfigService implements IContributionConfigService
     }
     return builder.withManager(manager).withUrlResolver(
         new EquoGenericUrlResolver(bundle.adapt(BundleWiring.class).getClassLoader())).build();
-  }
-
-  @Reference
-  public void setManager(IEquoContributionManager manager) {
-    this.manager = manager;
-  }
-
-  public void unsetManager(IEquoContributionManager server) {
-    this.manager = null;
   }
 
 }
