@@ -63,7 +63,7 @@ Export-Package: \
     org.eclipse.emf.common,\
     org.eclipse.emf.common.source,\
     osgi.cmpn,\
-    org.slf4j.api,\
+    org.slf4j.api;version='1.7.30',\
     com.equo.logging.client.api;version=latest
 Private-Package: \
     com.equo.application.handlers,\

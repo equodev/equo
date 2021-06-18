@@ -14,7 +14,7 @@ Export-Package: \
     io.netty.all.source;version='4.1.33',\
     osgi.cmpn,\
     org.littleshoot:littleproxy;version='1.1',\
-    org.slf4j.api,\
+    org.slf4j.api;version='1.7.30',\
     com.equo.logging.client.api;version=latest
 Private-Package: \
     com.equo.contribution.provider.filter,\
