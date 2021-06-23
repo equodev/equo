@@ -26,10 +26,9 @@ Export-Package: \
     com.google.guava.source;version='27.1',\
     com.github.ganskef:littleproxy-mitm;version='1.1',\
     org.bouncycastle.bcpkix;version='1.64',\
-    org.slf4j.api;version='1.7',\
+    org.slf4j.api;version='1.7.30',\
     org.bouncycastle.bcprov;version='1.64',\
     org.littleshoot:dnssec4j;version='0.1',\
     org.xbill.dns;version='2.0',\
     org.littleshoot:littleproxy;version='1.1',\
-    org.slf4j.api,\
     com.equo.logging.client.api;version=latest

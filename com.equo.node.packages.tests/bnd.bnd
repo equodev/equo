@@ -99,7 +99,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     org.bouncycastle.bcpkix;version='[1.64.0,1.64.1)',\
     org.bouncycastle.bcprov;version='[1.64.0,1.64.1)',\
     org.hamcrest;version='[2.2.0,2.2.1)',\
-    org.slf4j.api;version='[1.7.10,1.7.11)',\
+    org.slf4j.api;version='[1.7.30,1.7.31)',\
     org.w3c.css.sac;version='[1.3.1,1.3.2)',\
     org.w3c.dom.events;version='[3.0.0,3.0.1)',\
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
