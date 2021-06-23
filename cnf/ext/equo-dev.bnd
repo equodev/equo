@@ -25,9 +25,9 @@ javac.debug: on
         cache = ~/.bnd/cache/mvnequo
 
 -plugin.4.Chromium: \
-    aQute.bnd.repository.osgi.OSGiRepository; \
+    aQute.bnd.repository.p2.provider.P2Repository; \
         name = Chromium; \
-        locations = "https://dl.equoplatform.com/chromium-swt-ee/equo/mvn/index.xml.gz"; \
+        url = "https://dl.equoplatform.com/chromium-swt-ee/equo/p2/76/"; \
         location = ~/.bnd/cache/chromium
 
 # JUnit

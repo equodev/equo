@@ -7,4 +7,4 @@ Export-Package: \
     org.eclipse.osgi,\
     ch.qos.logback.core,\
     ch.qos.logback.classic,\
-    org.slf4j.api
+    org.slf4j.api;version='1.7.30'
