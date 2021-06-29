@@ -83,7 +83,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
       Optional<String> url = getRequestedUrl(originalRequest);
       if (url.isPresent() && !isFilteredOutFromProxy(originalRequest)) {
         return new EquoHttpModifierFiltersAdapter(originalRequest,
-            contributionRequestHandler.getResolvedContributions(), equoOfflineServer);
+            contributionRequestHandler.getResolvedContributions(), equoOfflineServer, proxiedUrls);
       } else {
         return new EquoHttpFiltersAdapter(originalRequest, equoOfflineServer);
       }

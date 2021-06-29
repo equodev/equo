@@ -38,6 +38,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
  */
 public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
 
+  private List<String> proxiedUrls;
   private List<String> equoContributionsJsApis;
   private List<String> equoContributionStyles;
   private String customJsScripts;
@@ -47,27 +48,37 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
    * Parameterized constructor.
    */
   public EquoHttpModifierFiltersAdapter(HttpRequest originalRequest,
-      ResolvedContribution globalContribution, IEquoOfflineServer equoOfflineServer) {
+      ResolvedContribution globalContribution, IEquoOfflineServer equoOfflineServer,
+      List<String> proxiedUrls) {
     super(originalRequest, equoOfflineServer);
     this.equoContributionsJsApis = globalContribution.getScripts();
     this.equoContributionStyles = globalContribution.getStyles();
     this.customJsScripts = globalContribution.getCustomScripts(originalRequest.getUri());
     this.customStyles = globalContribution.getCustomStyles(originalRequest.getUri());
+    this.proxiedUrls = proxiedUrls;
   }
 
   @Override
   public HttpObject serverToProxyResponse(HttpObject httpObject) {
-    if (httpObject instanceof FullHttpResponse
-        && ((FullHttpResponse) httpObject).getStatus().code() == HttpResponseStatus.OK.code()) {
-      FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
-      IModifiableResponse fullHttpResponseWithTransformersResources =
-          new FullHttpResponseWithTransformersResources(fullResponse, equoContributionsJsApis,
-              equoContributionStyles, customJsScripts, customStyles);
-      if (fullHttpResponseWithTransformersResources.isModifiable()) {
-        FullHttpResponse generatedModifiedResponse =
-            fullHttpResponseWithTransformersResources.generateModifiedResponse();
-        saveRequestResponseIfPossible(originalRequest, generatedModifiedResponse);
-        return generatedModifiedResponse;
+    if (httpObject instanceof FullHttpResponse) {
+      FullHttpResponse fullObject = ((FullHttpResponse) httpObject);
+      int code = fullObject.getStatus().code();
+      if (code == HttpResponseStatus.OK.code()) {
+        FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
+        IModifiableResponse fullHttpResponseWithTransformersResources =
+            new FullHttpResponseWithTransformersResources(fullResponse, equoContributionsJsApis,
+                equoContributionStyles, customJsScripts, customStyles);
+        if (fullHttpResponseWithTransformersResources.isModifiable()) {
+          FullHttpResponse generatedModifiedResponse =
+              fullHttpResponseWithTransformersResources.generateModifiedResponse();
+          saveRequestResponseIfPossible(originalRequest, generatedModifiedResponse);
+          return generatedModifiedResponse;
+        }
+      } else if (code == HttpResponseStatus.MOVED_PERMANENTLY.code()
+          || code == HttpResponseStatus.PERMANENT_REDIRECT.code()
+          || code == HttpResponseStatus.TEMPORARY_REDIRECT.code()) {
+        String location = fullObject.headers().get("location");
+        proxiedUrls.add(location);
       }
     }
     return super.serverToProxyResponse(httpObject);
