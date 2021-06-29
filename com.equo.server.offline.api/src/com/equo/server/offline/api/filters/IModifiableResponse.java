@@ -44,7 +44,9 @@ public interface IModifiableResponse {
    */
   default FullHttpResponse generateModifiedResponse() {
     FullHttpResponse originalFullHttpResponse = getOriginalFullHttpResponse();
-    String contentTypeHeader = originalFullHttpResponse.headers().get("Content-Type");
+    HttpHeaders originalHeaders = originalFullHttpResponse.headers();
+    originalHeaders.remove("Content-Security-Policy");
+    String contentTypeHeader = originalHeaders.get("Content-Type");
     ContentType contentType = ContentType.parse(contentTypeHeader);
     Charset charset = contentType.getCharset();
 
@@ -64,7 +66,7 @@ public interface IModifiableResponse {
     DefaultFullHttpResponse transformedHttpResponse =
         new DefaultFullHttpResponse(originalFullHttpResponse.getProtocolVersion(),
             originalFullHttpResponse.getStatus(), transformedContent);
-    transformedHttpResponse.headers().set(originalFullHttpResponse.headers());
+    transformedHttpResponse.headers().set(originalHeaders);
     HttpHeaders.setContentLength(transformedHttpResponse, bytes.length);
 
     return transformedHttpResponse;
