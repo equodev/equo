@@ -143,13 +143,13 @@ public class WindowManager {
     @Override
     public void openBrowser(String url, String browserName) {
       obtainInstance();
-      openBrowser(url, browserName);
+      instance.openBrowser(url, browserName);
     }
 
     @Override
     public void openBrowser(String url, String browserName, String position) {
       obtainInstance();
-      openBrowser(url, browserName, position);
+      instance.openBrowser(url, browserName, position);
     }
 
     @Override
