@@ -25,3 +25,9 @@ Private-Package: \
     com.equo.contribution.services,\
     com.equo.contribution.services.pojo,\
     com.equo.contribution.parser
+
+-maven-release: remote,\
+    sources,\
+    javadoc;packages="ALL"\
+    ;-docletpath="${doclet.cp}"\
+    ;-doclet="org.asciidoctor.Asciidoclet"
