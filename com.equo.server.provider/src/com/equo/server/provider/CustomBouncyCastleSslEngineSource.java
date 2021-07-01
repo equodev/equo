@@ -214,7 +214,7 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
     }
     MillisecondsDuration duration = new MillisecondsDuration();
     KeyStore keystore = CertificateHelper.createRootCertificate(authority, KEY_STORE_TYPE);
-    LOG.info("Created root certificate authority key store in {}ms", duration);
+    LOG.debug("Created root certificate authority key store in {}ms", duration);
 
     try (OutputStream os = new FileOutputStream(authority.aliasFile(KEY_STORE_FILE_EXTENSION))) {
       keystore.store(os, authority.password());
@@ -313,7 +313,7 @@ public class CustomBouncyCastleSslEngineSource implements SslEngineSource {
 
     SSLContext result = CertificateHelper.newServerContext(keyManagers);
 
-    LOG.info("Impersonated {} in {}ms", commonName, duration);
+    LOG.debug("Impersonated {} in {}ms", commonName, duration);
     return result;
   }
 
