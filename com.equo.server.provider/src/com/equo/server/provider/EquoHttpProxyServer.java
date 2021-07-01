@@ -22,6 +22,7 @@
 
 package com.equo.server.provider;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -36,6 +37,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.littleshoot.proxy.DefaultHostResolver;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
@@ -103,9 +105,20 @@ public class EquoHttpProxyServer implements IEquoServer {
     }
 
     int port = getPortForServer();
+
+    File pacFile = null;
+    final String pacFileContent = createPacFileContent(port);
+    try {
+      pacFile = File.createTempFile("proxy", ".pac");
+      pacFile.deleteOnExit();
+      FileUtils.writeStringToFile(pacFile, pacFileContent);
+    } catch (IOException e1) {
+      logger.error("Error creating PAC file", e1);
+    }
+
     System
         .setProperty("swt.chromium.args",
-        "--proxy-server=localhost:" + port
+        "--proxy-pac-url=file://" + pacFile.getAbsolutePath()
             + ";--allow-running-insecure-content;--allow-file-access-from-files;"
             + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
             + "--ignore-certificate-errors");
@@ -128,6 +141,29 @@ public class EquoHttpProxyServer implements IEquoServer {
     } catch (RootCertificateException e) {
       e.printStackTrace();
     }
+  }
+
+  private String createPacFileContent(int port) {
+    return "// Default connection\n"
+      + "var direct = \"DIRECT\";\n"
+      + " \n"
+      + "// Alternate Proxy Server\n"
+      + "var proxy = \"PROXY localhost:" + port + "\";\n"
+      + " \n"
+      + "// Proxy Logic\n"
+      + "//\n"
+      + " \n"
+      + "function FindProxyForURL(url, host)\n"
+      + "{\n"
+      + "    if (url.substring(0, 3) === \"ws:\" || url.substring(0, 4) === \"wss:\")\n"
+      + "    {\n"
+      + "        return direct;\n"
+      + "    } else {\n"
+      + "        return proxy;\n"
+      + "    }\n"
+      + " \n"
+      + "    return direct;\n"
+      + "}\n";
   }
 
   private int getPortForServer() {
