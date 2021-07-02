@@ -22,22 +22,23 @@
 
 package com.equo.server.provider;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
 import org.littleshoot.proxy.DefaultHostResolver;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
@@ -106,19 +107,12 @@ public class EquoHttpProxyServer implements IEquoServer {
 
     int port = getPortForServer();
 
-    File pacFile = null;
     final String pacFileContent = createPacFileContent(port);
-    try {
-      pacFile = File.createTempFile("proxy", ".pac");
-      pacFile.deleteOnExit();
-      FileUtils.writeStringToFile(pacFile, pacFileContent);
-    } catch (IOException e1) {
-      logger.error("Error creating PAC file", e1);
-    }
+    final String base64PacFile = base64Encode(pacFileContent);
 
     System
         .setProperty("swt.chromium.args",
-        "--proxy-pac-url=file://" + pacFile.getAbsolutePath()
+        "--proxy-pac-url=data:application/x-javascript-config\\;base64," + base64PacFile
             + ";--allow-running-insecure-content;--allow-file-access-from-files;"
             + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
             + "--ignore-certificate-errors");
@@ -140,6 +134,14 @@ public class EquoHttpProxyServer implements IEquoServer {
           .withManInTheMiddle(customHostNameMitmManager).start();
     } catch (RootCertificateException e) {
       e.printStackTrace();
+    }
+  }
+
+  private static String base64Encode(String value) {
+    try {
+      return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8.toString()));
+    } catch (UnsupportedEncodingException ex) {
+      throw new RuntimeException(ex);
     }
   }
 
