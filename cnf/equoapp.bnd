@@ -69,6 +69,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 #Using org.osgi.framework.bootdelegation to delegate org.w3c class resolution to Java's default classloader
 # Without this, OSGi fails to resolve some classes such as org.w3c.dom.css.DocumentCSS
 -runproperties.equo: \
+	appName=${def;appName},\
     applicationCSS=platform:/plugin/com.equo.application.client/default.css,\
     applicationXMI=com.equo.application.client/Application.e4xmi,\
     eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
