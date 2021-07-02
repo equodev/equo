@@ -146,25 +146,14 @@ public class EquoHttpProxyServer implements IEquoServer {
   }
 
   private String createPacFileContent(int port) {
-    return "// Default connection\n"
-      + "var direct = \"DIRECT\";\n"
-      + " \n"
-      + "// Alternate Proxy Server\n"
-      + "var proxy = \"PROXY localhost:" + port + "\";\n"
-      + " \n"
-      + "// Proxy Logic\n"
-      + "//\n"
-      + " \n"
-      + "function FindProxyForURL(url, host)\n"
+    return "function FindProxyForURL(url, host)\n"
       + "{\n"
       + "    if (url.substring(0, 3) === \"ws:\" || url.substring(0, 4) === \"wss:\")\n"
       + "    {\n"
-      + "        return direct;\n"
+      + "        return \"DIRECT\";\n"
       + "    } else {\n"
-      + "        return proxy;\n"
+      + "        return \"PROXY localhost:" + port + "\";\n"
       + "    }\n"
-      + " \n"
-      + "    return direct;\n"
       + "}\n";
   }
 
