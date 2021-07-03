@@ -22,6 +22,7 @@
 
 package com.equo.application.model;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -108,7 +109,11 @@ public class WindowManager {
    *         component
    */
   public static WindowManager getInstance() {
-    BundleContext ctx = FrameworkUtil.getBundle(WindowManager.class).getBundleContext();
+    Bundle ctxBundle = FrameworkUtil.getBundle(WindowManager.class);
+    if (ctxBundle == null) {
+      return new LazyWindowManager();
+    }
+    BundleContext ctx = ctxBundle.getBundleContext();
     if (ctx != null) {
       @SuppressWarnings("unchecked")
       ServiceReference<WindowManager> serviceReference =
@@ -118,5 +123,63 @@ public class WindowManager {
       }
     }
     return null;
+  }
+
+  private static class LazyWindowManager extends WindowManager {
+    private WindowManager instance;
+
+    private void obtainInstance() {
+      if (instance == null) {
+        instance = WindowManager.getInstance();
+      }
+    }
+
+    @Override
+    public void openBrowser(String url) {
+      obtainInstance();
+      instance.openBrowser(url);
+    }
+
+    @Override
+    public void openBrowser(String url, String browserName) {
+      obtainInstance();
+      instance.openBrowser(url, browserName);
+    }
+
+    @Override
+    public void openBrowser(String url, String browserName, String position) {
+      obtainInstance();
+      instance.openBrowser(url, browserName, position);
+    }
+
+    @Override
+    public void updateBrowser(String url) {
+      obtainInstance();
+      instance.updateBrowser(url);
+    }
+
+    @Override
+    public void updateBrowser(String url, String browserName) {
+      obtainInstance();
+      instance.updateBrowser(url, browserName);
+    }
+
+    @Override
+    public void addShortcut(String keySequence, Runnable runnable) {
+      obtainInstance();
+      instance.addShortcut(keySequence, runnable);
+    }
+
+    @Override
+    public void addShortcut(String keySequence, String userEvent) {
+      obtainInstance();
+      instance.addShortcut(keySequence, userEvent);
+    }
+
+    @Override
+    public void removeShortcut(String keySequence) {
+      obtainInstance();
+      instance.removeShortcut(keySequence);
+    }
   }
 }

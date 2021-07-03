@@ -69,6 +69,7 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
 #Using org.osgi.framework.bootdelegation to delegate org.w3c class resolution to Java's default classloader
 # Without this, OSGi fails to resolve some classes such as org.w3c.dom.css.DocumentCSS
 -runproperties.equo: \
+	appName=${def;appName},\
     applicationCSS=platform:/plugin/com.equo.application.client/default.css,\
     applicationXMI=com.equo.application.client/Application.e4xmi,\
     eclipse.application=${def;eclipseApplication;org.eclipse.e4.ui.workbench.swt.E4Application},\
@@ -78,9 +79,9 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
-    org.eclipse.swt.chromium.remote-debugging-port=8888,\
-    swt.chromium.debug=true,\
     org.osgi.framework.bootdelegation=org.w3c.*
+    #org.eclipse.swt.chromium.remote-debugging-port=8888
+    #swt.chromium.debug=true
 
 -runproperties.app: \
 # Set to true if you want to modify the original HTML content. False otherwise. True is the default value.,\
