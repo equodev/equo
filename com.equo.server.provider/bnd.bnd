@@ -31,5 +31,4 @@ Export-Package: \
     org.littleshoot:dnssec4j;version='0.1',\
     org.xbill.dns;version='2.0',\
     org.littleshoot:littleproxy;version='1.1',\
-    com.equo.logging.client.api;version=latest,\
-    org.apache.commons.io;version='[2.6.0,2.6.1)'
+    com.equo.logging.client.api;version=latest
