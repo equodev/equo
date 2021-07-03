@@ -23,14 +23,17 @@
 package com.equo.server.provider;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -103,9 +106,13 @@ public class EquoHttpProxyServer implements IEquoServer {
     }
 
     int port = getPortForServer();
+
+    final String pacFileContent = createPacFileContent(port);
+    final String base64PacFile = base64Encode(pacFileContent);
+
     System
         .setProperty("swt.chromium.args",
-        "--proxy-server=localhost:" + port
+        "--proxy-pac-url=data:application/x-javascript-config\\;base64," + base64PacFile
             + ";--allow-running-insecure-content;--allow-file-access-from-files;"
             + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
             + "--ignore-certificate-errors");
@@ -128,6 +135,26 @@ public class EquoHttpProxyServer implements IEquoServer {
     } catch (RootCertificateException e) {
       e.printStackTrace();
     }
+  }
+
+  private static String base64Encode(String value) {
+    try {
+      return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8.toString()));
+    } catch (UnsupportedEncodingException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  private String createPacFileContent(int port) {
+    return "function FindProxyForURL(url, host)\n"
+      + "{\n"
+      + "    if (url.substring(0, 3) === \"ws:\" || url.substring(0, 4) === \"wss:\")\n"
+      + "    {\n"
+      + "        return \"DIRECT\";\n"
+      + "    } else {\n"
+      + "        return \"PROXY localhost:" + port + "\";\n"
+      + "    }\n"
+      + "}\n";
   }
 
   private int getPortForServer() {
