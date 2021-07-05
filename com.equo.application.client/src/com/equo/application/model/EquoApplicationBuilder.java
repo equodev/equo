@@ -159,11 +159,11 @@ public class EquoApplicationBuilder {
   }
 
   private void addAppLevelCommands(MApplication mApplication) {
-    createWebSocketTriggeredCommand(mApplication, IConstants.EQUO_WEBSOCKET_OPEN_BROWSER,
+    createCommTriggeredCommand(mApplication, IConstants.EQUO_COMM_OPEN_BROWSER,
         IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
 
     equoEventHandler.on("openBrowser", new ParameterizedCommandRunnable(
-        IConstants.EQUO_WEBSOCKET_OPEN_BROWSER, getmApplication().getContext()));
+        IConstants.EQUO_COMM_OPEN_BROWSER, getmApplication().getContext()));
 
     // if (action.equals(EXECUTE_ACTION_ID)) {
     // TODO call user application code with the class passed as param
@@ -172,11 +172,11 @@ public class EquoApplicationBuilder {
         IConstants.OPEN_BROWSER_AS_WINDOW_COMMAND_CONTRIBUTION_URI);
     createOpenBrowserAsSidePartCommand(mApplication, IConstants.EQUO_OPEN_BROWSER_AS_SIDE_PART,
         IConstants.OPEN_BROWSER_AS_SIDE_PART_COMMAND_CONTRIBUTION_URI);
-    createUpdateBrowserCommand(mApplication, IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER,
+    createUpdateBrowserCommand(mApplication, IConstants.EQUO_COMM_UPDATE_BROWSER,
         IConstants.UPDATE_BROWSER_CONTRIBUTION_URI);
 
     equoEventHandler.on("updateBrowser", new ParameterizedCommandRunnable(
-        IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER, getmApplication().getContext()));
+        IConstants.EQUO_COMM_UPDATE_BROWSER, getmApplication().getContext()));
   }
 
   private void createUpdateBrowserCommand(MApplication mApplication, String commandId,
@@ -240,7 +240,7 @@ public class EquoApplicationBuilder {
     handlerBuilder.createCommandAndHandler(commandId);
   }
 
-  private void createWebSocketTriggeredCommand(MApplication mApplication, String commandId,
+  private void createCommTriggeredCommand(MApplication mApplication, String commandId,
       String commandContributionUri) {
     HandlerBuilder handlerBuilder =
         new HandlerBuilder(mApplication, commandId, commandContributionUri) {

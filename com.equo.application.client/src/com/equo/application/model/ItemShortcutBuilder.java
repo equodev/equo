@@ -63,7 +63,7 @@ public class ItemShortcutBuilder implements KeyBindingBuilder {
           createMParameter(IConstants.COMMAND_ID_PARAMETER, command.getElementId());
       keyBinding.getParameters().add(commandParameterId);
       MParameter userEventParameter =
-          createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, this.userEvent);
+          createMParameter(IConstants.EQUO_COMM_USER_EMITTED_EVENT, this.userEvent);
       keyBinding.getParameters().add(userEventParameter);
 
       List<MKeyBinding> bindings = mBindingTable.getBindings();

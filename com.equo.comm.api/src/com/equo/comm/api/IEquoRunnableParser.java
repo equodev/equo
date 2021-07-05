@@ -25,7 +25,7 @@ package com.equo.comm.api;
 import com.equo.comm.api.IEquoRunnable;
 
 /**
- * Parser from ws event payload into an Equo Runnable.
+ * Parser from comm event payload into an Equo Runnable.
  */
 public interface IEquoRunnableParser<T> {
   /**

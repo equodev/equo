@@ -32,8 +32,8 @@ import com.equo.comm.api.lambda.Newable;
 public interface IEquoRunnable<T> extends Newable<T> {
   /**
    * Executes the defined instructions when it receives the message from
-   * websocket.
-   * @param payload the data received from message from websocket.
+   * comm.
+   * @param payload the data received from message from comm.
    */
   public void run(T payload);
 }

@@ -52,7 +52,7 @@ public class UpdateBrowserCommandHandler implements BrowserCommandHandler {
    * @param sync          toolkit to synchronize back into the UI-Thread
    */
   @Execute
-  public void execute(@Named(IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER) String browserParams,
+  public void execute(@Named(IConstants.EQUO_COMM_UPDATE_BROWSER) String browserParams,
       MApplication mApplication, EModelService modelService, UISynchronize sync) {
     Gson gsonParser = new Gson();
     BrowserParams params = gsonParser.fromJson(browserParams, BrowserParams.class);

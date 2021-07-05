@@ -39,7 +39,7 @@ window.equo = window.equo || {};
 		let payload = {}
 		payload.message = message;
 		payload.type = type;
-		equo.sendToWebSocketServer('loggingEvent', payload);
+		equo.sendToCommServer('loggingEvent', payload);
 	}
 
 	let returnResponse = function(callback) {

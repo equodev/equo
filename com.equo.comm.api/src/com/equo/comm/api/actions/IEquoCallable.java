@@ -25,7 +25,7 @@ package com.equo.comm.api.actions;
 import com.equo.comm.api.lambda.Newable;
 
 /**
- * Interface for callables with a ws event payload as parameters.
+ * Interface for callables with a comm event payload as parameters.
  */
 @FunctionalInterface
 public interface IEquoCallable<T> extends Newable<T> {

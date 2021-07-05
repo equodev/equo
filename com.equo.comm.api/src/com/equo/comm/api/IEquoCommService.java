@@ -22,12 +22,10 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnableParser;
-
 /**
- * Interface of the websocket service.
+ * Interface of the Comm service.
  */
-public interface IEquoWebSocketService {
+public interface IEquoCommService {
   /**
    * Adds an event handler. Asings a instance of IEquoRunnableParser<?> to
    * determinated action.

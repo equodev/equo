@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
+import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.IEquoRunnableParser;
-import com.equo.comm.api.IEquoWebSocketService;
 import com.equo.comm.api.NamedActionMessage;
 import com.equo.comm.api.actions.IActionHandler;
 import com.equo.logging.client.api.Logger;
@@ -47,7 +47,7 @@ import com.google.gson.GsonBuilder;
  * all the event listeners.
  */
 @Component
-public class EquoWebSocketServiceImpl implements IEquoWebSocketService {
+public class EquoWebSocketServiceImpl implements IEquoCommService {
   protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
 
   @SuppressWarnings("rawtypes")

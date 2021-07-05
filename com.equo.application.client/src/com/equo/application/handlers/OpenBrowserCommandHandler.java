@@ -55,7 +55,7 @@ public class OpenBrowserCommandHandler implements BrowserCommandHandler {
    * @param modelService   Eclipse model service
    */
   @Execute
-  public void execute(@Named(IConstants.EQUO_WEBSOCKET_OPEN_BROWSER) String browserParams,
+  public void execute(@Named(IConstants.EQUO_COMM_OPEN_BROWSER) String browserParams,
       MApplication mApplication, ECommandService commandService, EHandlerService handlerService,
       EModelService modelService) {
     Gson gsonParser = new Gson();
@@ -78,7 +78,7 @@ public class OpenBrowserCommandHandler implements BrowserCommandHandler {
 
   private void executeUpdateBrowserCommand(String browserParams, ECommandService commandService,
       EHandlerService handlerService) {
-    String commandParameterId = IConstants.EQUO_WEBSOCKET_UPDATE_BROWSER;
+    String commandParameterId = IConstants.EQUO_COMM_UPDATE_BROWSER;
     Command command = commandService.getCommand(commandParameterId + IConstants.COMMAND_SUFFIX);
     Parameterization[] commandParams;
     try {

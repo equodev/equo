@@ -1,7 +1,7 @@
 {
     "name": "@equo/service-manager",
-    "version": "0.1.0",
-    "description": "Websocket API for usage within the Equo Framework",
+    "version": "0.1.1",
+    "description": "Comm API for usage within the Equo Framework",
     "license": "UNLICENSED",
     "publishConfig": {
         "access": "restricted"

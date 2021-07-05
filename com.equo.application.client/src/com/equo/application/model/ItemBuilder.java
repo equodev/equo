@@ -104,13 +104,13 @@ public abstract class ItemBuilder {
   /**
    * Sets the action to be executed when the item gets clicked.
    * @param  runnable runnable to be executed.
-   * @param  action   name of the ws event to be executed.
+   * @param  action   name of the comm event to be executed.
    * @return          the ItemBuilder instance.
    */
   public ItemBuilder onClick(Runnable runnable, String action) {
     this.setItemHandlerBuilder(new ItemHandlerBuilder(this));
     this.getItem().getTransientData().put(IConstants.IS_AN_EQUO_MODEL_ELEMENT, true);
-    this.getItem().getTransientData().put(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, action);
+    this.getItem().getTransientData().put(IConstants.EQUO_COMM_USER_EMITTED_EVENT, action);
     ItemBuilder itemBuilder = getItemHandlerBuilder().onClick(runnable, action);
     return itemBuilder;
   }

@@ -69,7 +69,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
     globalKeyBinding.getParameters().add(commandIdParameter);
 
     MParameter userEventParameter =
-        createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, this.userEvent);
+        createMParameter(IConstants.EQUO_COMM_USER_EMITTED_EVENT, this.userEvent);
     globalKeyBinding.getParameters().add(userEventParameter);
 
     MBindingTable parentPartBindingTable =
@@ -111,7 +111,7 @@ public class GlobalShortcutBuilder extends HandlerBuilder implements KeyBindingB
   @Override
   protected List<MCommandParameter> createCommandParameters() {
     MCommandParameter windowNameCommandParameter = createCommandParameter(
-        IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, "User emitted event", true);
+        IConstants.EQUO_COMM_USER_EMITTED_EVENT, "User emitted event", true);
     return Lists.newArrayList(windowNameCommandParameter);
   }
 }

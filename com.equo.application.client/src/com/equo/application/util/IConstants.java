@@ -37,7 +37,7 @@ public interface IConstants {
 
   public static final String MAIN_URL_KEY = "mainUrl";
 
-  public static final String MAIN_URL_WS_PORT = "equoCommPort";
+  public static final String MAIN_URL_COMM_PORT = "equoCommPort";
 
   public static final String EQUO_HANDLER_PREFIX = "com.equo.handler";
 
@@ -68,9 +68,9 @@ public interface IConstants {
 
   public static final String APPLICATION_NAME_PARAMETER = "applicationName";
 
-  public static final String EQUO_WEBSOCKET_PREFIX = "com.equo.websocket";
+  public static final String EQUO_COMM_PREFIX = "com.equo.comm";
 
-  public static final String EQUO_WEBSOCKET_OPEN_BROWSER = EQUO_WEBSOCKET_PREFIX + ".openbrowser";
+  public static final String EQUO_COMM_OPEN_BROWSER = EQUO_COMM_PREFIX + ".openbrowser";
 
   public static final String PARAMETERIZED_COMMAND_CONTRIBUTION_URI = "bundleclass://"
       + "com.equo.application.client/com.equo.application.handlers.ParameterizedCommandHandler";
@@ -103,8 +103,8 @@ public interface IConstants {
   public static final String EQUO_BROWSER_PART_POSITION =
       EQUO_APPLICATION_ID + ".browser.part.position";
 
-  public static final String EQUO_WEBSOCKET_UPDATE_BROWSER =
-      EQUO_WEBSOCKET_PREFIX + ".updatebrowser";
+  public static final String EQUO_COMM_UPDATE_BROWSER =
+      EQUO_COMM_PREFIX + ".updatebrowser";
 
   public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://"
       + "com.equo.application.client/com.equo.application.handlers.UpdateBrowserCommandHandler";
@@ -115,8 +115,8 @@ public interface IConstants {
 
   public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
-  public static final String EQUO_WEBSOCKET_USER_EMITTED_EVENT =
-      EQUO_WEBSOCKET_PREFIX + ".useremittedevent";
+  public static final String EQUO_COMM_USER_EMITTED_EVENT =
+      EQUO_COMM_PREFIX + ".useremittedevent";
 
   public static final String DEFAULT_EXIT_LABEL = "Exit";
 

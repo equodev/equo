@@ -31,13 +31,11 @@ import java.util.Map;
 
 import com.equo.comm.api.annotations.EventName;
 import com.equo.logging.client.api.LoggerFactory;
-import com.equo.comm.api.actions.IActionHandler;
-import com.equo.comm.api.actions.IEquoCallable;
 
 /**
  * <p>
  * Action handler interface. A class implementing this interface its declared as
- * a ws event listener.
+ * a comm event listener.
  * </p>
  * <p>
  * By default, the {@link #call(Object) call} method will be called on an event

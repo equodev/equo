@@ -26,7 +26,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import com.equo.comm.api.IEquoWebSocketService;
+import com.equo.comm.api.IEquoCommService;
 import com.equo.contribution.api.EquoContributionBuilder;
 
 /**
@@ -40,7 +40,7 @@ public class EquoWebSocketContribution {
 
   private EquoContributionBuilder builder;
 
-  private IEquoWebSocketService equoWebSocketService;
+  private IEquoCommService equoWebSocketService;
 
   @Activate
   protected void activate() {
@@ -50,11 +50,11 @@ public class EquoWebSocketContribution {
   }
 
   @Reference
-  void setEquoWebSocketService(IEquoWebSocketService equoWebSocketService) {
+  void setEquoWebSocketService(IEquoCommService equoWebSocketService) {
     this.equoWebSocketService = equoWebSocketService;
   }
 
-  void unsetEquoWebSocketService(IEquoWebSocketService equoWebSocketService) {
+  void unsetEquoWebSocketService(IEquoCommService equoWebSocketService) {
     this.equoWebSocketService = null;
   }
 

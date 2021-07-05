@@ -29,7 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * Parser for ws event payload into an Equo runnable of JsonObject type.
+ * Parser for comm event payload into an Equo runnable of JsonObject type.
  */
 public class JsonRunnableParser implements IEquoRunnableParser<JsonObject> {
 

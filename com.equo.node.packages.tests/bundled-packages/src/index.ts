@@ -79,40 +79,40 @@ function inicMenu(elementMenu : MenuBuilder, func?: Function) {
 
 comm.on("_createMenu", () => {
     let menu1 = Menu.create();
-    inicMenu(menu1, (ws: EquoComm, json: JSON) => { ws.send("_testSetMenu1", json); });
+    inicMenu(menu1, (comm: EquoComm, json: JSON) => { comm.send("_testSetMenu1", json); });
 });
 
 comm.on("_appendMenuItem", () => {
 	let menu2 = Menu.create();
     inicMenu(menu2);
     menu2.appendMenuItem("Menu1", 0, "SubMenu10").onClick("_test").addShortcut("M1+L")
-        .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu2", json); });
+        .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu2", json); });
 });
 
 comm.on("_appendMenu", () => {
 	let menu3 = Menu.create();
     inicMenu(menu3);
     menu3.appendMenu("Menu2/SubMenu22", 1, "SubMenu223").addMenuItem("SubMenu2231").onClick("_test").addShortcut("M1+K")
-        .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu3", json); });
+        .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu3", json); });
 });
 
 comm.on("_removeMenuElement", () => {
 	let menu4 = Menu.create();
     inicMenu(menu4);
-    menu4.removeMenuElementByPath("Menu2/SubMenu22/SubMenu222").setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu4", json); });
+    menu4.removeMenuElementByPath("Menu2/SubMenu22/SubMenu222").setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu4", json); });
 });
 
 comm.on("_appendMenuAtTheEnd", () => {
 	let menu5 = Menu.create();
     inicMenu(menu5);
     menu5.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221")
-        .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu5", json); });
+        .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu5", json); });
 });
 
 comm.on("_appendMenuItemAtTheEnd", () => {
 	let menu6 = Menu.create();
     inicMenu(menu6);
-    menu6.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu6", json); });
+    menu6.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu6", json); });
 });
 
 comm.on("_appendMenuRepeated", () => {
@@ -121,7 +121,7 @@ comm.on("_appendMenuRepeated", () => {
     menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu();
 
     try {
-        menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu7", json); });
+        menu7.appendMenuItemAtTheEnd("Menu1/SubMenu12", "SubMenu123").addMenuItem("SubMenu1221").setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu7", json); });
     } catch (Exception) {
         comm.send("_testSetMenu7", JSON.parse(JSON.stringify({"code":450,"error":"The menu SubMenu123 already exist in Menu1/SubMenu12"})))
     }
@@ -133,7 +133,7 @@ comm.on("_appendMenuItemRepeated", () => {
     menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu();
 
     try {
-        menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu8", json); });
+        menu8.appendMenuAtTheEnd("Menu1/SubMenu12", "SubMenu122").addMenuItem("SubMenu1221").setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu8", json); });
     } catch (Exception) {
         comm.send("_testSetMenu8", JSON.parse(JSON.stringify({"code":450,"error":"The menu SubMenu122 already exist in Menu1/SubMenu12"})))
     }
@@ -158,7 +158,7 @@ comm.on("_createMenuWithRepeatedMenus", () => {
     .withMainMenu("Menu1")
         .addMenuItem("SubMenu14").onClick("_test").addShortcut("M1+W")
 
-    .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu9", json); });
+    .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu9", json); });
 });
 
 comm.on("_buildWithCurrentModel", () => {
@@ -168,7 +168,7 @@ comm.on("_buildWithCurrentModel", () => {
             .addMenu("subMenu32")
                 .addMenuItem("subMenu321")
         
-        .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testSetMenu10", json); })
+        .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testSetMenu10", json); })
     })
 });
 
@@ -192,7 +192,7 @@ comm.on("_customActionOnClick", () => {
     Menu.create().withMainMenu("Menu1")
     .addMenuItem("SubMenu11").onClick(()=> {comm.send("_customActionOnClickResponse")}).addShortcut("M1+W")
 
-    .setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_testCustomOnClick", json); });
+    .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_testCustomOnClick", json); });
 });
 
 comm.send("_ready");

@@ -1,7 +1,7 @@
 {
     "name": "@equo/comm",
     "version": "0.1.5",
-    "description": "Websocket API for usage within the Equo Framework",
+    "description": "Comm API for usage within the Equo Framework",
     "license": "UNLICENSED",
     "publishConfig": {
         "access": "restricted"
@@ -12,7 +12,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/service-manager": "^0.1.0"
+        "@equo/service-manager": "^0.1.1"
     },
     "devDependencies": {
         "jsdoc-to-markdown": "^6.0.0"
@@ -22,6 +22,6 @@
         "clean": "rimraf lib",
         "build": "yarn run compile",
         "compile": "tsc",
-        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-websocket-doc.md"
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-comm-doc.md"
     }
 }

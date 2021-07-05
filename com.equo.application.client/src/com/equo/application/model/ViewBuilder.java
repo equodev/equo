@@ -23,8 +23,8 @@
 package com.equo.application.model;
 
 import static com.equo.application.util.IConstants.DEV_APP_URL;
+import static com.equo.application.util.IConstants.MAIN_URL_COMM_PORT;
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
-import static com.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 import static com.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
 import java.util.Optional;
@@ -42,7 +42,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
 import com.equo.application.util.IConstants;
-import com.equo.comm.api.IEquoWebSocketService;
+import com.equo.comm.api.IEquoCommService;
 import com.equo.contribution.api.EquoContributionBuilder;
 import com.equo.contribution.api.IEquoContributionManager;
 import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
@@ -73,7 +73,7 @@ public class ViewBuilder {
   private volatile AnalyticsService analyticsService;
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-  private IEquoWebSocketService websocketService;
+  private IEquoCommService commService;
 
   private OptionalViewBuilder optionalViewBuilder;
 
@@ -83,7 +83,7 @@ public class ViewBuilder {
     addUrlToProxyServer(this.url);
     equoServer.addUrl(this.url);
     part.getProperties().put(MAIN_URL_KEY, this.url);
-    part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
+    part.getProperties().put(MAIN_URL_COMM_PORT, String.valueOf(commService.getPort()));
     return optionalViewBuilder;
   }
 
@@ -96,7 +96,7 @@ public class ViewBuilder {
       addUrlToProxyServer(this.url);
     }
     part.getProperties().put(IConstants.MAIN_URL_KEY, this.url);
-    part.getProperties().put(MAIN_URL_WS_PORT, String.valueOf(websocketService.getPort()));
+    part.getProperties().put(MAIN_URL_COMM_PORT, String.valueOf(commService.getPort()));
     return optionalViewBuilder.withBaseHtml(baseHtmlFile);
   }
 

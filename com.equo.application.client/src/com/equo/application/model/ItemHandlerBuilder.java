@@ -56,7 +56,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
   /**
    * Sets the action to be executed when the item gets clicked.
    * @param  runnable  runnable to be executed.
-   * @param  userEvent name of the ws event to be executed.
+   * @param  userEvent name of the comm event to be executed.
    * @return           the ItemBuilder instance.
    */
   public ItemBuilder onClick(Runnable runnable, String userEvent) {
@@ -82,7 +82,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
     item.getParameters().add(commandIdparameter);
 
     MParameter userEventParameter =
-        createMParameter(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, userEvent);
+        createMParameter(IConstants.EQUO_COMM_USER_EMITTED_EVENT, userEvent);
     item.getParameters().add(userEventParameter);
 
     addCommandToHandler(item, newCommand);
@@ -142,7 +142,7 @@ public class ItemHandlerBuilder extends HandlerBuilder {
   @Override
   protected List<MCommandParameter> createCommandParameters() {
     MCommandParameter windowNameCommandParameter = createCommandParameter(
-        IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT, "User emitted event", true);
+        IConstants.EQUO_COMM_USER_EMITTED_EVENT, "User emitted event", true);
     return Lists.newArrayList(windowNameCommandParameter);
   }
 

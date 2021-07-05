@@ -23,7 +23,7 @@
 package com.equo.comm.api;
 
 /**
- * Websocket message that executes an action.
+ * Comm message that executes an action.
  */
 public abstract class ActionMessage {
 

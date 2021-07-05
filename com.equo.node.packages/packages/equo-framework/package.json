@@ -12,7 +12,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/service-manager": "^0.1.0",
+        "@equo/service-manager": "^0.1.1",
         "@equo/comm": "^0.1.5"
     },
     "devDependencies": {

@@ -27,9 +27,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
+import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.IEquoEventHandler;
 import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.IEquoWebSocketService;
 import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.equo.comm.api.JsonRunnableParser;
 import com.equo.comm.api.ObjectPayloadParser;
@@ -38,12 +38,12 @@ import com.equo.comm.api.StringPayloadParser;
 
 /**
  * Implements the handler actions for send and received websocket events using
- * equoWebSocketService instance.
+ * equoCommService instance.
  */
 @Component
 public class EquoEventHandler implements IEquoEventHandler {
 
-  private IEquoWebSocketService equoWebSocketService;
+  private IEquoCommService equoCommService;
 
   @Override
   public void send(String userEvent) {
@@ -52,32 +52,32 @@ public class EquoEventHandler implements IEquoEventHandler {
 
   @Override
   public void send(String userEvent, Object payload) {
-    equoWebSocketService.send(userEvent, payload);
+    equoCommService.send(userEvent, payload);
   }
 
   @Override
   public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
-    equoWebSocketService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
+    equoCommService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
   }
 
   @Override
   public void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable) {
-    equoWebSocketService.addEventHandler(eventId,
+    equoCommService.addEventHandler(eventId,
         new StringPayloadParser(stringPayloadEquoRunnable));
   }
 
   @Override
   public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
-    equoWebSocketService.addEventHandler(eventId,
+    equoCommService.addEventHandler(eventId,
         new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
   }
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
-  void setWebsocketService(IEquoWebSocketService equoWebSocketService) {
-    this.equoWebSocketService = equoWebSocketService;
+  void setWebsocketService(IEquoCommService equoWebSocketService) {
+    this.equoCommService = equoWebSocketService;
   }
 
-  void unsetWebsocketService(IEquoWebSocketService equoWebSocketService) {
-    this.equoWebSocketService = null;
+  void unsetWebsocketService(IEquoCommService equoWebSocketService) {
+    this.equoCommService = null;
   }
 }

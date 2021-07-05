@@ -54,7 +54,7 @@ import com.equo.application.model.EquoMenuItemSeparator;
 import com.equo.application.model.Menu;
 import com.equo.comm.api.IEquoEventHandler;
 import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.IEquoWebSocketService;
+import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.equo.logging.client.api.Logger;
 import com.equo.node.packages.tests.common.ChromiumSetup;
@@ -74,7 +74,7 @@ public class PackagesIntegrationTest {
 	protected Logger loggingServiceMock;
 
 	@Inject
-	protected IEquoWebSocketService websocketService;
+	protected IEquoCommService commService;
 
 	@Inject
 	protected IEquoEventHandler handler;
@@ -117,7 +117,7 @@ public class PackagesIntegrationTest {
 			data.grabExcessHorizontalSpace = true;
 			data.grabExcessVerticalSpace = true;
 			chromium.setLayoutData(data);
-			chromium.setUrl("http://testbundles/" + String.format("?equocommport=%d", websocketService.getPort()));
+			chromium.setUrl("http://testbundles/" + String.format("?equocommport=%d", commService.getPort()));
 			shell.open();
 			forceBrowserToStart();
 		});

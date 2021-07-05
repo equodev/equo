@@ -27,7 +27,7 @@ import com.equo.comm.api.IEquoRunnableParser;
 import com.google.gson.Gson;
 
 /**
- * Parser for ws event payload into an Equo runnable of String type.
+ * Parser for comm event payload into an Equo runnable of String type.
  */
 public class StringPayloadParser implements IEquoRunnableParser<String> {
 

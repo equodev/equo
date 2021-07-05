@@ -43,11 +43,11 @@ public class ParameterizedCommandHandler {
    * @param userEvent        event to respond once the command has been executed
    * @param mApplication     model of the current application
    * @param modelService     Eclipse model service
-   * @param equoEventHandler handler for websockets events.
+   * @param equoEventHandler handler for comm events.
    */
   @Execute
   public void execute(@Named("commandId") String commandId,
-      @Named(IConstants.EQUO_WEBSOCKET_USER_EMITTED_EVENT) String userEvent,
+      @Named(IConstants.EQUO_COMM_USER_EMITTED_EVENT) String userEvent,
       MApplication mApplication, EModelService modelService, IEquoEventHandler equoEventHandler) {
     Runnable runnable = (Runnable) mApplication.getTransientData().get(commandId);
 
