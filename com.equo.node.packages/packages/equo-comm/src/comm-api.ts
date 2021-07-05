@@ -55,7 +55,7 @@ export class EquoComm extends WebSocket {
     }
 
 
-    // Binds functions to the listeners for the websocket.
+    // Binds functions to the listeners for the comm.
     onopen = (event: any): void => {
         // For reasons I can't determine, onopen gets called twice
         // and the first time event.data is undefined.
@@ -76,10 +76,10 @@ export class EquoComm extends WebSocket {
     // hiding the implementation of the method within the 
     // function() block
 
-    private sendToWebSocketServer(actionId: any, browserParams?: any): void {
-        // Wait until the state of the socket is not ready and send the message when it is...
+    private sendToCommServer(actionId: any, browserParams?: any): void {
+        // Wait until the state of the comm is not ready and send the message when it is...
         let receiveMessage = this.receiveMessage;
-        this.waitForSocketConnection(this, () => {
+        this.waitForCommConnection(this, () => {
             let event = JSON.stringify({
                 action: actionId,
                 params: browserParams
@@ -90,16 +90,16 @@ export class EquoComm extends WebSocket {
     };
 
     // Make the function wait until the connection is made...
-    private waitForSocketConnection(socket: EquoComm, callback: Function): void {
+    private waitForCommConnection(comm: EquoComm, callback: Function): void {
         setTimeout(
             () => {
-                if (socket.readyState === socket.OPEN) {
+                if (comm.readyState === comm.OPEN) {
                     if (callback != null) {
                         callback();
                     }
                     return;
                 } else {
-                    socket.waitForSocketConnection(socket, callback);
+                    comm.waitForCommConnection(comm, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
     };
@@ -110,7 +110,7 @@ export class EquoComm extends WebSocket {
      * @returns {void}
      */
     public send(actionId: any, payload?: any): void {
-        this.sendToWebSocketServer(actionId, payload);
+        this.sendToCommServer(actionId, payload);
     };
     /**
      * Listens for an event with the given name.
@@ -130,7 +130,7 @@ export class EquoComm extends WebSocket {
  * This document specifies the usage methods for equo-comm.
  */
 export namespace EquoCommService {
-    const WebsocketServiceId: string = 'equo-comm';
+    const CommServiceId: string = 'equo-comm';
     const queryParams: URLSearchParams = new URLSearchParams(window.location.search);
     const portS: string | null = queryParams.get("equocommport");
     const port: number = portS === null ? 0 : +portS;
@@ -146,7 +146,7 @@ export namespace EquoCommService {
      */
     export function create(): EquoService<EquoComm> {
         return {
-            id: WebsocketServiceId,
+            id: CommServiceId,
             service: new EquoComm(port)
         };
     }
@@ -157,6 +157,6 @@ export namespace EquoCommService {
      * @returns {EquoComm}
      */
     export function get(): EquoComm {
-        return EquoService.get<EquoComm>(WebsocketServiceId, create);
+        return EquoService.get<EquoComm>(CommServiceId, create);
     }
 }

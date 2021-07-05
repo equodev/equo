@@ -24,7 +24,7 @@ window.equo = window.equo || {};
 
 (function (equo) {
 
-    let webSocket;
+    let comm;
     let userEventCallbacks = {};
 
     let receiveMessage = function(event){
@@ -47,19 +47,19 @@ window.equo = window.equo || {};
         }
     };
 
-    const openSocket = function() {
+    const openComm = function() {
         // Ensures only one connection is open at a time
-        if(webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED){
-            //equo.logDebug('WebSocket is already opened.');
+        if(comm !== undefined && comm.readyState !== WebSocket.CLOSED){
+            //equo.logDebug('comm is already opened.');
             return;
         }
         let wsPort = '%d';
-        // Create a new instance of the websocket
-        webSocket = new WebSocket('ws://127.0.0.1:' + wsPort);
+        // Create a new instance of the comm
+        comm = new WebSocket('ws://127.0.0.1:' + wsPort);
         /**
-         * Binds functions to the listeners for the websocket.
+         * Binds functions to the listeners for the comm.
          */
-        webSocket.onopen = function(event){
+        comm.onopen = function(event){
             // For reasons I can't determine, onopen gets called twice
             // and the first time event.data is undefined.
             // Leave a comment if you know the answer.
@@ -67,11 +67,11 @@ window.equo = window.equo || {};
                 return;
         };
 
-        webSocket.onmessage = function(event){
+        comm.onmessage = function(event){
             receiveMessage(event.data);
         };
 
-        webSocket.onclose = function(event){
+        comm.onclose = function(event){
         };
     }();
 
@@ -79,24 +79,24 @@ window.equo = window.equo || {};
     // hiding the implementation of the method within the 
     // function() block
 
-    equo.sendToWebSocketServer = function(action, browserParams) {
-        // Wait until the state of the socket is not ready and send the message when it is...
-        waitForSocketConnection(webSocket, function(){
+    equo.sendToCommServer = function(action, browserParams) {
+        // Wait until the state of the comm is not ready and send the message when it is...
+        waitForCommConnection(comm, function(){
             let event = JSON.stringify({
                 action: action,
                 params: browserParams
             });
-            webSocket.send(event);
+            comm.send(event);
             receiveMessage(event);
         });
     };
 
     equo.send = function(actionId) {
-        equo.sendToWebSocketServer(actionId);
+        equo.sendToCommServer(actionId);
     };
 
     equo.send = function(actionId, payload) {
-        equo.sendToWebSocketServer(actionId, payload);
+        equo.sendToCommServer(actionId, payload);
     };
 
     equo.on = function(userEvent, callback) {
@@ -104,10 +104,10 @@ window.equo = window.equo || {};
     };
 
     // Make the function wait until the connection is made...
-    let waitForSocketConnection = function(socket, callback){
+    let waitForCommConnection = function(comm, callback){
         setTimeout(
             function () {
-                if (socket.readyState === 1) {
+                if (comm.readyState === 1) {
                     if(callback != null){
                         callback();
                     }
@@ -115,9 +115,9 @@ window.equo = window.equo || {};
 
                 } else {
 		            try{
-		                openSocket();
+		                openComm();
                     }catch(err){}
-                    waitForSocketConnection(socket, callback);
+                    waitForCommConnection(comm, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...
     };

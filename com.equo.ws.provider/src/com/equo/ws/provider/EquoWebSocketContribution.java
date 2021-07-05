@@ -35,8 +35,8 @@ import com.equo.ws.api.IEquoWebSocketService;
 @Component
 public class EquoWebSocketContribution {
 
-  static final String WEBSOCKET_CONTRIBUTION_NAME = "equowebsocket";
-  private static final String EQUO_WEBSOCKET_JS_API = "equoWebsockets.js";
+  static final String WEBSOCKET_CONTRIBUTION_NAME = "equocomm";
+  private static final String EQUO_WEBSOCKET_JS_API = "equoComm.js";
 
   private EquoContributionBuilder builder;
 
