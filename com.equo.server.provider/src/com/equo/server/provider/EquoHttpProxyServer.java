@@ -115,6 +115,7 @@ public class EquoHttpProxyServer implements IEquoServer {
         "--proxy-pac-url=data:application/x-javascript-config\\;base64," + base64PacFile
             + ";--allow-running-insecure-content;--allow-file-access-from-files;"
             + "--disable-web-security;--enable-widevine-cdm;--proxy-bypass-list=<-loopback>;"
+            + "--enable-media-stream;"
             + "--ignore-certificate-errors");
 
     DefaultHostResolver serverResolver = new DefaultHostResolver() {
