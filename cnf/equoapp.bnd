@@ -79,8 +79,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     launch.storage.dir=.rt/cfg,\
     osgi.instance.area.default=.rt/,\
     com.apple.mrj.application.apple.menu.about.name=${def;appName},\
-    org.osgi.framework.bootdelegation=org.w3c.*
-    #org.eclipse.swt.chromium.remote-debugging-port=8888
+    org.osgi.framework.bootdelegation=org.w3c.*,\
+	org.eclipse.swt.chromium.remote-debugging-port=${def;chromium.remote-debugging-port}
     #swt.chromium.debug=true
 
 -runproperties.app: \
