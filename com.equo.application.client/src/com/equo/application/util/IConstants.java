@@ -37,7 +37,7 @@ public interface IConstants {
 
   public static final String MAIN_URL_KEY = "mainUrl";
 
-  public static final String MAIN_URL_WS_PORT = "equoWsPort";
+  public static final String MAIN_URL_WS_PORT = "equoCommPort";
 
   public static final String EQUO_HANDLER_PREFIX = "com.equo.handler";
 

@@ -68,7 +68,7 @@ public class SinglePagePart {
       Composite composite = new Composite(parent, SWT.NONE);
       composite.setLayout(GridLayoutFactory.fillDefaults().create());
       browser = new Browser(composite, SWT.NONE);
-      browser.setUrl(equoAppUrl + String.format("?equowsport=%s", equoWsPort));
+      browser.setUrl(equoAppUrl + String.format("?equocommport=%s", equoWsPort));
       browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
   }

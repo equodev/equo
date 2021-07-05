@@ -22,11 +22,11 @@
 
 import { EquoService } from '@equo/service-manager'
 
-export class EquoWebSocket extends WebSocket {
+export class EquoComm extends WebSocket {
 
     private userEventCallbacks: any = {};
     /**
-     * @name EquoWebSocket
+     * @name EquoComm
      * @extends WebSocket
      * @class
      */
@@ -90,7 +90,7 @@ export class EquoWebSocket extends WebSocket {
     };
 
     // Make the function wait until the connection is made...
-    private waitForSocketConnection(socket: EquoWebSocket, callback: Function): void {
+    private waitForSocketConnection(socket: EquoComm, callback: Function): void {
         setTimeout(
             () => {
                 if (socket.readyState === socket.OPEN) {
@@ -125,38 +125,38 @@ export class EquoWebSocket extends WebSocket {
 }
 /** 
  * @namespace
- * @description Websocket API for usage within the Equo Framework.
+ * @description Comm API for usage within the Equo Framework.
  * 
- * This document specifies the usage methods for equo-websocket.
+ * This document specifies the usage methods for equo-comm.
  */
-export namespace EquoWebSocketService {
-    const WebsocketServiceId: string = 'equo-websocket';
+export namespace EquoCommService {
+    const WebsocketServiceId: string = 'equo-comm';
     const queryParams: URLSearchParams = new URLSearchParams(window.location.search);
-    const portS: string | null = queryParams.get("equowsport");
+    const portS: string | null = queryParams.get("equocommport");
     const port: number = portS === null ? 0 : +portS;
 
     if (port === 0) {
-        throw new Error("WebSocket port could not be found.");
+        throw new Error("Comm port could not be found.");
     }
     /**
-     * Creates an EquoWebSocketService instance.
+     * Creates an EquoCommService instance.
      * @function
      * @name create
-     * @returns {EquoService<EquoWebSocket>}
+     * @returns {EquoService<EquoComm>}
      */
-    export function create(): EquoService<EquoWebSocket> {
+    export function create(): EquoService<EquoComm> {
         return {
             id: WebsocketServiceId,
-            service: new EquoWebSocket(port)
+            service: new EquoComm(port)
         };
     }
     /**
-     * Obtains existing EquoWebSocket service instance or else create a new one.
+     * Obtains existing EquoComm service instance or else create a new one.
      * @function
      * @name get
-     * @returns {EquoWebSocket}
+     * @returns {EquoComm}
      */
-    export function get(): EquoWebSocket {
-        return EquoService.get<EquoWebSocket>(WebsocketServiceId, create);
+    export function get(): EquoComm {
+        return EquoService.get<EquoComm>(WebsocketServiceId, create);
     }
 }

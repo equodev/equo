@@ -117,7 +117,7 @@ public class PackagesIntegrationTest {
 			data.grabExcessHorizontalSpace = true;
 			data.grabExcessVerticalSpace = true;
 			chromium.setLayoutData(data);
-			chromium.setUrl("http://testbundles/" + String.format("?equowsport=%d", websocketService.getPort()));
+			chromium.setUrl("http://testbundles/" + String.format("?equocommport=%d", websocketService.getPort()));
 			shell.open();
 			forceBrowserToStart();
 		});
