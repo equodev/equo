@@ -52,15 +52,15 @@ import com.equo.application.model.CustomDeserializer;
 import com.equo.application.model.EquoMenuItem;
 import com.equo.application.model.EquoMenuItemSeparator;
 import com.equo.application.model.Menu;
+import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.IEquoRunnable;
+import com.equo.comm.api.IEquoCommService;
+import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.equo.logging.client.api.Logger;
 import com.equo.node.packages.tests.common.ChromiumSetup;
 import com.equo.node.packages.tests.mocks.LoggingServiceMock;
 import com.equo.server.api.IEquoServer;
 import com.equo.testing.common.util.EquoRule;
-import com.equo.ws.api.IEquoEventHandler;
-import com.equo.ws.api.IEquoRunnable;
-import com.equo.ws.api.IEquoWebSocketService;
-import com.equo.ws.api.JsonPayloadEquoRunnable;
 
 public class PackagesIntegrationTest {
 
@@ -74,7 +74,7 @@ public class PackagesIntegrationTest {
 	protected Logger loggingServiceMock;
 
 	@Inject
-	protected IEquoWebSocketService websocketService;
+	protected IEquoCommService commService;
 
 	@Inject
 	protected IEquoEventHandler handler;
@@ -117,7 +117,7 @@ public class PackagesIntegrationTest {
 			data.grabExcessHorizontalSpace = true;
 			data.grabExcessVerticalSpace = true;
 			chromium.setLayoutData(data);
-			chromium.setUrl("http://testbundles/" + String.format("?equowsport=%d", websocketService.getPort()));
+			chromium.setUrl("http://testbundles/" + String.format("?equocommport=%d", commService.getPort()));
 			shell.open();
 			forceBrowserToStart();
 		});

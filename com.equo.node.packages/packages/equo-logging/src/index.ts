@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-import { EquoWebSocket, EquoWebSocketService } from '@equo/websocket';
+import { EquoComm, EquoCommService } from '@equo/comm';
 
 export interface LogPayload {
 	message: string;
@@ -32,7 +32,7 @@ export interface LogPayload {
  * Configure logs levels using ***equo-logging***
  */
 export namespace EquoLoggingService {
-	var websocket: EquoWebSocket = EquoWebSocketService.get();
+	var comm: EquoComm = EquoCommService.get();
 
 	/**
 	 * @constant
@@ -89,11 +89,11 @@ export namespace EquoLoggingService {
 			message: message,
 			type: type
 		};
-		websocket.send('loggingEvent', payload);
+		comm.send('loggingEvent', payload);
 	}
 
 	function returnResponse(callback: Function) {
-		websocket.on('loggingResponseEvent', callback);
+		comm.on('loggingResponseEvent', callback);
 	}
 
 	/**

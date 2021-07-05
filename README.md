@@ -24,7 +24,7 @@ The core provides:
 * App structure and a fluent API to build an app
 * Contributions support for multi-module apps to contribute resources into the app (as css or js scripts)
 * Equo server and proxy to add custom resources into the app
-* Equo Websockets to establish a real-time two-way communication between Java and Javascript
+* Equo Comm to establish a real-time two-way communication between Java and Javascript
 
 ## Getting Started
 

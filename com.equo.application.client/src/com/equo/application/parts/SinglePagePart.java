@@ -22,8 +22,8 @@
 
 package com.equo.application.parts;
 
+import static com.equo.application.util.IConstants.MAIN_URL_COMM_PORT;
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
-import static com.equo.application.util.IConstants.MAIN_URL_WS_PORT;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -63,12 +63,12 @@ public class SinglePagePart {
   @PostConstruct
   public void createControls(Composite parent) {
     String equoAppUrl = thisPart.getProperties().get(MAIN_URL_KEY);
-    String equoWsPort = thisPart.getProperties().get(MAIN_URL_WS_PORT);
+    String equoWsPort = thisPart.getProperties().get(MAIN_URL_COMM_PORT);
     if (equoAppUrl != null) {
       Composite composite = new Composite(parent, SWT.NONE);
       composite.setLayout(GridLayoutFactory.fillDefaults().create());
       browser = new Browser(composite, SWT.NONE);
-      browser.setUrl(equoAppUrl + String.format("?equowsport=%s", equoWsPort));
+      browser.setUrl(equoAppUrl + String.format("?equocommport=%s", equoWsPort));
       browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
   }

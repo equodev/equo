@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.equo.application.handlers.BrowserParams;
-import com.equo.ws.api.IEquoEventHandler;
+import com.equo.comm.api.IEquoEventHandler;
 import com.google.gson.Gson;
 
 /**

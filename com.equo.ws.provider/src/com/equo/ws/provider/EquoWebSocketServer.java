@@ -32,12 +32,12 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.equo.comm.api.IEquoRunnable;
+import com.equo.comm.api.IEquoRunnableParser;
+import com.equo.comm.api.NamedActionMessage;
+import com.equo.comm.api.actions.IActionHandler;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
-import com.equo.ws.api.IEquoRunnable;
-import com.equo.ws.api.IEquoRunnableParser;
-import com.equo.ws.api.NamedActionMessage;
-import com.equo.ws.api.actions.IActionHandler;
 import com.google.gson.Gson;
 
 class EquoWebSocketServer extends WebSocketServer {
