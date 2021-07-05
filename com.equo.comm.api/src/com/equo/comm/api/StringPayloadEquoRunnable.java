@@ -20,21 +20,16 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
+
+import com.equo.comm.api.IEquoRunnable;
 
 /**
- * Websocket message that executes an action.
+ * Calls the declared run method when the payload is a String object.
  */
-public abstract class ActionMessage {
+public interface StringPayloadEquoRunnable extends IEquoRunnable<String> {
 
-  private String action;
-
-  public ActionMessage(String action) {
-    this.action = action;
-  }
-
-  public String getAction() {
-    return action;
-  }
+  @Override
+  public void run(String payload);
 
 }

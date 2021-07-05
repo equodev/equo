@@ -20,44 +20,33 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
+
+import com.equo.comm.api.IEquoRunnableParser;
 
 /**
- * Interface for event handlers. Allows to listen and send events.
+ * Interface of the websocket service.
  */
-public interface IEquoEventHandler {
+public interface IEquoWebSocketService {
   /**
-   * Sends a null data to later be transmitted using the userEvent as ID.
-   * @param userEvent the event ID.
+   * Adds an event handler. Asings a instance of IEquoRunnableParser<?> to
+   * determinated action.
+   * @param actionId           the action ID.
+   * @param equoRunnableParser the parser instance.
    */
-  void send(String userEvent);
+  public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser);
 
   /**
    * Sends the specified data to later be transmitted using the userEvent as ID.
    * @param userEvent the event ID.
    * @param payload   the data to send.
    */
-  void send(String userEvent, Object payload);
+  public void send(String userEvent, Object payload);
 
   /**
-   * Defines a custom JsonPayloadEquoRunnable for an specific event ID.
-   * @param eventId                 the id event.
-   * @param jsonPayloadEquoRunnable the runnable.
+   * Gets the port number that this server listens on.
+   * @return the port number.
    */
-  void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable);
-
-  /**
-   * Defines a custom StringPayloadEquoRunnable for an specific event ID.
-   * @param eventId                   the id event.
-   * @param stringPayloadEquoRunnable the runnable.
-   */
-  void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable);
-
-  /**
-   * Defines a custom objectPayloadEquoRunnable for an specific event ID.
-   * @param eventId                   the event ID.
-   * @param objectPayloadEquoRunnable the runnable.
-   */
-  <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable);
+  public int getPort();
 
 }

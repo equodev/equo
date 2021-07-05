@@ -20,23 +20,38 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
+
+import com.equo.comm.api.IEquoRunnable;
+import com.equo.comm.api.IEquoRunnableParser;
+import com.google.gson.Gson;
 
 /**
- * Parser from ws event payload into an Equo Runnable.
+ * Parser for ws event payload into an Equo runnable of String type.
  */
-public interface IEquoRunnableParser<T> {
-  /**
-   * Parses the payload data.
-   * @param  payload the payload data.
-   * @return         the parsed data to an object of type T.
-   */
-  public T parsePayload(Object payload);
+public class StringPayloadParser implements IEquoRunnableParser<String> {
+
+  private IEquoRunnable<String> stringPayloadEquoRunnable;
+  private Gson gson;
 
   /**
-   * Gets the instance type of the parser from an equo runnable.
-   * @return the instance IEquoRunnable.
+   * Creates the payload parser for object of type String.
+   * @param stringPayloadEquoRunnable the runnable of type String.
    */
-  public IEquoRunnable<T> getEquoRunnable();
+  public StringPayloadParser(IEquoRunnable<String> stringPayloadEquoRunnable) {
+    this.stringPayloadEquoRunnable = stringPayloadEquoRunnable;
+    this.gson = new Gson();
+  }
+
+  @Override
+  public String parsePayload(Object payload) {
+    String result = gson.toJson(payload);
+    return result;
+  }
+
+  @Override
+  public IEquoRunnable<String> getEquoRunnable() {
+    return stringPayloadEquoRunnable;
+  }
 
 }

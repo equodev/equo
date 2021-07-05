@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
 
 import java.util.Optional;
 
@@ -28,6 +28,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+
+import com.equo.comm.api.IEquoEventHandler;
 
 /**
  * A helper class to obtain an EquoEventHandler instance.

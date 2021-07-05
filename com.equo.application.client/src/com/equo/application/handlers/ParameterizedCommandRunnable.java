@@ -31,7 +31,7 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import com.equo.application.util.IConstants;
-import com.equo.ws.api.StringPayloadEquoRunnable;
+import com.equo.comm.api.StringPayloadEquoRunnable;
 
 /**
  * Runnable to be executed when its associated command is called.

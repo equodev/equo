@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api.lambda;
+package com.equo.comm.api.lambda;
 
 import java.util.HashMap;
 import java.util.Map;

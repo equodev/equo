@@ -20,16 +20,25 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api.actions;
+package com.equo.comm.api;
 
-import com.equo.ws.api.lambda.Newable;
+import com.equo.comm.api.IEquoRunnable;
 
 /**
- * Interface for callables with a ws event payload as parameters.
+ * Parser from ws event payload into an Equo Runnable.
  */
-@FunctionalInterface
-public interface IEquoCallable<T> extends Newable<T> {
+public interface IEquoRunnableParser<T> {
+  /**
+   * Parses the payload data.
+   * @param  payload the payload data.
+   * @return         the parsed data to an object of type T.
+   */
+  public T parsePayload(Object payload);
 
-  public Object call(T payload);
+  /**
+   * Gets the instance type of the parser from an equo runnable.
+   * @return the instance IEquoRunnable.
+   */
+  public IEquoRunnable<T> getEquoRunnable();
 
 }

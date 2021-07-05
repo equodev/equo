@@ -30,7 +30,7 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.swt.widgets.Display;
 
 import com.equo.application.util.IConstants;
-import com.equo.ws.api.IEquoEventHandler;
+import com.equo.comm.api.IEquoEventHandler;
 
 /**
  * Handler for parameterized commands.

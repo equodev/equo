@@ -20,19 +20,17 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api.lambda;
+package com.equo.comm.api;
 
-import java.util.function.Consumer;
+import com.equo.comm.api.IEquoRunnable;
+import com.google.gson.JsonObject;
 
 /**
- * Interface that allows to obtain the class of the data type with which it was
- * parameterized (example: allows to obtain the {@code Runnable} class from an
- * instance of {@code TypeReference<Runnable>}).
+ * Calls the declared run method when the payload is a JsonObject.
  */
-public interface TypeReference<T> extends Newable<T> {
-  T typeIs(T t);
+public interface JsonPayloadEquoRunnable extends IEquoRunnable<JsonObject> {
 
-  default Consumer<T> consumer() {
-    return this::typeIs;
-  }
+  @Override
+  public void run(JsonObject payload);
+
 }

@@ -20,20 +20,23 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
 
-import com.equo.ws.api.lambda.Newable;
+import com.equo.comm.api.ActionMessage;
 
 /**
- * Calls the declared run method when the payload is a Object of T type.
- * @param <T> the type of the payload.
+ * An action message with parameters.
  */
-@FunctionalInterface
-public interface IEquoRunnable<T> extends Newable<T> {
-  /**
-   * Executes the defined instructions when it receives the message from
-   * websocket.
-   * @param payload the data received from message from websocket.
-   */
-  public void run(T payload);
+public class NamedActionMessage extends ActionMessage {
+
+  private Object params;
+
+  public NamedActionMessage(String action, Object params) {
+    super(action);
+    this.params = params;
+  }
+
+  public Object getParams() {
+    return params;
+  }
 }

@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api.actions;
+package com.equo.comm.api.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,8 +29,10 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.equo.comm.api.annotations.EventName;
 import com.equo.logging.client.api.LoggerFactory;
-import com.equo.ws.api.annotations.EventName;
+import com.equo.comm.api.actions.IActionHandler;
+import com.equo.comm.api.actions.IEquoCallable;
 
 /**
  * <p>
@@ -40,7 +42,7 @@ import com.equo.ws.api.annotations.EventName;
  * <p>
  * By default, the {@link #call(Object) call} method will be called on an event
  * named with the class name in lowercase. This can be changed using
- * {@link com.equo.ws.api.annotations.EventName} annotation.
+ * {@link com.equo.comm.api.annotations.EventName} annotation.
  * </p>
  */
 public interface IActionHandler<T> extends IEquoCallable<T> {
@@ -59,7 +61,7 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
 
   /**
    * Gets the event name associated to the current class. If there is no
-   * {@link com.equo.ws.api.annotations.EventName} annotation, it is by default
+   * {@link com.equo.comm.api.annotations.EventName} annotation, it is by default
    * the class name in lowercase.
    */
   public default String getEventName() {
@@ -76,7 +78,7 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
 
   /**
    * Gets all the extra event listeners the current class may have. That is, all
-   * other methods annotated with {@link com.equo.ws.api.annotations.EventName
+   * other methods annotated with {@link com.equo.comm.api.annotations.EventName
    * EventName}.
    * @return a map with event name as key, and an action handler executing the
    *         annotated method as value.

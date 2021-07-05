@@ -20,16 +20,21 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
-
-import com.google.gson.JsonObject;
+package com.equo.comm.api;
 
 /**
- * Calls the declared run method when the payload is a JsonObject.
+ * Websocket message that executes an action.
  */
-public interface JsonPayloadEquoRunnable extends IEquoRunnable<JsonObject> {
+public abstract class ActionMessage {
 
-  @Override
-  public void run(JsonObject payload);
+  private String action;
+
+  public ActionMessage(String action) {
+    this.action = action;
+  }
+
+  public String getAction() {
+    return action;
+  }
 
 }

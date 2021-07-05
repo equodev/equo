@@ -26,8 +26,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.equo.comm.api.IEquoWebSocketService;
 import com.equo.contribution.api.EquoContributionBuilder;
-import com.equo.ws.api.IEquoWebSocketService;
 
 /**
  * Websocket contribution, adding websocket javascript API into the app.

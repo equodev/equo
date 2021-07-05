@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api.lambda;
+package com.equo.comm.api.lambda;
 
 /**
  * Interface for all the Equo payload handlers that can be created with lambda

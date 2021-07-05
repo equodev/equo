@@ -20,41 +20,42 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api;
 
+import com.equo.comm.api.IEquoRunnable;
+import com.equo.comm.api.IEquoRunnableParser;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
- * Parser for ws event payload into an generic Equo runnable.
+ * Parser for ws event payload into an Equo runnable of JsonObject type.
  */
-public class ObjectPayloadParser<T> implements IEquoRunnableParser<T> {
+public class JsonRunnableParser implements IEquoRunnableParser<JsonObject> {
 
-  private IEquoRunnable<T> objectPayloadEquoRunnable;
+  private JsonParser jsonParser;
+  private IEquoRunnable<JsonObject> jsonPayloadEquoRunnable;
   private Gson gson;
 
   /**
-   * Creates the payload parser for object of type T.
-   * @param objectPayloadEquoRunnable the runnable of type T.
+   * Creates the payload parser for object of type Json.
+   * @param jsonPayloadEquoRunnable the runnable of type Json.
    */
-  public ObjectPayloadParser(IEquoRunnable<T> objectPayloadEquoRunnable) {
-    this.objectPayloadEquoRunnable = objectPayloadEquoRunnable;
+  public JsonRunnableParser(IEquoRunnable<JsonObject> jsonPayloadEquoRunnable) {
+    this.jsonPayloadEquoRunnable = jsonPayloadEquoRunnable;
+    this.jsonParser = new JsonParser();
     this.gson = new Gson();
   }
 
   @Override
-  public T parsePayload(Object payload) {
-    if (payload == null) {
-      return null;
-    }
+  public JsonObject parsePayload(Object payload) {
     String jsonString = gson.toJson(payload);
-    Class<T> type = getEquoRunnable().type();
-    T fromJson = gson.fromJson(jsonString, type);
-    return fromJson;
+    return jsonParser.parse(jsonString).getAsJsonObject();
   }
 
   @Override
-  public IEquoRunnable<T> getEquoRunnable() {
-    return objectPayloadEquoRunnable;
+  public IEquoRunnable<JsonObject> getEquoRunnable() {
+    return jsonPayloadEquoRunnable;
   }
 
 }

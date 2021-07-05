@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.${tstamp}
     org.eclipse.osgi.source,\
     osgi.cmpn
 Export-Package: \
-    com.equo.ws.api,\
-    com.equo.ws.api.annotations,\
-    com.equo.ws.api.lambda,\
-    com.equo.ws.api.actions
+	com.equo.comm.api,\
+	com.equo.comm.api.annotations,\
+	com.equo.comm.api.lambda,\
+	com.equo.comm.api.actions

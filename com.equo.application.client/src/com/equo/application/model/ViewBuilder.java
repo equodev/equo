@@ -42,11 +42,11 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
 import com.equo.application.util.IConstants;
+import com.equo.comm.api.IEquoWebSocketService;
 import com.equo.contribution.api.EquoContributionBuilder;
 import com.equo.contribution.api.IEquoContributionManager;
 import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
 import com.equo.server.api.IEquoServer;
-import com.equo.ws.api.IEquoWebSocketService;
 
 /**
  * Builder for Equo apps view.

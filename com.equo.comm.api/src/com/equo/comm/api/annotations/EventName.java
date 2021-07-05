@@ -20,31 +20,33 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.api;
+package com.equo.comm.api.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Interface of the websocket service.
+ * <p>
+ * Annotation to define the name of the event to be listened to in the annotated
+ * class/method.
+ * </p>
+ * <p>
+ * If a class implementing {@link com.equo.comm.api.actions.IActionHandler} is
+ * annotated, then the
+ * {@link com.equo.comm.api.actions.IActionHandler#call(Object) call} method will
+ * be executed when this event is sent.
+ * </p>
+ * <p>
+ * If a method of a class implementing
+ * {@link com.equo.comm.api.actions.IActionHandler} is annotated, then that method
+ * will be executed when this event is sent.
+ * </p>
  */
-public interface IEquoWebSocketService {
-  /**
-   * Adds an event handler. Asings a instance of IEquoRunnableParser<?> to
-   * determinated action.
-   * @param actionId           the action ID.
-   * @param equoRunnableParser the parser instance.
-   */
-  public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser);
-
-  /**
-   * Sends the specified data to later be transmitted using the userEvent as ID.
-   * @param userEvent the event ID.
-   * @param payload   the data to send.
-   */
-  public void send(String userEvent, Object payload);
-
-  /**
-   * Gets the port number that this server listens on.
-   * @return the port number.
-   */
-  public int getPort();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface EventName {
+  /** Gets the event name. */
+  String value();
 }

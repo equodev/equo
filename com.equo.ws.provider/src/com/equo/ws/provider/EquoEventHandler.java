@@ -27,14 +27,14 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
-import com.equo.ws.api.IEquoEventHandler;
-import com.equo.ws.api.IEquoRunnable;
-import com.equo.ws.api.IEquoWebSocketService;
-import com.equo.ws.api.JsonPayloadEquoRunnable;
-import com.equo.ws.api.JsonRunnableParser;
-import com.equo.ws.api.ObjectPayloadParser;
-import com.equo.ws.api.StringPayloadEquoRunnable;
-import com.equo.ws.api.StringPayloadParser;
+import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.IEquoRunnable;
+import com.equo.comm.api.IEquoWebSocketService;
+import com.equo.comm.api.JsonPayloadEquoRunnable;
+import com.equo.comm.api.JsonRunnableParser;
+import com.equo.comm.api.ObjectPayloadParser;
+import com.equo.comm.api.StringPayloadEquoRunnable;
+import com.equo.comm.api.StringPayloadParser;
 
 /**
  * Implements the handler actions for send and received websocket events using

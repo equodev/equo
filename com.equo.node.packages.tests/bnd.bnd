@@ -25,7 +25,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.equo.logging.client.api;version=latest,\
     com.equo.server.api;version=latest,\
     com.equo.testing.common;version=latest,\
-    com.equo.ws.api;version=latest,\
+    com.equo.comm.api;version=latest,\
     org.eclipse.e4.ui.model.workbench,\
     org.eclipse.e4.ui.workbench.renderers.swt,\
     org.eclipse.e4.ui.workbench,\
@@ -62,7 +62,7 @@ fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${cef.fragment}
     com.equo.contribution.provider;version=latest,\
     com.equo.server.api;version=latest,\
     com.equo.server.provider;version=latest,\
-    com.equo.ws.api;version=latest,\
+    com.equo.comm.api;version=latest,\
     com.equo.ws.provider;version=latest,\
     com.equo.analytics.client.api;version=latest,\
     com.equo.logging.client.api;version=latest,\
