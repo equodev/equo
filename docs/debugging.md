@@ -1,3 +1,30 @@
+## Enable Chromium logs and debug
+
+To be able to debug the web of an Equo app, you have to run the app with the `chromium.remote-debugging-port` property, specifying the port for remote debugging. This will also print Chromium logs in the console.
+
+The property can be configured in the pom.xml, in `<properties></properties>` section. Just add it like this:
+```
+<properties>
+    <equo.version>1.0.0</equo.version>
+    <chromium.remote-debugging-port>8888</chromium.remote-debugging-port>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+</properties>
+```
+
+Now when you run your app, open a browser in `localhost:8888` URL (or whatever port you have set up) to open devtools UI for your app.
+
+In an advanced app (Bnd) this property is just added in the `bnd.bnd` file of your app like this:
+```
+-include: https://dl.equoplatform.com/framework/1.0.0/equoapp.bnd
+
+Bundle-Version: ${version}.${tstamp}
+Private-Package: com.equo.testapp
+
+appName=TestApp
+chromium.remote-debugging-port=8888
+```
+
 ## Remote debug
 
 Remote debug may be useful to debug the framework when running an app in another workspace

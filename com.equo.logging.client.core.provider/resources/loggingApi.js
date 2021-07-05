@@ -20,38 +20,6 @@
 **
 ****************************************************************************/
 
-let oldOnError = window.onerror;
-let console=(function(oldCons){
-    return {
-        log: function(text){
-            oldCons.log(text);
-            equo.logDebug(text);
-        },
-        info: function (text) {
-            oldCons.info(text);
-            equo.logInfo(text);
-        },
-        warn: function (text) {
-            oldCons.warn(text);
-            equo.logWarn(text);
-        },
-        error: function (text) {
-            oldCons.error(text);
-            equo.logError(text);
-        }
-    };
-}(window.console));
-
-
-window.console = console;
-window.onerror = function (msg, url, lineNo, columnNo, error) {
-	equo.error(msg, url, lineNo, columnNo, error);
-	if (oldOnError) {
-		return oldOnError(msg, url, lineNo, columnNo, error);
-	}
-	return false;
-}
-
 window.equo = window.equo || {};
 
 (function(equo) {
