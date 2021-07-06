@@ -106,8 +106,8 @@ export class EquoComm {
                     }
                     return;
                 } else {
-		            try{
-		                this.openComm();
+                    try{
+                        this.openComm();
                     }catch(err){}
                     comm.waitForCommConnection(comm, callback);
                 }
