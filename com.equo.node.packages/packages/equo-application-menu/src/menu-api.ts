@@ -184,7 +184,7 @@ export class MenuBuilder{
   }
   /**
    * @callback setApplicationMenuCallback
-   * @param {EquoComm} ws - EquoComm instance.
+   * @param {EquoComm} comm - EquoComm instance.
    * @param {JSON} json - Json menu.
    */
   /**
@@ -192,7 +192,7 @@ export class MenuBuilder{
    * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
-  public setApplicationMenu(funct?: (ws: EquoComm, json :JSON) => void): void {
+  public setApplicationMenu(funct?: (comm: EquoComm, json :JSON) => void): void {
     let equoMenuModel = new EquoMenuModel(this.menus);
     this.setApplicationMenuWithJson(JSON.parse(JSON.stringify(equoMenuModel)));
 
@@ -463,7 +463,7 @@ export class MenuItemBuilder {
    * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
-  public setApplicationMenu(funct?: (ws: EquoComm, json :JSON) => void):void {
+  public setApplicationMenu(funct?: (comm: EquoComm, json :JSON) => void):void {
     this.linker.getMenuBuilder().setApplicationMenu(funct);
   }
 }

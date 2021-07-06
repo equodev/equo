@@ -53,9 +53,9 @@ window.equo = window.equo || {};
             //equo.logDebug('comm is already opened.');
             return;
         }
-        let wsPort = '%d';
+        let commPort = '%d';
         // Create a new instance of the comm
-        comm = new WebSocket('ws://127.0.0.1:' + wsPort);
+        comm = new WebSocket('ws://127.0.0.1:' + commPort);
         /**
          * Binds functions to the listeners for the comm.
          */

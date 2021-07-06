@@ -40,7 +40,7 @@ func is a optional callback for customise message after building the menu.
 
 ##### Example
 ```
-setApplicationMenu((ws: EquoComm, json: JSON) => { ws.send("_userAction", json); });    
+setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_userAction", json); });    
 ```
 
 ### appendMenuItem( Path, IndexToAddNewMenu, NameNewMenuItem )
