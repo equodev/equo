@@ -29,12 +29,12 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
+import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.equo.logging.client.api.Level;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerConfiguration;
 import com.equo.logging.client.api.LoggerFactory;
-import com.equo.ws.api.IEquoEventHandler;
-import com.equo.ws.api.JsonPayloadEquoRunnable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

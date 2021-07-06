@@ -20,14 +20,14 @@
 **
 ****************************************************************************/
 
-import { EquoWebSocket, EquoWebSocketService } from '@equo/websocket';
+import { EquoComm, EquoCommService } from '@equo/comm';
 /**
  * @namespace
  * @description Equo Framework Javascript API.
  * Use the ***framework*** package for basic browser management.
  */
 export namespace EquoFramework {
-    var websocket: EquoWebSocket = EquoWebSocketService.get();
+    var comm: EquoComm = EquoCommService.get();
     /**
      * Initializes and opens a browser.
      * @function
@@ -36,7 +36,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function openBrowser(browserParams: BrowserParams): void {
-        websocket.send('openBrowser', browserParams);
+        comm.send('openBrowser', browserParams);
     };
     /**
      * Updates a browser.
@@ -46,7 +46,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function updateBrowser(browserParams: BrowserParams): void {
-        websocket.send('updateBrowser', browserParams);
+        comm.send('updateBrowser', browserParams);
     };
 
     /**
@@ -62,12 +62,12 @@ export namespace EquoFramework {
             shortcut: shortcut,
 		    event: "_exec_shotcut_" + shortcut
         }
-        websocket.on(payload.event, callback);
-        websocket.send('_addShortcut', payload);
+        comm.on(payload.event, callback);
+        comm.send('_addShortcut', payload);
     };
 
     /**
-     * Adds a global shortcut binded to a websocket event
+     * Adds a global shortcut binded to a comm event
      * @function
      * @name addShortcutToEvent
      * @param {string} shortcut 
@@ -79,7 +79,7 @@ export namespace EquoFramework {
             shortcut: shortcut,
 		    event: event
         }
-        websocket.send('_addShortcut', payload);
+        comm.send('_addShortcut', payload);
     };
 
     /**
@@ -93,7 +93,7 @@ export namespace EquoFramework {
 		let payload = {
             shortcut: shortcut
         }
-        websocket.send('_removeShortcut', payload);
+        comm.send('_removeShortcut', payload);
     };
 }
 

@@ -21,7 +21,7 @@
 ****************************************************************************/
 
 
-import { EquoWebSocketService, EquoWebSocket } from '@equo/websocket'
+import { EquoCommService, EquoComm } from '@equo/comm'
 
 export class Linker{
 
@@ -96,7 +96,7 @@ export class MenuItemSeparatorBuilder{
 }
 
 export class MenuBuilder{
-  private webSocket= EquoWebSocketService.get();
+  private comm = EquoCommService.get();
   protected menus = new Array<EquoMenu>();
   private linker: Linker;
   private indexToAddItem!: number;
@@ -170,7 +170,7 @@ export class MenuBuilder{
   }
 
   private bindEquoFunctions(): void {
-    this.webSocket.on("_doGetMenu", (values: JSON) => {
+    this.comm.on("_doGetMenu", (values: JSON) => {
       let params = JSON.parse(JSON.stringify(values));
 
       let equoMenuModel = new EquoMenuModel(new Array<EquoMenu>());
@@ -180,11 +180,11 @@ export class MenuBuilder{
       this.linker.execBuildWithCurrentModel();
 
     })
-    this.webSocket.send("_getMenu", {});
+    this.comm.send("_getMenu", {});
   }
   /**
    * @callback setApplicationMenuCallback
-   * @param {EquoWebSocket} ws - EquoWebSocket instance.
+   * @param {EquoComm} ws - EquoComm instance.
    * @param {JSON} json - Json menu.
    */
   /**
@@ -192,12 +192,12 @@ export class MenuBuilder{
    * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
-  public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void): void {
+  public setApplicationMenu(funct?: (ws: EquoComm, json :JSON) => void): void {
     let equoMenuModel = new EquoMenuModel(this.menus);
     this.setApplicationMenuWithJson(JSON.parse(JSON.stringify(equoMenuModel)));
 
     if(funct){
-      funct(this.webSocket, JSON.parse(JSON.stringify(equoMenuModel)));
+      funct(this.comm, JSON.parse(JSON.stringify(equoMenuModel)));
     }
   }
   /**
@@ -206,7 +206,7 @@ export class MenuBuilder{
    * @returns {void}
    */
   public setApplicationMenuWithJson(json: JSON): void{
-    this.webSocket.send("_setMenu", json);
+    this.comm.send("_setMenu", json);
   }
   /**
    * Gets the all Equo menus from the under construction Menu.
@@ -463,7 +463,7 @@ export class MenuItemBuilder {
    * @param {setApplicationMenuCallback} [callback] - Optional
    * @returns {void}
    */
-  public setApplicationMenu(funct?: (ws: EquoWebSocket, json :JSON) => void):void {
+  public setApplicationMenu(funct?: (ws: EquoComm, json :JSON) => void):void {
     this.linker.getMenuBuilder().setApplicationMenu(funct);
   }
 }
@@ -534,7 +534,7 @@ export class EquoMenu{
    * @returns {void}
    */
   public setRunnable(runnable: () => void){
-    EquoWebSocketService.get().on(this.id, runnable);
+    EquoCommService.get().on(this.id, runnable);
     this.setAction(this.id);
   }
   /**

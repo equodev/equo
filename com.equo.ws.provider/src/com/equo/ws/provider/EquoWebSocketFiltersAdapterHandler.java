@@ -24,9 +24,9 @@ package com.equo.ws.provider;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
+import com.equo.comm.api.IEquoCommService;
 import com.equo.contribution.api.handler.IFiltersAdapterHandler;
 import com.equo.contribution.api.resolvers.EquoGenericUrlResolver;
-import com.equo.ws.api.IEquoWebSocketService;
 
 import io.netty.handler.codec.http.HttpRequest;
 
@@ -35,9 +35,9 @@ import io.netty.handler.codec.http.HttpRequest;
  */
 public class EquoWebSocketFiltersAdapterHandler implements IFiltersAdapterHandler {
 
-  private IEquoWebSocketService equoWebSocketService;
+  private IEquoCommService equoWebSocketService;
 
-  EquoWebSocketFiltersAdapterHandler(IEquoWebSocketService equoWebSocketService) {
+  EquoWebSocketFiltersAdapterHandler(IEquoCommService equoWebSocketService) {
     this.equoWebSocketService = equoWebSocketService;
   }
 

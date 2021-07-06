@@ -1,0 +1,27 @@
+{
+    "name": "@equo/comm",
+    "version": "0.1.5",
+    "description": "Comm API for usage within the Equo Framework",
+    "license": "UNLICENSED",
+    "publishConfig": {
+        "access": "restricted"
+    },
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "files": [
+        "/lib"
+    ],
+    "dependencies": {
+        "@equo/service-manager": "^0.1.1"
+    },
+    "devDependencies": {
+        "jsdoc-to-markdown": "^6.0.0"
+    },
+    "scripts": {
+        "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
+        "clean": "rimraf lib",
+        "build": "yarn run compile",
+        "compile": "tsc",
+        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-comm-doc.md"
+    }
+}
