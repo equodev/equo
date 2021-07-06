@@ -22,16 +22,42 @@
 
 import { EquoService } from '@equo/service-manager'
 
-export class EquoComm extends WebSocket {
+export class EquoComm {
 
     private userEventCallbacks: any = {};
+    private ws?: WebSocket;
+    private port: number;
+
     /**
      * @name EquoComm
-     * @extends WebSocket
      * @class
      */
     constructor(port: number) {
-        super(`ws://127.0.0.1:${port}`);
+        this.port = port;
+        this.openComm()
+    }
+
+    private openComm() {
+        if (this.ws !== undefined && this.ws.readyState !== WebSocket.CLOSED){
+            return;
+        }
+        this.ws = new WebSocket(`ws://127.0.0.1:${this.port}`);
+
+        // Binds functions to the listeners for the comm.
+        this.ws.onopen = (event: any): void => {
+            // For reasons I can't determine, onopen gets called twice
+            // and the first time event.data is undefined.
+            // Leave a comment if you know the answer.
+            if (event.data === undefined)
+                return;
+        }
+
+        this.ws.onmessage = (event: any): void => {
+            this.receiveMessage(event.data);
+        };
+
+        this.ws.onclose = (event: any): void => {
+        };
     }
 
     private receiveMessage(event: any): void {
@@ -54,28 +80,9 @@ export class EquoComm extends WebSocket {
         }
     }
 
-
-    // Binds functions to the listeners for the comm.
-    onopen = (event: any): void => {
-        // For reasons I can't determine, onopen gets called twice
-        // and the first time event.data is undefined.
-        // Leave a comment if you know the answer.
-        if (event.data === undefined)
-            return;
-    }
-
-    onmessage = (event: any): void => {
-        this.receiveMessage(event.data);
-    };
-
-    onclose = (event: any): void => {
-    };
-
-
     // Expose the below methods via the equo interface while
     // hiding the implementation of the method within the 
     // function() block
-
     private sendToCommServer(actionId: any, browserParams?: any): void {
         // Wait until the state of the comm is not ready and send the message when it is...
         let receiveMessage = this.receiveMessage;
@@ -84,7 +91,7 @@ export class EquoComm extends WebSocket {
                 action: actionId,
                 params: browserParams
             });
-            super.send(event);
+            this.ws!.send(event);
             receiveMessage(event);
         });
     };
@@ -93,12 +100,15 @@ export class EquoComm extends WebSocket {
     private waitForCommConnection(comm: EquoComm, callback: Function): void {
         setTimeout(
             () => {
-                if (comm.readyState === comm.OPEN) {
+                if (this.ws !== undefined && this.ws!.readyState === WebSocket.OPEN) {
                     if (callback != null) {
                         callback();
                     }
                     return;
                 } else {
+		            try{
+		                this.openComm();
+                    }catch(err){}
                     comm.waitForCommConnection(comm, callback);
                 }
             }, 5); // wait 5 milisecond for the connection...

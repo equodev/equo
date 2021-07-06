@@ -1,6 +1,6 @@
 {
     "name": "@equo/comm",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Comm API for usage within the Equo Framework",
     "license": "UNLICENSED",
     "publishConfig": {
