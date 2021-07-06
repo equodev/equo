@@ -91,7 +91,7 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
       if (equoHandler != null) {
         String eventName = equoHandler.value();
         if (eventName != null && !eventName.isEmpty()) {
-          result.put(eventName, new IActionHandler<>() {
+          result.put(eventName, new IActionHandler<T>() {
             @Override
             public Object call(T payload) {
               try {
