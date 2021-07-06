@@ -95,11 +95,11 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
             @Override
             public Object call(T payload) {
               try {
-                return method.invoke(original);
+                return method.invoke(original, payload);
               } catch (IllegalAccessException | IllegalArgumentException
                   | InvocationTargetException e) {
                 try {
-                  return method.invoke(original, payload);
+                  return method.invoke(original);
                 } catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException e1) {
                   LoggerFactory.getLogger(clazz)
@@ -108,7 +108,7 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
               }
               return null;
             }
-            
+
             @Override
             public Class getGenericInterfaceType() {
               return type;
