@@ -53,26 +53,26 @@ export class EquoComm {
         }
 
         this.ws.onmessage = (event: any): void => {
-            this.receiveMessage(event.data);
+            this.receiveMessage(this.userEventCallbacks, event.data);
         };
 
         this.ws.onclose = (event: any): void => {
         };
     }
 
-    private receiveMessage(event: any): void {
+    private receiveMessage(userEventCallbacks: any, event: any): void {
         if (event === undefined) {
             return;
         }
         try {
             let parsedPayload = JSON.parse(event);
             let actionId = parsedPayload.action;
-            if (actionId in this.userEventCallbacks) {
+            if (actionId in userEventCallbacks) {
                 let params = parsedPayload.params;
                 if (parsedPayload.params) {
-                    this.userEventCallbacks[actionId](params);
+                    userEventCallbacks[actionId](params);
                 } else {
-                    this.userEventCallbacks[actionId]();
+                    userEventCallbacks[actionId]();
                 }
             }
         } catch (err) {
@@ -86,13 +86,14 @@ export class EquoComm {
     private sendToCommServer(actionId: any, browserParams?: any): void {
         // Wait until the state of the comm is not ready and send the message when it is...
         let receiveMessage = this.receiveMessage;
+        let userEventCallbacks = this.userEventCallbacks
         this.waitForCommConnection(this, () => {
             let event = JSON.stringify({
                 action: actionId,
                 params: browserParams
             });
             this.ws!.send(event);
-            receiveMessage(event);
+            receiveMessage(userEventCallbacks, event);
         });
     };
 

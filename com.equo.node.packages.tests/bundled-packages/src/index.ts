@@ -29,7 +29,7 @@ import { EquoCommService, EquoComm } from '@equo/comm';
 // @ts-ignore
 import { Menu, MenuBuilder } from '@equo/equo-application-menu';
 
-var comm: EquoComm = EquoCommService.get();
+let comm: EquoComm = EquoCommService.get();
 
 EquoFramework.openBrowser('');
 
@@ -77,9 +77,13 @@ function inicMenu(elementMenu : MenuBuilder, func?: Function) {
     .setApplicationMenu(func);
 }
 
-comm.on("_createMenu", () => {
+comm.on("_createMenuImpl", () => {
     let menu1 = Menu.create();
     inicMenu(menu1, (comm: EquoComm, json: JSON) => { comm.send("_testSetMenu1", json); });
+});
+
+comm.on("_createMenu", () => {
+    comm.send("_createMenuImpl");
 });
 
 comm.on("_appendMenuItem", () => {
