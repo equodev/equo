@@ -85,25 +85,34 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
     IActionHandler<T> original = this;
     Map<String, IActionHandler<T>> result = new HashMap<>();
     Class<?> clazz = getClass();
+    final Class<?> type = getGenericInterfaceType();
     for (Method method : clazz.getDeclaredMethods()) {
       EventName equoHandler = method.getAnnotation(EventName.class);
       if (equoHandler != null) {
         String eventName = equoHandler.value();
         if (eventName != null && !eventName.isEmpty()) {
-          result.put(eventName, (payload) -> {
-            try {
-              return method.invoke(original);
-            } catch (IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+          result.put(eventName, new IActionHandler<T>() {
+            @Override
+            public Object call(T payload) {
               try {
                 return method.invoke(original, payload);
               } catch (IllegalAccessException | IllegalArgumentException
-                  | InvocationTargetException e1) {
-                LoggerFactory.getLogger(clazz)
-                    .error("Error calling handler for " + eventName + " event", e1);
+                  | InvocationTargetException e) {
+                try {
+                  return method.invoke(original);
+                } catch (IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException e1) {
+                  LoggerFactory.getLogger(clazz)
+                      .error("Error calling handler for " + eventName + " event", e1);
+                }
               }
+              return null;
             }
-            return null;
+
+            @Override
+            public Class getGenericInterfaceType() {
+              return type;
+            }
           });
         }
       }
