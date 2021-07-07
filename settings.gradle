@@ -2,7 +2,7 @@ buildscript {
     ext.repos = {
         gradlePluginPortal()
         maven {
-            url "https://dl.equoplatform.com/gradle/0.4.0/"
+            url "https://dl.dev.equoplatform.com/gradle/0.4.0/"
         }
     }
     ext.deps = {

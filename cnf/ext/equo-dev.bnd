@@ -18,7 +18,7 @@ javac.debug: on
 
 -plugin.3.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
-        releaseUrl = "https://dl.equoplatform.com/central/release"; \
+        releaseUrl = "https://dl.dev.equoplatform.com/central/release"; \
         index = ${.}/equo.mvn; \
         name = "Equo Central"; \
         readOnly = true; \
@@ -27,7 +27,7 @@ javac.debug: on
 -plugin.4.Chromium: \
     aQute.bnd.repository.p2.provider.P2Repository; \
         name = Chromium; \
-        url = "https://dl.equoplatform.com/chromium-swt-ee/equo/p2/76/"; \
+        url = "https://dl.dev.equoplatform.com/chromium-swt-ee/equo/p2/76/"; \
         location = ~/.bnd/cache/chromium
 
 # JUnit
