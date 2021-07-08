@@ -12,8 +12,8 @@ Bundle-ActivationPolicy:
     org.eclipse.e4.ui.workbench.renderers.swt,\
     org.eclipse.e4.ui.workbench,\
     org.eclipse.e4.ui.workbench.swt,\
-    org.eclipse.emf.common,\
-    org.eclipse.emf.ecore,\
+    org.eclipse.emf.common;version='2.18.0',\
+    org.eclipse.emf.ecore;version='2.21.0',\
     org.eclipse.emf.ecore.xmi,\
     Java-WebSocket,\
     org.mockito.mockito-all,\
