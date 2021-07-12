@@ -24,6 +24,8 @@ package com.equo.application.model;
 
 import static com.equo.application.util.OsUtils.isMac;
 
+import java.net.URL;
+
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.impl.CommandsFactoryImpl;
@@ -31,17 +33,25 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
+import com.equo.application.api.IEquoApplication;
 import com.equo.application.impl.EnterFullScreenModeRunnable;
 import com.equo.application.util.ICommandConstants;
 import com.equo.application.util.IConstants;
+import com.equo.logging.client.api.Logger;
+import com.equo.logging.client.api.LoggerFactory;
 
 /**
  * Equo menu item builder for Java.
  */
 public class MenuItemBuilder extends ItemBuilder {
   private static MCommand disabledCommand;
-
+  private static Logger logger = LoggerFactory.getLogger(MenuItemBuilder.class);
+  
   static {
     disabledCommand = CommandsFactoryImpl.eINSTANCE.createCommand();
     disabledCommand.setElementId("DISABLEDCOMMAND");
@@ -68,6 +78,29 @@ public class MenuItemBuilder extends ItemBuilder {
    */
   public MenuItemBuilder addMenuItem(String label) {
     return new MenuItemBuilder(this.getOptionalFieldBuilder(), createMenuItem(label), menuBuilder);
+  }
+  
+  /**
+   * Adds a icon menu item.
+   * @param  iconPath the icon relative path.
+   * @return          the MenuItemBuilder instance.
+   */
+  public MenuItemBuilder addIcon(String iconPath) {
+    BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+    ServiceReference<IEquoApplication> serviceReference =
+        bundleContext.getServiceReference(IEquoApplication.class);
+    IEquoApplication app = bundleContext.getService(serviceReference);
+    Bundle bundle = FrameworkUtil.getBundle(app.getClass());
+    URL path = bundle.getResource(iconPath);
+
+    if (path == null) {
+      logger.warn("Problem loading " + this.getItem().getLabel() + " icon");
+      return this;
+    }
+
+    MHandledMenuItem newMenuItem = (MHandledMenuItem) this.getItem();
+    newMenuItem.setIconURI(path.toString());
+    return new MenuItemBuilder(this.getOptionalFieldBuilder(), newMenuItem, menuBuilder);
   }
 
   private MHandledMenuItem createMenuItem(String label) {

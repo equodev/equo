@@ -22,14 +22,22 @@
 
 package com.equo.application.model;
 
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
+import com.equo.application.api.IEquoApplication;
 import com.equo.application.util.IConstants;
+import com.equo.logging.client.api.Logger;
+import com.equo.logging.client.api.LoggerFactory;
 
 /**
  * Equo menu builder for Java.
@@ -39,6 +47,7 @@ public class MenuBuilder {
   private OptionalViewBuilder optionalFieldBuilder;
   private MMenu parentMenu;
   private MMenu menu;
+  private static Logger logger = LoggerFactory.getLogger(MenuItemBuilder.class);
 
   MenuBuilder(OptionalViewBuilder optionalFieldBuilder) {
     this.parentMenu = optionalFieldBuilder.getMainMenu();
@@ -156,6 +165,29 @@ public class MenuBuilder {
    */
   public MenuItemBuilder addMenuItem(String label) {
     return new MenuItemBuilder(this).addMenuItem(label);
+  }
+  
+  /**
+   * Adds a new icon to a menu.
+   * @param  iconPath the icon relative path.
+   * @return          the MenuItemBuilder instance.
+   */
+  public MenuBuilder addIcon(String iconPath) {
+    BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+    ServiceReference<IEquoApplication> serviceReference =
+        bundleContext.getServiceReference(IEquoApplication.class);
+    IEquoApplication app = bundleContext.getService(serviceReference);
+    Bundle bundle = FrameworkUtil.getBundle(app.getClass());
+    URL path = bundle.getResource(iconPath);
+
+    if (path == null) {
+      logger.warn("Problem loading " + this.menu.getLabel() + " icon");
+      return this;
+    }
+
+    this.menu.setIconURI(path.toString());
+
+    return new MenuBuilder(this);
   }
 
   /**
