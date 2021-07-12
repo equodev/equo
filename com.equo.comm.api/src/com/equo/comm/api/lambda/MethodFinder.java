@@ -52,9 +52,10 @@ public interface MethodFinder extends Serializable {
    * Gets the class in which the lambda has been created.
    */
   default Class<?> getContainingClass() {
+    ClassLoader classLoader = this.getClass().getClassLoader();
     try {
       String className = serialized().getImplClass().replaceAll("/", ".");
-      return Class.forName(className);
+      return Class.forName(className, false, classLoader);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
