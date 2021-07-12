@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
 import com.equo.logging.client.api.AbstractLogger;
@@ -43,7 +44,7 @@ import ch.qos.logback.classic.LoggerContext;
     property = { "service.ranking:Integer=-100" })
 public class LoggingCoreImpl extends AbstractLogger {
 
-  private ch.qos.logback.classic.Logger logger;
+  private org.slf4j.Logger logger;
   private Level privateLevel = null;
 
   @Override
@@ -149,8 +150,13 @@ public class LoggingCoreImpl extends AbstractLogger {
   @SuppressWarnings("rawtypes")
   @Override
   protected void init(Class clazz) {
-    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-    this.logger = loggerContext.getLogger(clazz);
+    final ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
+    if (loggerFactory instanceof LoggerContext) {
+      LoggerContext loggerContext = (LoggerContext) loggerFactory;
+      this.logger = loggerContext.getLogger(clazz);
+    } else {
+      this.logger = loggerFactory.getLogger(clazz.getCanonicalName());
+    }
   }
 
   @Override
@@ -160,11 +166,15 @@ public class LoggingCoreImpl extends AbstractLogger {
 
   @Override
   public void setLoggerLevel(Level level) {
+    if (this.logger == null || !(this.logger instanceof ch.qos.logback.classic.Logger)) {
+      return;
+    }
     this.privateLevel = level;
     if (level != null) {
-      this.logger.setLevel(ch.qos.logback.classic.Level.toLevel(level.toString()));
+      ((ch.qos.logback.classic.Logger) this.logger)
+          .setLevel(ch.qos.logback.classic.Level.toLevel(level.toString()));
     } else {
-      this.logger.setLevel(null);
+      ((ch.qos.logback.classic.Logger) this.logger).setLevel(null);
     }
   }
 
