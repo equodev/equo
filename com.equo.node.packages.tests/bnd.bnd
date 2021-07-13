@@ -1,7 +1,7 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include: https://dl.dev.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
-    https://dl.dev.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
+-include: https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
+    https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
 
 -includeresource: \
     resources/

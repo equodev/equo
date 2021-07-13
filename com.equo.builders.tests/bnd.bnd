@@ -1,8 +1,8 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 Bundle-ActivationPolicy:
 
--include: https://dl.dev.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
-    https://dl.dev.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
+-include: https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
+    https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
 
 -buildpath: \
     com.equo.application.client;version=latest,\
