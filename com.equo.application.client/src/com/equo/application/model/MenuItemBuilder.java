@@ -98,9 +98,8 @@ public class MenuItemBuilder extends ItemBuilder {
       return this;
     }
 
-    MHandledMenuItem newMenuItem = (MHandledMenuItem) this.getItem();
-    newMenuItem.setIconURI(path.toString());
-    return new MenuItemBuilder(this.getOptionalFieldBuilder(), newMenuItem, menuBuilder);
+    this.getItem().setIconURI(path.toString());
+    return this;
   }
 
   private MHandledMenuItem createMenuItem(String label) {
