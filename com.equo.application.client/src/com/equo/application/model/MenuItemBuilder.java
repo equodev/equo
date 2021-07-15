@@ -81,7 +81,7 @@ public class MenuItemBuilder extends ItemBuilder {
   }
   
   /**
-   * Adds a icon menu item.
+   * Adds an icon to a menu item.
    * @param  iconPath the icon relative path.
    * @return          the MenuItemBuilder instance.
    */
