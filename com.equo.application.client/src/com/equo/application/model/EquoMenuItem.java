@@ -36,6 +36,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
   private Runnable runnable = null;
   private String action = null;
   private String shortcut = null;
+  private String iconPath = null;
   public static final String CLASSNAME = "EquoMenuItem";
 
   EquoMenuItem(IEquoMenu parent, String title) {
@@ -81,6 +82,19 @@ public class EquoMenuItem extends AbstractEquoMenu {
         itemBuilder.addShortcut(shortcut);
       }
     }
+    if (iconPath != null) {
+      itemBuilder = itemBuilder.addIcon(iconPath);
+    }
+  }
+
+  /**
+   * Adds an icon to a menu item.
+   * @param  iconPath the icon relative path.
+   * @return          the EquoMenuItem instance.
+   */
+  public EquoMenuItem addIcon(String iconPath) {
+    this.iconPath = iconPath;
+    return this;
   }
 
   static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
