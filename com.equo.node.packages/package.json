@@ -10,5 +10,13 @@
   "scripts": {
     "prepare": "lerna run prepare",
     "publishFromPackage": "lerna publish from-package --yes --registry"
+  },
+  "dependencies": {
+    "glob-parent": "^6.0.0",
+    "trim-newlines": "^4.0.2"
+  },
+  "resolutions": {
+    "trim-newlines": "^4.0.2",
+    "glob-parent": "^6.0.0"
   }
 }
