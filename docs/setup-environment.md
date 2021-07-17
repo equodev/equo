@@ -21,7 +21,7 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
    2. Select `New...` in the _Global Check Configurations_ section.
    3. Change the type of the new configuration to `External Configuration File`:
       - Write "Equo" on the name field.
-      - Import from this project the file located in `config/checkstyle/checkstyle-eclipse.xml` in the _location_ field.
+      - Import from this project the file located in `config/checkstyle/checkstyle.xml` in the _location_ field.
    4. Press Ok
    5. Select the recently created configuration and press the `Set as Default` button.
    6. Check `Run Checkstyle in backgroun on full builds` option.
