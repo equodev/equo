@@ -1,125 +1,130 @@
 /****************************************************************************
-**
-** Copyright (C) 2021 Equo
-**
-** This file is part of Equo Framework.
-**
-** Commercial License Usage
-** Licensees holding valid commercial Equo licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3 as published by the Free Software
-** Foundation. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-3.0.html.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2021 Equo
+ **
+ ** This file is part of Equo Framework.
+ **
+ ** Commercial License Usage
+ ** Licensees holding valid commercial Equo licenses may use this file in
+ ** accordance with the commercial license agreement provided with the
+ ** Software or, alternatively, in accordance with the terms contained in
+ ** a written agreement between you and Equo. For licensing terms
+ ** and conditions see https://www.equoplatform.com/terms.
+ **
+ ** GNU General Public License Usage
+ ** Alternatively, this file may be used under the terms of the GNU
+ ** General Public License version 3 as published by the Free Software
+ ** Foundation. Please review the following
+ ** information to ensure the GNU General Public License requirements will
+ ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
+ **
+ ****************************************************************************/
 
 window.equo = window.equo || {};
 
-(function (equo) {
+/**
+ * @typedef {any} Payload
+ * 
+ * @typedef {Object} Equo
+ * @property {(action: string, browserParams: Payload) => void} sendToCommServer
+ * @property {(action: string, payload: Payload) => {}} send
+ * @property {(userEvent: string, callback: Function) => void} on
+ */
 
+(function (/** @type {Equo} */equo) {
+    /** @type {WebSocket} */
     let comm;
+    /** @type {Record<string, Function>} */
     let userEventCallbacks = {};
 
-    let receiveMessage = function(event){
-        if(event === undefined) {
+    let receiveMessage = function (event) {
+        if (event === undefined) {
             return;
         }
         try {
+            /** 
+             * @type {{
+             *  action: string;
+             *  params: Payload;
+             * }}
+             */
             let parsedPayload = JSON.parse(event);
             let actionId = parsedPayload.action;
             if (actionId in userEventCallbacks) {
                 let params = parsedPayload.params;
-                if (parsedPayload.params) {
-                    userEventCallbacks[actionId](params);
-                } else {
-                    userEventCallbacks[actionId]();
-                }
+                userEventCallbacks[actionId](params);
             }
-        } catch(err) {
-
-        }
+        } catch (err) {}
     };
 
-    const openComm = function() {
+    const openComm = (function () {
         // Ensures only one connection is open at a time
-        if(comm !== undefined && comm.readyState !== WebSocket.CLOSED){
+        if (comm !== undefined && comm.readyState !== WebSocket.CLOSED) {
             //equo.logDebug('comm is already opened.');
             return;
         }
-        let commPort = '%d';
+        let commPort = "%d";
         // Create a new instance of the comm
-        comm = new WebSocket('ws://127.0.0.1:' + commPort);
+        comm = new WebSocket("ws://127.0.0.1:" + commPort);
         /**
          * Binds functions to the listeners for the comm.
          */
-        comm.onopen = function(event){
+        comm.onopen = function (event) {
             // For reasons I can't determine, onopen gets called twice
             // and the first time event.data is undefined.
             // Leave a comment if you know the answer.
-            if(event.data === undefined)
-                return;
+            if (event.data === undefined) return;
         };
 
-        comm.onmessage = function(event){
+        comm.onmessage = function (event) {
             receiveMessage(event.data);
         };
 
-        comm.onclose = function(event){
-        };
-    }();
+        comm.onclose = function () {};
+    })();
 
     // Expose the below methods via the equo interface while
-    // hiding the implementation of the method within the 
+    // hiding the implementation of the method within the
     // function() block
 
-    equo.sendToCommServer = function(action, browserParams) {
+    equo.sendToCommServer = function (action, browserParams) {
         // Wait until the state of the comm is not ready and send the message when it is...
-        waitForCommConnection(comm, function(){
+        waitForCommConnection(comm, function () {
             let event = JSON.stringify({
                 action: action,
-                params: browserParams
+                params: browserParams,
             });
             comm.send(event);
-            receiveMessage(event);
         });
     };
 
-    equo.send = function(actionId) {
-        equo.sendToCommServer(actionId);
-    };
-
-    equo.send = function(actionId, payload) {
+    equo.send = function (actionId, payload) {
         equo.sendToCommServer(actionId, payload);
     };
 
-    equo.on = function(userEvent, callback) {
+    equo.on = function (userEvent, callback) {
         userEventCallbacks[userEvent] = callback;
     };
 
     // Make the function wait until the connection is made...
-    let waitForCommConnection = function(comm, callback){
-        setTimeout(
-            function () {
-                if (comm.readyState === 1) {
-                    if(callback != null){
-                        callback();
-                    }
-                    return;
-
-                } else {
-		            try{
-		                openComm();
-                    }catch(err){}
-                    waitForCommConnection(comm, callback);
+    /**
+     * 
+     * @param {WebSocket} comm 
+     * @param {Function} callback 
+     */
+    let waitForCommConnection = function (comm, callback) {
+        setTimeout(function () {
+            if (comm.readyState === 1) {
+                if (callback != null) {
+                    callback();
                 }
-            }, 5); // wait 5 milisecond for the connection...
+                return;
+            } else {
+                try {
+                    openComm();
+                } catch (err) {}
+                waitForCommConnection(comm, callback);
+            }
+        }, 5); // wait 5 milisecond for the connection...
     };
-
-}(equo));
+})(equo);

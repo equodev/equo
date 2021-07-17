@@ -82,7 +82,7 @@ class EquoWebSocketServer extends WebSocketServer {
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  private void receiveMessage(String message) {
+  private void receiveMessage(String message, boolean broadcast) {
     NamedActionMessage actionMessage = null;
     try {
       actionMessage = gsonParser.fromJson(message, NamedActionMessage.class);
@@ -104,6 +104,8 @@ class EquoWebSocketServer extends WebSocketServer {
         parsedPayload = gson.fromJson(jsonString, actions.get(action).getGenericInterfaceType());
       }
       actions.get(action).call(parsedPayload);
+    } else if (broadcast) {
+      super.broadcast(message);
     }
   }
 
@@ -111,7 +113,7 @@ class EquoWebSocketServer extends WebSocketServer {
   public void onMessage(WebSocket conn, String message) {
     // broadcast(message);
     logger.debug(conn + ": " + message);
-    receiveMessage(message);
+    receiveMessage(message, true);
   }
 
   @Override
@@ -140,7 +142,7 @@ class EquoWebSocketServer extends WebSocketServer {
   public void broadcast(String messageAsJson) {
     if (firstClientConnected) {
       super.broadcast(messageAsJson);
-      receiveMessage(messageAsJson);
+      receiveMessage(messageAsJson, false);
     } else {
       synchronized (messagesToSend) {
         messagesToSend.add(messageAsJson);
