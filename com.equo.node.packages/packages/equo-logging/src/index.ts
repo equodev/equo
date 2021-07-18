@@ -32,7 +32,7 @@ export interface LogPayload {
  * Configure logs levels using ***equo-logging***
  */
 export namespace EquoLoggingService {
-	var comm: EquoComm = EquoCommService.get();
+	const comm: EquoComm = EquoCommService.get();
 
 	/**
 	 * @constant
@@ -85,7 +85,7 @@ export namespace EquoLoggingService {
 	export const LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
 
 	function sendLog(message: string, type: string): void {
-		var payload: LogPayload = {
+		const payload: LogPayload = {
 			message: message,
 			type: type
 		};

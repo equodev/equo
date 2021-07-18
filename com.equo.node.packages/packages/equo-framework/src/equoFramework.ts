@@ -27,7 +27,7 @@ import { EquoComm, EquoCommService } from "@equo/comm";
  * Use the ***framework*** package for basic browser management.
  */
 export namespace EquoFramework {
-    var comm: EquoComm = EquoCommService.get();
+    const comm: EquoComm = EquoCommService.get();
     /**
      * Initializes and opens a browser.
      * @function
@@ -58,7 +58,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function addShortcut(shortcut: string, callback: Function): void {
-		let payload = {
+		const payload = {
             shortcut: shortcut,
 		    event: "_exec_shotcut_" + shortcut
         }
@@ -75,7 +75,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function addShortcutToEvent(shortcut: string, event: string): void {
-		let payload = {
+		const payload = {
             shortcut: shortcut,
 		    event: event
         }
@@ -90,7 +90,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function removeShortcut(shortcut: string): void {
-		let payload = {
+		const payload = {
             shortcut: shortcut
         }
         comm.send("_removeShortcut", payload);

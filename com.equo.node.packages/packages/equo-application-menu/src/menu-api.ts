@@ -116,7 +116,7 @@ export class MenuBuilder{
    * @return {MenuBuilder}
    */
   public withMainMenu(label: string): MenuBuilder {
-    let menu = new EquoMenu();
+    const menu = new EquoMenu();
     menu.setType("EquoMenu");
     menu.setTitle(label);
 
@@ -141,11 +141,11 @@ export class MenuBuilder{
    * @return {MenuBuilder}
    */
   public addMenu(label: string): MenuBuilder {
-    let equoMenu = new EquoMenu();
+    const equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenu");
     equoMenu.setTitle(label);
 
-    let index = this.linker.getMenuAct().addChildren(equoMenu);
+    const index = this.linker.getMenuAct().addChildren(equoMenu);
     if (!(index !== -1 && this.linker.getMenuAct().getChildren()[index].getType() === "EquoMenuItem")) {
       this.linker.setMenuAct(this.linker.getMenuAct().getChildren()[index]);
     }
@@ -158,7 +158,7 @@ export class MenuBuilder{
    * @return {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' will return null.
    */
   public addMenuItem(label: string): MenuItemBuilder | null{
-    let equoMenu = new EquoMenu();
+    const equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenuItem");
     equoMenu.setTitle(label);
 
@@ -171,9 +171,9 @@ export class MenuBuilder{
 
   private bindEquoFunctions(): void {
     this.comm.on("_doGetMenu", (values: JSON) => {
-      let params = JSON.parse(JSON.stringify(values));
+      const params = JSON.parse(JSON.stringify(values));
 
-      let equoMenuModel = new EquoMenuModel(new Array<EquoMenu>());
+      const equoMenuModel = new EquoMenuModel(new Array<EquoMenu>());
       equoMenuModel.fillFromJSON(JSON.stringify(params["menus"]));
       this.menus = equoMenuModel.getMenus();
 
@@ -193,7 +193,7 @@ export class MenuBuilder{
    * @returns {void}
    */
   public setApplicationMenu(funct?: (comm: EquoComm, json :JSON) => void): void {
-    let equoMenuModel = new EquoMenuModel(this.menus);
+    const equoMenuModel = new EquoMenuModel(this.menus);
     this.setApplicationMenuWithJson(JSON.parse(JSON.stringify(equoMenuModel)));
 
     if(funct){
@@ -243,7 +243,7 @@ export class MenuBuilder{
   }
 
   private createEquoMenu(title: string, type:string, path:string): boolean {
-    let equoMenu = new EquoMenu();
+    const equoMenu = new EquoMenu();
     equoMenu.setType(type);
     equoMenu.setTitle(title);
     return this.searchByPathMenuRecursively(this.menus, path, equoMenu);
@@ -268,11 +268,11 @@ export class MenuBuilder{
   }
 
   private searchByPathMenuRecursively(menuItems: Array<EquoMenu>, path: string, equoMenu:EquoMenu): boolean{
-    let arr = path.split("/");
+    const arr = path.split("/");
     let newPath = path;
     let inserted = false;
     if (path !== "") {
-      for (var i=0; i<menuItems.length; i++){
+      for (let i=0; i<menuItems.length; i++){
         if (menuItems[i].getTitle() === arr[0]) {
           arr.splice(0, 1);
           newPath = arr.join("/");
@@ -315,7 +315,7 @@ export class MenuBuilder{
 
   private addMenuElementRecursively(menus: Array<EquoMenu>, parentMenuId: string, index: number, menuItem:EquoMenu): boolean {
     let added = false;
-    for (var i = 0; i < menus.length; i++){
+    for (let i = 0; i < menus.length; i++){
       if (menus[i].getId() === parentMenuId) {
         menus[i].addChildrenAtIndex(index, menuItem);
         added = true;
@@ -340,7 +340,7 @@ export class MenuBuilder{
 
   private removeMenuElementByIdRecursively(menuItems: Array<EquoMenu>, menuToRemoveId: string): boolean {
     let removed = false;
-    for (var i = 0; i < menuItems.length; i++){
+    for (let i = 0; i < menuItems.length; i++){
       if (menuItems[i].getId() === menuToRemoveId) {
         menuItems.splice(i, 1);
         removed = true;
@@ -367,11 +367,11 @@ export class MenuBuilder{
 
   private removeMenuElementByPathRecursively(menuItems: Array<EquoMenu>, menuNamePathToRemove: string): boolean {
     let removed = false;
-    let arr = menuNamePathToRemove.split("/");
+    const arr = menuNamePathToRemove.split("/");
     let newPath = menuNamePathToRemove;
     if (menuNamePathToRemove !== "") {
       let index = 0;
-      for (var i = 0; i < menuItems.length; i++ ){
+      for (let i = 0; i < menuItems.length; i++ ){
         if (menuItems[i].getTitle() === arr[0]) {
           arr.splice(0, 1);
           newPath = arr.join("/");
@@ -453,7 +453,7 @@ export class MenuItemBuilder {
    * @returns {MenuItemSeparatorBuilder}
    */
   public addMenuSeparator(): MenuItemSeparatorBuilder {
-    let equoMenu = new EquoMenu();
+    const equoMenu = new EquoMenu();
     equoMenu.setType("EquoMenuItemSeparator");
     this.linker.getMenuAct().addChildren(equoMenu);
     return this.linker.getMenuItemSeparatorBuilder();
@@ -480,10 +480,10 @@ export class EquoMenuModel{
   }
 
   fillFromJSON(json: string): void {
-    var jsonObj = JSON.parse(json);
+    const jsonObj = JSON.parse(json);
 
-    for (var jsonMenu in jsonObj){
-      let menu = new EquoMenu();
+    for (const jsonMenu in jsonObj){
+      const menu = new EquoMenu();
       menu.fillFromJSON(JSON.stringify(jsonObj[jsonMenu]));
       this.menus.push(menu);
     }
@@ -509,7 +509,7 @@ export class EquoMenu{
    * @returns {void}
    */
   public fillFromJSON(json: string): void {
-    var jsonObj = JSON.parse(json);
+    const jsonObj = JSON.parse(json);
     this.title = jsonObj["title"];
     this.type = jsonObj["type"];
     if (jsonObj["shortcut"])
@@ -520,9 +520,9 @@ export class EquoMenu{
     if (this.type === "EquoMenu") {
       this.children = new Array<EquoMenu>();
 
-      let childs = jsonObj["children"];
-      for (var elementChild in childs) {
-        let child = new EquoMenu();
+      const childs = jsonObj["children"];
+      for (const elementChild in childs) {
+        const child = new EquoMenu();
         child.fillFromJSON(JSON.stringify(childs[elementChild]));
         this.children.push(child);
       }
@@ -578,7 +578,7 @@ export class EquoMenu{
    */
   public addChildren(children: EquoMenu): number{
     let position= -1;
-    for (var i = 0; i < this.children.length; i++ ){
+    for (let i = 0; i < this.children.length; i++ ){
       if (this.children[i].getTitle() === children.getTitle()) {
         position = i;
         break;
@@ -690,7 +690,7 @@ export class EquoMenu{
    * @returns {string[]}
    */
   public getTitleMenus(): Array<string>{
-    let titleMenus = new Array<string>();
+    const titleMenus = new Array<string>();
     titleMenus.push(this.title);
 
     if (this.type === "EquoMenu") {
