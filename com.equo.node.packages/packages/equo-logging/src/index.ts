@@ -105,7 +105,7 @@ export namespace EquoLoggingService {
    */
 	export function logInfo(message: string): void {
 		sendLog(message, "info");
-	};
+	}
 	/**
    * Log a message with ***error*** level.
    * @function
@@ -115,7 +115,7 @@ export namespace EquoLoggingService {
    */
 	export function logError(message: string): void {
 		sendLog(message, "error");
-	};
+	}
 	/**
    * Log a message with ***warn*** level.
    * @function
@@ -125,7 +125,7 @@ export namespace EquoLoggingService {
    */
 	export function logWarn(message: string): void {
 		sendLog(message, "warning");
-	};
+	}
 	/**
    * Log a message with ***debug*** level.
    * @function
@@ -135,7 +135,7 @@ export namespace EquoLoggingService {
    */
 	export function logDebug(message: string): void {
 		sendLog(message, "debug");
-	};
+	}
 	/**
    * Log a message with ***trace*** level.
    * @function
@@ -145,7 +145,7 @@ export namespace EquoLoggingService {
    */
 	export function logTrace(message: string): void {
 		sendLog(message, "trace");
-	};
+	}
 	/**
    * Gets a custom level for javascript logs.
    * @function
@@ -156,7 +156,7 @@ export namespace EquoLoggingService {
 	export function getJsLoggerLevel(callback: Function): void {
 		returnResponse(callback);
 		sendLog("", "getLevel");
-	};
+	}
 	/**
    * Sets a custom level for javascript logs.
 	 * Javascrips logs will use this level instead the global one. Disabled by default.
@@ -168,7 +168,7 @@ export namespace EquoLoggingService {
    */
 	export function setJsLoggerLevel(level: string): void {
 		sendLog(level, "setLevel");
-	};
+	}
 	/**
    * Gets a global log level.
    * @function
@@ -179,7 +179,7 @@ export namespace EquoLoggingService {
 	export function getGlobalLoggerLevel(callback: Function): void {
 		returnResponse(callback);
 		sendLog("", "getGlobalLevel");
-	};
+	}
 	/**
    * Sets a global log level.
    * @function
@@ -189,5 +189,5 @@ export namespace EquoLoggingService {
    */
 	export function setGlobalLoggerLevel(level: string): void {
 		sendLog(level, "setGlobalLevel");
-	};
+	}
 }

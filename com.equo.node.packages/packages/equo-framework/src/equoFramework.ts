@@ -37,7 +37,7 @@ export namespace EquoFramework {
      */
     export function openBrowser(browserParams: BrowserParams): void {
         comm.send("openBrowser", browserParams);
-    };
+    }
     /**
      * Updates a browser.
      * @function
@@ -47,7 +47,7 @@ export namespace EquoFramework {
      */
     export function updateBrowser(browserParams: BrowserParams): void {
         comm.send("updateBrowser", browserParams);
-    };
+    }
 
     /**
      * Adds a global shortcut binded to the given callback
@@ -64,7 +64,7 @@ export namespace EquoFramework {
         }
         comm.on(payload.event, callback);
         comm.send("_addShortcut", payload);
-    };
+    }
 
     /**
      * Adds a global shortcut binded to a comm event
@@ -80,7 +80,7 @@ export namespace EquoFramework {
 		    event: event
         }
         comm.send("_addShortcut", payload);
-    };
+    }
 
     /**
      * Removes a global shortcut
@@ -94,7 +94,7 @@ export namespace EquoFramework {
             shortcut: shortcut
         }
         comm.send("_removeShortcut", payload);
-    };
+    }
 }
 
 export class BrowserParams {
@@ -106,11 +106,11 @@ export class BrowserParams {
       this.url = url;
       this.name = name;
       this.position = position;
-    };
+    }
 
     public getUrl(): string {
         return this.url;
-    };
+    }
 
     public getName(): string {
         return this.name;

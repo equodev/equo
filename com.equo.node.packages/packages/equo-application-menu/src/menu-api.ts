@@ -295,7 +295,7 @@ export class MenuBuilder{
           if (inserted)
               break;
         }
-      };
+      }
     }
     return inserted;
   }
@@ -326,7 +326,7 @@ export class MenuBuilder{
         if (added)
           break;
       }
-    };
+    }
     return added;
   }
   /**
@@ -352,7 +352,7 @@ export class MenuBuilder{
         if (removed)
           break;
       }
-    };
+    }
     return removed;
   }
   /**
@@ -387,7 +387,7 @@ export class MenuBuilder{
           if (removed)
             break;
         }
-      };
+      }
     }
     return removed;
   }
@@ -583,7 +583,7 @@ export class EquoMenu{
         position = i;
         break;
       }
-    };
+    }
     if (position === -1) {
       this.children.push(children);
       position = this.children.length-1;
