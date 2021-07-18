@@ -4,7 +4,16 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.2",
+    "eslint-plugin-prettier": "^3.4.0",
     "lerna": "^3.20.2",
+    "prettier": "^2.3.0",
+    "ts-standard": "^10.0.0",
     "typescript": "^3.8.3"
   },
   "scripts": {
