@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-import { EquoComm, EquoCommService } from '@equo/comm';
+import { EquoComm, EquoCommService } from "@equo/comm";
 
 export interface LogPayload {
 	message: string;
@@ -39,61 +39,61 @@ export namespace EquoLoggingService {
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_OFF = 'OFF';
+	export const LOG_LEVEL_OFF = "OFF";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_ERROR = 'ERROR';
+	export const LOG_LEVEL_ERROR = "ERROR";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_WARN = 'WARN';
+	export const LOG_LEVEL_WARN = "WARN";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_INFO = 'INFO';
+	export const LOG_LEVEL_INFO = "INFO";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_DEBUG = 'DEBUG';
+	export const LOG_LEVEL_DEBUG = "DEBUG";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_TRACE = 'TRACE';
+	export const LOG_LEVEL_TRACE = "TRACE";
 	/**
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_ALL = 'ALL';
+	export const LOG_LEVEL_ALL = "ALL";
 	/**
 	 * Level use to disable special logger level for javascript and use the global level
 	 * @constant
 	 * @type {string}
 	 * @default
 	 */
-	export const LOG_LEVEL_NOT_CONFIGURED = 'NOT CONFIGURED';
+	export const LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
 
 	function sendLog(message: string, type: string) {
 		var payload: LogPayload = {
 			message: message,
 			type: type
 		};
-		comm.send('loggingEvent', payload);
+		comm.send("loggingEvent", payload);
 	}
 
 	function returnResponse(callback: Function) {
-		comm.on('loggingResponseEvent', callback);
+		comm.on("loggingResponseEvent", callback);
 	}
 
 	/**
@@ -104,7 +104,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function logInfo(message: string): void {
-		sendLog(message, 'info');
+		sendLog(message, "info");
 	};
 	/**
    * Log a message with ***error*** level.
@@ -114,7 +114,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function logError(message: string): void {
-		sendLog(message, 'error');
+		sendLog(message, "error");
 	};
 	/**
    * Log a message with ***warn*** level.
@@ -124,7 +124,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function logWarn(message: string): void {
-		sendLog(message, 'warning');
+		sendLog(message, "warning");
 	};
 	/**
    * Log a message with ***debug*** level.
@@ -134,7 +134,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function logDebug(message: string): void {
-		sendLog(message, 'debug');
+		sendLog(message, "debug");
 	};
 	/**
    * Log a message with ***trace*** level.
@@ -144,7 +144,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function logTrace(message: string): void {
-		sendLog(message, 'trace');
+		sendLog(message, "trace");
 	};
 	/**
    * Gets a custom level for javascript logs.
@@ -155,7 +155,7 @@ export namespace EquoLoggingService {
    */
 	export function getJsLoggerLevel(callback: Function) {
 		returnResponse(callback);
-		sendLog('', 'getLevel');
+		sendLog("", "getLevel");
 	};
 	/**
    * Sets a custom level for javascript logs.
@@ -167,7 +167,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function setJsLoggerLevel(level: string) {
-		sendLog(level, 'setLevel');
+		sendLog(level, "setLevel");
 	};
 	/**
    * Gets a global log level.
@@ -178,7 +178,7 @@ export namespace EquoLoggingService {
    */
 	export function getGlobalLoggerLevel(callback: Function) {
 		returnResponse(callback);
-		sendLog('', 'getGlobalLevel');
+		sendLog("", "getGlobalLevel");
 	};
 	/**
    * Sets a global log level.
@@ -188,6 +188,6 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
 	export function setGlobalLoggerLevel(level: string) {
-		sendLog(level, 'setGlobalLevel');
+		sendLog(level, "setGlobalLevel");
 	};
 }

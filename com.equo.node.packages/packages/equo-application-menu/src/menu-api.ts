@@ -21,7 +21,7 @@
 ****************************************************************************/
 
 
-import { EquoCommService, EquoComm } from '@equo/comm'
+import { EquoCommService, EquoComm } from "@equo/comm"
 
 export class Linker{
 

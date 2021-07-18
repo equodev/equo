@@ -33,14 +33,14 @@ export namespace EquoService {
         if (!globalService && create) {
             const newService: EquoService<T> = create();
             if (!newService) {
-                throw new Error(id + ' couldn\'t be created');
+                throw new Error(id + " couldn't be created");
             }
             install<T>(newService);
             return newService.service;
         } else if (globalService) {
             return globalService;
         } else {
-            throw new Error(id + ' has not been installed');
+            throw new Error(id + " has not been installed");
         }
     }
 

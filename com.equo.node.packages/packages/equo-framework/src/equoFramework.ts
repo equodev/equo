@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-import { EquoComm, EquoCommService } from '@equo/comm';
+import { EquoComm, EquoCommService } from "@equo/comm";
 /**
  * @namespace
  * @description Equo Framework Javascript API.
@@ -36,7 +36,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function openBrowser(browserParams: BrowserParams): void {
-        comm.send('openBrowser', browserParams);
+        comm.send("openBrowser", browserParams);
     };
     /**
      * Updates a browser.
@@ -46,7 +46,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function updateBrowser(browserParams: BrowserParams): void {
-        comm.send('updateBrowser', browserParams);
+        comm.send("updateBrowser", browserParams);
     };
 
     /**
@@ -63,7 +63,7 @@ export namespace EquoFramework {
 		    event: "_exec_shotcut_" + shortcut
         }
         comm.on(payload.event, callback);
-        comm.send('_addShortcut', payload);
+        comm.send("_addShortcut", payload);
     };
 
     /**
@@ -79,7 +79,7 @@ export namespace EquoFramework {
             shortcut: shortcut,
 		    event: event
         }
-        comm.send('_addShortcut', payload);
+        comm.send("_addShortcut", payload);
     };
 
     /**
@@ -93,7 +93,7 @@ export namespace EquoFramework {
 		let payload = {
             shortcut: shortcut
         }
-        comm.send('_removeShortcut', payload);
+        comm.send("_removeShortcut", payload);
     };
 }
 
