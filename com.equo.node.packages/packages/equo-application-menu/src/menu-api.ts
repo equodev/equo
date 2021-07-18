@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /****************************************************************************
 **
 ** Copyright (C) 2021 Equo
