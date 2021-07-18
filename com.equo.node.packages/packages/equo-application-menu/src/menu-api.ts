@@ -38,7 +38,7 @@ export class Linker{
     this.menuItemSeparatorBuilder = new MenuItemSeparatorBuilder(this);
   }
 
-  public setBuildWithCurrentModel(func: Function) {
+  public setBuildWithCurrentModel(func: Function): void {
     this.buildWithCurrentModel = func;
     this.menuBuilder = new MenuBuilder(this);
   }
@@ -47,23 +47,23 @@ export class Linker{
     this.buildWithCurrentModel(this.menuBuilder);
   }
 
-  public getMenuBuilder() {
+  public getMenuBuilder(): MenuBuilder {
     return this.menuBuilder;
   }
 
-  public getMenuItemBuilder() {
+  public getMenuItemBuilder(): MenuItemBuilder {
     return this.menuItemBuilder;
   }
 
-  public getMenuItemSeparatorBuilder() {
+  public getMenuItemSeparatorBuilder(): MenuItemSeparatorBuilder {
     return this.menuItemSeparatorBuilder;
   }
 
-  public setMenuAct(menuAct: EquoMenu) {
+  public setMenuAct(menuAct: EquoMenu): void {
     this.menuAct = menuAct;
   }
 
-  public getMenuAct() {
+  public getMenuAct(): EquoMenu {
     return this.menuAct;
   }
 }
@@ -479,7 +479,7 @@ export class EquoMenuModel{
     return this.menus;
   }
 
-  fillFromJSON(json: string) {
+  fillFromJSON(json: string): void {
     var jsonObj = JSON.parse(json);
 
     for (var jsonMenu in jsonObj){
@@ -508,7 +508,7 @@ export class EquoMenu{
    * @param {JSON} json - Json with menu.
    * @returns {void}
    */
-  public fillFromJSON(json: string) {
+  public fillFromJSON(json: string): void {
     var jsonObj = JSON.parse(json);
     this.title = jsonObj["title"];
     this.type = jsonObj["type"];
@@ -533,7 +533,7 @@ export class EquoMenu{
    * @param {Function} runnable 
    * @returns {void}
    */
-  public setRunnable(runnable: () => void){
+  public setRunnable(runnable: () => void): void{
     EquoCommService.get().on(this.id, runnable);
     this.setAction(this.id);
   }
@@ -667,7 +667,7 @@ export class EquoMenu{
    * @param {number} index - Index to remove item.
    * @returns {void}
    */
-  public removeMenuItemOfIndex(index: number) {
+  public removeMenuItemOfIndex(index: number): void {
     this.children.splice(index,1);
   }
   /**
@@ -675,7 +675,7 @@ export class EquoMenu{
    * @param {string} menuItemId - ID from menu to remove.
    * @returns {void}
    */
-  public removeMenuItemById(menuItemId: string) {
+  public removeMenuItemById(menuItemId: string): void {
     let index = 0;
     this.children.forEach(element => {
       if (element.getId() === menuItemId) {

@@ -84,7 +84,7 @@ export namespace EquoLoggingService {
 	 */
 	export const LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
 
-	function sendLog(message: string, type: string) {
+	function sendLog(message: string, type: string): void {
 		var payload: LogPayload = {
 			message: message,
 			type: type
@@ -92,7 +92,7 @@ export namespace EquoLoggingService {
 		comm.send("loggingEvent", payload);
 	}
 
-	function returnResponse(callback: Function) {
+	function returnResponse(callback: Function): void {
 		comm.on("loggingResponseEvent", callback);
 	}
 
@@ -153,7 +153,7 @@ export namespace EquoLoggingService {
 	 * @param {Function} callback
    * @returns {void}
    */
-	export function getJsLoggerLevel(callback: Function) {
+	export function getJsLoggerLevel(callback: Function): void {
 		returnResponse(callback);
 		sendLog("", "getLevel");
 	};
@@ -166,7 +166,7 @@ export namespace EquoLoggingService {
 	 * @param {string} level - Use constant log level.
    * @returns {void}
    */
-	export function setJsLoggerLevel(level: string) {
+	export function setJsLoggerLevel(level: string): void {
 		sendLog(level, "setLevel");
 	};
 	/**
@@ -176,7 +176,7 @@ export namespace EquoLoggingService {
 	 * @param {Function} callback
    * @returns {void}
    */
-	export function getGlobalLoggerLevel(callback: Function) {
+	export function getGlobalLoggerLevel(callback: Function): void {
 		returnResponse(callback);
 		sendLog("", "getGlobalLevel");
 	};
@@ -187,7 +187,7 @@ export namespace EquoLoggingService {
 	 * @param {string} level - Use constant log level.
    * @returns {void}
    */
-	export function setGlobalLoggerLevel(level: string) {
+	export function setGlobalLoggerLevel(level: string): void {
 		sendLog(level, "setGlobalLevel");
 	};
 }

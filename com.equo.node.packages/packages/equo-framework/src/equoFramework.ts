@@ -57,7 +57,7 @@ export namespace EquoFramework {
      * @param {Function} callback 
      * @returns {void}
      */
-    export function addShortcut(shortcut: string, callback: Function) {
+    export function addShortcut(shortcut: string, callback: Function): void {
 		let payload = {
             shortcut: shortcut,
 		    event: "_exec_shotcut_" + shortcut
@@ -74,7 +74,7 @@ export namespace EquoFramework {
      * @param {string} event 
      * @returns {void}
      */
-    export function addShortcutToEvent(shortcut: string, event: string) {
+    export function addShortcutToEvent(shortcut: string, event: string): void {
 		let payload = {
             shortcut: shortcut,
 		    event: event
@@ -89,7 +89,7 @@ export namespace EquoFramework {
      * @param {string} shortcut
      * @returns {void}
      */
-    export function removeShortcut(shortcut: string) {
+    export function removeShortcut(shortcut: string): void {
 		let payload = {
             shortcut: shortcut
         }
