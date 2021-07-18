@@ -86,8 +86,8 @@ export namespace EquoLoggingService {
 
 	function sendLog(message: string, type: string): void {
 		const payload: LogPayload = {
-			message: message,
-			type: type
+			message,
+			type
 		};
 		comm.send("loggingEvent", payload);
 	}
