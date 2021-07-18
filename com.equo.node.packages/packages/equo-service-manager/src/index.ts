@@ -41,9 +41,9 @@ export namespace EquoService {
             return newService.service;
         } else if (globalService) {
             return globalService;
-        } else {
+        } 
             throw new Error(id + " has not been installed");
-        }
+        
     }
 
     export function install<T>(service: EquoService<T>): void {
