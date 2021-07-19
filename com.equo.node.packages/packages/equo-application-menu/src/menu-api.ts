@@ -25,6 +25,22 @@
 
 import { EquoCommService, EquoComm } from "@equo/comm";
 
+// eslint-disable-next-line no-shadow
+const enum EQUO_MENU_ENUM {
+  EQUO_MENU = "EquoMenu",
+  EQUO_MENU_ITEM = "EquoMenuItem",
+  EQUO_MENU_ITEM_SEPARATOR = "EquoMenuItemSeparator",
+}
+type EquoMenuType = typeof EQUO_MENU_ENUM[keyof typeof EQUO_MENU_ENUM];
+
+const TITLE = "title";
+const TYPE = "type";
+const SHORTCUT = "shortcut";
+const ACTION = "action";
+const CHILDREN = "children";
+const MENUS = "menus";
+
+
 export class Linker {
   private menuBuilder: MenuBuilder;
   private menuItemBuilder: MenuItemBuilder;
@@ -117,7 +133,7 @@ export class MenuBuilder {
    */
   public withMainMenu(label: string): MenuBuilder {
     const menu = new EquoMenu();
-    menu.setType("EquoMenu");
+    menu.setType(EQUO_MENU_ENUM.EQUO_MENU);
     menu.setTitle(label);
 
     let exist = false;
@@ -142,7 +158,7 @@ export class MenuBuilder {
    */
   public addMenu(label: string): MenuBuilder {
     const equoMenu = new EquoMenu();
-    equoMenu.setType("EquoMenu");
+    equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU);
     equoMenu.setTitle(label);
 
     const index = this.linker.getMenuAct().addChildren(equoMenu);
@@ -150,7 +166,7 @@ export class MenuBuilder {
       !(
         index !== -1 &&
         this.linker.getMenuAct().getChildren()[index].getType() ===
-          "EquoMenuItem"
+          EQUO_MENU_ENUM.EQUO_MENU_ITEM
       )
     ) {
       this.linker.setMenuAct(this.linker.getMenuAct().getChildren()[index]);
@@ -165,7 +181,7 @@ export class MenuBuilder {
    */
   public addMenuItem(label: string): MenuItemBuilder | null {
     const equoMenu = new EquoMenu();
-    equoMenu.setType("EquoMenuItem");
+    equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU_ITEM);
     equoMenu.setTitle(label);
 
     this.linker.buildMenuItemPosition = this.linker
@@ -176,7 +192,7 @@ export class MenuBuilder {
       this.linker
         .getMenuAct()
         .getChildren()
-        [this.linker.buildMenuItemPosition].getType() === "EquoMenu"
+        [this.linker.buildMenuItemPosition].isEquoMenu()
     ) {
       return null;
     }
@@ -188,7 +204,7 @@ export class MenuBuilder {
       const params = JSON.parse(JSON.stringify(values));
 
       const equoMenuModel = new EquoMenuModel(new Array<EquoMenu>());
-      equoMenuModel.fillFromJSON(JSON.stringify(params["menus"]));
+      equoMenuModel.fillFromJSON(JSON.stringify(params[MENUS]));
       this.menus = equoMenuModel.getMenus();
 
       this.linker.execBuildWithCurrentModel();
@@ -243,7 +259,9 @@ export class MenuBuilder {
     menuItemName: string
   ): MenuItemBuilder | null {
     this.indexToAddItem = indexToAddItem;
-    if (this.createEquoMenu(menuItemName, "EquoMenuItem", menuPath))
+    if (
+      this.createEquoMenu(menuItemName, EQUO_MENU_ENUM.EQUO_MENU_ITEM, menuPath)
+    )
       return this.linker.getMenuItemBuilder();
     return null;
   }
@@ -260,11 +278,16 @@ export class MenuBuilder {
     menuName: string
   ): MenuBuilder | null {
     this.indexToAddItem = indexToAddItem;
-    if (this.createEquoMenu(menuName, "EquoMenu", menuPath)) return this;
+    if (this.createEquoMenu(menuName, EQUO_MENU_ENUM.EQUO_MENU, menuPath))
+      return this;
     return null;
   }
 
-  private createEquoMenu(title: string, type: string, path: string): boolean {
+  private createEquoMenu(
+    title: string,
+    type: EquoMenuType,
+    path: string
+  ): boolean {
     const equoMenu = new EquoMenu();
     equoMenu.setType(type);
     equoMenu.setTitle(title);
@@ -296,8 +319,8 @@ export class MenuBuilder {
   }
 
   private setMenu(eq1: EquoMenu, eq2: EquoMenu): void {
-    if (eq2.getType() === "EquoMenu") {
-      if (eq1.getType() === "EquoMenu") this.linker.setMenuAct(eq1);
+    if (eq2.isEquoMenu()) {
+      if (eq1.isEquoMenu()) this.linker.setMenuAct(eq1);
       else this.linker.setMenuAct(eq2);
     }
   }
@@ -325,7 +348,7 @@ export class MenuBuilder {
           break;
         }
       }
-      if (menuItems[i].getType() === "EquoMenu") {
+      if (menuItems[i].isEquoMenu()) {
         inserted = this.searchByPathMenuRecursively(
           menuItems[i].getChildren(),
           newPath,
@@ -369,7 +392,7 @@ export class MenuBuilder {
         added = true;
         break;
       }
-      if (menus[i].getType() === "EquoMenu") {
+      if (menus[i].isEquoMenu()) {
         added = this.addMenuElementRecursively(
           menus[i].getChildren(),
           parentMenuId,
@@ -402,7 +425,7 @@ export class MenuBuilder {
         this.setApplicationMenu();
         break;
       }
-      if (menuItems[i].getType() === "EquoMenu") {
+      if (menuItems[i].isEquoMenu()) {
         removed = this.removeMenuElementByIdRecursively(
           menuItems[i].getChildren(),
           menuToRemoveId
@@ -442,7 +465,7 @@ export class MenuBuilder {
         }
       }
       index++;
-      if (menuItems[i].getType() === "EquoMenu") {
+      if (menuItems[i].isEquoMenu()) {
         removed = this.removeMenuElementByPathRecursively(
           menuItems[i].getChildren(),
           newPath
@@ -524,7 +547,7 @@ export class MenuItemBuilder {
    */
   public addMenuSeparator(): MenuItemSeparatorBuilder {
     const equoMenu = new EquoMenu();
-    equoMenu.setType("EquoMenuItemSeparator");
+    equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU_ITEM_SEPARATOR);
     this.linker.getMenuAct().addChildren(equoMenu);
     return this.linker.getMenuItemSeparatorBuilder();
   }
@@ -561,8 +584,9 @@ export class EquoMenuModel {
     }
   }
 }
+
 export class EquoMenu {
-  private type!: string;
+  private type!: EquoMenuType;
   private title!: string;
   private children!: Array<EquoMenu>;
   private shortcut!: string;
@@ -582,15 +606,15 @@ export class EquoMenu {
    */
   public fillFromJSON(json: string): void {
     const jsonObj = JSON.parse(json);
-    this.title = jsonObj["title"];
-    this.type = jsonObj["type"];
-    if (jsonObj["shortcut"]) this.shortcut = jsonObj["shortcut"];
-    if (jsonObj["action"]) this.action = jsonObj["action"];
+    this.title = jsonObj[TITLE];
+    this.type = jsonObj[TYPE];
+    if (jsonObj[SHORTCUT]) this.shortcut = jsonObj[SHORTCUT];
+    if (jsonObj[ACTION]) this.action = jsonObj[ACTION];
 
-    if (this.type === "EquoMenu") {
+    if (this.isEquoMenu()) {
       this.children = new Array<EquoMenu>();
 
-      const childs = jsonObj["children"];
+      const childs = jsonObj[CHILDREN];
       for (const elementChild in childs) {
         const child = new EquoMenu();
         child.fillFromJSON(JSON.stringify(childs[elementChild]));
@@ -612,9 +636,11 @@ export class EquoMenu {
    * @param {string} type - Valid types: EquoMenu | EquoMenuItem
    * @returns {void}
    */
-  public setType(type: string): void {
-    if (type === "EquoMenu") this.children = new Array<EquoMenu>();
+  public setType(type: EquoMenuType): void {
     this.type = type;
+    if (this.isEquoMenu()) {
+      this.children = new Array<EquoMenu>();
+    }
   }
   /**
    * Sets the title for menu.
@@ -760,12 +786,16 @@ export class EquoMenu {
     const titleMenus = new Array<string>();
     titleMenus.push(this.title);
 
-    if (this.type === "EquoMenu") {
+    if (this.isEquoMenu()) {
       this.children.forEach((child) => {
         titleMenus.push(...child.getTitleMenus());
       });
     }
     return titleMenus;
+  }
+
+  public isEquoMenu(type = this.type): boolean {
+    return type === EQUO_MENU_ENUM.EQUO_MENU;
   }
 }
 /**

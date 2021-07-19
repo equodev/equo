@@ -35,6 +35,25 @@ export interface LogPayload {
 export namespace EquoLoggingService {
   const comm: EquoComm = EquoCommService.get();
 
+  // eslint-disable-next-line no-shadow
+  const enum LOG_EVENTS {
+    LOGGING_EVENT = "loggingEvent",
+    LOGGING_RESPONSE_EVENT = "loggingResponseEvent"
+  }
+
+  // eslint-disable-next-line no-shadow
+  const enum LOG_TYPES {
+    INFO = "info",
+    ERROR = "error",
+    WARNING = "warning",
+    DEBUG = "debug",
+    TRACE = "trace",
+    GET_LEVEL = "getLevel",
+    SET_LEVEL = "setLevel",
+    GET_GLOBAL_LEVEL = "getGlobalLevel",
+    SET_GLOBAL_LEVEL = "setGlobalLevel",
+  }
+
   /**
    * @constant
    * @type {string}
@@ -90,11 +109,11 @@ export namespace EquoLoggingService {
       message,
       type,
     };
-    comm.send("loggingEvent", payload);
+    comm.send(LOG_EVENTS.LOGGING_EVENT, payload);
   }
 
   function returnResponse(callback: Function): void {
-    comm.on("loggingResponseEvent", callback);
+    comm.on(LOG_EVENTS.LOGGING_RESPONSE_EVENT, callback);
   }
 
   /**
@@ -105,7 +124,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function logInfo(message: string): void {
-    sendLog(message, "info");
+    sendLog(message, LOG_TYPES.INFO);
   }
   /**
    * Log a message with ***error*** level.
@@ -115,7 +134,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function logError(message: string): void {
-    sendLog(message, "error");
+    sendLog(message, LOG_TYPES.ERROR);
   }
   /**
    * Log a message with ***warn*** level.
@@ -125,7 +144,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function logWarn(message: string): void {
-    sendLog(message, "warning");
+    sendLog(message, LOG_TYPES.WARNING);
   }
   /**
    * Log a message with ***debug*** level.
@@ -135,7 +154,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function logDebug(message: string): void {
-    sendLog(message, "debug");
+    sendLog(message, LOG_TYPES.DEBUG);
   }
   /**
    * Log a message with ***trace*** level.
@@ -145,7 +164,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function logTrace(message: string): void {
-    sendLog(message, "trace");
+    sendLog(message, LOG_TYPES.TRACE);
   }
   /**
    * Gets a custom level for javascript logs.
@@ -156,7 +175,7 @@ export namespace EquoLoggingService {
    */
   export function getJsLoggerLevel(callback: Function): void {
     returnResponse(callback);
-    sendLog("", "getLevel");
+    sendLog("", LOG_TYPES.GET_LEVEL);
   }
   /**
    * Sets a custom level for javascript logs.
@@ -168,7 +187,7 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function setJsLoggerLevel(level: string): void {
-    sendLog(level, "setLevel");
+    sendLog(level, LOG_TYPES.SET_LEVEL);
   }
   /**
    * Gets a global log level.
@@ -179,7 +198,7 @@ export namespace EquoLoggingService {
    */
   export function getGlobalLoggerLevel(callback: Function): void {
     returnResponse(callback);
-    sendLog("", "getGlobalLevel");
+    sendLog("", LOG_TYPES.GET_GLOBAL_LEVEL);
   }
   /**
    * Sets a global log level.
@@ -189,6 +208,6 @@ export namespace EquoLoggingService {
    * @returns {void}
    */
   export function setGlobalLoggerLevel(level: string): void {
-    sendLog(level, "setGlobalLevel");
+    sendLog(level, LOG_TYPES.SET_GLOBAL_LEVEL);
   }
 }

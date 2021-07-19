@@ -29,6 +29,15 @@ import { EquoComm, EquoCommService } from "@equo/comm";
  */
 export namespace EquoFramework {
     const comm: EquoComm = EquoCommService.get();
+
+    // eslint-disable-next-line no-shadow
+    const enum EQUO_EVENTS {
+        OPEN_BROWSER = "openBrowser",
+        UPDATE_BROWSER = "updateBrowser",
+        ADD_SHORTCUT = "_addShortcut",
+        REMOVE_SHORTCUT = "_removeShortcut",
+    }
+
     /**
      * Initializes and opens a browser.
      * @function
@@ -37,7 +46,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function openBrowser(browserParams: BrowserParams): void {
-        comm.send("openBrowser", browserParams);
+        comm.send(EQUO_EVENTS.OPEN_BROWSER, browserParams);
     }
     /**
      * Updates a browser.
@@ -47,7 +56,7 @@ export namespace EquoFramework {
      * @returns {void}
      */
     export function updateBrowser(browserParams: BrowserParams): void {
-        comm.send("updateBrowser", browserParams);
+        comm.send(EQUO_EVENTS.UPDATE_BROWSER, browserParams);
     }
 
     /**
@@ -61,10 +70,10 @@ export namespace EquoFramework {
     export function addShortcut(shortcut: string, callback: Function): void {
 		const payload = {
             shortcut,
-		    event: "_exec_shotcut_" + shortcut
+		    event: `_exec_shotcut_${shortcut}`
         }
         comm.on(payload.event, callback);
-        comm.send("_addShortcut", payload);
+        comm.send(EQUO_EVENTS.ADD_SHORTCUT, payload);
     }
 
     /**
@@ -80,7 +89,7 @@ export namespace EquoFramework {
             shortcut,
 		    event
         }
-        comm.send("_addShortcut", payload);
+        comm.send(EQUO_EVENTS.ADD_SHORTCUT, payload);
     }
 
     /**
@@ -94,7 +103,7 @@ export namespace EquoFramework {
 		const payload = {
             shortcut
         }
-        comm.send("_removeShortcut", payload);
+        comm.send(EQUO_EVENTS.REMOVE_SHORTCUT, payload);
     }
 }
 
