@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /****************************************************************************
@@ -28,6 +29,7 @@ export interface EquoService<T> {
 }
 
 export namespace EquoService {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const global = window as any;
 
     export function get<T>(id: string, create?: () => EquoService<T>): T {
