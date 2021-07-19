@@ -71,7 +71,7 @@ public abstract class AbstractEquoMenu implements IEquoMenu {
    * @return the menu icon path.
    */
   public String getIconPath() {
-    return this.title;
+    return this.iconPath;
   }
 
   /**
