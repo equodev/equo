@@ -23,6 +23,5 @@
         "build": "yarn run compile",
         "compile": "tsc",
         "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md"
-    },
-    "gitHead": "bda2339a2802d00f27f773a2368902c125dc5fea"
+    }
 }
