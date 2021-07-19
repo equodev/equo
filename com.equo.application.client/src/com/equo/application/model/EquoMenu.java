@@ -74,6 +74,11 @@ public class EquoMenu extends AbstractEquoMenu {
     return addMenuItem(-1, title);
   }
 
+  public EquoMenu addIcon(String iconPath) {
+    this.iconPath = iconPath;
+    return this;
+  }
+  
   EquoMenu addMenu(int index, String title) {
     AbstractEquoMenu item = getExistingChildren(title);
     if (item != null) {
@@ -127,6 +132,9 @@ public class EquoMenu extends AbstractEquoMenu {
     for (AbstractEquoMenu item : children) {
       item.implement(menu);
     }
+    if (iconPath != null) {
+      menu.addIcon(iconPath);
+    }
   }
 
   static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
@@ -151,6 +159,9 @@ public class EquoMenu extends AbstractEquoMenu {
     JsonObject jOb = new JsonObject();
     jOb.addProperty("type", CLASSNAME);
     jOb.addProperty("title", getTitle());
+    if (iconPath != null) {
+      jOb.addProperty("iconPath", iconPath);
+    }
     jOb.add("children", jArr);
     return jOb;
   }

@@ -33,12 +33,13 @@ const enum EQUO_MENU_ENUM {
 }
 type EquoMenuType = typeof EQUO_MENU_ENUM[keyof typeof EQUO_MENU_ENUM];
 
-const TITLE = "title";
-const TYPE = "type";
-const SHORTCUT = "shortcut";
 const ACTION = "action";
 const CHILDREN = "children";
+const ICON_PATH = "iconPath"
 const MENUS = "menus";
+const SHORTCUT = "shortcut";
+const TITLE = "title";
+const TYPE = "type";
 
 
 export class Linker {
@@ -172,6 +173,15 @@ export class MenuBuilder {
       this.linker.setMenuAct(this.linker.getMenuAct().getChildren()[index]);
     }
 
+    return this;
+  }
+  /**
+   * Adds an icon to a menu item.
+   * @param {string} iconPath the icon relative path.
+   * @return {MenuBuilder} the MenuBuilder instance.
+   */
+  public addIcon(iconPath: string): MenuBuilder | null{
+    this.linker.getMenuAct().setIcon(iconPath);
     return this;
   }
   /**
@@ -503,6 +513,15 @@ export class MenuItemBuilder {
     return this.linker.getMenuBuilder().addMenuItem(label);
   }
   /**
+   * Adds a icon menu item.
+   * @param {string} iconPath the icon relative path.
+   * @return {MenuItemBuilder} the MenuItemBuilder instance.
+   */
+  public addIcon(iconPath: string): MenuItemBuilder | null{
+    this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setIcon(iconPath);
+    return this;
+  }
+  /**
    * Adds the action in menu element.
    * @param {string|function} action - Define onclick action.
    * @returns {MenuItemBuilder}
@@ -592,6 +611,7 @@ export class EquoMenu {
   private shortcut!: string;
   private action!: string;
   private id: string;
+  private iconPath!: string;
   /**
    * @name EquoMenu
    * @class
@@ -604,12 +624,15 @@ export class EquoMenu {
    * @param {JSON} json - Json with menu.
    * @returns {void}
    */
-  public fillFromJSON(json: string): void {
-    const jsonObj = JSON.parse(json);
+  public fillFromJSON(json: string) {
+    var jsonObj = JSON.parse(json);
     this.title = jsonObj[TITLE];
     this.type = jsonObj[TYPE];
-    if (jsonObj[SHORTCUT]) this.shortcut = jsonObj[SHORTCUT];
-    if (jsonObj[ACTION]) this.action = jsonObj[ACTION];
+    this.iconPath = jsonObj[ICON_PATH];
+    if (jsonObj[SHORTCUT])
+      this.shortcut = jsonObj[SHORTCUT];
+    if (jsonObj[ACTION])
+      this.action = jsonObj[ACTION];
 
     if (this.isEquoMenu()) {
       this.children = new Array<EquoMenu>();
@@ -658,6 +681,14 @@ export class EquoMenu {
   public setAction(action: string): void {
     this.action = action;
   }
+    /**
+   * Sets the icon for menu.
+   * @param {string} iconPath - Icon path.
+   * @returns {void}
+   */
+  public setIcon(iconPath: string): void{
+    this.iconPath = iconPath;
+  }
   /**
    * Sets the shortcut for menu.
    * @param {string} shortcut
@@ -699,6 +730,13 @@ export class EquoMenu {
    */
   public getType(): string {
     return this.type;
+  }
+  /**
+   * Gets the menu iconPath.
+   * @returns {string} 
+   */
+  public getIcon():string | null {
+    return this.iconPath || null;
   }
   /**
    * Gets the menu title.

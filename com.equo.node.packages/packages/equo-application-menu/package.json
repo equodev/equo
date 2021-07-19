@@ -1,6 +1,6 @@
 {
     "name": "@equo/equo-application-menu",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "description": "Application menu for Equo apps",
     "license": "UNLICENSED",
     "publishConfig": {
@@ -12,7 +12,7 @@
         "/lib"
     ],
     "dependencies": {
-        "@equo/comm": "^0.1.6"
+        "@equo/comm": "^0.1.7"
     },
     "devDependencies": {
         "jsdoc-to-markdown": "^6.0.0"
