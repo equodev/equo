@@ -9,5 +9,13 @@
   },
   "scripts": {
     "prepare": "lerna run prepare"
+  },
+  "dependencies": {
+    "glob-parent": "^6.0.0",
+    "trim-newlines": "^4.0.2"
+  },
+  "resolutions": {
+    "glob-parent": "^6.0.0",
+    "trim-newlines": "^4.0.2"
   }
 }
