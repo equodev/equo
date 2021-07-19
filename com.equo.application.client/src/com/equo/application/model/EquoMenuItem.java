@@ -81,6 +81,19 @@ public class EquoMenuItem extends AbstractEquoMenu {
         itemBuilder.addShortcut(shortcut);
       }
     }
+    if (iconPath != null) {
+      itemBuilder.addIcon(iconPath);
+    }
+  }
+
+  /**
+   * Adds an icon to a menu item.
+   * @param  iconPath the icon relative path.
+   * @return          the EquoMenuItem instance.
+   */
+  public EquoMenuItem addIcon(String iconPath) {
+    this.iconPath = iconPath;
+    return this;
   }
 
   static AbstractEquoMenu getElement(IEquoMenu parent, MMenuElement element) {
@@ -127,6 +140,10 @@ public class EquoMenuItem extends AbstractEquoMenu {
 
     if (action != null) {
       jOb.addProperty("action", action);
+    }
+    
+    if (iconPath != null) {
+      jOb.addProperty("iconPath", iconPath);
     }
     return jOb;
   }
