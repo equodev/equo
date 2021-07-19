@@ -28,6 +28,7 @@ import { EquoService } from "@equo/service-manager";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Payload = any;
 export class EquoComm {
+  private readonly HOST = "127.0.0.1";
   private userEventCallbacks: Record<string, Function> = {};
   private ws?: WebSocket;
   private port: number;
@@ -45,7 +46,7 @@ export class EquoComm {
     if (this.ws !== undefined && this.ws.readyState !== WebSocket.CLOSED) {
       return;
     }
-    this.ws = new WebSocket(`ws://127.0.0.1:${this.port}`);
+    this.ws = new WebSocket(`ws://${this.HOST}:${this.port}`);
 
     // Binds functions to the listeners for the comm.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +81,7 @@ export class EquoComm {
   // Expose the below methods via the equo interface while
   // hiding the implementation of the method within the
   // function() block
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private sendToCommServer(actionId: any, browserParams?: any): void {
     // Wait until the state of the comm is not ready and send the message when it is...
     this.waitForCommConnection(this, () => {

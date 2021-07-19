@@ -2,13 +2,9 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
-    "project": [
-      "packages/**/tsconfig.json"
-    ]
+    "project": ["packages/**/tsconfig.json"]
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     "plugin:import/errors",
@@ -17,64 +13,41 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "settings": {
-    "allow": [
-      "warn",
-      "error"
-    ],
+    "allow": ["warn", "error"],
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx",
-          ".json"
-        ],
-        "paths": [
-          "src"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"],
+        "paths": ["src"]
       }
     }
   },
   "rules": {
-    "@typescript-eslint/no-namespace": [
-      1
-    ],
-    "prefer-destructuring": [
-      2
-    ],
-    "camelcase": [
-      2
-    ],
-    "consistent-return": [
-      2
-    ],
-    "max-depth": [
-      1,
-      3
-    ],
-    "max-params": [
-      2,
-      4
-    ],
-    "object-shorthand": [
-      2
-    ],
-    "no-else-return": [
-      2
-    ],
-    "@typescript-eslint/consistent-type-definitions": [
-      2
-    ],
-    "@typescript-eslint/explicit-function-return-type": [
-      2
-    ],
-    "@typescript-eslint/no-extra-parens": [
-      2
-    ],
-    "@typescript-eslint/ban-types": [
-      1
-    ],
+    "no-debugger": [1],
+    "valid-typeof": [2],
+    "consistent-this": [2],
+    "arrow-parens": [2],
+    "arrow-spacing": [2],
+    "arrow-body-style": [2],
+    "func-names": [2],
+    "prefer-const": [2],
+    "prefer-arrow-callback": [2],
+    "prefer-numeric-literals": [2],
+    "prefer-promise-reject-errors": [2],
+    "prefer-template": [2],
+    "prefer-rest-params": [2],
+    "class-methods-use-this": [2],
+    "@typescript-eslint/no-namespace": [1],
+    "prefer-destructuring": [2],
+    "camelcase": [2],
+    "consistent-return": [2],
+    "max-depth": [1, 3],
+    "max-params": [2, 4],
+    "object-shorthand": [2],
+    "no-else-return": [2],
+    "@typescript-eslint/consistent-type-definitions": [2],
+    "@typescript-eslint/explicit-function-return-type": [2],
+    "@typescript-eslint/no-extra-parens": [2],
+    "@typescript-eslint/ban-types": [1],
     "@typescript-eslint/promise-function-async": [
       2,
       {
@@ -90,9 +63,7 @@
         "checksVoidReturn": false
       }
     ],
-    "quotes": [
-      2
-    ],
+    "quotes": [2],
     "no-param-reassign": [
       2,
       {
@@ -102,11 +73,7 @@
     "no-console": [
       1,
       {
-        "allow": [
-          "warn",
-          "info",
-          "error"
-        ]
+        "allow": ["warn", "info", "error"]
       }
     ],
     "no-shadow": [
