@@ -153,6 +153,15 @@ export class MenuBuilder{
     return this;
   }
   /**
+   * Adds an icon to a menu item.
+   * @param {string} iconPath the icon relative path.
+   * @return {MenuBuilder} the MenuBuilder instance.
+   */
+  public addIcon(iconPath: string): MenuBuilder | null{
+    this.linker.getMenuAct().setIcon(iconPath);
+    return this;
+  }
+  /**
    * Adds a new menu item that will not contain other menus.
    * @param {string} label - Menu title.
    * @return {MenuItemBuilder|null} If name exists and the menu type is 'EquoMenuItem' will return MenuItemBuilder. If exists and type is 'EquoMenu' will return null.
@@ -505,7 +514,7 @@ export class EquoMenu{
   private shortcut!: string;
   private action!: string;
   private id: string;
-  private iconPath?: string;
+  private iconPath!: string;
   /**
    * @name EquoMenu
    * @class
@@ -522,7 +531,7 @@ export class EquoMenu{
     var jsonObj = JSON.parse(json);
     this.title = jsonObj["title"];
     this.type = jsonObj["type"];
-    this.iconPath = jsonObj["iconPath"]
+    this.iconPath = jsonObj["iconPath"];
     if (jsonObj["shortcut"])
       this.shortcut = jsonObj["shortcut"];
     if (jsonObj["action"])
@@ -576,7 +585,7 @@ export class EquoMenu{
   }
     /**
    * Sets the icon for menu.
-   * @param {string} iconPath - Action ID.
+   * @param {string} iconPath - Icon path.
    * @returns {void}
    */
   public setIcon(iconPath: string): void{

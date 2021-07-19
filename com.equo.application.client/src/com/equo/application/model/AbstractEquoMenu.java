@@ -33,6 +33,7 @@ import com.google.gson.JsonObject;
 public abstract class AbstractEquoMenu implements IEquoMenu {
   private String title;
   private IEquoMenu parent;
+  protected String iconPath = null;
 
   AbstractEquoMenu(IEquoMenu parent, String title) {
     this.parent = parent;
@@ -62,6 +63,14 @@ public abstract class AbstractEquoMenu implements IEquoMenu {
    * @return the menu title.
    */
   public String getTitle() {
+    return this.title;
+  }
+  
+  /**
+   * Gets the menu icon path.
+   * @return the menu icon path.
+   */
+  public String getIconPath() {
     return this.title;
   }
 

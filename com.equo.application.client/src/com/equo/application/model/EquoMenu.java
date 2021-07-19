@@ -37,7 +37,6 @@ import com.google.gson.JsonObject;
 public class EquoMenu extends AbstractEquoMenu {
   private List<AbstractEquoMenu> children;
   public static final String CLASSNAME = "EquoMenu";
-  private String iconPath = null;
 
   EquoMenu(IEquoMenu parent, String title) {
     super(parent, title);
@@ -160,6 +159,9 @@ public class EquoMenu extends AbstractEquoMenu {
     JsonObject jOb = new JsonObject();
     jOb.addProperty("type", CLASSNAME);
     jOb.addProperty("title", getTitle());
+    if (iconPath != null) {
+      jOb.addProperty("iconPath", iconPath);
+    }
     jOb.add("children", jArr);
     return jOb;
   }

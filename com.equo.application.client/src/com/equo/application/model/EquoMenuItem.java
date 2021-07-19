@@ -36,7 +36,6 @@ public class EquoMenuItem extends AbstractEquoMenu {
   private Runnable runnable = null;
   private String action = null;
   private String shortcut = null;
-  private String iconPath = null;
   public static final String CLASSNAME = "EquoMenuItem";
 
   EquoMenuItem(IEquoMenu parent, String title) {
@@ -83,7 +82,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
       }
     }
     if (iconPath != null) {
-      itemBuilder = itemBuilder.addIcon(iconPath);
+      itemBuilder.addIcon(iconPath);
     }
   }
 
@@ -141,6 +140,10 @@ public class EquoMenuItem extends AbstractEquoMenu {
 
     if (action != null) {
       jOb.addProperty("action", action);
+    }
+    
+    if (iconPath != null) {
+      jOb.addProperty("iconPath", iconPath);
     }
     return jOb;
   }
