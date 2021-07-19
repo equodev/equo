@@ -24,33 +24,34 @@
  ****************************************************************************/
 
 export interface EquoService<T> {
-  id: string;
-  service: T;
+    id: string;
+    service: T;
 }
 
+// eslint-disable-next-line no-redeclare
 export namespace EquoService {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const global = window as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-undef
+    const global = window as any;
 
-  export function get<T>(id: string, create?: () => EquoService<T>): T {
-    const globalService: T = global[id] as T;
-    if (!globalService && create) {
-      const newService: EquoService<T> = create();
-      if (!newService) {
-        throw new Error(`${id} couldn't be created`);
-      }
-      install<T>(newService);
-      return newService.service;
-    } else if (globalService) {
-      return globalService;
+    export function get<T>(id: string, create?: () => EquoService<T>): T {
+        const globalService: T = global[id] as T;
+        if (!globalService && create) {
+            const newService: EquoService<T> = create();
+            if (!newService) {
+                throw new Error(`${id} couldn't be created`);
+            }
+            install<T>(newService);
+            return newService.service;
+        } else if (globalService) {
+            return globalService;
+        }
+        throw new Error(`${id} has not been installed`);
     }
-    throw new Error(`${id} has not been installed`);
-  }
 
-  export function install<T>(service: EquoService<T>): void {
-    if (global[service.id]) {
-      return;
+    export function install<T>(service: EquoService<T>): void {
+        if (global[service.id]) {
+            return;
+        }
+        global[service.id] = service.service;
     }
-    global[service.id] = service.service;
-  }
 }
