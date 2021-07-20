@@ -64,6 +64,26 @@ Now you can start coding both the Equo Framework and the Equo application in par
 
 Happy coding!
 
+## Develop the framework in parallel with a standalone app
+
+The configs for a standalone app are similar. In this scenario, the local repository is configured by system properties.
+
+There are two configurations to make. The same at the step 5 explained before for bnd apps:
+
+* Set a local repository
+* Set the local `equoapp.bnd` file
+
+The local repository is set with the property `develop.repos`. The value is a list of URIs for repositories to add, separated by ';'.
+
+The `equoapp.bnd` file is set with the property `develop.bnds`. Its value is a list of paths to bnd files to include, separated by ';'.
+
+So all you need to do to run a standalone app with your local framework is to set properties like the follow ones into the VM args and run it:
+
+```
+-Ddevelop.bnds="/home/username/Equo/framework/cnf/equoapp.bnd"
+-Ddevelop.repos="file:///home/username/Equo/framework/cnf/release/index.xml.gz"
+```
+
 ## Troubleshooting
 
 * If you find any compilation or build problem after you get changes from the remote repository try to clean the workspace. If not, apply the following actions:
