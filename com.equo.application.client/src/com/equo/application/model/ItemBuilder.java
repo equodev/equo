@@ -34,6 +34,7 @@ public abstract class ItemBuilder {
   private ItemHandlerBuilder itemHandlerBuilder;
   private MHandledItem item;
   private OptionalViewBuilder viewBuilder;
+  private String shortcut = "";
 
   /**
    * Creates a new instance.
@@ -69,6 +70,7 @@ public abstract class ItemBuilder {
     if (getItemHandlerBuilder() != null) {
       return getItemHandlerBuilder().addShortcut(keySequence);
     }
+    this.shortcut = keySequence;
     // log that there is no menu item handler -> no onClick method was called.
     return this;
   }
@@ -112,6 +114,9 @@ public abstract class ItemBuilder {
     this.getItem().getTransientData().put(IConstants.IS_AN_EQUO_MODEL_ELEMENT, true);
     this.getItem().getTransientData().put(IConstants.EQUO_COMM_USER_EMITTED_EVENT, action);
     ItemBuilder itemBuilder = getItemHandlerBuilder().onClick(runnable, action);
+    if (!this.shortcut.equals("")) {
+      this.addShortcut(this.shortcut);
+    }
     return itemBuilder;
   }
 
