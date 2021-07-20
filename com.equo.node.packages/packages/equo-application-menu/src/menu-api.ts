@@ -154,7 +154,7 @@ export class MenuBuilder{
   }
   /**
    * Adds an icon to a menu item.
-   * @param {string} iconPath the icon relative path.
+   * @param {string} iconPath the icon relative path to resources folder.
    * @return {MenuBuilder} the MenuBuilder instance.
    */
   public addIcon(iconPath: string): MenuBuilder | null{
@@ -429,7 +429,7 @@ export class MenuItemBuilder {
   }
   /**
    * Adds a icon menu item.
-   * @param {string} iconPath the icon relative path.
+   * @param {string} iconPath the icon relative path to resources folder.
    * @return {MenuItemBuilder} the MenuItemBuilder instance.
    */
   public addIcon(iconPath: string): MenuItemBuilder | null{

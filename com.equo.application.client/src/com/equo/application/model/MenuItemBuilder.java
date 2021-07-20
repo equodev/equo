@@ -82,7 +82,7 @@ public class MenuItemBuilder extends ItemBuilder {
   
   /**
    * Adds an icon to a menu item.
-   * @param  iconPath the icon relative path.
+   * @param  iconPath the icon relative path to resources folder.
    * @return          the MenuItemBuilder instance.
    */
   public MenuItemBuilder addIcon(String iconPath) {
