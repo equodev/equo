@@ -169,7 +169,7 @@ public class MenuBuilder {
   
   /**
    * Adds a new icon to a menu.
-   * @param  iconPath the icon relative path.
+   * @param  iconPath the icon relative path to resources folder.
    * @return          the MenuItemBuilder instance.
    */
   public MenuBuilder addIcon(String iconPath) {
