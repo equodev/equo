@@ -82,7 +82,7 @@ public class CustomDeserializer implements JsonDeserializer<Menu> {
       case EquoMenu.CLASSNAME:
         EquoMenu equoMenu = new EquoMenu(parent, menu.get("title").getAsString());
         JsonElement iconPath = menu.get("iconPath");
-        if (iconPath != null && iconPath.getAsString() != "") {
+        if (iconPath != null && !iconPath.getAsString().equals("")) {
           equoMenu.addIcon(iconPath.getAsString());
         }
         JsonArray subMenus = menu.get("children").getAsJsonArray();
