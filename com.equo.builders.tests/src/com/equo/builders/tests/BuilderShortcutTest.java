@@ -27,73 +27,115 @@ import org.junit.Test;
 import com.equo.application.model.MenuItemBuilder;
 import com.equo.application.model.ToolbarItemBuilder;
 
-
 public class BuilderShortcutTest extends AbstractBuilderTest {
 
-	@Test
-	public void should_Create_Toolbar_With_An_ItemEventShortcut() throws Exception {
-		String tooltip = "text1";
-		String shortcut = "Alt + T";
-		ToolbarItemBuilder toolItemBuilder = appBuilder.withUI("/").withToolbar().addToolItem(tooltip, tooltip)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcut);
+  @Test
+  public void should_Create_Toolbar_With_An_ItemEventShortcut() throws Exception {
+    String tooltip = "text1";
+    String shortcut = "Alt + T";
+    ToolbarItemBuilder toolItemBuilder =
+        appBuilder.withUI("/").withToolbar().addToolItem(tooltip, tooltip)
+            .onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcut);
 
-		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
-		assertCheckItemShortcut(shortcut);
+    assertCheckToolItemTooltip(tooltip, toolItemBuilder);
+    assertCheckItemShortcut(shortcut);
+  }
 
-	}
+  @Test
+  public void should_Create_Menu_With_An_ItemEventShortcut() throws Exception {
+    String label = "item1";
+    String shortcut = "Alt + M";
+    MenuItemBuilder menuItemBuilder =
+        appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label)
+            .onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcut);
 
-	
+    assertCheckMenuItemLabel(label, menuItemBuilder);
+    assertCheckItemShortcut(shortcut);
+  }
 
-	@Test
-	public void should_Create_Menu_With_An_ItemEventShortcut() throws Exception {
-		String label = "item1";
-		String shortcut = "Alt + M";
-		MenuItemBuilder menuItemBuilder = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcut);
-		
-		assertCheckMenuItemLabel(label, menuItemBuilder);
-		assertCheckItemShortcut(shortcut);
-		
-	}
+  @Test
+  public void should_Create_MenuToolbar_With_An_ItemEventShortcut() throws Exception {
+    String label = "item1";
+    String shortcutMenu = "Alt + M";
+    MenuItemBuilder menuItemBuilder =
+        appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label)
+            .onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu);
 
-	@Test
-	public void should_Create_MenuToolbar_With_An_ItemEventShortcut() throws Exception {
-		String label = "item1";
-		String shortcutMenu = "Alt + M";
-		MenuItemBuilder menuItemBuilder = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu);
+    String tooltip = "text1";
+    String shortcutToolbar = "Alt + T";
+    ToolbarItemBuilder toolItemBuilder = menuItemBuilder.withToolbar().addToolItem(tooltip, tooltip)
+        .onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar);
 
-		String tooltip = "text1";
-		String shortcutToolbar = "Alt + T";
-		ToolbarItemBuilder toolItemBuilder = menuItemBuilder.withToolbar().addToolItem(tooltip, tooltip)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar);
+    assertCheckMenuItemLabel(label, menuItemBuilder);
+    assertCheckItemShortcut(shortcutMenu);
 
-		assertCheckMenuItemLabel(label, menuItemBuilder);
-		assertCheckItemShortcut(shortcutMenu);
-		
-		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
-		assertCheckItemShortcut(shortcutToolbar);
-	}
+    assertCheckToolItemTooltip(tooltip, toolItemBuilder);
+    assertCheckItemShortcut(shortcutToolbar);
+  }
 
-	@Test
-	public void should_Create_ToolbarMenu_With_An_ItemEventShortcut() throws Exception {
-		String tooltip = "text1";
-		String shortcutToolbar = "Alt + T";
-		ToolbarItemBuilder toolItemBuilder = appBuilder.withUI("/").withToolbar().addToolItem(tooltip, tooltip)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar);
+  @Test
+  public void should_Create_ToolbarMenu_With_An_ItemEventShortcut() throws Exception {
+    String tooltip = "text1";
+    String shortcutToolbar = "Alt + T";
+    ToolbarItemBuilder toolItemBuilder =
+        appBuilder.withUI("/").withToolbar().addToolItem(tooltip, tooltip)
+            .onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar);
 
-		String label = "item1";
-		String shortcutMenu = "Alt + M";
-		MenuItemBuilder menuItemBuilder = toolItemBuilder.withMainMenu("Menu1").addMenuItem(label)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu);
+    String label = "item1";
+    String shortcutMenu = "Alt + M";
+    MenuItemBuilder menuItemBuilder = toolItemBuilder.withMainMenu("Menu1").addMenuItem(label)
+        .onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu);
 
-		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
-		assertCheckItemShortcut(shortcutToolbar);
-		
-		assertCheckMenuItemLabel(label, menuItemBuilder);
-		assertCheckItemShortcut(shortcutToolbar);
-	}
-	
-	
+    assertCheckToolItemTooltip(tooltip, toolItemBuilder);
+    assertCheckItemShortcut(shortcutToolbar);
+
+    assertCheckMenuItemLabel(label, menuItemBuilder);
+    assertCheckItemShortcut(shortcutMenu);
+  }
+
+  @Test
+  public void should_Create_Toolbar_With_An_ItemEventShortcut_declaring_shortcut_before_onclick()
+      throws Exception {
+    String tooltip = "text1";
+    String shortcutToolbar = "Alt + T";
+    ToolbarItemBuilder toolItemBuilder =
+        appBuilder.withUI("/").withToolbar().addToolItem(tooltip, tooltip)
+            .addShortcut(shortcutToolbar).onClick(() -> System.out.println("toolitem event 1"));
+
+    assertCheckToolItemTooltip(tooltip, toolItemBuilder);
+    assertCheckItemShortcut(shortcutToolbar);
+  }
+
+  @Test
+  public void should_Create_Menu_With_An_ItemEventShortcut_declaring_shortcut_before_onclick()
+      throws Exception {
+    String label = "item1";
+    String shortcut = "Alt + M";
+    MenuItemBuilder menuItemBuilder =
+        appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label).addShortcut(shortcut)
+            .onClick(() -> System.out.println("menuitem event 1"));
+
+    assertCheckMenuItemLabel(label, menuItemBuilder);
+    assertCheckItemShortcut(shortcut);
+  }
+
+  @Test
+  public void should_Create_Menu_With_two_ItemEventShortcut_declaring_shortcut_before_onclick()
+      throws Exception {
+    String label1 = "item1";
+    String shortcutMenu1 = "Alt + M";
+    String label2 = "item2";
+    String shortcutMenu2 = "Alt + N";
+    MenuItemBuilder menuItemBuilder =
+        appBuilder.withUI("/").withMainMenu("Menu").addMenuItem(label1).addShortcut(shortcutMenu1)
+            .onClick(() -> System.out.println("menuitem event 1")).addMenuItem(label2)
+            .addShortcut(shortcutMenu2).onClick(() -> System.out.println("menuitem event 2"));
+
+    assertCheckMenuItemLabel(label1, menuItemBuilder);
+    assertCheckItemShortcut(shortcutMenu1);
+
+    assertCheckMenuItemLabel(label2, menuItemBuilder);
+    assertCheckItemShortcut(shortcutMenu2);
+  }
 
 }
