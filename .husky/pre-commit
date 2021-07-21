@@ -1,0 +1,57 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# https://gist.github.com/rashtay/328da46a99a9d7c746636df1cf769675
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.ts$")
+ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
+
+printf "\e[4mStaged typescript files\e[0m:\n"
+
+for FILE in $STAGED_FILES; do
+    echo "\t→ $FILE"
+done
+
+if [ -z "$STAGED_FILES" ]; then
+    printf "\tNo staged files\n"
+    exit 0
+fi
+
+PASS=true
+
+printf "\n\e[4mValidating Typescript files\e[0m:\n"
+
+# Check for eslint
+if [ ! -x "$ESLINT" ]; then
+    printf "\t\033[41mPlease install ESlint\033[0m (\"yarn install\")\n"
+    exit 1
+fi
+
+for FILE in $STAGED_FILES; do
+    "$ESLINT" "$FILE"
+
+    if [ "$?" -eq 0 ]; then
+        printf "\t✅ \e[4;32mESLint Passed\e[m\e[32m: $FILE\e[0m\n"
+    else
+        printf "\t❌ \033[4;31mESLint Failed\e[m\e[31m: $FILE\033[0m\n"
+        PASS=false
+    fi
+done
+
+printf "\n"
+printf "\e[1;100m┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\e[m\n"
+printf "\e[1;100m┃                                                                              ┃\e[m\n"
+printf "\e[1;100m┃                      ¡Typescript validation completed!                       ┃\e[m\n"
+printf "\e[1;100m┃                                                                              ┃\e[m\n"
+printf "\e[1;100m┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\e[m\n"
+printf "\n"
+
+if ! $PASS; then
+    printf "\e[1;41mCOMMIT FAILED:\e[0m Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors and try again.\n"
+    exit 1
+else
+    printf "\e[1;90;42m  ¡COMMIT SUCCEEDED!  \e[32;0m\n\n"
+fi
+
+exit $?
+

@@ -1,0 +1,8 @@
+.gradle-wrapper/
+.gradle/
+bin/
+cnf/
+generated/
+lib/
+node_modules/
+com.equo.node.packages.tests/resources/

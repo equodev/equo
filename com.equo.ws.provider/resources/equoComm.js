@@ -24,14 +24,14 @@ window.equo = window.equo || {};
 
 /**
  * @typedef {any} Payload
- * 
+ *
  * @typedef {Object} Equo
  * @property {(action: string, browserParams: Payload) => void} sendToCommServer
  * @property {(action: string, payload: Payload) => {}} send
  * @property {(userEvent: string, callback: Function) => void} on
  */
 
-(function (/** @type {Equo} */equo) {
+(function (/** @type {Equo} */ equo) {
     /** @type {WebSocket} */
     let comm;
     /** @type {Record<string, Function>} */
@@ -42,7 +42,7 @@ window.equo = window.equo || {};
             return;
         }
         try {
-            /** 
+            /**
              * @type {{
              *  action: string;
              *  params: Payload;
@@ -108,9 +108,9 @@ window.equo = window.equo || {};
 
     // Make the function wait until the connection is made...
     /**
-     * 
-     * @param {WebSocket} comm 
-     * @param {Function} callback 
+     *
+     * @param {WebSocket} comm
+     * @param {Function} callback
      */
     let waitForCommConnection = function (comm, callback) {
         setTimeout(function () {
