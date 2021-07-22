@@ -2,11 +2,14 @@
   "name": "framework",
   "description": "[Equo Framework](https://www.equoplatform.com/framework) is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.",
   "scripts": {
-    "lint": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts,.js --fix",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/eslint-parser": "^7.14.7",
     "@tsconfig/recommended": "^1.0.1",
+    "@types/jquery": "^3.5.6",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
     "eslint": "^7.31.0",

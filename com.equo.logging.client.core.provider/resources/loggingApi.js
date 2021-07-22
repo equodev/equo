@@ -34,14 +34,14 @@ window.equo = window.equo || {};
     // Level use to disable special logger level for javascript and use the global level
     equo.LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
 
-    let sendLog = function (message, type) {
-        let payload = {};
+    const sendLog = function (message, type) {
+        const payload = {};
         payload.message = message;
         payload.type = type;
         equo.sendToCommServer("loggingEvent", payload);
     };
 
-    let returnResponse = function (callback) {
+    const returnResponse = function (callback) {
         equo.on("loggingResponseEvent", callback);
     };
 
@@ -83,16 +83,16 @@ window.equo = window.equo || {};
         sendLog(level, "setGlobalLevel");
     };
 
-    equo.error = function (msg, url, lineNo, columnNo, error) {
+    equo.error = function ({ msg, url, lineNo, columnNo, error }) {
         sendLog(
             {
-                msg: msg,
-                url: url,
-                lineNo: lineNo,
-                columnNo: columnNo,
-                error: error,
+                msg,
+                url,
+                lineNo,
+                columnNo,
+                error,
             },
             "jserror",
         );
     };
-})(equo);
+})(window.equo);

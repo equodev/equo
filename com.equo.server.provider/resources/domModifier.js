@@ -19,34 +19,34 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
+import $ from "../../node_modules/@types/jquery";
 
 window.equo = window.equo || {};
 
 (function (equo) {
-    let domModifiersCallbacks = [];
+    const domModifiersCallbacks = [];
 
     equo.onNativeDomChanged = function (callback) {
         domModifiersCallbacks.push(callback);
     };
 
-    $(document).ready(function () {
+    $(document).ready(() => {
         const observeDOM = (function () {
-            let MutationObserver =
+            const MutationObserver =
                     window.MutationObserver || window.WebKitMutationObserver,
                 eventListenerSupported = window.addEventListener;
 
             return function (obj, callback) {
                 if (MutationObserver) {
                     // define a new observer
-                    let obs = new MutationObserver(function (
-                        mutations,
-                        observer,
-                    ) {
+                    // 'observer' is declared but its value is never read.
+                    const obs = new MutationObserver((mutations/* , observer */) => {
                         if (
                             mutations[0].addedNodes.length ||
                             mutations[0].removedNodes.length
-                        )
+                        ) {
                             callback(mutations);
+                        }
                     });
                     obs.observe(obj, {
                         childList: true,
@@ -60,17 +60,17 @@ window.equo = window.equo || {};
         })();
 
         // Observe the body
-        let targetNode = document.body;
-        observeDOM(targetNode, function (mutations) {
+        const targetNode = document.body;
+        observeDOM(targetNode, (mutations) => {
             for (let i = 0; i < mutations.length; i++) {
-                let mutation = mutations[i];
+                const mutation = mutations[i];
                 if (mutation.addedNodes.length) {
-                    let addedNode = $(mutation.addedNodes[0]);
-                    for (let callback of domModifiersCallbacks) {
+                    const addedNode = $(mutation.addedNodes[0]);
+                    for (const callback of domModifiersCallbacks) {
                         callback(addedNode);
                     }
                 }
             }
         });
     });
-})(equo);
+})(window.equo);

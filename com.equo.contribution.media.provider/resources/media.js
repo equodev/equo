@@ -19,6 +19,7 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
+import $ from "../../node_modules/@types/jquery";
 
 window.equo = window.equo || {};
 
@@ -28,15 +29,17 @@ window.equo = window.equo || {};
     let getCurrentMediaTitleFunction;
     let mediaType;
 
-    checkMediaType = () => {
+    const checkMediaType = () => {
         if (typeof mediaType === "undefined") {
-            throw "Media type is not defined. The method equo.setMediaType must be call first and the media type must be 'audio' or 'video'";
+            throw new Error(
+                "Media type is not defined. The method equo.setMediaType must be call first and the media type must be 'audio' or 'video'",
+            );
         }
     };
 
     equo.on("playSelectedMedia", () => {
         checkMediaType();
-        let currentVideo = document.getElementsByTagName(mediaType)[0];
+        const currentVideo = document.getElementsByTagName(mediaType)[0];
         if (currentVideo) {
             if (currentVideo.paused) {
                 currentVideo.play();
@@ -48,7 +51,7 @@ window.equo = window.equo || {};
 
     equo.on("turnUpVolume", () => {
         checkMediaType();
-        let currentVideo = document.getElementsByTagName(mediaType)[0];
+        const currentVideo = document.getElementsByTagName(mediaType)[0];
         if (currentVideo) {
             currentVideo.volume += VOLUME;
         }
@@ -56,7 +59,7 @@ window.equo = window.equo || {};
 
     equo.on("turnDownVolume", () => {
         checkMediaType();
-        let currentVideo = document.getElementsByTagName(mediaType)[0];
+        const currentVideo = document.getElementsByTagName(mediaType)[0];
         if (currentVideo) {
             currentVideo.volume -= VOLUME;
         }
@@ -78,11 +81,11 @@ window.equo = window.equo || {};
      * @param {*} domElement
      */
     equo.playVideoWhenClick = (domElement) => {
-        $(document).on("click", domElement, function (event) {
-            equo.logDebug("this is... " + JSON.stringify(this));
+        $(document).on("click", domElement, (event) => {
+            equo.logDebug(`this is... ${JSON.stringify(this)}`);
             if (typeof getCurrentMediaTitleFunction !== "undefined") {
-                let mediaTitle = getCurrentMediaTitleFunction(this);
-                equo.logDebug("media playing is... " + mediaTitle);
+                const mediaTitle = getCurrentMediaTitleFunction(this);
+                equo.logDebug(`media playing is... ${mediaTitle}`);
                 event.preventDefault();
                 if (equo.registerEvent) {
                     equo.registerEvent({
@@ -114,8 +117,8 @@ window.equo = window.equo || {};
      */
     equo.setMediaType = (type) => {
         if (type !== "video" && type !== "audio") {
-            throw "Media type must be 'audio' or 'video'";
+            throw new Error("Media type must be 'audio' or 'video'");
         }
         mediaType = type;
     };
-})(equo);
+})(window.equo);

@@ -35,9 +35,9 @@ window.equo = window.equo || {};
     /** @type {WebSocket} */
     let comm;
     /** @type {Record<string, Function>} */
-    let userEventCallbacks = {};
+    const userEventCallbacks = {};
 
-    let receiveMessage = function (event) {
+    const receiveMessage = function (event) {
         if (event === undefined) {
             return;
         }
@@ -48,13 +48,13 @@ window.equo = window.equo || {};
              *  params: Payload;
              * }}
              */
-            let parsedPayload = JSON.parse(event);
-            let actionId = parsedPayload.action;
+            const parsedPayload = JSON.parse(event);
+            const actionId = parsedPayload.action;
             if (actionId in userEventCallbacks) {
-                let params = parsedPayload.params;
+                const { params } = parsedPayload;
                 userEventCallbacks[actionId](params);
             }
-        } catch (err) {}
+        } catch (err) {/*  */}
     };
 
     const openComm = (function () {
@@ -63,9 +63,9 @@ window.equo = window.equo || {};
             //equo.logDebug('comm is already opened.');
             return;
         }
-        let commPort = "%d";
+        const commPort = "%d";
         // Create a new instance of the comm
-        comm = new WebSocket("ws://127.0.0.1:" + commPort);
+        comm = new WebSocket(`ws://127.0.0.1:${commPort}`);
         /**
          * Binds functions to the listeners for the comm.
          */
@@ -80,7 +80,7 @@ window.equo = window.equo || {};
             receiveMessage(event.data);
         };
 
-        comm.onclose = function () {};
+        comm.onclose = function () {/*  */};
     })();
 
     // Expose the below methods via the equo interface while
@@ -89,9 +89,9 @@ window.equo = window.equo || {};
 
     equo.sendToCommServer = function (action, browserParams) {
         // Wait until the state of the comm is not ready and send the message when it is...
-        waitForCommConnection(comm, function () {
-            let event = JSON.stringify({
-                action: action,
+        waitForCommConnection(comm, () => {
+            const event = JSON.stringify({
+                action,
                 params: browserParams,
             });
             comm.send(event);
@@ -112,19 +112,18 @@ window.equo = window.equo || {};
      * @param {WebSocket} comm
      * @param {Function} callback
      */
-    let waitForCommConnection = function (comm, callback) {
-        setTimeout(function () {
+    const waitForCommConnection = function (comm, callback) {
+        setTimeout(() => {
             if (comm.readyState === 1) {
                 if (callback != null) {
                     callback();
                 }
                 return;
-            } else {
-                try {
-                    openComm();
-                } catch (err) {}
-                waitForCommConnection(comm, callback);
             }
+            try {
+                openComm();
+            } catch (err) {/* */}
+            waitForCommConnection(comm, callback);
         }, 5); // wait 5 milisecond for the connection...
     };
-})(equo);
+})(window.equo);
