@@ -2,7 +2,7 @@
 
 ## Development Environment
 
-1. Download [<u>_Eclipse Installer_</u>][Eclipse] and run it (Click _advanced mode_ button):
+1. Download [<u>_Eclipse Installer_</u>][ECLIPSE] and run it (Click _advanced mode_ button):
 
    ![img](img/equo-framework-development-environment-1.png)
 
@@ -53,6 +53,8 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
 
    ![img](img/Workspace%20configurations/4.5.png)
 
+   Press `Apply`.
+
    ![img](img/Workspace%20configurations/5.png)
 
 2. Import the _checkstyle_ file to check Equo code styling as you are developing. For this, you need to:
@@ -98,5 +100,16 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
 
       ![img](img/Workspace%20configurations/13.png)
 
-<!-- links -->
-   [Eclipse]: https://wiki.eclipse.org/Eclipse_Installer
+### Visual Studio Code
+
+   If you want work with typescript files into framework, only few extensions are needed:
+
+   1. [Error Lens][ERROR_LENS]
+   2. [ESLint][ESLINT]
+   3. [Prettier][PRETTIER]
+
+<!-- links [CASE_CONSTANT]: https://link -->
+   [ECLIPSE]: https://wiki.eclipse.org/Eclipse_Installer
+   [ERROR_LENS]: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
+   [ESLINT]: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+   [PRETTIER]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
