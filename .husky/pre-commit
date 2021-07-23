@@ -27,7 +27,7 @@ validationCompleted() {
 }
 
 if [ -z "$STAGED_FILES" ]; then
-    printf '\n	%s[%smNo staged files%s\n\n' "${ESC}" "${underline}" "${ESC_END}"
+    printf '\n	%b[%bmNo staged typescript and javascript files%b\n\n' "$ESC" "$underline" "$ESC_END"
     exit 0
 fi
 
@@ -39,7 +39,7 @@ done
 
 PASS=true
 
-printf "\n %b[%bmValidating typescript and javascript files%b:\n" "$ESC" "$underline" "$ESC_END"
+printf "\n %b[%bmValidating files%b:\n" "$ESC" "$underline" "$ESC_END"
 
 # Check for eslint
 if [ ! -x "$ESLINT" ]; then

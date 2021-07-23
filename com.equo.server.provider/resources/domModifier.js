@@ -29,8 +29,8 @@ window.equo = window.equo || {};
     equo.onNativeDomChanged = function (callback) {
         domModifiersCallbacks.push(callback);
     };
-
-    $(document).ready(() => {
+    // $(document).ready() @deprecated — Deprecated since 3.0. Use $(function() { }).
+    $(() => {
         const observeDOM = (function () {
             const MutationObserver =
                     window.MutationObserver || window.WebKitMutationObserver,
