@@ -82,7 +82,7 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
 
   @Override
   public void addEventHandler(String eventId, IEquoRunnableParser<?> equoRunnableParser) {
-    eventHandlers.put(eventId.toLowerCase(), equoRunnableParser);
+    eventHandlers.put(eventId, equoRunnableParser);
   }
 
   @Override
