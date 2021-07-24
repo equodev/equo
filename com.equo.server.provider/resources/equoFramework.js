@@ -23,40 +23,40 @@
 window.equo = window.equo || {};
 
 (function (equo) {
-    equo.openBrowser = function (browserParams) {
-        equo.sendToCommServer("openBrowser", browserParams);
-    };
+  equo.openBrowser = function (browserParams) {
+    equo.sendToCommServer('openBrowser', browserParams)
+  }
 
-    equo.updateBrowser = function (browserParams) {
-        equo.sendToCommServer("updateBrowser", browserParams);
-    };
+  equo.updateBrowser = function (browserParams) {
+    equo.sendToCommServer('updateBrowser', browserParams)
+  }
 
-    equo.addMenu = function (menuModel) {
-        equo.sendToCommServer("_setMenu", menuModel);
-    };
+  equo.addMenu = function (menuModel) {
+    equo.sendToCommServer('_setMenu', menuModel)
+  }
 
-    equo.addShortcut = function (shortcut, callback) {
-        const payload = {
-            shortcut,
-            event: `_exec_shotcut_${shortcut}`,
-        };
-        equo.on(payload.event, callback);
-        equo.sendToCommServer("_addShortcut", payload);
-    };
+  equo.addShortcut = function (shortcut, callback) {
+    const payload = {
+      shortcut,
+      event: `_exec_shotcut_${shortcut}`
+    }
+    equo.on(payload.event, callback)
+    equo.sendToCommServer('_addShortcut', payload)
+  }
 
-    equo.addShortcutToEvent = function (shortcut, event) {
-        const payload = {
-            shortcut,
-            event,
-        };
-        equo.sendToCommServer("_addShortcut", payload);
-    };
+  equo.addShortcutToEvent = function (shortcut, event) {
+    const payload = {
+      shortcut,
+      event
+    }
+    equo.sendToCommServer('_addShortcut', payload)
+  }
 
-    // 'event' is declared but its value is never read.
-    equo.removeShortcut = function (shortcut/* , event */) {
-        const payload = {
-            shortcut,
-        };
-        equo.sendToCommServer("_removeShortcut", payload);
-    };
-})(window.equo);
+  // 'event' is declared but its value is never read.
+  equo.removeShortcut = function (shortcut/* , event */) {
+    const payload = {
+      shortcut
+    }
+    equo.sendToCommServer('_removeShortcut', payload)
+  }
+})(window.equo)

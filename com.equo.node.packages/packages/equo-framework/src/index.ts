@@ -20,4 +20,4 @@
 **
 ****************************************************************************/
 
-export * from "./equoFramework";
+export * from './equoFramework'

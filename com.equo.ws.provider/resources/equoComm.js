@@ -32,98 +32,98 @@ window.equo = window.equo || {};
  */
 
 (function (/** @type {Equo} */ equo) {
-    /** @type {WebSocket} */
-    let comm;
-    /** @type {Record<string, Function>} */
-    const userEventCallbacks = {};
+  /** @type {WebSocket} */
+  let comm
+  /** @type {Record<string, Function>} */
+  const userEventCallbacks = {}
 
-    const receiveMessage = function (event) {
-        if (event === undefined) {
-            return;
-        }
-        try {
-            /**
+  const receiveMessage = function (event) {
+    if (event === undefined) {
+      return
+    }
+    try {
+      /**
              * @type {{
              *  action: string;
              *  params: Payload;
              * }}
              */
-            const parsedPayload = JSON.parse(event);
-            const actionId = parsedPayload.action;
-            if (actionId in userEventCallbacks) {
-                const { params } = parsedPayload;
-                userEventCallbacks[actionId](params);
-            }
-        } catch (err) {/*  */}
-    };
+      const parsedPayload = JSON.parse(event)
+      const actionId = parsedPayload.action
+      if (actionId in userEventCallbacks) {
+        const { params } = parsedPayload
+        userEventCallbacks[actionId](params)
+      }
+    } catch (err) { /*  */ }
+  }
 
-    const openComm = (function () {
-        // Ensures only one connection is open at a time
-        if (comm !== undefined && comm.readyState !== WebSocket.CLOSED) {
-            //equo.logDebug('comm is already opened.');
-            return;
-        }
-        const commPort = "%d";
-        // Create a new instance of the comm
-        comm = new WebSocket(`ws://127.0.0.1:${commPort}`);
-        /**
+  const openComm = (function () {
+    // Ensures only one connection is open at a time
+    if (comm !== undefined && comm.readyState !== WebSocket.CLOSED) {
+      // equo.logDebug('comm is already opened.');
+      return
+    }
+    const commPort = '%d'
+    // Create a new instance of the comm
+    comm = new WebSocket(`ws://127.0.0.1:${commPort}`)
+    /**
          * Binds functions to the listeners for the comm.
          */
-        comm.onopen = function (event) {
-            // For reasons I can't determine, onopen gets called twice
-            // and the first time event.data is undefined.
-            // Leave a comment if you know the answer.
-            if (event.data === undefined) return;
-        };
+    comm.onopen = function (event) {
+      // For reasons I can't determine, onopen gets called twice
+      // and the first time event.data is undefined.
+      // Leave a comment if you know the answer.
+      if (event.data === undefined) { /*  */ }
+    }
 
-        comm.onmessage = function (event) {
-            receiveMessage(event.data);
-        };
+    comm.onmessage = function (event) {
+      receiveMessage(event.data)
+    }
 
-        comm.onclose = function () {/*  */};
-    })();
+    comm.onclose = function () { /*  */ }
+  })()
 
-    // Expose the below methods via the equo interface while
-    // hiding the implementation of the method within the
-    // function() block
+  // Expose the below methods via the equo interface while
+  // hiding the implementation of the method within the
+  // function() block
 
-    equo.sendToCommServer = function (action, browserParams) {
-        // Wait until the state of the comm is not ready and send the message when it is...
-        waitForCommConnection(comm, () => {
-            const event = JSON.stringify({
-                action,
-                params: browserParams,
-            });
-            comm.send(event);
-        });
-    };
+  equo.sendToCommServer = function (action, browserParams) {
+    // Wait until the state of the comm is not ready and send the message when it is...
+    waitForCommConnection(comm, () => {
+      const event = JSON.stringify({
+        action,
+        params: browserParams
+      })
+      comm.send(event)
+    })
+  }
 
-    equo.send = function (actionId, payload) {
-        equo.sendToCommServer(actionId, payload);
-    };
+  equo.send = function (actionId, payload) {
+    equo.sendToCommServer(actionId, payload)
+  }
 
-    equo.on = function (userEvent, callback) {
-        userEventCallbacks[userEvent] = callback;
-    };
+  equo.on = function (userEvent, callback) {
+    userEventCallbacks[userEvent] = callback
+  }
 
-    // Make the function wait until the connection is made...
-    /**
+  // Make the function wait until the connection is made...
+  /**
      *
      * @param {WebSocket} comm
      * @param {Function} callback
      */
-    const waitForCommConnection = function (comm, callback) {
-        setTimeout(() => {
-            if (comm.readyState === 1) {
-                if (callback != null) {
-                    callback();
-                }
-                return;
-            }
-            try {
-                openComm();
-            } catch (err) {/* */}
-            waitForCommConnection(comm, callback);
-        }, 5); // wait 5 milisecond for the connection...
-    };
-})(window.equo);
+  const waitForCommConnection = function (comm, callback) {
+    setTimeout(() => {
+      if (comm.readyState === 1) {
+        if (callback != null) {
+          callback()
+        }
+        return
+      }
+      try {
+        openComm()
+      } catch (err) { /* */ }
+      waitForCommConnection(comm, callback)
+    }, 5) // wait 5 milisecond for the connection...
+  }
+})(window.equo)

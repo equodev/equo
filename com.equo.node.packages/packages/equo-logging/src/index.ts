@@ -1,4 +1,3 @@
-/* eslint-disable no-inner-declarations */
 /* eslint-disable @typescript-eslint/no-namespace */
 /****************************************************************************
  **
@@ -22,11 +21,11 @@
  **
  ****************************************************************************/
 
-import { EquoComm, EquoCommService } from "@equo/comm";
+import { EquoComm, EquoCommService } from '@equo/comm'
 
 export interface LogPayload {
-    message: string;
-    type: string;
+  message: string
+  type: string
 }
 /**
  * @namespace
@@ -34,153 +33,151 @@ export interface LogPayload {
  * Configure logs levels using ***equo-logging***
  */
 
+const LOG_EVENTS = {
+  LOGGING_EVENT: 'loggingEvent',
+  LOGGING_RESPONSE_EVENT: 'loggingResponseEvent'
+}
+
+const LOG_TYPES = {
+  INFO: 'info',
+  ERROR: 'error',
+  WARNING: 'warning',
+  DEBUG: 'debug',
+  TRACE: 'trace',
+  GET_LEVEL: 'getLevel',
+  SET_LEVEL: 'setLevel',
+  GET_GLOBAL_LEVEL: 'getGlobalLevel',
+  SET_GLOBAL_LEVEL: 'setGlobalLevel'
+}
+
 export namespace EquoLoggingService {
-    const comm: EquoComm = EquoCommService.get();
+  const comm: EquoComm = EquoCommService.get()
 
-    // eslint-disable-next-line no-shadow
-    const LOG_EVENTS = {
-        LOGGING_EVENT: "loggingEvent",
-        LOGGING_RESPONSE_EVENT: "loggingResponseEvent",
-    };
-
-    // eslint-disable-next-line no-shadow
-    const LOG_TYPES = {
-        INFO: "info",
-        ERROR: "error",
-        WARNING: "warning",
-        DEBUG: "debug",
-        TRACE: "trace",
-        GET_LEVEL: "getLevel",
-        SET_LEVEL: "setLevel",
-        GET_GLOBAL_LEVEL: "getGlobalLevel",
-        SET_GLOBAL_LEVEL: "setGlobalLevel",
-    };
-
-    /**
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_OFF = "OFF";
-    /**
+  export const LOG_LEVEL_OFF = 'OFF'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_ERROR = "ERROR";
-    /**
+  export const LOG_LEVEL_ERROR = 'ERROR'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_WARN = "WARN";
-    /**
+  export const LOG_LEVEL_WARN = 'WARN'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_INFO = "INFO";
-    /**
+  export const LOG_LEVEL_INFO = 'INFO'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_DEBUG = "DEBUG";
-    /**
+  export const LOG_LEVEL_DEBUG = 'DEBUG'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_TRACE = "TRACE";
-    /**
+  export const LOG_LEVEL_TRACE = 'TRACE'
+  /**
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_ALL = "ALL";
-    /**
+  export const LOG_LEVEL_ALL = 'ALL'
+  /**
      * Level use to disable special logger level for javascript and use the
      * global level
      * @constant
      * @type {string}
      * @default
      */
-    export const LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
+  export const LOG_LEVEL_NOT_CONFIGURED = 'NOT CONFIGURED'
 
-    function sendLog(message: string, type: string): void {
-        const payload: LogPayload = {
-            message,
-            type,
-        };
-        comm.send(LOG_EVENTS.LOGGING_EVENT, payload);
+  const sendLog = function (message: string, type: string): void {
+    const payload: LogPayload = {
+      message,
+      type
     }
+    comm.send(LOG_EVENTS.LOGGING_EVENT, payload)
+  }
 
-    function returnResponse(callback: Function): void {
-        comm.on(LOG_EVENTS.LOGGING_RESPONSE_EVENT, callback);
-    }
+  const returnResponse = function (callback: Function): void {
+    comm.on(LOG_EVENTS.LOGGING_RESPONSE_EVENT, callback)
+  }
 
-    /**
+  /**
      * Log a message with ***info*** level.
      * @function
      * @name logInfo
      * @param {string} message
      * @returns {void}
      */
-    export function logInfo(message: string): void {
-        sendLog(message, LOG_TYPES.INFO);
-    }
-    /**
+  export function logInfo (message: string): void {
+    sendLog(message, LOG_TYPES.INFO)
+  }
+  /**
      * Log a message with ***error*** level.
      * @function
      * @name logError
      * @param {string} message
      * @returns {void}
      */
-    export function logError(message: string): void {
-        sendLog(message, LOG_TYPES.ERROR);
-    }
-    /**
+  export function logError (message: string): void {
+    sendLog(message, LOG_TYPES.ERROR)
+  }
+  /**
      * Log a message with ***warn*** level.
      * @function
      * @name logWarn
      * @param {string} message
      * @returns {void}
      */
-    export function logWarn(message: string): void {
-        sendLog(message, LOG_TYPES.WARNING);
-    }
-    /**
+  export function logWarn (message: string): void {
+    sendLog(message, LOG_TYPES.WARNING)
+  }
+  /**
      * Log a message with ***debug*** level.
      * @function
      * @name logDebug
      * @param {string} message
      * @returns {void}
      */
-    export function logDebug(message: string): void {
-        sendLog(message, LOG_TYPES.DEBUG);
-    }
-    /**
+  export function logDebug (message: string): void {
+    sendLog(message, LOG_TYPES.DEBUG)
+  }
+  /**
      * Log a message with ***trace*** level.
      * @function
      * @name logTrace
      * @param {string} message
      * @returns {void}
      */
-    export function logTrace(message: string): void {
-        sendLog(message, LOG_TYPES.TRACE);
-    }
-    /**
+  export function logTrace (message: string): void {
+    sendLog(message, LOG_TYPES.TRACE)
+  }
+  /**
      * Gets a custom level for javascript logs.
      * @function
      * @name getJsLoggerLevel
      * @param {Function} callback
      * @returns {void}
      */
-    export function getJsLoggerLevel(callback: Function): void {
-        returnResponse(callback);
-        sendLog("", LOG_TYPES.GET_LEVEL);
-    }
-    /**
+  export function getJsLoggerLevel (callback: Function): void {
+    returnResponse(callback)
+    sendLog('', LOG_TYPES.GET_LEVEL)
+  }
+  /**
      * Sets a custom level for javascript logs. Javascrips logs will use this
      * level instead the global one. Disabled by default.
      * @default LOG_LEVEL_NOT_CONFIGURED
@@ -189,28 +186,28 @@ export namespace EquoLoggingService {
      * @param {string} level - Use constant log level.
      * @returns {void}
      */
-    export function setJsLoggerLevel(level: string): void {
-        sendLog(level, LOG_TYPES.SET_LEVEL);
-    }
-    /**
+  export function setJsLoggerLevel (level: string): void {
+    sendLog(level, LOG_TYPES.SET_LEVEL)
+  }
+  /**
      * Gets a global log level.
      * @function
      * @name getGlobalLoggerLevel
      * @param {Function} callback
      * @returns {void}
      */
-    export function getGlobalLoggerLevel(callback: Function): void {
-        returnResponse(callback);
-        sendLog("", LOG_TYPES.GET_GLOBAL_LEVEL);
-    }
-    /**
+  export function getGlobalLoggerLevel (callback: Function): void {
+    returnResponse(callback)
+    sendLog('', LOG_TYPES.GET_GLOBAL_LEVEL)
+  }
+  /**
      * Sets a global log level.
      * @function
      * @name setGlobalLoggerLevel
      * @param {string} level - Use constant log level.
      * @returns {void}
      */
-    export function setGlobalLoggerLevel(level: string): void {
-        sendLog(level, LOG_TYPES.SET_GLOBAL_LEVEL);
-    }
+  export function setGlobalLoggerLevel (level: string): void {
+    sendLog(level, LOG_TYPES.SET_GLOBAL_LEVEL)
+  }
 }

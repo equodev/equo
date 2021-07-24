@@ -19,58 +19,58 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
-import $ from "../../node_modules/@types/jquery";
+import $ from '../../node_modules/@types/jquery'
 
 window.equo = window.equo || {};
 
 (function (equo) {
-    const domModifiersCallbacks = [];
+  const domModifiersCallbacks = []
 
-    equo.onNativeDomChanged = function (callback) {
-        domModifiersCallbacks.push(callback);
-    };
-    // $(document).ready() @deprecated — Deprecated since 3.0. Use $(function() { }).
-    $(() => {
-        const observeDOM = (function () {
-            const MutationObserver =
-                    window.MutationObserver || window.WebKitMutationObserver,
-                eventListenerSupported = window.addEventListener;
+  equo.onNativeDomChanged = function (callback) {
+    domModifiersCallbacks.push(callback)
+  }
+  // $(document).ready() @deprecated — Deprecated since 3.0. Use $(function() { }).
+  $(() => {
+    const observeDOM = (function () {
+      const MutationObserver =
+                    window.MutationObserver || window.WebKitMutationObserver
+      const eventListenerSupported = window.addEventListener
 
-            return function (obj, callback) {
-                if (MutationObserver) {
-                    // define a new observer
-                    // 'observer' is declared but its value is never read.
-                    const obs = new MutationObserver((mutations/* , observer */) => {
-                        if (
-                            mutations[0].addedNodes.length ||
+      return function (obj, callback) {
+        if (MutationObserver) {
+          // define a new observer
+          // 'observer' is declared but its value is never read.
+          const obs = new MutationObserver((mutations/* , observer */) => {
+            if (
+              mutations[0].addedNodes.length ||
                             mutations[0].removedNodes.length
-                        ) {
-                            callback(mutations);
-                        }
-                    });
-                    obs.observe(obj, {
-                        childList: true,
-                        subtree: true,
-                    });
-                } else if (eventListenerSupported) {
-                    obj.addEventListener("DOMNodeInserted", callback, false);
-                    obj.addEventListener("DOMNodeRemoved", callback, false);
-                }
-            };
-        })();
-
-        // Observe the body
-        const targetNode = document.body;
-        observeDOM(targetNode, (mutations) => {
-            for (let i = 0; i < mutations.length; i++) {
-                const mutation = mutations[i];
-                if (mutation.addedNodes.length) {
-                    const addedNode = $(mutation.addedNodes[0]);
-                    for (const callback of domModifiersCallbacks) {
-                        callback(addedNode);
-                    }
-                }
+            ) {
+              callback(mutations)
             }
-        });
-    });
-})(window.equo);
+          })
+          obs.observe(obj, {
+            childList: true,
+            subtree: true
+          })
+        } else if (eventListenerSupported) {
+          obj.addEventListener('DOMNodeInserted', callback, false)
+          obj.addEventListener('DOMNodeRemoved', callback, false)
+        }
+      }
+    })()
+
+    // Observe the body
+    const targetNode = document.body
+    observeDOM(targetNode, (mutations) => {
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i]
+        if (mutation.addedNodes.length) {
+          const addedNode = $(mutation.addedNodes[0])
+          for (const callback of domModifiersCallbacks) {
+            callback(addedNode)
+          }
+        }
+      }
+    })
+  })
+})(window.equo)

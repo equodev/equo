@@ -23,76 +23,76 @@
 window.equo = window.equo || {};
 
 (function (equo) {
-    equo.LOG_LEVEL_OFF = "OFF";
-    equo.LOG_LEVEL_ERROR = "ERROR";
-    equo.LOG_LEVEL_WARN = "WARN";
-    equo.LOG_LEVEL_INFO = "INFO";
-    equo.LOG_LEVEL_DEBUG = "DEBUG";
-    equo.LOG_LEVEL_TRACE = "TRACE";
-    equo.LOG_LEVEL_ALL = "ALL";
+  equo.LOG_LEVEL_OFF = 'OFF'
+  equo.LOG_LEVEL_ERROR = 'ERROR'
+  equo.LOG_LEVEL_WARN = 'WARN'
+  equo.LOG_LEVEL_INFO = 'INFO'
+  equo.LOG_LEVEL_DEBUG = 'DEBUG'
+  equo.LOG_LEVEL_TRACE = 'TRACE'
+  equo.LOG_LEVEL_ALL = 'ALL'
 
-    // Level use to disable special logger level for javascript and use the global level
-    equo.LOG_LEVEL_NOT_CONFIGURED = "NOT CONFIGURED";
+  // Level use to disable special logger level for javascript and use the global level
+  equo.LOG_LEVEL_NOT_CONFIGURED = 'NOT CONFIGURED'
 
-    const sendLog = function (message, type) {
-        const payload = {};
-        payload.message = message;
-        payload.type = type;
-        equo.sendToCommServer("loggingEvent", payload);
-    };
+  const sendLog = function (message, type) {
+    const payload = {}
+    payload.message = message
+    payload.type = type
+    equo.sendToCommServer('loggingEvent', payload)
+  }
 
-    const returnResponse = function (callback) {
-        equo.on("loggingResponseEvent", callback);
-    };
+  const returnResponse = function (callback) {
+    equo.on('loggingResponseEvent', callback)
+  }
 
-    equo.logInfo = function (message) {
-        sendLog(message, "info");
-    };
+  equo.logInfo = function (message) {
+    sendLog(message, 'info')
+  }
 
-    equo.logError = function (message) {
-        sendLog(message, "error");
-    };
+  equo.logError = function (message) {
+    sendLog(message, 'error')
+  }
 
-    equo.logWarn = function (message) {
-        sendLog(message, "warning");
-    };
+  equo.logWarn = function (message) {
+    sendLog(message, 'warning')
+  }
 
-    equo.logDebug = function (message) {
-        sendLog(message, "debug");
-    };
+  equo.logDebug = function (message) {
+    sendLog(message, 'debug')
+  }
 
-    equo.logTrace = function (message) {
-        sendLog(message, "trace");
-    };
+  equo.logTrace = function (message) {
+    sendLog(message, 'trace')
+  }
 
-    equo.getJsLoggerLevel = function (callback) {
-        returnResponse(callback);
-        sendLog("", "getLevel");
-    };
+  equo.getJsLoggerLevel = function (callback) {
+    returnResponse(callback)
+    sendLog('', 'getLevel')
+  }
 
-    equo.setJsLoggerLevel = function (level) {
-        sendLog(level, "setLevel");
-    };
+  equo.setJsLoggerLevel = function (level) {
+    sendLog(level, 'setLevel')
+  }
 
-    equo.getGlobalLoggerLevel = function (callback) {
-        returnResponse(callback);
-        sendLog("", "getGlobalLevel");
-    };
+  equo.getGlobalLoggerLevel = function (callback) {
+    returnResponse(callback)
+    sendLog('', 'getGlobalLevel')
+  }
 
-    equo.setGlobalLoggerLevel = function (level) {
-        sendLog(level, "setGlobalLevel");
-    };
+  equo.setGlobalLoggerLevel = function (level) {
+    sendLog(level, 'setGlobalLevel')
+  }
 
-    equo.error = function ({ msg, url, lineNo, columnNo, error }) {
-        sendLog(
-            {
-                msg,
-                url,
-                lineNo,
-                columnNo,
-                error,
-            },
-            "jserror",
-        );
-    };
-})(window.equo);
+  equo.error = function ({ msg, url, lineNo, columnNo, error }) {
+    sendLog(
+      {
+        msg,
+        url,
+        lineNo,
+        columnNo,
+        error
+      },
+      'jserror'
+    )
+  }
+})(window.equo)
