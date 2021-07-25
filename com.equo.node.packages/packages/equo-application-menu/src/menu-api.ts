@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 /****************************************************************************
  **
  ** Copyright (C) 2021 Equo

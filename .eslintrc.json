@@ -12,8 +12,8 @@
         ]
       },
       "rules": {
-        "@typescript-eslint/strict-boolean-expressions": 1,
-        "@typescript-eslint/no-namespace": 1
+        "@typescript-eslint/strict-boolean-expressions": 0,
+        "@typescript-eslint/no-namespace": 0
       }
     },
     {
