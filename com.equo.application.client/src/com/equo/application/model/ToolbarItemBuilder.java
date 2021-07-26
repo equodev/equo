@@ -81,8 +81,8 @@ public class ToolbarItemBuilder extends ItemBuilder {
   }
 
   @Override
-  public ToolbarItemBuilder addShortcut(String keySequence) {
-    return (ToolbarItemBuilder) super.addShortcut(keySequence);
+  public ToolbarItemBuilder withShortcut(String keySequence) {
+    return (ToolbarItemBuilder) super.withShortcut(keySequence);
   }
 
   public ToolbarBuilder addToolbar() {

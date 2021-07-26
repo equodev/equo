@@ -49,7 +49,7 @@ public class ItemShortcutBuilder implements KeyBindingBuilder {
     this.userEvent = userEvent;
   }
 
-  void addShortcut(String shortcut) {
+  void withShortcut(String shortcut) {
     Optional<MBindingTable> bindingTable =
         getDefaultBindingTable(itemBuilder.getOptionalFieldBuilder().getEquoApplicationBuilder());
     if (bindingTable.isPresent()) {

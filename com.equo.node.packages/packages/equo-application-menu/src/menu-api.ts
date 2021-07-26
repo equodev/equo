@@ -157,7 +157,7 @@ export class MenuBuilder{
    * @param {string} iconPath the icon relative path to resources folder.
    * @return {MenuBuilder} the MenuBuilder instance.
    */
-  public addIcon(iconPath: string): MenuBuilder | null{
+  public withIcon(iconPath: string): MenuBuilder | null{
     this.linker.getMenuAct().setIcon(iconPath);
     return this;
   }
@@ -432,7 +432,7 @@ export class MenuItemBuilder {
    * @param {string} iconPath the icon relative path to resources folder.
    * @return {MenuItemBuilder} the MenuItemBuilder instance.
    */
-  public addIcon(iconPath: string): MenuItemBuilder | null{
+  public withIcon(iconPath: string): MenuItemBuilder | null{
     this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setIcon(iconPath);
     return this;
   }
@@ -454,7 +454,7 @@ export class MenuItemBuilder {
    * @param {string} shortcut - Define shortcut.
    * @returns {MenuItemBuilder}
    */
-  public addShortcut(shortcut: string): MenuItemBuilder{
+  public withShortcut(shortcut: string): MenuItemBuilder{
     this.linker.getMenuAct().getChildren()[this.linker.buildMenuItemPosition].setShortcut(shortcut);
     return this;
   }
