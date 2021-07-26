@@ -19,7 +19,6 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
-import $ from '../../node_modules/@types/jquery'
 
 window.equo = window.equo || {};
 
@@ -81,6 +80,7 @@ window.equo = window.equo || {};
      * @param {*} domElement
      */
   equo.playVideoWhenClick = (domElement) => {
+    // eslint-disable-next-line no-undef
     $(document).on('click', domElement, (event) => {
       equo.logDebug(`this is... ${JSON.stringify(this)}`)
       if (typeof getCurrentMediaTitleFunction !== 'undefined') {

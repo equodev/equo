@@ -8,19 +8,23 @@ allprojects {
 
     apply(plugin = "checkstyle")
 
-    checkstyle { toolVersion = "8.43" }
+    checkstyle {
+      toolVersion = "8.43"
+    }
 
-    tasks.withType<org.gradle.language.jvm.tasks.ProcessResources> { dependsOn(":yarn_install") }
+    tasks.withType<org.gradle.language.jvm.tasks.ProcessResources> { 
+      dependsOn(":yarn_install")
+    }
 }
 
 val node_version: String by project
 val yarn_version: String by project
 
-node.setProperty("download", true)
-
-node.setProperty("version", node_version)
-
-node.setProperty("yarnVersion", yarn_version)
+node {
+  download = true
+  version = node_version
+  yarnVersion = yarn_version
+}
 
 val yarn_install = tasks.named("yarn_install").get()
 

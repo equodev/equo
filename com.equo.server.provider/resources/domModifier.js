@@ -19,7 +19,6 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
-import $ from '../../node_modules/@types/jquery'
 
 window.equo = window.equo || {};
 
@@ -30,6 +29,7 @@ window.equo = window.equo || {};
     domModifiersCallbacks.push(callback)
   }
   // $(document).ready() @deprecated — Deprecated since 3.0. Use $(function() { }).
+  // eslint-disable-next-line no-undef
   $(() => {
     const observeDOM = (function () {
       const MutationObserver =
@@ -65,6 +65,7 @@ window.equo = window.equo || {};
       for (let i = 0; i < mutations.length; i++) {
         const mutation = mutations[i]
         if (mutation.addedNodes.length) {
+          // eslint-disable-next-line no-undef
           const addedNode = $(mutation.addedNodes[0])
           for (const callback of domModifiersCallbacks) {
             callback(addedNode)

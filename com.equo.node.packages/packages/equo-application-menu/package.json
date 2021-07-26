@@ -1,27 +1,27 @@
 {
-    "name": "@equo/equo-application-menu",
-    "version": "0.1.12",
-    "description": "Application menu for Equo apps",
-    "license": "UNLICENSED",
-    "publishConfig": {
-        "access": "restricted"
-    },
-    "main": "./lib/index.js",
-    "typings": "./lib/index",
-    "files": [
-        "/lib"
-    ],
-    "dependencies": {
-        "@equo/comm": "^0.1.7"
-    },
-    "devDependencies": {
-        "jsdoc-to-markdown": "^6.0.0"
-    },
-    "scripts": {
-        "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
-        "clean": "rimraf lib",
-        "build": "yarn run compile",
-        "compile": "tsc",
-        "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md"
-    }
+  "name": "@equo/equo-application-menu",
+  "version": "0.1.12",
+  "description": "Application menu for Equo apps",
+  "license": "UNLICENSED",
+  "main": "./lib/index.js",
+  "typings": "./lib/index",
+  "files": [
+    "/lib"
+  ],
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
+    "clean": "rimraf lib",
+    "build": "yarn run compile",
+    "compile": "tsc",
+    "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md"
+  },
+  "dependencies": {
+    "@equo/comm": "^0.1.7"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
 }

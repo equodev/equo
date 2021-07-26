@@ -24,6 +24,21 @@
         "browser": true
       },
       "extends": "./node_modules/standard/eslintrc.json"
+    },
+    {
+      "files": [
+        "**/*.json"
+      ],
+      "plugins": [
+        "json-format"
+      ],
+      "settings": {
+        "json/sort-package-json": "standard",
+        "json/json-with-comments-files": [
+          "**/tsconfig.json",
+          ".vscode/**"
+        ]
+      }
     }
   ]
 }
