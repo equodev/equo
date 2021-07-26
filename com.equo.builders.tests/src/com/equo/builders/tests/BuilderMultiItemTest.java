@@ -34,12 +34,12 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 		String tooltip1 = "text1";
 		String shortcut1 = "Alt + T";
 		ToolbarItemBuilder toolItemBuilder1 = appBuilder.withUI("/").withToolbar().addToolItem("text", tooltip1)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcut1);
+				.onClick(() -> System.out.println("toolitem event 1")).withShortcut(shortcut1);
 
 		String tooltip2 = "text2";
 		String shortcut2 = "Alt + Y";
 		ToolbarItemBuilder toolItemBuilder2 = toolItemBuilder1.addToolItem("text", tooltip2)
-				.onClick(() -> System.out.println("toolitem event 2")).addShortcut(shortcut2);
+				.onClick(() -> System.out.println("toolitem event 2")).withShortcut(shortcut2);
 
 		assertCheckToolItemTooltip(tooltip1, toolItemBuilder1);
 		assertCheckItemShortcut(shortcut1);
@@ -53,12 +53,12 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 		String label1 = "item1";
 		String shortcut1 = "Alt + M";
 		MenuItemBuilder menuItemBuilder1 = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label1)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcut1);
+				.onClick(() -> System.out.println("menuitem event 1")).withShortcut(shortcut1);
 
 		String label2 = "item2";
 		String shortcut2 = "Alt + N";
 		MenuItemBuilder menuItemBuilder2 = menuItemBuilder1.addMenuItem(label2)
-				.onClick(() -> System.out.println("menuitem event 2")).addShortcut(shortcut2);
+				.onClick(() -> System.out.println("menuitem event 2")).withShortcut(shortcut2);
 
 		assertCheckMenuItemLabel(label1, menuItemBuilder1);
 		assertCheckItemShortcut(shortcut1);
@@ -73,22 +73,22 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 		String tooltip1 = "text1";
 		String shortcutToolbar1 = "Alt + T";
 		ToolbarItemBuilder toolItemBuilder1 = appBuilder.withUI("/").withToolbar().addToolItem("text", tooltip1)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar1);
+				.onClick(() -> System.out.println("toolitem event 1")).withShortcut(shortcutToolbar1);
 
 		String tooltip2 = "text2";
 		String shortcutToolbar2 = "Alt + Y";
 		ToolbarItemBuilder toolItemBuilder2 = toolItemBuilder1.addToolItem("text", tooltip2)
-				.onClick(() -> System.out.println("toolitem event 2")).addShortcut(shortcutToolbar2);
+				.onClick(() -> System.out.println("toolitem event 2")).withShortcut(shortcutToolbar2);
 
 		String label1 = "item1";
 		String shortcutMenu1 = "Alt + M";
 		MenuItemBuilder menuItemBuilder1 = toolItemBuilder2.withMainMenu("Menu1").addMenuItem(label1)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu1);
+				.onClick(() -> System.out.println("menuitem event 1")).withShortcut(shortcutMenu1);
 
 		String label2 = "item2";
 		String shortcutMenu2 = "Alt + N";
 		MenuItemBuilder menuItemBuilder2 = menuItemBuilder1.addMenuItem(label2)
-				.onClick(() -> System.out.println("menuitem event 2")).addShortcut(shortcutMenu2);
+				.onClick(() -> System.out.println("menuitem event 2")).withShortcut(shortcutMenu2);
 
 		assertCheckToolItemTooltip(tooltip1, toolItemBuilder1);
 		assertCheckItemShortcut(shortcutToolbar1);
@@ -109,22 +109,22 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 		String label1 = "item1";
 		String shortcutMenu1 = "Alt + M";
 		MenuItemBuilder menuItemBuilder1 = appBuilder.withUI("/").withMainMenu("Menu1").addMenuItem(label1)
-				.onClick(() -> System.out.println("menuitem event 1")).addShortcut(shortcutMenu1);
+				.onClick(() -> System.out.println("menuitem event 1")).withShortcut(shortcutMenu1);
 
 		String label2 = "item2";
 		String shortcutMenu2 = "Alt + N";
 		MenuItemBuilder menuItemBuilder2 = menuItemBuilder1.addMenuItem(label2)
-				.onClick(() -> System.out.println("menuitem event 2")).addShortcut(shortcutMenu2);
+				.onClick(() -> System.out.println("menuitem event 2")).withShortcut(shortcutMenu2);
 
 		String tooltip1 = "text1";
 		String shortcutToolbar1 = "Alt + T";
 		ToolbarItemBuilder toolItemBuilder1 = menuItemBuilder1.withToolbar().addToolItem("text", tooltip1)
-				.onClick(() -> System.out.println("toolitem event 1")).addShortcut(shortcutToolbar1);
+				.onClick(() -> System.out.println("toolitem event 1")).withShortcut(shortcutToolbar1);
 
 		String tooltip2 = "text2";
 		String shortcutToolbar2 = "Alt + Y";
 		ToolbarItemBuilder toolItemBuilder2 = toolItemBuilder1.addToolItem("text", tooltip2)
-				.onClick(() -> System.out.println("toolitem event 2")).addShortcut(shortcutToolbar2);
+				.onClick(() -> System.out.println("toolitem event 2")).withShortcut(shortcutToolbar2);
 		
 		assertCheckMenuItemLabel(label1, menuItemBuilder1);
 		assertCheckItemShortcut(shortcutMenu1);

@@ -85,7 +85,7 @@ public class MenuItemBuilder extends ItemBuilder {
    * @param  iconPath the icon relative path to resources folder.
    * @return          the MenuItemBuilder instance.
    */
-  public MenuItemBuilder addIcon(String iconPath) {
+  public MenuItemBuilder withIcon(String iconPath) {
     BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
     ServiceReference<IEquoApplication> serviceReference =
         bundleContext.getServiceReference(IEquoApplication.class);
@@ -160,8 +160,8 @@ public class MenuItemBuilder extends ItemBuilder {
   }
 
   @Override
-  public MenuItemBuilder addShortcut(String keySequence) {
-    return (MenuItemBuilder) super.addShortcut(keySequence);
+  public MenuItemBuilder withShortcut(String keySequence) {
+    return (MenuItemBuilder) super.withShortcut(keySequence);
   }
 
   /**
