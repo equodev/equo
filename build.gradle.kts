@@ -26,10 +26,8 @@ node {
   yarnVersion = yarn_version
 }
 
-val yarn_install = tasks.named("yarn_install").get()
-
-yarn_install.inputs.files(project.file("./package.json"), project.file("./yarn.lock"))
-
-yarn_install.outputs.dirs(project.file("./node_modules/"))
-
-yarn_install.outputs.files(project.file("./.git/config"))
+tasks.named("yarn_install") {
+  inputs.files(project.file("./package.json"), project.file("./yarn.lock"))
+  outputs.dirs(project.file("./node_modules/"))
+  outputs.files(project.file("./.git/config"))
+}
