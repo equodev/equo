@@ -43,11 +43,11 @@ window.equo = window.equo || {};
     }
     try {
       /**
-             * @type {{
-             *  action: string;
-             *  params: Payload;
-             * }}
-             */
+       * @type {{
+       *  action: string;
+       *  params: Payload;
+       * }}
+       */
       const parsedPayload = JSON.parse(event)
       const actionId = parsedPayload.action
       if (actionId in userEventCallbacks) {

@@ -106,10 +106,33 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
 
    1. [Error Lens][ERROR_LENS]
    2. [ESLint][ESLINT]
-   3. [Prettier][PRETTIER]
+
+  And a few settings in your local settings of vscode are nedeed:
+
+  ```json
+  {
+    "errorLens.fontSize": "12",
+    "errorLens.fontWeight": "bold",
+    "errorLens.severityText": [
+      "ERROR",
+      "WARNING",
+      "INFO",
+      "HINT"
+    ],
+    "errorLens.messageTemplate": "[$severity] $message",
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+  }
+  ```
 
 <!-- links [CASE_CONSTANT]: https://link -->
    [ECLIPSE]: https://wiki.eclipse.org/Eclipse_Installer
    [ERROR_LENS]: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
    [ESLINT]: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-   [PRETTIER]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
