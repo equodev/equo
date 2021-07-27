@@ -78,11 +78,11 @@ public class EquoMenuItem extends AbstractEquoMenu {
     if (runnable != null || action != null) {
       itemBuilder = itemBuilder.onClick(runnable, action);
       if (shortcut != null) {
-        itemBuilder.addShortcut(shortcut);
+        itemBuilder.withShortcut(shortcut);
       }
     }
     if (iconPath != null) {
-      itemBuilder.addIcon(iconPath);
+      itemBuilder.withIcon(iconPath);
     }
   }
 
@@ -91,7 +91,7 @@ public class EquoMenuItem extends AbstractEquoMenu {
    * @param  iconPath the icon relative path to resources folder.
    * @return          the EquoMenuItem instance.
    */
-  public EquoMenuItem addIcon(String iconPath) {
+  public EquoMenuItem withIcon(String iconPath) {
     this.iconPath = iconPath;
     return this;
   }

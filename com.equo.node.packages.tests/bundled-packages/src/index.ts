@@ -40,19 +40,19 @@ comm.on('_makeLogs', () => {
   EquoLoggingService.logDebug('testDebug')
   EquoLoggingService.logTrace('testTrace')
 
-  EquoLoggingService.getJsLoggerLevel((response: string): void => {
+  EquoLoggingService.getJsLoggerLevel((response: string) => {
     EquoLoggingService.logInfo(`Current is ${response}`)
 
     EquoLoggingService.setJsLoggerLevel(EquoLoggingService.LOG_LEVEL_DEBUG)
-    EquoLoggingService.getJsLoggerLevel((response: string): void => {
+    EquoLoggingService.getJsLoggerLevel((response: string) => {
       EquoLoggingService.logInfo(`Current is ${response}`)
 
       EquoLoggingService.setGlobalLoggerLevel(EquoLoggingService.LOG_LEVEL_TRACE)
-      EquoLoggingService.getGlobalLoggerLevel((response: string): void => {
+      EquoLoggingService.getGlobalLoggerLevel((response: string) => {
         EquoLoggingService.logInfo(`Global is ${response}`)
 
         EquoLoggingService.setGlobalLoggerLevel(EquoLoggingService.LOG_LEVEL_INFO)
-        EquoLoggingService.getGlobalLoggerLevel((response: string): void => {
+        EquoLoggingService.getGlobalLoggerLevel((response: string) => {
           EquoLoggingService.logInfo(`Global is ${response}`)
         })
       })
@@ -62,7 +62,7 @@ comm.on('_makeLogs', () => {
 
 function inicMenu (elementMenu: MenuBuilder, func?: Function): void {
   elementMenu.withMainMenu('Menu1')
-    .addMenuItem('SubMenu11').onClick('_test').addShortcut('M1+W')
+    .addMenuItem('SubMenu11').onClick('_test').withShortcut('M1+W')
     .addMenu('SubMenu12')
     .addMenuItem('SubMenu121')
 
@@ -70,7 +70,7 @@ function inicMenu (elementMenu: MenuBuilder, func?: Function): void {
     .addMenuItem('SubMenu21').onClick('_test')
     .addMenuSeparator()
     .addMenu('SubMenu22')
-    .addMenuItem('SubMenu221').onClick('_test').addShortcut('M1+G')
+    .addMenuItem('SubMenu221').onClick('_test').withShortcut('M1+G')
     .addMenu('SubMenu222')
     .addMenuItem('SubMenu2221')
 
@@ -89,14 +89,14 @@ comm.on('_createMenu', () => {
 comm.on('_appendMenuItem', () => {
   const menu2 = Menu.create()
   inicMenu(menu2)
-  menu2.appendMenuItem('Menu1', 0, 'SubMenu10').onClick('_test').addShortcut('M1+L')
+  menu2.appendMenuItem('Menu1', 0, 'SubMenu10').onClick('_test').withShortcut('M1+L')
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu2', json) })
 })
 
 comm.on('_appendMenu', () => {
   const menu3 = Menu.create()
   inicMenu(menu3)
-  menu3.appendMenu('Menu2/SubMenu22', 1, 'SubMenu223').addMenuItem('SubMenu2231').onClick('_test').addShortcut('M1+K')
+  menu3.appendMenu('Menu2/SubMenu22', 1, 'SubMenu223').addMenuItem('SubMenu2231').onClick('_test').withShortcut('M1+K')
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu3', json) })
 })
 
@@ -145,7 +145,7 @@ comm.on('_appendMenuItemRepeated', () => {
 
 comm.on('_createMenuWithRepeatedMenus', () => {
   Menu.create().withMainMenu('Menu1')
-    .addMenuItem('SubMenu11').onClick('_test').addShortcut('M1+W')
+    .addMenuItem('SubMenu11').onClick('_test').withShortcut('M1+W')
     .addMenu('SubMenu12')
     .addMenuItem('SubMenu121')
 
@@ -153,14 +153,14 @@ comm.on('_createMenuWithRepeatedMenus', () => {
     .addMenuItem('SubMenu21').onClick('_test')
     .addMenuSeparator()
     .addMenu('SubMenu22')
-    .addMenuItem('SubMenu221').onClick('_test').addShortcut('M1+G')
+    .addMenuItem('SubMenu221').onClick('_test').withShortcut('M1+G')
     .addMenu('SubMenu222')
     .addMenuItem('SubMenu2221')
     .addMenu('SubMenu2221')
     .addMenuItem('newMenu')
 
     .withMainMenu('Menu1')
-    .addMenuItem('SubMenu14').onClick('_test').addShortcut('M1+W')
+    .addMenuItem('SubMenu14').onClick('_test').withShortcut('M1+W')
 
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu9', json) })
 })
@@ -169,7 +169,7 @@ comm.on('_buildWithCurrentModel', () => {
   Menu.getCurrentModel((builder: MenuBuilder) => {
     builder
       .withMainMenu('Menu3')
-      .addMenuItem('subMenu31').onClick('_test').addShortcut('M1+W')
+      .addMenuItem('subMenu31').onClick('_test').withShortcut('M1+W')
       .addMenu('subMenu32')
       .addMenuItem('subMenu321')
 
@@ -181,7 +181,7 @@ comm.on('_buildWithCurrentModelWithRepeatedMenus', () => {
   Menu.getCurrentModel((builder: MenuBuilder) => {
     try {
       builder.withMainMenu('Menu2')
-        .addMenuItem('SubMenu22').onClick('_test').addShortcut('M1+W')
+        .addMenuItem('SubMenu22').onClick('_test').withShortcut('M1+W')
         .addMenu('subMenu23')
         .addMenuItem('subMenu231')
 
@@ -194,7 +194,7 @@ comm.on('_buildWithCurrentModelWithRepeatedMenus', () => {
 
 comm.on('_customActionOnClick', () => {
   Menu.create().withMainMenu('Menu1')
-    .addMenuItem('SubMenu11').onClick(() => { comm.send('_customActionOnClickResponse') }).addShortcut('M1+W')
+    .addMenuItem('SubMenu11').onClick(() => { comm.send('_customActionOnClickResponse') }).withShortcut('M1+W')
 
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testCustomOnClick', json) })
 })

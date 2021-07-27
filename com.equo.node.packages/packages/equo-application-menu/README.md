@@ -20,7 +20,7 @@ using **EquoMenu** for reference builds methods
 var menu = EquoMenu.create();
 
     menu.withMainMenu("Menu1") #create main menu 1
-            .addMenuItem("SubMenu11").onClick("_test").addShortcut("M1+W") #add equo menu item in main menu
+            .addMenuItem("SubMenu11").onClick("_test").withShortcut("M1+W") #add equo menu item in main menu
             .addMenu("SubMenu12") # add equo menu in main menu
                 .addMenuItem("SubMenu121") #add equo menu item in menu "SubMenu12"
 
@@ -28,7 +28,7 @@ var menu = EquoMenu.create();
             .addMenuItem("SubMenu21").onClick("_test")
             .addMenuSeparator() # add menu item separator in main menu 2
             .addMenu("SubMenu22")
-                .addMenuItem("SubMenu221").onClick("_test").addShortcut("M1+G")
+                .addMenuItem("SubMenu221").onClick("_test").withShortcut("M1+G")
                 .addMenu("SubMenu222")
                     .addMenuItem("SubMenu2221")
 
@@ -48,7 +48,7 @@ setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send("_userAction", js
 Example method for apped menu item using a path location.
 
 ```
-    menu.appendMenuItem("Menu1/SubMenu11", 0, "SubMenu10").onClick("_test").addShortcut("M1+L")
+    menu.appendMenuItem("Menu1/SubMenu11", 0, "SubMenu10").onClick("_test").withShortcut("M1+L")
         .setApplicationMenu();
 ```
 For append menu at the end use method **appendMenuItemAtTheEnd( Path, NameNewMenuItem )**.
@@ -58,7 +58,7 @@ For append menu at the end use method **appendMenuItemAtTheEnd( Path, NameNewMen
 Example method for apped menu using a path location.
 
 ```
-    menu.appendMenu("Menu2/SubMenu22", 1, "SubMenu223").addMenuItem("SubMenu2231").onClick("_test").addShortcut("M1+K")
+    menu.appendMenu("Menu2/SubMenu22", 1, "SubMenu223").addMenuItem("SubMenu2231").onClick("_test").withShortcut("M1+K")
         .setApplicationMenu();
 ```
 For append menu at the end use method **appendMenuAtTheEnd( Path, NameNewMenu )**.
@@ -75,7 +75,7 @@ Example method for remove menu using a path location.
 EquoMenu.getCurrentModel( # method for use current menu model
     (builder: MenuBuilder) => {
         builder.withMainMenu("Menu3")
-            .addMenuItem("subMenu31").onClick("_test").addShortcut("M1+W")
+            .addMenuItem("subMenu31").onClick("_test").withShortcut("M1+W")
             .addMenu("subMenu32")
                 .addMenuItem("subMenu321")
         

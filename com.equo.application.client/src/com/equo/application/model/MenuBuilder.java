@@ -172,7 +172,7 @@ public class MenuBuilder {
    * @param  iconPath the icon relative path to resources folder.
    * @return          the MenuItemBuilder instance.
    */
-  public MenuBuilder addIcon(String iconPath) {
+  public MenuBuilder withIcon(String iconPath) {
     BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
     ServiceReference<IEquoApplication> serviceReference =
         bundleContext.getServiceReference(IEquoApplication.class);

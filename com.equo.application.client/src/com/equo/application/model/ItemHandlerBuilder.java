@@ -115,9 +115,9 @@ public class ItemHandlerBuilder extends HandlerBuilder {
    * Sets a shortcut for the current menu item.
    * @param keySequence string format of the shortcut
    */
-  public ItemBuilder addShortcut(String keySequence) {
+  public ItemBuilder withShortcut(String keySequence) {
     itemBuilder.getItem().getTransientData().put(IConstants.ITEM_SHORTCUT, keySequence);
-    new ItemShortcutBuilder(this.getItemBuilder(), userEvent).addShortcut(keySequence);
+    new ItemShortcutBuilder(this.getItemBuilder(), userEvent).withShortcut(keySequence);
     EquoApplicationBuilder equoApplicationBuilder =
         getItemBuilder().getOptionalFieldBuilder().getEquoApplicationBuilder();
     new GlobalShortcutBuilder(equoApplicationBuilder, getItemBuilder().getItem().getElementId(),

@@ -67,8 +67,8 @@ public class OptionalViewBuilder {
    * @param  runnable    the runnable.
    * @return             this.
    */
-  public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable) {
-    return addShortcut(keySequence, runnable, null);
+  public OptionalViewBuilder withShortcut(String keySequence, Runnable runnable) {
+    return withShortcut(keySequence, runnable, null);
   }
 
   /**
@@ -78,7 +78,7 @@ public class OptionalViewBuilder {
    * @param  userEvent   the user event.
    * @return             this.
    */
-  public OptionalViewBuilder addShortcut(String keySequence, Runnable runnable, String userEvent) {
+  public OptionalViewBuilder withShortcut(String keySequence, Runnable runnable, String userEvent) {
     EquoApplicationBuilder equoAppBuilder = this.viewBuilder.getEquoApplicationBuilder();
     new GlobalShortcutBuilder(equoAppBuilder, this.viewBuilder.getPart().getElementId(), runnable,
         userEvent).addGlobalShortcut(keySequence);
@@ -91,8 +91,8 @@ public class OptionalViewBuilder {
    * @param  userEvent   the user event.
    * @return             this.
    */
-  public OptionalViewBuilder addShortcut(String keySequence, String userEvent) {
-    return addShortcut(keySequence, null, userEvent);
+  public OptionalViewBuilder withShortcut(String keySequence, String userEvent) {
+    return withShortcut(keySequence, null, userEvent);
   }
 
   /**
@@ -214,7 +214,7 @@ public class OptionalViewBuilder {
    * @return             this.
    */
   public OptionalViewBuilder addFullScreenModeShortcut(String keySequence) {
-    return addShortcut(keySequence, EnterFullScreenModeRunnable.instance);
+    return withShortcut(keySequence, EnterFullScreenModeRunnable.instance);
   }
 
   /**

@@ -66,9 +66,9 @@ public abstract class ItemBuilder {
    * @param  keySequence the shortcut command.
    * @return             this.
    */
-  public ItemBuilder addShortcut(String keySequence) {
+  public ItemBuilder withShortcut(String keySequence) {
     if (getItemHandlerBuilder() != null) {
-      return getItemHandlerBuilder().addShortcut(keySequence);
+      return getItemHandlerBuilder().withShortcut(keySequence);
     }
     this.shortcut = keySequence;
     // log that there is no menu item handler -> no onClick method was called.
@@ -115,7 +115,7 @@ public abstract class ItemBuilder {
     this.getItem().getTransientData().put(IConstants.EQUO_COMM_USER_EMITTED_EVENT, action);
     ItemBuilder itemBuilder = getItemHandlerBuilder().onClick(runnable, action);
     if (!this.shortcut.equals("")) {
-      this.addShortcut(this.shortcut);
+      this.withShortcut(this.shortcut);
     }
     return itemBuilder;
   }

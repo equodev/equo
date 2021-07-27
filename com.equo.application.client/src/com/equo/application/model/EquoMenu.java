@@ -74,7 +74,7 @@ public class EquoMenu extends AbstractEquoMenu {
     return addMenuItem(-1, title);
   }
 
-  public EquoMenu addIcon(String iconPath) {
+  public EquoMenu withIcon(String iconPath) {
     this.iconPath = iconPath;
     return this;
   }
@@ -133,7 +133,7 @@ public class EquoMenu extends AbstractEquoMenu {
       item.implement(menu);
     }
     if (iconPath != null) {
-      menu.addIcon(iconPath);
+      menu.withIcon(iconPath);
     }
   }
 

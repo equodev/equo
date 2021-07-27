@@ -90,7 +90,7 @@ class EquoWebSocketServer extends WebSocketServer {
       return;
     }
 
-    String action = actionMessage.getAction().toLowerCase();
+    String action = actionMessage.getAction();
     if (eventHandlers.containsKey(action)) {
       IEquoRunnableParser<?> equoRunnableParser = eventHandlers.get(action);
       Object parsedPayload = equoRunnableParser.parsePayload(actionMessage.getParams());
