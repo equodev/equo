@@ -44,7 +44,7 @@ printf "\n %b[%bmValidating files%b:\n" "$ESC" "$underline" "$ESC_END"
 
 # Check for eslint
 if [ ! -x "$ESLINT" ]; then
-  printf "	%b[%bmPlease install ESlint%b (\"yarn install\")\n" "$ESC" "$backgroundRed" "$ESC_END"
+  printf >&2 "	%b[%bmPlease install ESlint%b (\"yarn install\")\n" "$ESC" "$backgroundRed" "$ESC_END"
   exit 1
 fi
 
@@ -54,7 +54,7 @@ for FILE in $STAGED_FILES; do
   if [ "$?" -eq 0 ]; then
     printf "	✅ %b[%b;%bmESLint Passed%b%b[%bm: %s%b\n" "$ESC" "$underline" "$green" "$ESC_END" "$ESC" "$green" "$FILE" "$ESC_END"
   else
-    printf "	❌ %b[%b;%bmESLint Failed%b%b[%bm: %s%b\n" "$ESC" "$underline" "$red" "$ESC_END" "$ESC" "$red" "$FILE" "$ESC_END"
+    printf >&2 "	❌ %b[%b;%bmESLint Failed%b%b[%bm: %s%b\n" "$ESC" "$underline" "$red" "$ESC_END" "$ESC" "$red" "$FILE" "$ESC_END"
     PASS=false
   fi
 done
@@ -62,7 +62,7 @@ done
 validationCompleted
 
 if ! $PASS; then
-  printf "%b[%b;%bm  ¡COMMIT FAILED!  %b: Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors (or try with %b[%bmyarn lint%b to automatically fix problems) and try again.\n\n" "$ESC" "$bold" "$backgroundRed" "$ESC_END" "$ESC" "$lightGray" "$ESC_END"
+  printf >&2 "%b[%b;%bm  ¡COMMIT FAILED!  %b: Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors (or try with %b[%bmyarn lint%b to automatically fix problems) and try again.\n\n" "$ESC" "$bold" "$backgroundRed" "$ESC_END" "$ESC" "$lightGray" "$ESC_END"
   exit 1
 else
   printf "%b[%b;90;%bm  ¡COMMIT SUCCEEDED!  %b\n\n" "$ESC" "$bold" "$backgroundGreen" "$ESC_END"

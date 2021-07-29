@@ -1,0 +1,94 @@
+#!/bin/sh
+
+# An example hook script to verify what is about to be pushed.  Called by "git
+# push" after it has checked the remote status, but before anything has been
+# pushed.  If this script exits with a non-zero status nothing will be pushed.
+#
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+#
+# Information about the commits which are being pushed is supplied as lines to
+# the standard input in the form:
+#
+#   <local ref> <local sha1> <remote ref> <remote sha1>
+#
+# This sample shows how to prevent push of commits where the log message starts
+# with "WIP" (work in progress).
+
+remote="$1"
+url="$2"
+
+z40=0000000000000000000000000000000000000000
+
+link_to_wiki="https://gitlab.com/maketechnology/equo/platform-ui/-/wikis/How-to-add-commit-in-changelog"
+regex_commit_id_abbrev="^[a-z0-9]{8}"
+
+get_commit_list() {
+  # Regexs
+  regex_validate="^(feat|fix|chg|rem|dep|sec)(?:\(([\w\\$\.\-\*\s]*)\))?:\s.{3,}"
+  regex_skip_validate="$regex_commit_id_abbrev int:\s.*"
+
+  # Filter commits
+  commit=$(git rev-list --oneline "$range" --grep "$regex_validate" -P -i --invert-grep)
+  echo "$commit" | grep -viE "$regex_skip_validate"
+}
+
+sha_oneline() {
+  echo "$1" | grep -Po "$regex_commit_id_abbrev"
+}
+
+while read -r local_ref local_sha remote_ref remote_sha
+do
+  git_current_branch=$(git branch --show-current)
+  # remote_sha dont work in eclipse
+  remote_sha=$(git rev-parse origin/"$git_current_branch" 2> /dev/null)
+
+  if [ "$?" -ne 0 ]
+  then
+    remote_sha=$(git rev-parse origin/develop)
+  fi
+
+  if [ "$local_sha" = $z40 ]
+  then
+    # Handle delete
+    :
+  else
+    range="$remote_sha..$local_sha"
+
+    printf "\n"
+    printf "	[  Validating commit messages:  ] %s..%s" "$(sha_oneline "$remote_sha")" "$(sha_oneline "$local_sha")"
+    printf "\n\n"
+
+
+    # Check for CHANGELOG commit
+    if [ -n "$(get_commit_list)" ]
+    then
+      printf >&2 "\n"
+      printf >&2 "[  ERROR  ] Found commit that does not match with the pattern defined here %s in $local_ref, not pushing" "$link_to_wiki"
+      printf >&2 "\n\n"
+
+      # how to skip validation
+      printf >&2 "[  INFO  ] To skip validation for one commit, use this pattern: 'int: <anything>'"
+      printf >&2 "\n\n"
+
+      printf >&2 "The commits below do not match with the pattern"
+      printf >&2 "\n\n"
+      printf >&2 ">>>>>>>"
+      printf >&2 "\n\n"
+      printf >&2 "%b" "$(get_commit_list)"
+      printf >&2 "\n\n"
+      printf >&2 "<<<<<<<"
+      printf >&2 "\n\n"
+      exit 1
+    fi
+
+    printf "[  ¡PUSH COMMITS SUCCEEDED!  ]"
+    printf "\n\n"
+  fi
+done
+
+exit 0
