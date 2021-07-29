@@ -110,7 +110,7 @@ public interface IActionHandler<T> extends IEquoCallable<T> {
             }
 
             @Override
-            public Class getGenericInterfaceType() {
+            public Class<?> getGenericInterfaceType() {
               return type;
             }
           });

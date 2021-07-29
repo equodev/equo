@@ -31,6 +31,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpUtil;
 
 /**
  * Interface for handlers that makes modifiable responses.
@@ -64,10 +65,10 @@ public interface IModifiableResponse {
     transformedContent.writeBytes(bytes);
 
     DefaultFullHttpResponse transformedHttpResponse =
-        new DefaultFullHttpResponse(originalFullHttpResponse.getProtocolVersion(),
-            originalFullHttpResponse.getStatus(), transformedContent);
+        new DefaultFullHttpResponse(originalFullHttpResponse.protocolVersion(),
+            originalFullHttpResponse.status(), transformedContent);
     transformedHttpResponse.headers().set(originalHeaders);
-    HttpHeaders.setContentLength(transformedHttpResponse, bytes.length);
+    HttpUtil.setContentLength(transformedHttpResponse, bytes.length);
 
     return transformedHttpResponse;
   }

@@ -38,11 +38,12 @@ import com.google.common.io.ByteStreams;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 
 /**
@@ -117,8 +118,8 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
   protected HttpResponse buildResponse(ByteBuf buffer, String contentType) {
     HttpResponse response =
         new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
-    HttpHeaders.setContentLength(response, buffer.readableBytes());
-    HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
+    HttpUtil.setContentLength(response, buffer.readableBytes());
+    response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     return response;
   }
 

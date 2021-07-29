@@ -65,8 +65,8 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
     this.urlResolver = urlResolver;
     equoContributionsJsApis = contribution.getScripts();
     equoContributionStyles = contribution.getStyles();
-    customJsScripts = contribution.getCustomScripts(originalRequest.getUri());
-    customStyles = contribution.getCustomStyles(originalRequest.getUri());
+    customJsScripts = contribution.getCustomScripts(originalRequest.uri());
+    customStyles = contribution.getCustomStyles(originalRequest.uri());
     this.contributedFilePath = contributedFilePath;
   }
 

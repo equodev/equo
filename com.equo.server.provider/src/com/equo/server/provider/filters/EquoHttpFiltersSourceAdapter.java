@@ -36,7 +36,7 @@ import com.equo.server.offline.api.IEquoOfflineServer;
 import com.equo.server.provider.EquoHttpProxyServer;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpHeaders.Names;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
 
 /**
@@ -91,7 +91,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
   }
 
   private boolean isFilteredOutFromProxy(HttpRequest originalRequest) {
-    String uri = originalRequest.getUri();
+    String uri = originalRequest.uri();
     return uri.contains("/shared") || uri.contains("/static");
   }
 
@@ -101,7 +101,7 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
   }
 
   private boolean containsHeader(String url, HttpRequest originalRequest) {
-    String host = originalRequest.headers().get(Names.HOST);
+    String host = originalRequest.headers().get(HttpHeaderNames.HOST);
     if (host.indexOf(":") != -1) {
       return url.contains(host.substring(0, host.indexOf(":")));
     } else {

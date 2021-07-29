@@ -62,7 +62,7 @@ public class DefaultEquoContributionRequestHandler implements IEquoContributionR
   @Override
   public HttpFilters handle(HttpRequest request) {
     try {
-      URI uri = URI.create(request.getUri());
+      URI uri = URI.create(request.uri());
       Optional<String> key = getContributionKeyIfPresent(uri);
       if (key.isPresent()) {
         EquoContribution contribution = manager.getContribution(key.get());

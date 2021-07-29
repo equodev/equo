@@ -41,11 +41,12 @@ import com.google.common.io.ByteStreams;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 
 /**
@@ -72,7 +73,7 @@ public class EquoWebsocketJsApiRequestFiltersAdapter extends HttpFiltersAdapter 
    * Handles the request from the client to the proxy.
    */
   public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-    String requestUri = originalRequest.getUri();
+    String requestUri = originalRequest.uri();
     String fileName = requestUri.substring(
         requestUri.indexOf(WEBSOCKET_CONTRIBUTION_NAME) + WEBSOCKET_CONTRIBUTION_NAME.length(),
         requestUri.length());
@@ -111,8 +112,8 @@ public class EquoWebsocketJsApiRequestFiltersAdapter extends HttpFiltersAdapter 
     ByteBuf newBuffer = Unpooled.wrappedBuffer(bytes);
     HttpResponse response =
         new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, newBuffer);
-    HttpHeaders.setContentLength(response, newBuffer.readableBytes());
-    HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
+    HttpUtil.setContentLength(response, newBuffer.readableBytes());
+    response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     return response;
   }
 

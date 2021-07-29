@@ -101,7 +101,7 @@ public class CustomHostNameMitmManager implements MitmManager {
    * Creates a new SSL engine for the request given by parameter.
    */
   public SSLEngine clientSslEngineFor(HttpRequest httpRequest, SSLSession serverSslSession) {
-    String serverHostAndPort = httpRequest.getUri();
+    String serverHostAndPort = httpRequest.uri();
     try {
       String serverName = serverHostAndPort.split(":")[0];
       SubjectAlternativeNameHolder san = new SubjectAlternativeNameHolder();
@@ -120,7 +120,7 @@ public class CustomHostNameMitmManager implements MitmManager {
   @Override
   public boolean accepts(HttpRequest httpRequest) {
     String developmentUrl = System.getProperty(DEV_APP_URL);
-    String uri = httpRequest.getUri();
+    String uri = httpRequest.uri();
     if (developmentUrl != null && uri.startsWith(developmentUrl)) {
       return false;
     }

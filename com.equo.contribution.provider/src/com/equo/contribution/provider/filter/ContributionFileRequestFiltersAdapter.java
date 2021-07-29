@@ -55,7 +55,7 @@ public class ContributionFileRequestFiltersAdapter extends OfflineRequestFilters
 
   @Override
   public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-    String requestUri = originalRequest.getUri();
+    String requestUri = originalRequest.uri();
     String fileName = requestUri.substring(
         requestUri.indexOf(contributionName) + contributionName.length(), requestUri.length());
     URL resolvedUrl = urlResolver.resolve(fileName);

@@ -37,7 +37,7 @@ public interface Newable<T> extends MethodFinder {
    */
   default T newInstance() {
     try {
-      return type().newInstance();
+      return type().getConstructor().newInstance();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

@@ -41,7 +41,7 @@ public class LocalFileRequestFiltersAdapter extends OfflineRequestFiltersAdapter
 
   @Override
   public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-    String uri = originalRequest.getUri();
+    String uri = originalRequest.uri();
     this.setLocalFilePathWithProtocol(uri);
     return super.clientToProxyRequest(httpObject);
   }

@@ -53,8 +53,8 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
     super(originalRequest, equoOfflineServer);
     this.equoContributionsJsApis = globalContribution.getScripts();
     this.equoContributionStyles = globalContribution.getStyles();
-    this.customJsScripts = globalContribution.getCustomScripts(originalRequest.getUri());
-    this.customStyles = globalContribution.getCustomStyles(originalRequest.getUri());
+    this.customJsScripts = globalContribution.getCustomScripts(originalRequest.uri());
+    this.customStyles = globalContribution.getCustomStyles(originalRequest.uri());
     this.proxiedUrls = proxiedUrls;
   }
 
@@ -62,7 +62,7 @@ public class EquoHttpModifierFiltersAdapter extends EquoHttpFiltersAdapter {
   public HttpObject serverToProxyResponse(HttpObject httpObject) {
     if (httpObject instanceof FullHttpResponse) {
       FullHttpResponse fullObject = ((FullHttpResponse) httpObject);
-      int code = fullObject.getStatus().code();
+      int code = fullObject.status().code();
       if (code == HttpResponseStatus.OK.code()) {
         FullHttpResponse fullResponse = (FullHttpResponse) httpObject;
         IModifiableResponse fullHttpResponseWithTransformersResources =
