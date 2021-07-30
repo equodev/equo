@@ -27,6 +27,7 @@ import java.util.List;
 import com.equo.server.offline.api.filters.IModifiableResponse;
 
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
 
 /**
  * Modified HTTP response.
@@ -59,8 +60,21 @@ public class FullHttpResponseWithTransformersResources implements IModifiableRes
 
   @Override
   public boolean isModifiable() {
-    String contentTypeHeader = originalFullHttpResponse.headers().get("Content-Type");
-    return contentTypeHeader != null && contentTypeHeader.startsWith("text/");
+    final HttpHeaders headers = originalFullHttpResponse.headers();
+    if (isAnAttachment(headers)) {
+      return false;
+    }
+    return isAnHtmlFile(headers);
+  }
+
+  private boolean isAnHtmlFile(HttpHeaders headers) {
+    String contentTypeHeader = headers.get("Content-Type");
+    return contentTypeHeader != null && contentTypeHeader.startsWith("text/html");
+  }
+
+  private boolean isAnAttachment(HttpHeaders headers) {
+    final String contentDispositionheader = headers.get("Content-Disposition");
+    return contentDispositionheader != null && contentDispositionheader.contains("attachment");
   }
 
   @Override

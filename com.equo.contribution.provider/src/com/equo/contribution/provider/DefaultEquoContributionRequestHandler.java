@@ -25,6 +25,7 @@ package com.equo.contribution.provider;
 import static com.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -74,19 +75,40 @@ public class DefaultEquoContributionRequestHandler implements IEquoContributionR
             request = filter.applyFilter(request);
           }
 
-          if (contribution.accepts(request, uri)) {
-            return new ContributionFileRequestFiltersAdapter(request, contribution.getUrlResolver(),
-                contribution.getContributionName());
-          }
-
-          return new DefaultContributionRequestFiltersAdapter(request, getResolvedContributions(),
-              contribution.getUrlResolver(), contribution.getContributedResourceName());
+          return filterAdapterForLocalFile(request, uri, contribution);
         }
       }
     } catch (IllegalArgumentException e) {
       logger.error(e.getMessage());
     }
     return null;
+  }
+
+  private HttpFilters filterAdapterForLocalFile(HttpRequest request, URI uri,
+      EquoContribution contribution) {
+    String contributedResourceName = contribution.getContributedResourceName();
+    if (contribution.accepts(request, uri)) {
+      ContributionFileRequestFiltersAdapter fileRequestFilter =
+          new ContributionFileRequestFiltersAdapter(request, contribution.getUrlResolver(),
+              contribution.getContributionName());
+      if (!fileRequestFilter.isModifiable()) {
+        return fileRequestFilter;
+      }
+      contributedResourceName =
+          getFileResourceName(contributedResourceName, fileRequestFilter);
+    }
+
+    return new DefaultContributionRequestFiltersAdapter(request, getResolvedContributions(),
+        contribution.getUrlResolver(), contributedResourceName);
+  }
+
+  private String getFileResourceName(String contributedResourceName,
+      ContributionFileRequestFiltersAdapter fileRequestFilter) {
+    final URL resolvedUrl = fileRequestFilter.getResolvedUrl();
+    if (resolvedUrl != null) {
+      contributedResourceName = resolvedUrl.getPath();
+    }
+    return contributedResourceName;
   }
 
   @Override

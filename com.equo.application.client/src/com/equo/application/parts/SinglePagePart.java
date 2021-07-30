@@ -22,7 +22,6 @@
 
 package com.equo.application.parts;
 
-import static com.equo.application.util.IConstants.MAIN_URL_COMM_PORT;
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +33,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
+
+import com.equo.comm.api.EquoCommHelper;
 
 /**
  * Main part for Equo apps, where the browser with the web front-end is placed.
@@ -62,8 +63,8 @@ public class SinglePagePart {
    */
   @PostConstruct
   public void createControls(Composite parent) {
-    String equoAppUrl = thisPart.getProperties().get(MAIN_URL_KEY);
-    String equoWsPort = thisPart.getProperties().get(MAIN_URL_COMM_PORT);
+    String equoAppUrl = removeTrailingSlashes(thisPart.getProperties().get(MAIN_URL_KEY));
+    int equoWsPort = EquoCommHelper.getCommService().getPort();
     if (equoAppUrl != null) {
       Composite composite = new Composite(parent, SWT.NONE);
       composite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -71,6 +72,16 @@ public class SinglePagePart {
       browser.setUrl(equoAppUrl + String.format("?equocommport=%s", equoWsPort));
       browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
+  }
+
+  private String removeTrailingSlashes(String url) {
+    if (url == null) {
+      return null;
+    }
+    while (url.endsWith("/")) {
+      url = url.substring(0, url.length() - 1);
+    }
+    return url;
   }
 
   public void loadUrl(String newUrl) {

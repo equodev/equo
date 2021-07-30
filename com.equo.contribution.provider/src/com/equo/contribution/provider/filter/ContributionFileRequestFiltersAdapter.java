@@ -55,20 +55,41 @@ public class ContributionFileRequestFiltersAdapter extends OfflineRequestFilters
 
   @Override
   public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+    URL resolvedUrl = getResolvedUrl();
+    return super.buildHttpResponse(resolvedUrl);
+  }
+
+  /**
+   * Returns the resolved URL for the requested file or null if it's not found.
+   */
+  public URL getResolvedUrl() {
     String requestUri = originalRequest.uri();
-    String fileName = requestUri.substring(
-        requestUri.indexOf(contributionName) + contributionName.length(), requestUri.length());
-    URL resolvedUrl = urlResolver.resolve(fileName);
+    String uriPath = getPathFromUri(requestUri);
+    URL resolvedUrl = getResolvedUrlFromPath(uriPath);
     if (resolvedUrl == null) {
       URI requestUriAsUri = URI.create(requestUri);
       final String host = requestUriAsUri.getHost();
       if (host != null && host.contains(contributionName)) {
-        fileName = fileName.substring(
-            fileName.indexOf(contributionName) + contributionName.length(), fileName.length());
-        resolvedUrl = urlResolver.resolve(fileName);
+        uriPath = getPathFromUri(uriPath);
+        resolvedUrl = getResolvedUrlFromPath(uriPath);
       }
     }
-    return super.buildHttpResponse(resolvedUrl);
+    return resolvedUrl;
+  }
+
+  private String getPathFromUri(String uri) {
+    int indexWhenContributionNameEnds = uri.indexOf(contributionName) + contributionName.length();
+    int endIndex = uri.length();
+    return uri.substring(indexWhenContributionNameEnds, endIndex);
+  }
+
+  private URL getResolvedUrlFromPath(String path) {
+    URL resolvedUrl = urlResolver.resolve(path);
+    if (resolvedUrl == null) {
+      final String pathWithoutQueryParams = path.split("\\?")[0];
+      resolvedUrl = urlResolver.resolve(pathWithoutQueryParams);
+    }
+    return resolvedUrl;
   }
 
   @Override
@@ -78,7 +99,11 @@ public class ContributionFileRequestFiltersAdapter extends OfflineRequestFilters
 
   @Override
   public boolean isModifiable() {
-    return true;
+    final URL resolvedUrl = getResolvedUrl();
+    if (resolvedUrl == null) {
+      return false;
+    }
+    return resolvedUrl.toString().endsWith(".html");
   }
 
   @Override

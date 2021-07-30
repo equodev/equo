@@ -37,8 +37,6 @@ public interface IConstants {
 
   public static final String MAIN_URL_KEY = "mainUrl";
 
-  public static final String MAIN_URL_COMM_PORT = "equoCommPort";
-
   public static final String EQUO_HANDLER_PREFIX = "com.equo.handler";
 
   public static final String DEFAULT_HANDLER_IMPL_ID = EQUO_HANDLER_PREFIX + ".default";
