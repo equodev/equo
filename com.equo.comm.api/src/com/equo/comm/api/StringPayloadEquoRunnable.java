@@ -22,8 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnable;
-
 /**
  * Calls the declared run method when the payload is a String object.
  */

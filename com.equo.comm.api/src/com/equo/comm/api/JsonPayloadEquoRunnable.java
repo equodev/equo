@@ -22,7 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnable;
 import com.google.gson.JsonObject;
 
 /**

@@ -29,8 +29,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.equo.comm.api.IEquoEventHandler;
-
 /**
  * A helper class to obtain an EquoEventHandler instance.
  */

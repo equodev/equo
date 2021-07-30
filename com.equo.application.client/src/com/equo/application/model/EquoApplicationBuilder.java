@@ -26,12 +26,9 @@ import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
-import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
-import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
-import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -55,10 +52,12 @@ public class EquoApplicationBuilder {
   private static EquoApplicationBuilder currentBuilder;
   private static final String ECLIPSE_RCP_APP_ID = "org.eclipse.ui.ide.workbench";
 
-  private MApplication mApplication;
-  private MTrimmedWindow mWindow;
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
   private ViewBuilder viewBuilder;
+
+  private MApplication mApplication;
+  private MTrimmedWindow mWindow;
+
   private EquoApplicationModel equoApplicationModel;
   private String applicationName;
   private IEquoEventHandler equoEventHandler;
@@ -107,25 +106,13 @@ public class EquoApplicationBuilder {
 
     if (!isAnEclipseBasedApp()) {
       configureEquoApp(appId);
-      return this.viewBuilder.configureViewPart(this, equoApp);
+      return this.viewBuilder.configureViewPart(this, equoApp, appId);
     }
     return null;
   }
 
   private void configureEquoApp(String appId) {
-    MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
-    mainMenu.setElementId(appId + "." + "mainmenu");
-    getmWindow().setMainMenu(mainMenu);
-
-    createDefaultBindingContexts();
-
-    MBindingTable mainWindowBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
-    mainWindowBindingTable.setBindingContext(getmApplication().getBindingContexts().get(0));
-    mainWindowBindingTable.setElementId(IConstants.DEFAULT_BINDING_TABLE);
-
-    addAppLevelCommands(getmApplication());
-
-    getmApplication().getBindingTables().add(mainWindowBindingTable);
+    createDefaultBindingsAndCommandsIfNeeded();
     configureJavascriptApis();
   }
 
@@ -252,24 +239,35 @@ public class EquoApplicationBuilder {
     handlerBuilder.createCommandAndHandler(commandId);
   }
 
-  private void createDefaultBindingContexts() {
+  private void createDefaultBindingsAndCommandsIfNeeded() {
+    if (!getmApplication().getRootContext().isEmpty()) {
+      return;
+    }
+
     MBindingContext windowAndDialogBindingContext =
         MCommandsFactory.INSTANCE.createBindingContext();
     windowAndDialogBindingContext.setElementId(IConstants.DIALOGS_AND_WINDOWS_BINDING_CONTEXT);
     windowAndDialogBindingContext.setName("Dialogs and Windows Binding Context");
+    windowAndDialogBindingContext.setDescription("Either a window or a dialog is open");
 
     MBindingContext windowBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
     windowBindingContext.setElementId(IConstants.WINDOWS_BINDING_CONTEXT);
     windowBindingContext.setName("Windows Binding Context");
+    windowBindingContext.setDescription("A window is open");
 
     MBindingContext dialogBindingContext = MCommandsFactory.INSTANCE.createBindingContext();
     dialogBindingContext.setElementId(IConstants.DIALOGS_BINDING_CONTEXT);
     dialogBindingContext.setName("Dialogs Binding Context");
+    dialogBindingContext.setDescription("A dialog is open");
+
+    windowAndDialogBindingContext.getChildren().add(windowBindingContext);
+    windowAndDialogBindingContext.getChildren().add(dialogBindingContext);
 
     // keep this order, the order in which they are added is important.
+    getmApplication().getRootContext().add(windowAndDialogBindingContext);
     getmApplication().getBindingContexts().add(windowAndDialogBindingContext);
-    getmApplication().getBindingContexts().add(windowBindingContext);
-    getmApplication().getBindingContexts().add(dialogBindingContext);
+
+    addAppLevelCommands(getmApplication());
   }
 
   protected ViewBuilder getViewBuilder() {

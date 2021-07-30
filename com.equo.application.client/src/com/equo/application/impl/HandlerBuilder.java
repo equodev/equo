@@ -94,6 +94,8 @@ public abstract class HandlerBuilder implements MParameterBuilder {
 
     MHandler newHandler = createNewHandler(id, contributionUri);
     newHandler.setCommand(newCommand);
+    
+    newCommand.getTransientData().put("thisHandler", newHandler);
 
     mApplication.getCommands().add(newCommand);
     mApplication.getHandlers().add(newHandler);

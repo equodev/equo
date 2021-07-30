@@ -1,6 +1,12 @@
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.1.0.${tstamp}
 Export-Package: \
+    com.equo.testing.common.internal.util,\
     com.equo.testing.common.internal.components
 
 -buildpath: \
-    com.equo.application.client;version=latest
+    com.equo.application.client;version=latest,\
+    org.eclipse.e4.ui.workbench,\
+    org.eclipse.e4.ui.model.workbench,\
+    org.eclipse.emf.common,\
+    org.eclipse.emf.ecore,\
+    org.eclipse.emf.ecore.xmi

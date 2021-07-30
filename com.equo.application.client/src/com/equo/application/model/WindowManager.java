@@ -22,6 +22,18 @@
 
 package com.equo.application.model;
 
+import static org.eclipse.swt.SWT.NO_TRIM;
+
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -30,6 +42,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.equo.application.handlers.BrowserParams;
+import com.equo.application.util.IConstants;
 import com.equo.comm.api.IEquoEventHandler;
 import com.google.gson.Gson;
 
@@ -41,6 +54,18 @@ public class WindowManager {
 
   @Reference
   private IEquoEventHandler eventHandler;
+
+  @Reference
+  private MApplication mApplication;
+
+  private Display display;
+
+  private Display getDisplay() {
+    if (display == null || display.isDisposed()) {
+      display = mApplication.getContext().get(Display.class);
+    }
+    return display;
+  }
 
   public void openBrowser(String url) {
     BrowserParams browserParams = new BrowserParams(url);
@@ -101,6 +126,203 @@ public class WindowManager {
     new GlobalShortcutBuilder(equoAppBuilder,
         equoAppBuilder.getViewBuilder().getPart().getElementId(), null, null)
             .removeShortcut(keySequence);
+  }
+
+  /**
+   * Finds and returns the top level window.
+   * @return top level window or null
+   */
+  public MWindow getTopLevelWindow() {
+    for (MWindow window : mApplication.getChildren()) {
+      if (window.getTags().contains("topLevel")) {
+        return window;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Finds and returns the window with the specified name.
+   * @param  name the window name
+   * @return      found window or null
+   */
+  public MWindow getWindow(String name) {
+    if (name == null) {
+      return null;
+    }
+    for (MWindow window : mApplication.getChildren()) {
+      if (window.getLabel().equals(name)) {
+        return window;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Creates a window with the given name containing a browser pointing to the
+   * given url. Equivalent to calling createWindow(name, url, SWT.NO_TRIM).
+   * @param  name the window name
+   * @param  url  to open inside the browser
+   * @return      newly created window
+   */
+  public MWindow createWindow(String name, String url) {
+    return createWindow(name, url, SWT.NO_TRIM);
+  }
+
+  /**
+   * Creates a window with the given name containing a browser pointing to the
+   * given url with the given style.
+   * @param  name  the window name
+   * @param  url   to open inside the browser
+   * @param  style for the window (SWT style constants)
+   * @return       newly created window
+   */
+  public MWindow createWindow(String name, String url, int style) {
+    MTrimmedWindow windowToOpen = MBasicFactory.INSTANCE.createTrimmedWindow();
+    windowToOpen.getPersistedState().put(IPresentationEngine.STYLE_OVERRIDE_KEY,
+        Integer.toString(style));
+
+    if (name != null) {
+      windowToOpen.setLabel(name);
+    }
+
+    mApplication.getChildren().add(windowToOpen);
+
+    MPart part = MBasicFactory.INSTANCE.createPart();
+    part.setElementId(IConstants.MAIN_PART_ID + "." + name != null ? name : "popup");
+    part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
+    part.getProperties().put(IConstants.MAIN_URL_KEY, url);
+
+    windowToOpen.getChildren().add(part);
+
+    return windowToOpen;
+  }
+
+  /**
+   * Moves the top level window to the given coordinates.
+   * @param x coordinate
+   * @param y coordinate
+   */
+  public void moveWindow(int x, int y) {
+    moveWindow(getTopLevelWindow(), x, y);
+  }
+
+  /**
+   * Moves the window with the given name to the given coordinates.
+   * @param name the window name
+   * @param x    coordinate
+   * @param y    coordinate
+   */
+  public void moveWindow(String name, int x, int y) {
+    MWindow window = getWindow(name);
+    moveWindow(window, x, y);
+  }
+
+  /**
+   * Moves the given window to the given coordinates.
+   * @param window to move
+   * @param x      coordinate
+   * @param y      coordinate
+   */
+  public void moveWindow(MWindow window, int x, int y) {
+    if (window.getWidget() instanceof Shell) {
+      getDisplay().syncExec(() -> {
+        Shell shell = (Shell) window.getWidget();
+        Rectangle newBounds = shell.getBounds();
+        newBounds.x = x;
+        newBounds.y = y;
+        shell.setBounds(newBounds);
+      });
+    } else {
+      window.setX(x);
+      window.setY(y);
+    }
+  }
+
+  /**
+   * Resizes the top level window to the given width and height.
+   * @param width  new width for the window
+   * @param height new height for the window
+   */
+  public void resizeWindow(int width, int height) {
+    resizeWindow(getTopLevelWindow(), width, height);
+  }
+
+  /**
+   * Resizes the window with the given name to match given width and height.
+   * @param name   the window name
+   * @param width  new width for the window
+   * @param height new height for the window
+   */
+  public void resizeWindow(String name, int width, int height) {
+    MWindow window = getWindow(name);
+    resizeWindow(window, width, height);
+  }
+
+  /**
+   * Resizes the given window to match the given width and height.
+   * @param window to resize
+   * @param width  new width for the window
+   * @param height new height for the window
+   */
+  public void resizeWindow(MWindow window, int width, int height) {
+    if (window.getWidget() instanceof Shell) {
+      getDisplay().syncExec(() -> {
+        Shell shell = (Shell) window.getWidget();
+        Rectangle newBounds = shell.getBounds();
+        newBounds.width = width;
+        newBounds.height = height;
+        shell.setBounds(newBounds);
+      });
+    } else {
+      window.setWidth(width);
+      window.setHeight(height);
+    }
+  }
+
+  /**
+   * Minimizes the window with the given name.
+   * @param name the window name
+   */
+  public void minimizeWindow(String name) {
+    minimizeWindow(getWindow(name));
+  }
+
+  /**
+   * Minimizes the given window.
+   * @param window to minimize
+   */
+  public void minimizeWindow(MWindow window) {
+    Shell windowShell = (Shell) window.getWidget();
+    getDisplay().syncExec(() -> {
+      windowShell.setMaximized(false);
+      windowShell.setMinimized(true);
+    });
+  }
+
+  /**
+   * Maximizes the window with the given name.
+   * @param name the window name
+   */
+  public void maximizeWindow(String name) {
+    maximizeWindow(getWindow(name));
+  }
+
+  /**
+   * Maximizes the given window.
+   * @param window to maximize
+   */
+  public void maximizeWindow(MWindow window) {
+    Shell windowShell = (Shell) window.getWidget();
+    getDisplay().syncExec(() -> {
+      if ((windowShell.getStyle() & NO_TRIM) == NO_TRIM) {
+        windowShell.setMinimized(false);
+        windowShell.setBounds(Display.getDefault().getPrimaryMonitor().getBounds());
+      } else {
+        windowShell.setMinimized(false);
+        windowShell.setMaximized(true);
+      }
+    });
   }
 
   /**

@@ -67,6 +67,7 @@ Private-Package: \
     com.equo.application.handlers,\
     com.equo.application.impl,\
     com.equo.application.model,\
+    com.equo.application.model.util,\
     com.equo.application.parts,\
     com.equo.application.util,\
     com.equo.application

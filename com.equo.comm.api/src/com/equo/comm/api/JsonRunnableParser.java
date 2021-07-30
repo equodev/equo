@@ -22,8 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.IEquoRunnableParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

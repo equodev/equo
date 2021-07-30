@@ -22,8 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnable;
-
 /**
  * Parser from comm event payload into an Equo Runnable.
  */

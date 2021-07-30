@@ -29,6 +29,9 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 import com.equo.aer.internal.api.IEquoCrashReporter;
 import com.equo.application.api.IEquoApplication;
@@ -40,7 +43,6 @@ import com.equo.contribution.api.IEquoContributionManager;
 
 /**
  * Controls the application life cycle.
- *
  */
 public class LifeCycleManager {
 
@@ -50,6 +52,7 @@ public class LifeCycleManager {
       IDependencyInjector dependencyInjector, EModelService modelService, IEventBroker eventBroker,
       IEquoContributionManager equoContributionManager)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    registerService(mainApplication, MApplication.class);
     IEquoCrashReporter equoCrashReporter = dependencyInjector.getEquoCrashReporter();
     if (equoCrashReporter != null) {
       Platform.addLogListener(new LogListener(equoCrashReporter));
@@ -65,6 +68,11 @@ public class LifeCycleManager {
     appStartupHandler.setEquoContributionManager(equoContributionManager);
     eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
     equoApp.buildApp(equoApplicationBuilder);
+  }
 
+  void registerService(Object service, Class<?> serviceClass) {
+    Bundle bundle = FrameworkUtil.getBundle(serviceClass);
+    BundleContext bundleContext = bundle.getBundleContext();
+    bundleContext.registerService(serviceClass.getName(), service, null);
   }
 }

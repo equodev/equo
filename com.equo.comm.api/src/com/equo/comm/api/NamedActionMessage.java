@@ -22,8 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.ActionMessage;
-
 /**
  * An action message with parameters.
  */

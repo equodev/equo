@@ -1,4 +1,5 @@
--includeresource:
 -resourceonly: true
+-includeresource:
 -pom: false
 -releaserepo: 
+-buildrepo:

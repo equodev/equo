@@ -22,11 +22,14 @@
 
 package com.equo.application.model;
 
+import static com.equo.application.util.IConstants.DEFAULT_BINDING_TABLE;
 import static com.equo.application.util.IConstants.DEV_APP_URL;
+import static com.equo.application.util.IConstants.MAIN_PART_ID;
 import static com.equo.application.util.IConstants.MAIN_URL_COMM_PORT;
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
 import static com.equo.contribution.api.IEquoContributionConstants.OFFLINE_SUPPORT_CONTRIBUTION_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
@@ -34,6 +37,13 @@ import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindowElement;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -41,6 +51,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
+import com.equo.application.model.util.MenuModelHelper;
 import com.equo.application.util.IConstants;
 import com.equo.comm.api.IEquoCommService;
 import com.equo.contribution.api.EquoContributionBuilder;
@@ -101,22 +112,9 @@ public class ViewBuilder {
   }
 
   OptionalViewBuilder configureViewPart(EquoApplicationBuilder equoApplicationBuilder,
-      IEquoApplication equoApp) {
+      IEquoApplication equoApp, String appId) {
     this.equoAppBuilder = equoApplicationBuilder;
-    part = MBasicFactory.INSTANCE.createPart();
-    part.setElementId(IConstants.MAIN_PART_ID);
-    part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
-
-    // Get the Window binding context.
-    MBindingContext mBindingContext = equoAppBuilder.getmApplication().getBindingContexts().get(1);
-    part.getBindingContexts().add(mBindingContext);
-
-    mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
-    mainPartBindingTable.setBindingContext(mBindingContext);
-    mainPartBindingTable.setElementId("com.equo.application.client.bindingtable.mainpart");
-    equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
-
-    equoAppBuilder.getmWindow().getChildren().add(part);
+    createMainPartIfNotPresent();
 
     EquoGenericUrlResolver equoAppUrlResolver =
         new EquoGenericUrlResolver(equoApp.getClass().getClassLoader());
@@ -132,6 +130,8 @@ public class ViewBuilder {
     optionalViewBuilder = new OptionalViewBuilder(this, equoServer, analyticsService,
         mainAppBuilder, offlineSupportBuilder, equoApp);
 
+    resetMenu(appId);
+
     return optionalViewBuilder;
   }
 
@@ -142,6 +142,60 @@ public class ViewBuilder {
 
   private void addUrlToProxyServer(String url) {
     mainAppBuilder.withProxiedUri(url);
+  }
+
+  private void resetMenu(String appId) {
+    if (equoAppBuilder.getmWindow().getMainMenu() == null) {
+      MMenu mainMenu = MenuFactoryImpl.eINSTANCE.createMenu();
+      mainMenu.setElementId(appId + "." + "mainmenu");
+      equoAppBuilder.getmWindow().setMainMenu(mainMenu);
+    } else {
+      MenuModelHelper.getInstance().removeRecursively(equoAppBuilder.getmWindow().getMainMenu(),
+          optionalViewBuilder);
+    }
+  }
+
+  private void createMainPartIfNotPresent() {
+    MTrimmedWindow mainWindow = equoAppBuilder.getmWindow();
+    List<MWindowElement> windowElements = mainWindow.getChildren();
+    MPart mainPart = null;
+    Optional<MWindowElement> optionalMainPart =
+        windowElements.stream().filter((elem) -> MAIN_PART_ID.equals(elem.getElementId()))
+            .filter((elem) -> elem instanceof MPart).findFirst();
+    if (optionalMainPart.isPresent()) {
+      mainPart = (MPart) optionalMainPart.get();
+    } else {
+      Optional<List<MStackElement>> optionalMainStackPart = mainWindow.getChildren().stream()
+          .filter((elem) -> elem instanceof MPartSashContainer)
+          .map((sash) -> ((MPartSashContainer) sash).getChildren())
+          .filter((sashElem) -> sashElem instanceof MPartStack)
+          .map((partStack) -> ((MPartStack) partStack).getChildren())
+          .filter((stackElem) -> MAIN_PART_ID.equals(((MStackElement) stackElem).getElementId()))
+          .filter((part) -> part instanceof MPart).findFirst();
+      if (optionalMainStackPart.isPresent()) {
+        mainPart = (MPart) optionalMainStackPart.get();
+      }
+    }
+    if (mainPart != null) {
+      part = mainPart;
+      return;
+    }
+
+    part = MBasicFactory.INSTANCE.createPart();
+    part.setElementId(IConstants.MAIN_PART_ID);
+    part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
+
+    // Get the Window binding context.
+    MBindingContext mBindingContext =
+        equoAppBuilder.getmApplication().getRootContext().get(0).getChildren().get(0);
+    part.getBindingContexts().add(mBindingContext);
+
+    mainPartBindingTable = MCommandsFactory.INSTANCE.createBindingTable();
+    mainPartBindingTable.setBindingContext(mBindingContext);
+    mainPartBindingTable.setElementId(DEFAULT_BINDING_TABLE);
+    equoAppBuilder.getmApplication().getBindingTables().add(mainPartBindingTable);
+
+    equoAppBuilder.getmWindow().getChildren().add(part);
   }
 
   private String normalizeUrl(String url) {

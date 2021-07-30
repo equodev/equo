@@ -25,7 +25,6 @@ package com.equo.application.model;
 import java.net.URL;
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuFactoryImpl;
@@ -35,7 +34,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import com.equo.application.api.IEquoApplication;
-import com.equo.application.util.IConstants;
+import com.equo.application.model.util.MenuModelHelper;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
 
@@ -93,39 +92,14 @@ public class MenuBuilder {
     if (menu == null) {
       List<MMenuElement> children = parentMenu.getChildren();
       for (MMenuElement menu : children) {
-        removeRecursively(menu);
+        MenuModelHelper.getInstance().removeRecursively(menu, optionalFieldBuilder);
       }
       children.clear();
     } else {
-      removeRecursively(menu);
+      MenuModelHelper.getInstance().removeRecursively(menu, optionalFieldBuilder);
       parentMenu.getChildren().remove(menu);
     }
     return new MenuBuilder(this);
-  }
-
-  private void removeShortcutFromItem(MMenuElement element) {
-    if (element instanceof MHandledMenuItem) {
-      MHandledMenuItem item = (MHandledMenuItem) element;
-      Object shortcut = item.getTransientData().get(IConstants.ITEM_SHORTCUT);
-      if (shortcut != null) {
-        optionalFieldBuilder.removeShortcut((String) shortcut);
-      }
-    }
-  }
-
-  private void removeRecursively(MMenuElement element) {
-    if (element instanceof MMenu) {
-      MMenu menu = (MMenu) element;
-      List<MMenuElement> childrens = menu.getChildren();
-      for (MMenuElement children : childrens) {
-        removeShortcutFromItem(children);
-        removeRecursively(children);
-        children.setVisible(false);
-      }
-      childrens.clear();
-    }
-    removeShortcutFromItem(element);
-    element.setVisible(false);
   }
 
   /**
@@ -138,7 +112,7 @@ public class MenuBuilder {
     MMenuElement itemToDelete = null;
     for (MMenuElement children : childrens) {
       if (children.getLabel().equals(label)) {
-        removeRecursively(children);
+        MenuModelHelper.getInstance().removeRecursively(children, optionalFieldBuilder);
         itemToDelete = children;
         break;
       }
@@ -213,8 +187,8 @@ public class MenuBuilder {
   /**
    * Adds a Preferences menu item only if needed (Not needed in OSx) and executes
    * the runnable when the item is accessed.
-   * @param  label    the menu title.
-   * @return          the MenuItemBuilder instance.
+   * @param  label the menu title.
+   * @return       the MenuItemBuilder instance.
    */
   public MenuItemBuilder onPreferences(String label, Runnable runnable) {
     return new MenuItemBuilder(this).onPreferences(label, runnable);

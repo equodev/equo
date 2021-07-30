@@ -22,11 +22,14 @@
 
 package com.equo.application.model;
 
+import static org.eclipse.e4.ui.workbench.IPresentationEngine.STYLE_OVERRIDE_KEY;
+
 import java.util.concurrent.Callable;
 
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.workbench.modeling.IWindowCloseHandler;
+import org.eclipse.swt.SWT;
 
 import com.equo.analytics.internal.api.AnalyticsService;
 import com.equo.application.api.IEquoApplication;
@@ -273,6 +276,16 @@ public class OptionalViewBuilder {
    */
   public ToolbarBuilder withToolbar() {
     return new ToolbarBuilder(this, equoApplicationBuilder.getmWindow()).addToolbar();
+  }
+
+  /**
+   * Hides the decorations of the top window.
+   * @return this
+   */
+  public OptionalViewBuilder hideTopWindowDecorations() {
+    equoApplicationBuilder.getmWindow().getPersistedState().put(STYLE_OVERRIDE_KEY,
+        Integer.toString(SWT.NO_TRIM));
+    return this;
   }
 
 }

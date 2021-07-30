@@ -22,10 +22,6 @@
 
 package com.equo.comm.api;
 
-import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.JsonPayloadEquoRunnable;
-import com.equo.comm.api.StringPayloadEquoRunnable;
-
 /**
  * Interface for event handlers. Allows to listen and send events.
  */
