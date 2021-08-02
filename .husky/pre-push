@@ -25,7 +25,7 @@ url="$2"
 z40=0000000000000000000000000000000000000000
 
 link_to_wiki="https://gitlab.com/maketechnology/equo/platform-ui/-/wikis/How-to-add-commit-in-changelog"
-regex_commit_id_abbrev="^[a-z0-9]{8}"
+regex_commit_id_abbrev="^[a-z0-9]{8,9}"
 
 get_commit_list() {
   # Regexs
