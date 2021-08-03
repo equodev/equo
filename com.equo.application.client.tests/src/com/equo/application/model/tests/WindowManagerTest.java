@@ -72,9 +72,9 @@ public class WindowManagerTest {
   @Test
   public void windowResizesCorrectly() throws Exception {
     MWindow window = rule.getMApplication().getChildren().get(0);
-    // Add 30 to avoid hitting the minimum width and height of some desktop environments.
-    int width = (int) (Math.random() * 100) + 30;
-    int height = (int) (Math.random() * 100) + 30;
+    // Add 100 to avoid hitting the minimum width and height of some desktop environments.
+    int width = (int) (Math.random() * 100) + 100;
+    int height = (int) (Math.random() * 100) + 100;
     windowManager.resizeWindow(window, width, height);
     await().untilAsserted(() -> {
       Shell widget = (Shell) window.getWidget();
@@ -96,8 +96,9 @@ public class WindowManagerTest {
   @Test
   public void windowPositionIsSetCorrectly() {
     MWindow window = rule.getMApplication().getChildren().get(0);
-    int x = (int) (Math.random() * 100);
-    int y = (int) (Math.random() * 100);
+    // Add 100 to avoid hitting the minimum width and height of some desktop environments.
+    int x = (int) (Math.random() * 100) + 100;
+    int y = (int) (Math.random() * 100) + 100;
     windowManager.moveWindow(window, x, y);
     await().untilAsserted(() -> {
       Shell widget = (Shell) window.getWidget();
