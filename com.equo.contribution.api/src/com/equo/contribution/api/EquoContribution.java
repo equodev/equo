@@ -55,20 +55,23 @@ public class EquoContribution {
 
   private final Map<String, String> pathsToScripts;
   private final Map<String, String> pathsToStyles;
+  private final List<String> dependencies;
 
   private final IHttpRequestFilter filter;
 
   private final Runnable runnableAtStart;
 
   /**
-   * Constructor with all the contributions elements. Used by the Contribution Builder.
+   * Constructor with all the contributions elements. Used by the Contribution
+   * Builder.
    */
   public EquoContribution(IEquoContributionManager manager,
       IEquoContributionUrlResolver urlResolver, IFiltersAdapterHandler filtersAdapterHandler,
       String contributedHtmlName, String contributionName, List<String> proxiedUris,
       List<String> contributedScripts, List<String> contributedStyles,
       List<String> excludedResources, Map<String, String> pathsToScripts,
-      Map<String, String> pathsToStyles, IHttpRequestFilter filter, Runnable runnableAtStart) {
+      Map<String, String> pathsToStyles, List<String> dependencies, IHttpRequestFilter filter,
+      Runnable runnableAtStart) {
     this.manager = manager;
     this.urlResolver = urlResolver;
     this.filtersAdapterHandler = filtersAdapterHandler;
@@ -80,6 +83,7 @@ public class EquoContribution {
     this.excludedResources = excludedResources;
     this.pathsToScripts = pathsToScripts;
     this.pathsToStyles = pathsToStyles;
+    this.dependencies = dependencies;
     this.filter = filter;
     this.runnableAtStart = runnableAtStart;
     addToManager();
@@ -115,6 +119,10 @@ public class EquoContribution {
 
   public Map<String, String> getPathsToStyles() {
     return new HashMap<String, String>(pathsToStyles);
+  }
+
+  public List<String> getDependencies() {
+    return new ArrayList<String>(dependencies);
   }
 
   public IHttpRequestFilter getFilter() {

@@ -43,6 +43,7 @@ public class EquoMediaApiContribution {
   @Activate
   protected void activate() {
     builder.withContributionName(MEDIA_CONTRIBUTION_NAME).withScriptFile(MEDIA_JS_API)
+        .withDependencies("equocomm")
         .withUrlResolver(
             new EquoGenericUrlResolver(EquoMediaApiContribution.class.getClassLoader()))
         .build();

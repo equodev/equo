@@ -34,6 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 import com.equo.contribution.api.EquoContribution;
 import com.equo.contribution.api.IEquoContributionManager;
 import com.equo.contribution.api.ResolvedContribution;
+import com.equo.contribution.provider.dependency.IDependencyTreeManager;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
 
@@ -49,18 +50,44 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
 
   private Optional<String> limitedConnectionPagePath = Optional.empty();
   private Map<String, EquoContribution> equoContributions = new HashMap<String, EquoContribution>();
+  private List<String> equoContributionLoadOrder = new ArrayList<>();
+
+  @Reference
+  private IDependencyTreeManager dependencyTreeManager;
 
   @Override
-  public void addContribution(EquoContribution contribution) {
+  public synchronized void addContribution(EquoContribution contribution) {
+    String contributionName = contribution.getContributionName();
+    // Check if the contribution has already been uploaded.
+    if (equoContributions.containsKey(contributionName)) {
+      logger.info("Equo Contribution " + contributionName + " it was already loaded");
+      return;
+    }
+
+    List<String> contributionDependencies = contribution.getDependencies();
+    // Check if contribution dependencies are satisfied.
+    for (int i = 0; i < contributionDependencies.size(); i++) {
+      if (!equoContributions.containsKey(contributionDependencies.get(i))) {
+        dependencyTreeManager.addContribution(contribution);
+        return;
+      }
+    }
     try {
-      equoContributions.put(contribution.getContributionName().toLowerCase(), contribution);
+      equoContributions.put(contributionName.toLowerCase(), contribution);
+      equoContributionLoadOrder.add(contributionName);
       resolve(contribution);
       if (logger == null) {
         logger = LoggerFactory.getLogger(DefaultEquoContributionManager.class);
       }
-      logger.info("Equo Contribution added: " + contribution.getContributionName());
+      logger.info("Equo Contribution added: " + contributionName);
+
+      // Check if any pending contributions can be loaded.
+      dependencyTreeManager.pullSatisfiedContributions(contributionName)
+          .forEach((equoContribution) -> {
+            addContribution(equoContribution);
+          });
     } catch (IllegalStateException e) {
-      equoContributions.remove(contribution.getContributionName().toLowerCase());
+      equoContributions.remove(contributionName.toLowerCase());
       e.printStackTrace();
     }
   }
@@ -71,6 +98,11 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
       return null;
     }
     return equoContributions.get(contributionName.toLowerCase());
+  }
+
+  @Override
+  public List<String> getContributions() {
+    return new ArrayList<String>(equoContributionLoadOrder);
   }
 
   @Override
@@ -117,4 +149,17 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
     this.limitedConnectionPagePath = limitedConnectionPage;
   }
 
+  @Override
+  public List<String> getPendingContributions() {
+    return dependencyTreeManager.getPendingContributions();
+  }
+
+  @Override
+  public void reportPendingContributions() {
+    List<String> pendingDependencies = dependencyTreeManager.getPendingContributions();
+    if (pendingDependencies.size() > 0) {
+      logger.error("The following " + pendingDependencies
+          + " contributions could not be loaded due to dependency conflicts.");
+    }
+  }
 }

@@ -68,6 +68,7 @@ public class LifeCycleManager {
     appStartupHandler.setEquoContributionManager(equoContributionManager);
     eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, appStartupHandler);
     equoApp.buildApp(equoApplicationBuilder);
+    equoContributionManager.reportPendingContributions();
   }
 
   void registerService(Object service, Class<?> serviceClass) {

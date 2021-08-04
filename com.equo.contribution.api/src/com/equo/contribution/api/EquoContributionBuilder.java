@@ -23,6 +23,7 @@
 package com.equo.contribution.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class EquoContributionBuilder {
   private List<String> contributedScripts;
   private List<String> contributedStyles;
   private List<String> excludedResources;
+  private List<String> dependencies;
 
   private Map<String, String> pathsToScripts;
   private Map<String, String> pathsToStyles;
@@ -74,6 +76,7 @@ public class EquoContributionBuilder {
     this.excludedResources = new ArrayList<String>();
     this.pathsToScripts = new HashMap<String, String>();
     this.pathsToStyles = new HashMap<String, String>();
+    this.dependencies = new ArrayList<>();
     this.filter = ((originalRequest) -> {
       return originalRequest;
     });
@@ -236,13 +239,23 @@ public class EquoContributionBuilder {
   }
 
   /**
+   * Adds the restriction of loading a dependent contribution before this.
+   * @param  dependencies await load contribution before this.
+   * @return              this
+   */
+  public EquoContributionBuilder withDependencies(String... dependencies) {
+    this.dependencies = Arrays.asList(dependencies);
+    return this;
+  }
+
+  /**
    * Builds the contribution defined by this builder.
    * @return an EquoContribution instance.
    */
   public EquoContribution build() {
     return new EquoContribution(manager, urlResolver, filtersAdapterHandler, contributedHtmlName,
         contributionName, proxiedUris, contributedScripts, contributedStyles, excludedResources,
-        pathsToScripts, pathsToStyles, filter, runnableAtStart);
+        pathsToScripts, pathsToStyles, dependencies, filter, runnableAtStart);
   }
 
 }

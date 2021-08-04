@@ -20,39 +20,41 @@
 **
 ****************************************************************************/
 
-package com.equo.contribution.api;
+package com.equo.contribution.provider.dependency;
 
 import java.util.List;
-import java.util.Optional;
+
+import com.equo.contribution.api.EquoContribution;
 
 /**
- * Interface for contribution manager. The manager will concentrate all the
- * added contributions and enable them to be obtained.
+ * DependencyTree administrator interface. Provides the methods for using
+ * DependencyTree.
  */
-public interface IEquoContributionManager {
+public interface IDependencyTreeManager {
 
-  EquoContribution getContribution(String contributionName);
+  /**
+   * Adds contribution to the dependency tree.
+   * @param equoContribution Contribution to add.
+   */
+  void addContribution(EquoContribution equoContribution);
 
-  ResolvedContribution resolve(EquoContribution contribution);
+  /**
+   * Gets and extract a list of contributions that are ready to be uploaded. This implies that
+   * the contributions are discarded from the dependency tree.
+   * @param  dependency Satisfied dependence
+   * @return            List of contributions.
+   */
+  List<EquoContribution> pullSatisfiedContributions(String dependency);
 
-  ResolvedContribution getResolvedContributions();
+  /**
+   * Removes dependency key to dependency tree.
+   * @param dependency Dependency to remove.
+   */
+  void removeDependency(String dependency);
 
-  List<String> getContributionProxiedUris();
-
-  List<Runnable> getContributionStartProcedures();
-
-  boolean contains(String contributionName);
-
-  void addContribution(EquoContribution contribution);
-
-  Optional<String> getContributedLimitedConnectionPage();
-
-  void setContributedLimitedConnectionPage(Optional<String> limitedConnectionPage);
-
-  List<String> getContributions();
-
+  /**
+   * Gets a list of pending contributions.
+   * @return List of pending contributions.
+   */
   List<String> getPendingContributions();
-
-  void reportPendingContributions();
-
 }

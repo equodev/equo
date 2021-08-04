@@ -1,0 +1,17 @@
+Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
+Bundle-ActivationPolicy:
+
+-include: https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
+    https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd
+
+-buildpath: \
+    com.equo.testing.common;version=latest,\
+    com.equo.contribution.api;version=latest
+
+-privatepackage: \
+    com.equo.contribution.api.tests,\
+    com.equo.contribution.api.tests.util
+
+-runbundles: \
+    com.equo.contribution.api;version=snapshot,\
+    com.equo.contribution.api.tests;version=snapshot
