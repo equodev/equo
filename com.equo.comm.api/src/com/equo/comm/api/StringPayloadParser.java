@@ -22,15 +22,12 @@
 
 package com.equo.comm.api;
 
-import com.google.gson.Gson;
-
 /**
  * Parser for comm event payload into an Equo runnable of String type.
  */
 public class StringPayloadParser implements IEquoRunnableParser<String> {
 
   private IEquoRunnable<String> stringPayloadEquoRunnable;
-  private Gson gson;
 
   /**
    * Creates the payload parser for object of type String.
@@ -38,12 +35,11 @@ public class StringPayloadParser implements IEquoRunnableParser<String> {
    */
   public StringPayloadParser(IEquoRunnable<String> stringPayloadEquoRunnable) {
     this.stringPayloadEquoRunnable = stringPayloadEquoRunnable;
-    this.gson = new Gson();
   }
 
   @Override
   public String parsePayload(Object payload) {
-    String result = gson.toJson(payload);
+    String result = payload.toString();
     return result;
   }
 

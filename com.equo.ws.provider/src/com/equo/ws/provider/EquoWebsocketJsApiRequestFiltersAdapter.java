@@ -22,7 +22,7 @@
 
 package com.equo.ws.provider;
 
-import static com.equo.ws.provider.EquoWebSocketContribution.WEBSOCKET_CONTRIBUTION_NAME;
+import static com.equo.comm.api.EquoCommContribution.COMM_CONTRIBUTION_NAME;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +75,7 @@ public class EquoWebsocketJsApiRequestFiltersAdapter extends HttpFiltersAdapter 
   public HttpResponse clientToProxyRequest(HttpObject httpObject) {
     String requestUri = originalRequest.uri();
     String fileName = requestUri.substring(
-        requestUri.indexOf(WEBSOCKET_CONTRIBUTION_NAME) + WEBSOCKET_CONTRIBUTION_NAME.length(),
+        requestUri.indexOf(COMM_CONTRIBUTION_NAME) + COMM_CONTRIBUTION_NAME.length(),
         requestUri.length());
     URL resolvedUrl = urlResolver.resolve(fileName);
     return buildHttpResponse(resolvedUrl);

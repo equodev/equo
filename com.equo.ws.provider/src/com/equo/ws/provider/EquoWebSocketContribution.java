@@ -26,6 +26,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.equo.comm.api.EquoCommContribution;
 import com.equo.comm.api.IEquoCommService;
 import com.equo.contribution.api.EquoContributionBuilder;
 
@@ -33,9 +34,7 @@ import com.equo.contribution.api.EquoContributionBuilder;
  * Websocket contribution, adding websocket javascript API into the app.
  */
 @Component
-public class EquoWebSocketContribution {
-
-  static final String WEBSOCKET_CONTRIBUTION_NAME = "equocomm";
+public class EquoWebSocketContribution extends EquoCommContribution {
   private static final String EQUO_WEBSOCKET_JS_API = "equoComm.js";
 
   private EquoContributionBuilder builder;
@@ -44,7 +43,7 @@ public class EquoWebSocketContribution {
 
   @Activate
   protected void activate() {
-    builder.withScriptFile(EQUO_WEBSOCKET_JS_API).withContributionName(WEBSOCKET_CONTRIBUTION_NAME)
+    builder.withScriptFile(EQUO_WEBSOCKET_JS_API).withContributionName(COMM_CONTRIBUTION_NAME)
         .withFiltersAdapterHandler(new EquoWebSocketFiltersAdapterHandler(equoWebSocketService))
         .build();
   }

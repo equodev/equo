@@ -58,7 +58,7 @@ public class OfflineRequestFiltersAdapter extends HttpFiltersAdapter {
     FILE_TYPE_MAP.addMimeTypes("text/css css");
     FILE_TYPE_MAP.addMimeTypes("application/javascript js");
     FILE_TYPE_MAP.addMimeTypes("application/json json");
-
+    FILE_TYPE_MAP.addMimeTypes("text/xml xml");
   }
 
   protected ILocalUrlResolver urlResolver;
