@@ -8,10 +8,12 @@
   },
   "resolutions": {
     "glob-parent": "^6.0.0",
+    "tar": "^4.4.15",
     "trim-newlines": "^4.0.2"
   },
   "dependencies": {
     "glob-parent": "^6.0.0",
+    "tar": "^4.4.15",
     "trim-newlines": "^4.0.2"
   },
   "devDependencies": {

@@ -29,7 +29,7 @@ regex_commit_id_abbrev="^[a-z0-9]{8,9}"
 
 get_commit_list() {
   # Regexs
-  regex_validate="^(feat|fix|chg|rem|dep|sec)(?:\(([\w\\$\.\-\*\s]*)\))?:\s.{3,}"
+  regex_validate="^(feat|fix|chg|del|dep|sec)(?:\(([\w\\$\.\-\*\s]*)\))?:\s.{3,}"
   regex_skip_validate="$regex_commit_id_abbrev int:\s.*"
 
   # Filter commits
