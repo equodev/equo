@@ -12,8 +12,7 @@ The bundles that provide the core functionality of the framework:
 | com.equo.analytics.internal.api | Internal Analytics API. Used by the framework to register internal framework events. It does nothing without the SDK running | 
 | com.equo.application.client | The main API entry point of the Equo Framework. Here we have the app structure, with Equo builders to create it, and its model (which includes the main window, toolbars, shortcuts, menus, etc). We also have the app lifecycle and Eclipse handlers to manage the E4 app | 
 | com.equo.comm.api | API of the comm service. Contains the EquoEventHandler API (the interface with which to use the service) and different payload types and runnables to send/receive messages  | 
-| com.equo.contribution.api | API defined to allow other bundles to contribute resources to the app such as css, js scripts, startup scripts, and more | 
-| com.equo.contribution.media.provider | A contribution to enhance the app with a Equo media API | 
+| com.equo.contribution.api | API defined to allow other bundles to contribute resources to the app such as css, js scripts, startup scripts, and more |
 | com.equo.contribution.provider | Contributions API implementation. It has the manager and resolver to process contributions in runtime | 
 | com.equo.logging.client.api | API for Equo logging service. It contains the API, configurations, a logger factory and a basic logger implementation that logs to stdout using [Logback](https://logback.qos.ch) | 
 | com.equo.logging.client.core.provider | Provides the Javascript logging API | 

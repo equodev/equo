@@ -41,7 +41,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     osgi.identity;filter:='(osgi.identity=com.equo.analytics.internal.api)',\
     osgi.identity;filter:='(osgi.identity=com.equo.aer.api)',\
     osgi.identity;filter:='(osgi.identity=com.equo.aer.internal.api)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.contribution.media.provider)',\
     osgi.identity;filter:='(osgi.identity=org.bouncycastle.bcpkix)',\
     osgi.identity;filter:='(osgi.identity=org.bouncycastle.bcprov)',\
     osgi.identity;filter:='(osgi.identity=org.eclipse.equinox.event)',\
@@ -118,7 +117,6 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     com.equo.analytics.internal.api;version=latest,\
     com.equo.application.client;version=latest,\
     com.equo.contribution.api;version=latest,\
-    com.equo.contribution.media.provider;version=latest,\
     com.equo.contribution.provider;version=latest,\
     com.equo.logging.client.api;version=latest,\
     com.equo.logging.client.core.provider;version=latest,\
