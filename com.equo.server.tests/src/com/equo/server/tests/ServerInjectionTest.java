@@ -138,6 +138,16 @@ public class ServerInjectionTest {
 
     assertEquals("File content has been modified in the request", fileText, browserText);
   }
+  
+  @Test
+  public void scriptsAreInjectedBeforeHtmlCode() {
+    AtomicBoolean textReceived = new AtomicBoolean(false);
+    handler.on("_testIndexJs", (IEquoRunnable<Void>) runnable -> {
+      textReceived.set(true);
+    });
+    goToUrl(TEST_URL + "/indexWithJs.html");
+    await().untilTrue(textReceived);
+  }
 
   private String getXmlFileContent() throws IOException {
     InputStream fis = getClass().getClassLoader().getResourceAsStream("pom.xml");

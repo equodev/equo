@@ -199,7 +199,8 @@ vmargs:${if;${matches;${tolower;${os.name}};.*mac.*};-XstartOnFirstThread;}
     org.w3c.dom.events;version='[3.0.0,3.0.1)',\
     org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
     org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
-    org.xbill.dns;version='[2.0.8,2.0.9)'
+    org.xbill.dns;version='[2.0.8,2.0.9)',\
+    org.jsoup;version='[1.8.0,1.9.0)'
 #-runbundles.debug: \
 #    org.eclipse.equinox.console,\
 #    org.apache.felix.gogo.command,\

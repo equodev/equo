@@ -23,8 +23,11 @@
 package com.equo.server.offline.api.filters;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.http.entity.ContentType;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -84,6 +87,37 @@ public interface IModifiableResponse {
   FullHttpResponse getOriginalFullHttpResponse();
 
   boolean isModifiable();
+
+  /**
+   * Generates a HTML modified response in which includes the contributed scripts
+   * and style into the original response content.
+   * @param  responseToTransform     request response to modify.
+   * @param  customJsScripts         custom js scripts for added in response.
+   * @param  customStyles            custom js styles for added in response.
+   * @param  equoContributionsJsApis list with contribution js scripts for added
+   *                                 in response.
+   * @param  equoContributionStyles  list with contribution js styles for added in
+   *                                 response.
+   * @return                         modified response
+   */
+  default String modifyOriginalResponseHtml(String responseToTransform, String customJsScripts,
+      String customStyles, List<String> equoContributionsJsApis,
+      List<String> equoContributionStyles) {
+    String customResponse = new String(responseToTransform);
+
+    Document html = Jsoup.parse(customResponse);
+
+    html.head().prepend(customJsScripts);
+    for (int i = equoContributionsJsApis.size() - 1; i >= 0; i--) {
+      html.head().prepend(equoContributionsJsApis.get(i));
+    }
+    for (int i = equoContributionStyles.size() - 1; i >= 0; i--) {
+      html.body().append(equoContributionStyles.get(i));
+    }
+
+    html.body().append(customStyles);
+    return html.toString();
+  }
 
   String modifyOriginalResponse(String responseToTransform);
 

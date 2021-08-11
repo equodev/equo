@@ -79,15 +79,7 @@ public class FullHttpResponseWithTransformersResources implements IModifiableRes
 
   @Override
   public String modifyOriginalResponse(String responseToTransform) {
-    StringBuilder customResponse = new StringBuilder(responseToTransform);
-    for (String jsApi : equoContributionsJsApis) {
-      customResponse.append(jsApi);
-    }
-    for (String style : equoContributionStyles) {
-      customResponse.append(style);
-    }
-    customResponse.append(customJsScripts);
-    customResponse.append(customStyles);
-    return customResponse.toString();
+    return this.modifyOriginalResponseHtml(responseToTransform, customJsScripts, customStyles,
+        equoContributionsJsApis, equoContributionStyles);
   }
 }

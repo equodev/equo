@@ -1,4 +1,4 @@
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.1.0.${tstamp}
 Export-Package: \
     com.equo.server.offline.api,\
     com.equo.server.offline.api.filters,\
@@ -11,4 +11,5 @@ Export-Package: \
     osgi.cmpn,\
     org.apache.httpcomponents.httpcore;version=4.4.6,\
     org.littleshoot:littleproxy;version=1.1,\
-    javax.activation
+    javax.activation, \
+    org.jsoup;version=1.8.3

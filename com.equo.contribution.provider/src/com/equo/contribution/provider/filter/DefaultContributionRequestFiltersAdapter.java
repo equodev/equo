@@ -86,27 +86,13 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 
     String responseToTransform = IModifiableResponse.createStringFromData(data, charset);
 
-    String transformedResponse = addCustomJsScriptsAndStyles(responseToTransform);
+    String transformedResponse = modifyOriginalResponse(responseToTransform);
 
     byte[] bytes = IModifiableResponse.createDataFromString(transformedResponse, charset);
     ByteBuf transformedContent = Unpooled.buffer(bytes.length);
     transformedContent.writeBytes(bytes);
 
     return super.buildResponse(transformedContent, "text/html; charset=utf-8");
-  }
-
-  private String addCustomJsScriptsAndStyles(String responseToTransform) {
-    StringBuilder customResponse = new StringBuilder(responseToTransform);
-    customResponse.append("\n");
-    for (String jsApi : equoContributionsJsApis) {
-      customResponse.append(jsApi);
-    }
-    for (String style : equoContributionStyles) {
-      customResponse.append(style);
-    }
-    customResponse.append(customJsScripts);
-    customResponse.append(customStyles);
-    return customResponse.toString();
   }
 
   @Override
@@ -121,6 +107,7 @@ public class DefaultContributionRequestFiltersAdapter extends OfflineRequestFilt
 
   @Override
   public String modifyOriginalResponse(String responseToTransform) {
-    return null;
+    return this.modifyOriginalResponseHtml(responseToTransform, customJsScripts, customStyles,
+        equoContributionsJsApis, equoContributionStyles);
   }
 }
