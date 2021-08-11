@@ -1,5 +1,4 @@
--include: ext/equocore.bnd,\
-		equochromium.bnd
+-include: ext/equocore.bnd,equochromium.bnd
 
 -buildpath.equo: \
     com.equo.application.client;version=latest,\
