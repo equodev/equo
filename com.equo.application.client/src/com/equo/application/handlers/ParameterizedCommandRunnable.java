@@ -22,6 +22,8 @@
 
 package com.equo.application.handlers;
 
+import java.util.function.Consumer;
+
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -31,14 +33,11 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import com.equo.application.util.IConstants;
-import com.equo.comm.api.StringPayloadEquoRunnable;
 
 /**
  * Runnable to be executed when its associated command is called.
  */
-public class ParameterizedCommandRunnable implements StringPayloadEquoRunnable {
-
-  private static final long serialVersionUID = 1L;
+public class ParameterizedCommandRunnable implements Consumer<String> {
 
   private String commandId;
 
@@ -50,7 +49,7 @@ public class ParameterizedCommandRunnable implements StringPayloadEquoRunnable {
   }
 
   @Override
-  public void run(String payload) {
+  public void accept(String payload) {
     ECommandService commandService = eclipseContext.get(ECommandService.class);
     Command command = commandService.getCommand(commandId + IConstants.COMMAND_SUFFIX);
     try {
@@ -60,7 +59,6 @@ public class ParameterizedCommandRunnable implements StringPayloadEquoRunnable {
       EHandlerService handlerService = eclipseContext.get(EHandlerService.class);
       handlerService.executeHandler(parametrizedCommand);
     } catch (NotDefinedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

@@ -22,6 +22,9 @@
 
 package com.equo.comm.api;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 /**
  * Interface for event handlers. Allows to listen and send events.
  */
@@ -40,24 +43,31 @@ public interface IEquoEventHandler {
   void send(String userEvent, Object payload);
 
   /**
-   * Defines a custom JsonPayloadEquoRunnable for an specific event ID.
-   * @param eventId                 the id event.
-   * @param jsonPayloadEquoRunnable the runnable.
+   * Defines a custom actionHandler for an specific event ID.
+   * @param payloadClass  the event expected payload class.
+   * @param actionHandler the action handler.
    */
-  void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable);
+  <T, R> void on(String actionId, Class<T> payloadClass, Function<T, R> actionHandler);
 
   /**
-   * Defines a custom StringPayloadEquoRunnable for an specific event ID.
-   * @param eventId                   the id event.
-   * @param stringPayloadEquoRunnable the runnable.
+   * Defines a custom actionHandler for an specific event ID.
+   * @param actionId      the event id.
+   * @param actionHandler the action handler.
    */
-  void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable);
+  <R> void on(String actionId, Function<String, R> actionHandler);
 
   /**
-   * Defines a custom objectPayloadEquoRunnable for an specific event ID.
-   * @param eventId                   the event ID.
-   * @param objectPayloadEquoRunnable the runnable.
+   * Defines a custom actionHandler for an specific event ID.
+   * @param payloadClass  the event expected payload class.
+   * @param actionHandler the action handler.
    */
-  <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable);
+  <T> void on(String actionId, Class<T> payloadClass, Consumer<T> actionHandler);
+
+  /**
+   * Defines a custom actionHandler for an specific event ID.
+   * @param actionId      the event id.
+   * @param actionHandler the action handler.
+   */
+  void on(String actionId, Consumer<String> actionHandler);
 
 }

@@ -22,6 +22,9 @@
 
 package com.equo.comm.api;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -62,9 +65,17 @@ public class EquoCommHelper {
     }
 
     @Override
-    public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser) {
+    public <T, R> void addEventHandler(String actionId, Function<T, R> actionHandler,
+        Class<?>... paramTypes) {
       obtainInstance();
-      instance.addEventHandler(actionId, equoRunnableParser);
+      instance.addEventHandler(actionId, actionHandler, paramTypes);
+    }
+
+    @Override
+    public <T> void addEventHandler(String actionId, Consumer<T> actionHandler,
+        Class<?>... paramTypes) {
+      obtainInstance();
+      instance.addEventHandler(actionId, actionHandler, paramTypes);
     }
 
     @Override

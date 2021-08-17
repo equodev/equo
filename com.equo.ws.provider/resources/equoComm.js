@@ -91,8 +91,8 @@ window.equo = window.equo || {};
     // Wait until the state of the comm is not ready and send the message when it is...
     waitForCommConnection(comm, () => {
       const event = JSON.stringify({
-        action,
-        params: browserParams
+        actionId: action,
+        payload: browserParams
       })
       comm.send(event)
     })

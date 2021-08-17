@@ -1,5 +1,7 @@
 Bundle-Version: 1.0.1.${tstamp}
-Private-Package: com.equo.ws.provider
+Private-Package: \
+    com.equo.ws.provider,\
+    com.equo.ws.provider.util
 -includeresource: resources/
 -buildpath: \
     com.google.guava;version='27.1',\

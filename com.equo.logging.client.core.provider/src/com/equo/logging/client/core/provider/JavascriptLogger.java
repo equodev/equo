@@ -23,6 +23,7 @@
 package com.equo.logging.client.core.provider;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -30,7 +31,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
 import com.equo.comm.api.IEquoEventHandler;
-import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.equo.logging.client.api.Level;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerConfiguration;
@@ -52,12 +52,11 @@ public class JavascriptLogger {
 
   @Activate
   public void start() {
-    equoEventHandler.on(LOGGING_EVENT_KEY, new LoggingEventPayloadRunnable());
+    equoEventHandler.on(LOGGING_EVENT_KEY, JsonObject.class, new LoggingEventActionHandler());
   }
 
-  private class LoggingEventPayloadRunnable implements JsonPayloadEquoRunnable {
+  private class LoggingEventActionHandler implements Consumer<JsonObject> {
 
-    private static final long serialVersionUID = 1L;
     private static final String MESSAGE_LOG = "message";
     private static final String TYPE_LOG = "type";
 
@@ -77,7 +76,7 @@ public class JavascriptLogger {
     private static final String TYPE_SET_GLOBAL_LEVEL = "setGlobalLevel";
 
     @Override
-    public void run(JsonObject payload) {
+    public void accept(JsonObject payload) {
       JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
       JsonElement typeJsonElement = payload.get(TYPE_LOG);
 

@@ -23,15 +23,11 @@
 // @ts-expect-error
 import { EquoLoggingService } from '@equo/logging'
 // @ts-expect-error
-import { EquoFramework } from '@equo/framework'
-// @ts-expect-error
 import { EquoCommService, EquoComm } from '@equo/comm'
 // @ts-expect-error
 import { Menu, MenuBuilder } from '@equo/equo-application-menu'
 
 const comm: EquoComm = EquoCommService.get()
-
-EquoFramework.openBrowser('')
 
 comm.on('_makeLogs', () => {
   EquoLoggingService.logInfo('testInfo')
@@ -60,7 +56,7 @@ comm.on('_makeLogs', () => {
   })
 })
 
-function inicMenu (elementMenu: MenuBuilder, func?: Function): void {
+function initMenu (elementMenu: MenuBuilder, func?: Function): void {
   elementMenu.withMainMenu('Menu1')
     .addMenuItem('SubMenu11').onClick('_test').withShortcut('M1+W')
     .addMenu('SubMenu12')
@@ -79,7 +75,7 @@ function inicMenu (elementMenu: MenuBuilder, func?: Function): void {
 
 comm.on('_createMenuImpl', () => {
   const menu1 = Menu.create()
-  inicMenu(menu1, (comm: EquoComm, json: JSON) => { comm.send('_testSetMenu1', json) })
+  initMenu(menu1, (comm: EquoComm, json: JSON) => { comm.send('_testSetMenu1', json) })
 })
 
 comm.on('_createMenu', () => {
@@ -88,40 +84,40 @@ comm.on('_createMenu', () => {
 
 comm.on('_appendMenuItem', () => {
   const menu2 = Menu.create()
-  inicMenu(menu2)
+  initMenu(menu2)
   menu2.appendMenuItem('Menu1', 0, 'SubMenu10').onClick('_test').withShortcut('M1+L')
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu2', json) })
 })
 
 comm.on('_appendMenu', () => {
   const menu3 = Menu.create()
-  inicMenu(menu3)
+  initMenu(menu3)
   menu3.appendMenu('Menu2/SubMenu22', 1, 'SubMenu223').addMenuItem('SubMenu2231').onClick('_test').withShortcut('M1+K')
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu3', json) })
 })
 
 comm.on('_removeMenuElement', () => {
   const menu4 = Menu.create()
-  inicMenu(menu4)
+  initMenu(menu4)
   menu4.removeMenuElementByPath('Menu2/SubMenu22/SubMenu222').setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu4', json) })
 })
 
 comm.on('_appendMenuAtTheEnd', () => {
   const menu5 = Menu.create()
-  inicMenu(menu5)
+  initMenu(menu5)
   menu5.appendMenuAtTheEnd('Menu1/SubMenu12', 'SubMenu122').addMenuItem('SubMenu1221')
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu5', json) })
 })
 
 comm.on('_appendMenuItemAtTheEnd', () => {
   const menu6 = Menu.create()
-  inicMenu(menu6)
+  initMenu(menu6)
   menu6.appendMenuItemAtTheEnd('Menu1/SubMenu12', 'SubMenu123').setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testSetMenu6', json) })
 })
 
 comm.on('_appendMenuRepeated', () => {
   const menu7 = Menu.create()
-  inicMenu(menu7)
+  initMenu(menu7)
   menu7.appendMenuItemAtTheEnd('Menu1/SubMenu12', 'SubMenu123').addMenuItem('SubMenu1221').setApplicationMenu()
 
   try {
@@ -133,7 +129,7 @@ comm.on('_appendMenuRepeated', () => {
 
 comm.on('_appendMenuItemRepeated', () => {
   const menu8 = Menu.create()
-  inicMenu(menu8)
+  initMenu(menu8)
   menu8.appendMenuAtTheEnd('Menu1/SubMenu12', 'SubMenu122').addMenuItem('SubMenu1221').setApplicationMenu()
 
   try {
@@ -197,6 +193,14 @@ comm.on('_customActionOnClick', () => {
     .addMenuItem('SubMenu11').onClick(() => { comm.send('_customActionOnClickResponse') }).withShortcut('M1+W')
 
     .setApplicationMenu((comm: EquoComm, json: JSON) => { comm.send('_testCustomOnClick', json) })
+})
+
+comm.on('_resolvePromise', () => {
+  comm.call<any>({ actionId: 'testPromise', payload: { testParam1: 'someString', testParam2: 256 } }).then((response: any) => {
+    if (response.testParam2 === 512 && response.testParam1 === 'someStringAppended') {
+      comm.send('_promiseResolved')
+    }
+  })
 })
 
 comm.send('_ready')

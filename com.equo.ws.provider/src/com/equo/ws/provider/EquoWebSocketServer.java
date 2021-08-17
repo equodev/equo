@@ -27,15 +27,14 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.IEquoRunnableParser;
 import com.equo.comm.api.NamedActionMessage;
-import com.equo.comm.api.actions.IActionHandler;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
 import com.google.gson.Gson;
@@ -44,19 +43,20 @@ class EquoWebSocketServer extends WebSocketServer {
   protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServer.class);
 
   private Gson gsonParser;
-  private Map<String, IEquoRunnableParser<?>> eventHandlers;
-  @SuppressWarnings("rawtypes")
-  private Map<String, IActionHandler> actions;
+  private Map<String, Function<?, ?>> functionActionHandlers;
+  private Map<String, Consumer<?>> consumerActionHandlers;
+  private Map<String, Class<?>> actionParamTypes;
   private boolean firstClientConnected = false;
   List<String> messagesToSend = new ArrayList<>();
 
   private volatile boolean started;
 
-  public EquoWebSocketServer(Map<String, IEquoRunnableParser<?>> eventHandlers,
-      @SuppressWarnings("rawtypes") Map<String, IActionHandler> actionHandlers) {
+  public EquoWebSocketServer(Map<String, Function<?, ?>> functionActionHandlers,
+      Map<String, Consumer<?>> consumerActionHandlers, Map<String, Class<?>> actionParamTypes) {
     super(new InetSocketAddress(0));
-    this.actions = actionHandlers;
-    this.eventHandlers = eventHandlers;
+    this.functionActionHandlers = functionActionHandlers;
+    this.consumerActionHandlers = consumerActionHandlers;
+    this.actionParamTypes = actionParamTypes;
     this.gsonParser = new Gson();
     this.started = false;
   }
@@ -81,7 +81,7 @@ class EquoWebSocketServer extends WebSocketServer {
     logger.debug(conn + " has left the Equo Framework!");
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   private void receiveMessage(String message, boolean broadcast) {
     NamedActionMessage actionMessage = null;
     try {
@@ -90,20 +90,41 @@ class EquoWebSocketServer extends WebSocketServer {
       return;
     }
 
-    String action = actionMessage.getAction();
-    if (eventHandlers.containsKey(action)) {
-      IEquoRunnableParser<?> equoRunnableParser = eventHandlers.get(action);
-      Object parsedPayload = equoRunnableParser.parsePayload(actionMessage.getParams());
-      IEquoRunnable equoRunnable = equoRunnableParser.getEquoRunnable();
-      equoRunnable.run(parsedPayload);
-    } else if (actions.containsKey(action)) {
+    String actionId = actionMessage.getActionId();
+    if (functionActionHandlers.containsKey(actionId)
+        || consumerActionHandlers.containsKey(actionId)) {
       Object parsedPayload = null;
-      if (actionMessage.getParams() != null) {
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(actionMessage.getParams());
-        parsedPayload = gson.fromJson(jsonString, actions.get(action).getGenericInterfaceType());
+      if (actionMessage.getPayload() != null) {
+        Class<?> type = actionParamTypes.get(actionId);
+        String jsonString;
+        if (actionMessage.getPayload() instanceof String) {
+          jsonString = actionMessage.getPayload().toString();
+        } else {
+          jsonString = gsonParser.toJson(actionMessage.getPayload());
+        }
+        try {
+          if (String.class.equals(type)) {
+            parsedPayload = jsonString;
+          } else {
+            parsedPayload = gsonParser.fromJson(jsonString, type);
+          }
+        } catch (Exception e) {
+          parsedPayload = jsonString;
+        }
       }
-      actions.get(action).call(parsedPayload);
+      Function<?, ?> function = functionActionHandlers.get(actionId);
+      Object response = null;
+      if (function != null) {
+        response = ((Function<Object, ?>) function).apply(parsedPayload);
+      } else {
+        Consumer<?> consumer = consumerActionHandlers.get(actionId);
+        ((Consumer<Object>) consumer).accept(parsedPayload);
+      }
+      if (actionMessage.getCallerUuid() != null && response != null) {
+        NamedActionMessage responseMessage =
+            new NamedActionMessage(actionMessage.getCallerUuid(), response);
+        super.broadcast(gsonParser.toJson(responseMessage));
+      }
     } else if (broadcast) {
       super.broadcast(message);
     }

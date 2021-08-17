@@ -27,14 +27,14 @@ package com.equo.comm.api;
  */
 public abstract class ActionMessage {
 
-  private String action;
+  private String actionId;
 
-  public ActionMessage(String action) {
-    this.action = action;
+  public ActionMessage(String actionId) {
+    this.actionId = actionId;
   }
 
-  public String getAction() {
-    return action;
+  public String getActionId() {
+    return actionId;
   }
 
 }

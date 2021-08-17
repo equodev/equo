@@ -25,16 +25,35 @@ package com.equo.comm.api;
 /**
  * An action message with parameters.
  */
-public class NamedActionMessage extends ActionMessage {
+public class NamedActionMessage extends ActionMessage implements IdentifiableActionMessage {
 
-  private Object params;
+  private Object payload;
+  private String callerId;
 
-  public NamedActionMessage(String action, Object params) {
-    super(action);
-    this.params = params;
+  public NamedActionMessage(String actionId, Object payload) {
+    super(actionId);
+    this.payload = payload;
   }
 
-  public Object getParams() {
-    return params;
+  /**
+   * Simple constructor. Initializes this instance's attributes with the given
+   * values.
+   * @param actionId ID of this action
+   * @param payload  parameters of this action
+   * @param callerId id of this action's caller
+   */
+  public NamedActionMessage(String actionId, Object payload, String callerId) {
+    super(actionId);
+    this.payload = payload;
+    this.callerId = callerId;
+  }
+
+  public Object getPayload() {
+    return payload;
+  }
+
+  @Override
+  public String getCallerUuid() {
+    return callerId;
   }
 }

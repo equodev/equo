@@ -36,6 +36,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 -privatepackage: \
     com.equo.node.packages.tests,\
     com.equo.node.packages.tests.common,\
+    com.equo.node.packages.tests.handlers,\
     com.equo.node.packages.tests.mocks,\
     com.equo.node.packages.tests.util
 

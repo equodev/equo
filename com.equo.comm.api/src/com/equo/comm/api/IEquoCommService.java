@@ -22,17 +22,30 @@
 
 package com.equo.comm.api;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 /**
  * Interface of the Comm service.
  */
 public interface IEquoCommService {
   /**
-   * Adds an event handler. Asings a instance of IEquoRunnableParser<?> to
-   * determinated action.
-   * @param actionId           the action ID.
-   * @param equoRunnableParser the parser instance.
+   * Adds a Function event handler.
+   * @param actionId      the action ID.
+   * @param actionHandler the action handler.
+   * @param paramTypes    types for the handler parameters.
    */
-  public void addEventHandler(String actionId, IEquoRunnableParser<?> equoRunnableParser);
+  public <T, R> void addEventHandler(String actionId, Function<T, R> actionHandler,
+      Class<?>... paramTypes);
+
+  /**
+   * Adds a Consumer event handler.
+   * @param actionId      the action ID.
+   * @param actionHandler the action handler.
+   * @param paramTypes    types for the handler parameters.
+   */
+  public <T> void addEventHandler(String actionId, Consumer<T> actionHandler,
+      Class<?>... paramTypes);
 
   /**
    * Sends the specified data to later be transmitted using the userEvent as ID.

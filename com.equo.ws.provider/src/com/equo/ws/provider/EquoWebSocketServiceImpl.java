@@ -23,8 +23,13 @@
 package com.equo.ws.provider;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -35,11 +40,12 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import com.equo.comm.api.IEquoCommService;
-import com.equo.comm.api.IEquoRunnableParser;
 import com.equo.comm.api.NamedActionMessage;
 import com.equo.comm.api.actions.IActionHandler;
+import com.equo.comm.api.annotations.EventName;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
+import com.equo.ws.provider.util.ActionHelper;
 import com.google.gson.GsonBuilder;
 
 /**
@@ -50,9 +56,9 @@ import com.google.gson.GsonBuilder;
 public class EquoWebSocketServiceImpl implements IEquoCommService {
   protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
 
-  @SuppressWarnings("rawtypes")
-  private Map<String, IActionHandler> actionHandlers = new HashMap<>();
-  private Map<String, IEquoRunnableParser<?>> eventHandlers = new HashMap<>();
+  private Map<String, Function<?, ?>> functionActionHandlers = new HashMap<>();
+  private Map<String, Consumer<?>> consumerActionHandlers = new HashMap<>();
+  private Map<String, Class<?>> actionParamTypes = new HashMap<>();
   private EquoWebSocketServer equoWebSocketServer;
 
   /**
@@ -61,7 +67,8 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
   @Activate
   public void start() {
     logger.info("Initializing Equo websocket server...");
-    equoWebSocketServer = new EquoWebSocketServer(eventHandlers, actionHandlers);
+    equoWebSocketServer =
+        new EquoWebSocketServer(functionActionHandlers, consumerActionHandlers, actionParamTypes);
     equoWebSocketServer.start();
   }
 
@@ -71,7 +78,6 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
   @Deactivate
   public void stop() {
     logger.info("Stopping Equo websocket server... ");
-    eventHandlers.clear();
     try {
       equoWebSocketServer.stop();
     } catch (IOException | InterruptedException e) {
@@ -81,8 +87,21 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
   }
 
   @Override
-  public void addEventHandler(String eventId, IEquoRunnableParser<?> equoRunnableParser) {
-    eventHandlers.put(eventId, equoRunnableParser);
+  public <T> void addEventHandler(String eventId, Consumer<T> actionHandler,
+      Class<?>... paramTypes) {
+    consumerActionHandlers.put(eventId, actionHandler);
+    if (paramTypes != null && paramTypes.length == 1) {
+      actionParamTypes.put(eventId, paramTypes[0]);
+    }
+  }
+
+  @Override
+  public <T, R> void addEventHandler(String eventId, Function<T, R> actionHandler,
+      Class<?>... paramTypes) {
+    functionActionHandlers.put(eventId, actionHandler);
+    if (paramTypes != null && paramTypes.length == 1) {
+      actionParamTypes.put(eventId, paramTypes[0]);
+    }
   }
 
   @Override
@@ -104,19 +123,67 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
   /**
    * Method used to add all the Action Handler implementations.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
       policyOption = ReferencePolicyOption.GREEDY)
-  public void setActionHandler(IActionHandler actionHandler) {
-    this.actionHandlers.put(actionHandler.getEventName(), actionHandler);
-    Map<String, IActionHandler> events = actionHandler.getExtraEvents();
-    for (Map.Entry<String, IActionHandler> extraEvent : events.entrySet()) {
-      this.actionHandlers.put(extraEvent.getKey(), extraEvent.getValue());
+  public void setFunctionActionHandler(IActionHandler actionHandler) {
+    for (Method method : actionHandler.getClass().getDeclaredMethods()) {
+      final String actionHandlerName =
+          ActionHelper.getEventName(method.getAnnotation(EventName.class)).orElse(method.getName());
+      final Class<?> parameterType;
+      Type[] types = method.getGenericParameterTypes();
+      if (types.length == 1) {
+        parameterType = (Class<?>) types[0];
+        actionParamTypes.put(actionHandlerName, parameterType);
+      } else {
+        parameterType = Object.class;
+      }
+      Class<?> rt = method.getReturnType();
+      if (Void.TYPE.equals(rt)) {
+        Consumer<?> cons = (param) -> {
+          try {
+            method.invoke(actionHandler, parameterType.cast(param));
+          } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+              | ClassCastException e1) {
+            try {
+              method.invoke(actionHandler);
+            } catch (IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e2) {
+              logger.error("Error invoking action handler " + actionHandlerName, e2);
+            }
+          }
+        };
+        consumerActionHandlers.put(actionHandlerName, cons);
+      } else {
+        Function<?, ?> func = (param) -> {
+          try {
+            return method.invoke(actionHandler, parameterType.cast(param));
+          } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+              | ClassCastException e1) {
+            try {
+              return method.invoke(actionHandler);
+            } catch (IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e2) {
+              logger.error("Error invoking action handler " + actionHandlerName, e2);
+              return null;
+            }
+          }
+        };
+        functionActionHandlers.put(actionHandlerName, func);
+      }
     }
   }
 
-  public void unsetActionHandler(@SuppressWarnings("rawtypes") IActionHandler actionHandler) {
-    this.actionHandlers.clear();
+  /**
+   * Method to release all actions defined in this action handler.
+   */
+  public void unsetFunctionActionHandler(IActionHandler actionHandler) {
+    for (Method method : actionHandler.getClass().getDeclaredMethods()) {
+      final String actionHandlerName =
+          ActionHelper.getEventName(method.getAnnotation(EventName.class)).orElse(method.getName());
+      functionActionHandlers.remove(actionHandlerName);
+      consumerActionHandlers.remove(actionHandlerName);
+      actionParamTypes.remove(actionHandlerName);
+    }
   }
 
 }

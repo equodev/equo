@@ -39,10 +39,10 @@ import com.equo.application.handlers.ParameterizedCommandRunnable;
 import com.equo.application.impl.HandlerBuilder;
 import com.equo.application.util.IConstants;
 import com.equo.comm.api.IEquoEventHandler;
-import com.equo.comm.api.JsonPayloadEquoRunnable;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 /**
  * Builder needed to create an Equo app.
@@ -117,7 +117,7 @@ public class EquoApplicationBuilder {
   }
 
   private void configureJavascriptApis() {
-    equoEventHandler.on("_setMenu", (JsonPayloadEquoRunnable) payload -> {
+    equoEventHandler.on("_setMenu", payload -> {
 
       CustomDeserializer deserializer = new CustomDeserializer();
       deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
@@ -127,18 +127,18 @@ public class EquoApplicationBuilder {
       gson.fromJson(payload, Menu.class).setApplicationMenu();
     });
 
-    equoEventHandler.on("_getMenu", (JsonPayloadEquoRunnable) payload -> {
+    equoEventHandler.on("_getMenu", JsonObject.class, payload -> {
       equoEventHandler.send("_doGetMenu", Menu.getActiveMenu().serialize());
     });
 
-    equoEventHandler.on("_addShortcut", (JsonPayloadEquoRunnable) payload -> {
+    equoEventHandler.on("_addShortcut", JsonObject.class, payload -> {
       final String shortcut = payload.get("shortcut").getAsString();
       final String event = payload.get("event").getAsString();
       new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, event)
           .addGlobalShortcut(shortcut);
     });
 
-    equoEventHandler.on("_removeShortcut", (JsonPayloadEquoRunnable) payload -> {
+    equoEventHandler.on("_removeShortcut", JsonObject.class, payload -> {
       final String shortcut = payload.get("shortcut").getAsString();
       new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, null)
           .removeShortcut(shortcut);

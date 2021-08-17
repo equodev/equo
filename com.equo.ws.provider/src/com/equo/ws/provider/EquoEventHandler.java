@@ -22,6 +22,9 @@
 
 package com.equo.ws.provider;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -29,15 +32,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.IEquoEventHandler;
-import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.JsonPayloadEquoRunnable;
-import com.equo.comm.api.JsonRunnableParser;
-import com.equo.comm.api.ObjectPayloadParser;
-import com.equo.comm.api.StringPayloadEquoRunnable;
-import com.equo.comm.api.StringPayloadParser;
 
 /**
- * Implements the handler actions for send and received websocket events using
+ * Implements the handler actions for send and received web-socket events using
  * equoCommService instance.
  */
 @Component
@@ -56,20 +53,23 @@ public class EquoEventHandler implements IEquoEventHandler {
   }
 
   @Override
-  public void on(String eventId, JsonPayloadEquoRunnable jsonPayloadEquoRunnable) {
-    equoCommService.addEventHandler(eventId, new JsonRunnableParser(jsonPayloadEquoRunnable));
+  public <T, R> void on(String actionId, Class<T> payloadClass, Function<T, R> actionHandler) {
+    equoCommService.addEventHandler(actionId, actionHandler, payloadClass);
   }
 
   @Override
-  public void on(String eventId, StringPayloadEquoRunnable stringPayloadEquoRunnable) {
-    equoCommService.addEventHandler(eventId,
-        new StringPayloadParser(stringPayloadEquoRunnable));
+  public <R> void on(String actionId, Function<String, R> actionHandler) {
+    equoCommService.addEventHandler(actionId, actionHandler, String.class);
   }
 
   @Override
-  public <T> void on(String eventId, IEquoRunnable<T> objectPayloadEquoRunnable) {
-    equoCommService.addEventHandler(eventId,
-        new ObjectPayloadParser<T>(objectPayloadEquoRunnable));
+  public <T> void on(String actionId, Class<T> payloadClass, Consumer<T> actionHandler) {
+    equoCommService.addEventHandler(actionId, actionHandler, payloadClass);
+  }
+
+  @Override
+  public void on(String actionId, Consumer<String> actionHandler) {
+    equoCommService.addEventHandler(actionId, actionHandler, String.class);
   }
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
@@ -80,4 +80,5 @@ public class EquoEventHandler implements IEquoEventHandler {
   void unsetWebsocketService(IEquoCommService equoWebSocketService) {
     this.equoCommService = null;
   }
+
 }

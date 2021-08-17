@@ -16,7 +16,7 @@
     "jsdoc2md": "jsdoc2md lib/**/*.js > equo-application-menu-doc.md"
   },
   "dependencies": {
-    "@equo/comm": "^0.1.7"
+    "@equo/comm": "^0.2.0"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^6.0.0"

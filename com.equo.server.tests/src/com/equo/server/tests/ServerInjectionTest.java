@@ -47,8 +47,6 @@ import org.junit.Test;
 
 import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.IEquoEventHandler;
-import com.equo.comm.api.IEquoRunnable;
-import com.equo.comm.api.StringPayloadEquoRunnable;
 import com.equo.server.api.IEquoServer;
 import com.equo.testing.common.util.EquoRule;
 
@@ -84,7 +82,7 @@ public class ServerInjectionTest {
 
   private void goToUrl(String url) {
     AtomicBoolean start = new AtomicBoolean(false);
-    handler.on("_ready", (IEquoRunnable<Void>) runnable -> {
+    handler.on("_ready", runnable -> {
       start.set(true);
     });
     goToUrlWithoutWaitForLoad(url + String.format("?equocommport=%d", commService.getPort()));
@@ -138,11 +136,11 @@ public class ServerInjectionTest {
 
     assertEquals("File content has been modified in the request", fileText, browserText);
   }
-  
+
   @Test
   public void scriptsAreInjectedBeforeHtmlCode() {
     AtomicBoolean textReceived = new AtomicBoolean(false);
-    handler.on("_testIndexJs", (IEquoRunnable<Void>) runnable -> {
+    handler.on("_testIndexJs", runnable -> {
       textReceived.set(true);
     });
     goToUrl(TEST_URL + "/indexWithJs.html");
@@ -157,7 +155,7 @@ public class ServerInjectionTest {
 
   private StringBuilder receiveXmlFileResponseContent(AtomicBoolean textReceived) {
     StringBuilder stringBuilder = new StringBuilder();
-    handler.on("_sendText", (StringPayloadEquoRunnable) s -> {
+    handler.on("_sendText", s -> {
       stringBuilder.append(s);
       textReceived.set(true);
     });

@@ -16,7 +16,7 @@
     "jsdoc2md": "jsdoc2md lib/**/*.js > equo-framework-doc.md"
   },
   "dependencies": {
-    "@equo/comm": "^0.1.5",
+    "@equo/comm": "^0.2.0",
     "@equo/service-manager": "^0.1.1"
   },
   "devDependencies": {
