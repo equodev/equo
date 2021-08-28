@@ -17,9 +17,9 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
     - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local framework build repository** (`cnf/release/index.xml.gz` index file inside the framework). The modified file will be something like this, with the first plugin being the new one we just added:
 
       ```
-      -include: https://dl.equoplatform.com/framework/1.0.0/equobuild.bnd,\
-                https://dl.equoplatform.com/framework-extras/1.0.0/equobuild.bnd,\
-                https://dl.equoplatform.com/framework-renderers/1.0.0/equobuild.bnd
+      -include: https://dl.equoplatform.com/framework/1.1/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-extras/1.1/equobuild.bnd,\
+                https://dl.equoplatform.com/framework-renderers/1.0/equobuild.bnd
 
       -plugin.1.EquoLocal: \
         aQute.bnd.repository.osgi.OSGiRepository; \
@@ -34,9 +34,9 @@ To develop this apps and continue developing the Equo Framework in parallel, fol
 
       ```
       -include: /home/username/Equo/framework/cnf/equoapp.bnd,\
-        https://dl.equoplatform.com/framework-extras/1.0.0/extras.bnd,\
-        https://dl.equoplatform.com/framework-renderers/1.0.0/renderers.bnd,\
-        https://dl.equoplatform.com/framework-renderers/1.0.0/aspects.bnd
+        https://dl.equoplatform.com/framework-extras/1.1/extras.bnd,\
+        https://dl.equoplatform.com/framework-renderers/1.0/renderers.bnd,\
+        https://dl.equoplatform.com/framework-renderers/1.0/aspects.bnd
       Bundle-Version: ${version}.${tstamp}
       Private-Package: com.equo.testapp
       ```

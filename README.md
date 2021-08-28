@@ -12,8 +12,8 @@ Regarding desktop environments, it provides an SDK to create modern **native** c
 
 | Name | Repo | Version |
 | ---- | ---- | ------- |
-| **Renderers** | [equo/framework-renderers](https://github.com/equoplatform/framework-renderers) | 1.0.0 |
-| **Extras** | [equo/framework-extras](https://github.com/equoplatform/framework-extras) | 1.0.0 |
+| **Renderers** | [equo/framework-renderers](https://github.com/equoplatform/framework-renderers) | 1.0.x|
+| **Extras** | [equo/framework-extras](https://github.com/equoplatform/framework-extras) | 1.1.x |
 
 ## Framework Core
 
@@ -28,7 +28,7 @@ The core provides:
 
 ## Getting Started
 
-If you are interested in creating an Equo application, you need to first download the [CLI](https://www.equoplatform.com/cli), and then you can start developing your application. Please visit the documentation website to [start creating an application](https://docs.equoplatform.com/framework/1.0.0/getting-started/creating.html). This README is more useful for those who are interested in contributing to the core SDK.
+If you are interested in creating an Equo application, you need to first download the [CLI](https://www.equoplatform.com/cli), and then you can start developing your application. Please visit the documentation website to [start creating an application](https://docs.equoplatform.com/framework/1.1.x/getting-started/creating.html). This README is more useful for those who are interested in contributing to the core SDK.
 
 ## Contributing
 

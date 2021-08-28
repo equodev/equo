@@ -5,7 +5,7 @@ To be able to debug the web of an Equo app, you have to run the app with the `ch
 The property can be configured in the pom.xml, in `<properties></properties>` section. Just add it like this:
 ```
 <properties>
-    <equo.version>1.0.0</equo.version>
+    <equo.version>1.1.1</equo.version>
     <chromium.remote-debugging-port>8888</chromium.remote-debugging-port>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -16,7 +16,7 @@ Now when you run your app, open a browser in `localhost:8888` URL (or whatever p
 
 In an advanced app (Bnd) this property is just added in the `bnd.bnd` file of your app like this:
 ```
--include: https://dl.equoplatform.com/framework/1.0.0/equoapp.bnd
+-include: https://dl.equoplatform.com/framework/1.1/equoapp.bnd
 
 Bundle-Version: ${version}.${tstamp}
 Private-Package: com.equo.testapp

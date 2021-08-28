@@ -24,7 +24,7 @@
       <repository
           url="https://ecd-plugin.github.io/update"/>
       <repository
-          url="https://dl.equoplatform.com/monaco-editor/1.0.0/repo/"/>
+          url="https://dl.equoplatform.com/monaco-editor/1.0/repo/"/>
       <repository
           url="https://checkstyle.org/eclipse-cs-update-site"/>
     </setupTask>
