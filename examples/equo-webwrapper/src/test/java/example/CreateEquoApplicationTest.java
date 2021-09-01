@@ -1,4 +1,4 @@
-package CreateEquoApp;
+package example;
 
 //import org.junit.Assert;
 
