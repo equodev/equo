@@ -45,38 +45,38 @@ export class Linker {
   public buildWithCurrentModel!: Function
   public buildMenuItemPosition!: number
 
-  constructor () {
+  constructor() {
     this.menuItemBuilder = new MenuItemBuilder(this)
     this.menuBuilder = new MenuBuilder(this)
     this.menuItemSeparatorBuilder = new MenuItemSeparatorBuilder(this)
   }
 
-  public setBuildWithCurrentModel (func: Function): void {
+  public setBuildWithCurrentModel(func: Function): void {
     this.buildWithCurrentModel = func
     this.menuBuilder = new MenuBuilder(this)
   }
 
-  public execBuildWithCurrentModel (): void {
+  public execBuildWithCurrentModel(): void {
     this.buildWithCurrentModel(this.menuBuilder)
   }
 
-  public getMenuBuilder (): MenuBuilder {
+  public getMenuBuilder(): MenuBuilder {
     return this.menuBuilder
   }
 
-  public getMenuItemBuilder (): MenuItemBuilder {
+  public getMenuItemBuilder(): MenuItemBuilder {
     return this.menuItemBuilder
   }
 
-  public getMenuItemSeparatorBuilder (): MenuItemSeparatorBuilder {
+  public getMenuItemSeparatorBuilder(): MenuItemSeparatorBuilder {
     return this.menuItemSeparatorBuilder
   }
 
-  public setMenuAct (menuAct: EquoMenu): void {
+  public setMenuAct(menuAct: EquoMenu): void {
     this.menuAct = menuAct
   }
 
-  public getMenuAct (): EquoMenu {
+  public getMenuAct(): EquoMenu {
     return this.menuAct
   }
 }
@@ -87,7 +87,7 @@ export class MenuItemSeparatorBuilder {
      * @name MenuItemSeparatorBuilder
      * @class
      */
-  constructor (linker: Linker) {
+  constructor(linker: Linker) {
     this.linker = linker
   }
 
@@ -96,7 +96,7 @@ export class MenuItemSeparatorBuilder {
      * @param {string} label - Menu title.
      * @return {MenuBuilder}
      */
-  public addMenu (label: string): MenuBuilder {
+  public addMenu(label: string): MenuBuilder {
     return this.linker.getMenuItemBuilder().addMenu(label)
   }
 
@@ -107,7 +107,7 @@ export class MenuItemSeparatorBuilder {
      * 'EquoMenuItem' will return MenuItemBuilder. If exists and type is
      * 'EquoMenu' will return null.
      */
-  public addMenuItem (label: string): MenuItemBuilder | null {
+  public addMenuItem(label: string): MenuItemBuilder | null {
     return this.linker.getMenuItemBuilder().addMenuItem(label)
   }
 }
@@ -121,7 +121,7 @@ export class MenuBuilder {
      * @name MenuBuilder
      * @class
      */
-  constructor (linker: Linker) {
+  constructor(linker: Linker) {
     this.linker = linker
 
     if (this.linker.buildWithCurrentModel !== undefined) this.bindEquoFunctions()
@@ -132,7 +132,7 @@ export class MenuBuilder {
      * @param {string} label - Menu title.
      * @return {MenuBuilder}
      */
-  public withMainMenu (label: string): MenuBuilder {
+  public withMainMenu(label: string): MenuBuilder {
     const menu = new EquoMenu()
     menu.setType(EQUO_MENU_ENUM.EQUO_MENU)
     menu.setTitle(label)
@@ -157,7 +157,7 @@ export class MenuBuilder {
      * @param {string} label - Menu title.
      * @return {MenuBuilder}
      */
-  public addMenu (label: string): MenuBuilder {
+  public addMenu(label: string): MenuBuilder {
     const equoMenu = new EquoMenu()
     equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU)
     equoMenu.setTitle(label)
@@ -183,7 +183,7 @@ export class MenuBuilder {
      * @param {string} iconPath the icon relative path to resources folder.
      * @return {MenuBuilder} the MenuBuilder instance.
      */
-  public withIcon (iconPath: string): MenuBuilder | null {
+  public withIcon(iconPath: string): MenuBuilder | null {
     this.linker.getMenuAct().setIcon(iconPath)
     return this
   }
@@ -195,7 +195,7 @@ export class MenuBuilder {
      * 'EquoMenuItem' will return MenuItemBuilder. If exists and type is
      * 'EquoMenu' will return null.
      */
-  public addMenuItem (label: string): MenuItemBuilder | null {
+  public addMenuItem(label: string): MenuItemBuilder | null {
     const equoMenu = new EquoMenu()
     equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU_ITEM)
     equoMenu.setTitle(label)
@@ -214,7 +214,7 @@ export class MenuBuilder {
     return this.linker.getMenuItemBuilder()
   }
 
-  private bindEquoFunctions (): void {
+  private bindEquoFunctions(): void {
     this.comm.on('_doGetMenu', (values: JSON) => {
       const params = JSON.parse(JSON.stringify(values))
 
@@ -239,7 +239,7 @@ export class MenuBuilder {
      * @param {setApplicationMenuCallback} [callback] - Optional
      * @returns {void}
      */
-  public setApplicationMenu (
+  public setApplicationMenu(
     funct?: (comm: EquoComm, json: JSON) => void
   ): void {
     const equoMenuModel = new EquoMenuModel(this.menus)
@@ -257,7 +257,7 @@ export class MenuBuilder {
      * @param {JSON} json - Json menu
      * @returns {void}
      */
-  public setApplicationMenuWithJson (json: JSON): void {
+  public setApplicationMenuWithJson(json: JSON): void {
     this.comm.send('_setMenu', json)
   }
 
@@ -265,7 +265,7 @@ export class MenuBuilder {
      * Gets the all Equo menus from the under construction Menu.
      * @returns {EquoMenu[]}
      */
-  public getMenus (): EquoMenu[] {
+  public getMenus(): EquoMenu[] {
     return this.menus
   }
 
@@ -278,7 +278,7 @@ export class MenuBuilder {
      * 'EquoMenuItem' will return MenuItemBuilder. If exists and type is
      * 'EquoMenu' will return null.
      */
-  public appendMenuItem (
+  public appendMenuItem(
     menuPath: string,
     indexToAddItem: number,
     menuItemName: string
@@ -303,7 +303,7 @@ export class MenuBuilder {
      * @param {string} menuName - Menu title.
      * @returns {MenuItemBuilder|null} Returns null if menuPath does not exists
      */
-  public appendMenu (
+  public appendMenu(
     menuPath: string,
     indexToAddItem: number,
     menuName: string
@@ -315,7 +315,7 @@ export class MenuBuilder {
     return null
   }
 
-  private createEquoMenu (
+  private createEquoMenu(
     title: string,
     type: EquoMenuType,
     path: string
@@ -334,7 +334,7 @@ export class MenuBuilder {
      * 'EquoMenuItem' will return MenuItemBuilder. If exists and type is
      * 'EquoMenu' or menuPath does not exists will return null.
      */
-  public appendMenuItemAtTheEnd (
+  public appendMenuItemAtTheEnd(
     menuElementPath: string,
     menuItemName: string
   ): MenuItemBuilder | null {
@@ -348,21 +348,21 @@ export class MenuBuilder {
      * @returns {MenuBuilder|null} Returns null if menuElementPath does not
      * exists
      */
-  public appendMenuAtTheEnd (
+  public appendMenuAtTheEnd(
     menuElementPath: string,
     menuName: string
   ): MenuBuilder | null {
     return this.appendMenu(menuElementPath, -1, menuName)
   }
 
-  private setMenu (eq1: EquoMenu, eq2: EquoMenu): void {
+  private setMenu(eq1: EquoMenu, eq2: EquoMenu): void {
     if (eq2.isEquoMenu()) {
       if (eq1.isEquoMenu()) this.linker.setMenuAct(eq1)
       else this.linker.setMenuAct(eq2)
     }
   }
 
-  private searchByPathMenuRecursively (
+  private searchByPathMenuRecursively(
     menuItems: EquoMenu[],
     path: string,
     equoMenu: EquoMenu
@@ -409,7 +409,7 @@ export class MenuBuilder {
      * @param {EquoMenu} menuItem - Menu element to add.
      * @returns {void}
      */
-  public addMenuItemToModel (
+  public addMenuItemToModel(
     parentMenuId: string,
     index: number,
     menuItem: EquoMenu
@@ -427,7 +427,7 @@ export class MenuBuilder {
     }
   }
 
-  private addMenuElementRecursively (
+  private addMenuElementRecursively(
     menus: EquoMenu[],
     parentMenuId: string,
     index: number,
@@ -459,14 +459,14 @@ export class MenuBuilder {
      * @returns {boolean} Returns true if the menu was found and removed, false
      * otherwise.
      */
-  public removeMenuElementById (menuToRemoveId: string): boolean {
+  public removeMenuElementById(menuToRemoveId: string): boolean {
     return this.removeMenuElementByIdRecursively(
       this.menus,
       menuToRemoveId
     )
   }
 
-  private removeMenuElementByIdRecursively (
+  private removeMenuElementByIdRecursively(
     menuItems: EquoMenu[],
     menuToRemoveId: string
   ): boolean {
@@ -495,7 +495,7 @@ export class MenuBuilder {
      * @param {string} menuNamePathToRemove - Path|name from menu to remove.
      * @returns {MenuBuilder}
      */
-  public removeMenuElementByPath (menuNamePathToRemove: string): MenuBuilder {
+  public removeMenuElementByPath(menuNamePathToRemove: string): MenuBuilder {
     this.removeMenuElementByPathRecursively(
       this.menus,
       menuNamePathToRemove
@@ -503,7 +503,7 @@ export class MenuBuilder {
     return this
   }
 
-  private removeMenuElementByPathRecursively (
+  private removeMenuElementByPathRecursively(
     menuItems: EquoMenu[],
     menuNamePathToRemove: string
   ): boolean {
@@ -541,7 +541,7 @@ export class MenuItemBuilder {
      * @name MenuItemBuilder
      * @class
      */
-  constructor (linker: Linker) {
+  constructor(linker: Linker) {
     this.linker = linker
   }
 
@@ -550,7 +550,7 @@ export class MenuItemBuilder {
      * @param {string} label - Menu title.
      * @return {MenuBuilder}
      */
-  public withMainMenu (label: string): MenuBuilder {
+  public withMainMenu(label: string): MenuBuilder {
     return this.linker.getMenuBuilder().withMainMenu(label)
   }
 
@@ -561,7 +561,7 @@ export class MenuItemBuilder {
      * 'EquoMenuItem' will return MenuItemBuilder. If exists and type is
      * 'EquoMenu' will return null.
      */
-  public addMenuItem (label: string): MenuItemBuilder | null {
+  public addMenuItem(label: string): MenuItemBuilder | null {
     return this.linker.getMenuBuilder().addMenuItem(label)
   }
 
@@ -570,7 +570,7 @@ export class MenuItemBuilder {
      * @param {string} iconPath the icon relative path to resources folder.
      * @return {MenuItemBuilder} the MenuItemBuilder instance.
      */
-  public withIcon (iconPath: string): MenuItemBuilder | null {
+  public withIcon(iconPath: string): MenuItemBuilder | null {
     this.linker
       .getMenuAct()
       .getChildren()[this.linker.buildMenuItemPosition].setIcon(iconPath)
@@ -582,7 +582,7 @@ export class MenuItemBuilder {
      * @param {string|function} action - Define onclick action.
      * @returns {MenuItemBuilder}
      */
-  public onClick (action: string | (() => void)): MenuItemBuilder {
+  public onClick(action: string | (() => void)): MenuItemBuilder {
     if (action instanceof Function) {
       this.linker
         .getMenuAct()
@@ -600,7 +600,7 @@ export class MenuItemBuilder {
      * @param {string} shortcut - Define shortcut.
      * @returns {MenuItemBuilder}
      */
-  public withShortcut (shortcut: string): MenuItemBuilder {
+  public withShortcut(shortcut: string): MenuItemBuilder {
     this.linker
       .getMenuAct()
       .getChildren()[this.linker.buildMenuItemPosition].setShortcut(shortcut)
@@ -612,7 +612,7 @@ export class MenuItemBuilder {
      * @param {string} label - Menu title.
      * @return {MenuBuilder}
      */
-  public addMenu (label: string): MenuBuilder {
+  public addMenu(label: string): MenuBuilder {
     return this.linker.getMenuBuilder().addMenu(label)
   }
 
@@ -620,7 +620,7 @@ export class MenuItemBuilder {
      * Adds a separator between menus.
      * @returns {MenuItemSeparatorBuilder}
      */
-  public addMenuSeparator (): MenuItemSeparatorBuilder {
+  public addMenuSeparator(): MenuItemSeparatorBuilder {
     const equoMenu = new EquoMenu()
     equoMenu.setType(EQUO_MENU_ENUM.EQUO_MENU_ITEM_SEPARATOR)
     this.linker.getMenuAct().addChildren(equoMenu)
@@ -634,7 +634,7 @@ export class MenuItemBuilder {
      * @param {setApplicationMenuCallback} [callback] - Optional
      * @returns {void}
      */
-  public setApplicationMenu (
+  public setApplicationMenu(
     funct?: (comm: EquoComm, json: JSON) => void
   ): void {
     this.linker.getMenuBuilder().setApplicationMenu(funct)
@@ -644,15 +644,15 @@ export class MenuItemBuilder {
 export class EquoMenuModel {
   private readonly menus: EquoMenu[]
 
-  constructor (arrayEquoMenu: EquoMenu[]) {
+  constructor(arrayEquoMenu: EquoMenu[]) {
     this.menus = arrayEquoMenu
   }
 
-  public getMenus (): EquoMenu[] {
+  public getMenus(): EquoMenu[] {
     return this.menus
   }
 
-  fillFromJSON (json: string): void {
+  fillFromJSON(json: string): void {
     const jsonObj = JSON.parse(json)
 
     for (const jsonMenu in jsonObj) {
@@ -675,7 +675,7 @@ export class EquoMenu {
      * @name EquoMenu
      * @class
      */
-  constructor () {
+  constructor() {
     this.id = Math.random().toString(36).substr(2, 9).trim()
   }
 
@@ -684,7 +684,7 @@ export class EquoMenu {
      * @param {JSON} json - Json with menu.
      * @returns {void}
      */
-  public fillFromJSON (json: string): void {
+  public fillFromJSON(json: string): void {
     const jsonObj = JSON.parse(json)
     this.title = jsonObj[TITLE]
     this.type = jsonObj[TYPE]
@@ -709,7 +709,7 @@ export class EquoMenu {
      * @param {Function} runnable
      * @returns {void}
      */
-  public setRunnable (runnable: () => void): void {
+  public setRunnable(runnable: () => void): void {
     EquoCommService.get().on(this.id, runnable)
     this.setAction(this.id)
   }
@@ -719,7 +719,7 @@ export class EquoMenu {
      * @param {string} type - Valid types: EquoMenu | EquoMenuItem
      * @returns {void}
      */
-  public setType (type: EquoMenuType): void {
+  public setType(type: EquoMenuType): void {
     this.type = type
     if (this.isEquoMenu()) {
       this.children = new Array<EquoMenu>()
@@ -731,7 +731,7 @@ export class EquoMenu {
      * @param {string} title - Menu title
      * @returns {void}
      */
-  public setTitle (title: string): void {
+  public setTitle(title: string): void {
     this.title = title
   }
 
@@ -740,7 +740,7 @@ export class EquoMenu {
      * @param {string} action - Action ID.
      * @returns {void}
      */
-  public setAction (action: string): void {
+  public setAction(action: string): void {
     this.action = action
   }
 
@@ -749,7 +749,7 @@ export class EquoMenu {
      * @param {string} iconPath - Icon path.
      * @returns {void}
      */
-  public setIcon (iconPath: string): void {
+  public setIcon(iconPath: string): void {
     this.iconPath = iconPath
   }
 
@@ -758,7 +758,7 @@ export class EquoMenu {
      * @param {string} shortcut
      * @returns {void}
      */
-  public setShortcut (shortcut: string): void {
+  public setShortcut(shortcut: string): void {
     this.shortcut = shortcut
   }
 
@@ -769,7 +769,7 @@ export class EquoMenu {
      * @param {EquoMenu} children
      * @returns {void}
      */
-  public addChildren (children: EquoMenu): number {
+  public addChildren(children: EquoMenu): number {
     let position = -1
     for (let i = 0; i < this.children.length; i++) {
       if (this.children[i].getTitle() === children.getTitle()) {
@@ -789,7 +789,7 @@ export class EquoMenu {
      * @param {EquoMenu[]} childrens
      * @returns {void}
      */
-  public setChildren (childrens: EquoMenu[]): void {
+  public setChildren(childrens: EquoMenu[]): void {
     this.children = childrens
   }
 
@@ -797,7 +797,7 @@ export class EquoMenu {
      * Gets the menu type. Returns EquoMenu or EquoMenuItem.
      * @returns {string}
      */
-  public getType (): string {
+  public getType(): string {
     return this.type
   }
 
@@ -805,7 +805,7 @@ export class EquoMenu {
      * Gets the menu iconPath.
      * @returns {string}
      */
-  public getIcon (): string | null {
+  public getIcon(): string | null {
     return this.iconPath !== '' ? this.iconPath : null
   }
 
@@ -813,7 +813,7 @@ export class EquoMenu {
      * Gets the menu title.
      * @returns {string}
      */
-  public getTitle (): string {
+  public getTitle(): string {
     return this.title
   }
 
@@ -821,7 +821,7 @@ export class EquoMenu {
      * Gets the action id from menu.
      * @returns {string}
      */
-  public getAction (): string {
+  public getAction(): string {
     return this.action
   }
 
@@ -829,7 +829,7 @@ export class EquoMenu {
      * Gets the shortcut from menu.
      * @returns {string}
      */
-  public getShortcut (): string {
+  public getShortcut(): string {
     return this.shortcut
   }
 
@@ -837,7 +837,7 @@ export class EquoMenu {
      * Gets the childrens from menu.
      * @returns {EquoMenu[]}
      */
-  public getChildren (): EquoMenu[] {
+  public getChildren(): EquoMenu[] {
     return this.children
   }
 
@@ -845,7 +845,7 @@ export class EquoMenu {
      * Gets the menu id.
      * @returns {string}
      */
-  public getId (): string {
+  public getId(): string {
     return this.id
   }
 
@@ -856,7 +856,7 @@ export class EquoMenu {
      * @param {EquoMenu} children - Menu element to add.
      * @returns {boolean}
      */
-  public addChildrenAtIndex (index: number, children: EquoMenu): boolean {
+  public addChildrenAtIndex(index: number, children: EquoMenu): boolean {
     let exist = false
     this.children.forEach((element) => {
       if (element.getTitle() === children.getTitle()) {
@@ -875,7 +875,7 @@ export class EquoMenu {
      * @param {number} index - Index to remove item.
      * @returns {void}
      */
-  public removeMenuItemOfIndex (index: number): void {
+  public removeMenuItemOfIndex(index: number): void {
     this.children.splice(index, 1)
   }
 
@@ -884,7 +884,7 @@ export class EquoMenu {
      * @param {string} menuItemId - ID from menu to remove.
      * @returns {void}
      */
-  public removeMenuItemById (menuItemId: string): void {
+  public removeMenuItemById(menuItemId: string): void {
     let index = 0
     this.children.forEach((element) => {
       if (element.getId() === menuItemId) {
@@ -899,7 +899,7 @@ export class EquoMenu {
      * Gets the all menu titles in the EquoMenu from all childrends.
      * @returns {string[]}
      */
-  public getTitleMenus (): string[] {
+  public getTitleMenus(): string[] {
     const titleMenus = new Array<string>()
     titleMenus.push(this.title)
 
@@ -911,7 +911,7 @@ export class EquoMenu {
     return titleMenus
   }
 
-  public isEquoMenu (type = this.type): boolean {
+  public isEquoMenu(type = this.type): boolean {
     return type === EQUO_MENU_ENUM.EQUO_MENU
   }
 }
@@ -930,7 +930,7 @@ export namespace Menu {
      * @name create
      * @returns {MenuBuilder}
      */
-  export function create (): MenuBuilder {
+  export function create(): MenuBuilder {
     return new Linker().getMenuBuilder()
   }
   /**
@@ -941,7 +941,7 @@ export namespace Menu {
      * @param  {Function} callback
      * @returns {void}
      */
-  export function getCurrentModel (funct: (mb: MenuBuilder) => void): void {
+  export function getCurrentModel(funct: (mb: MenuBuilder) => void): void {
     new Linker().setBuildWithCurrentModel(funct)
   }
 }

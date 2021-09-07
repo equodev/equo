@@ -33,7 +33,7 @@ export namespace UUID {
      * Adapted from https://jcward.com/UUID.js (MIT license)
      * @returns UUID
      */
-  export function getUuid (): string {
+  export function getUuid(): string {
     var d0 = Math.random() * 0x100000000 >>> 0
     var d1 = Math.random() * 0x100000000 >>> 0
     var d2 = Math.random() * 0x100000000 >>> 0

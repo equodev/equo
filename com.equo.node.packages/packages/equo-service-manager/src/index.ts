@@ -28,7 +28,7 @@ export interface EquoService<T> {
 export namespace EquoService {
   const global = window as any
 
-  export function get<T> (id: string, create?: () => EquoService<T>): T {
+  export function get<T>(id: string, create?: () => EquoService<T>): T {
     const globalService: T = global[id] as T
     if (!globalService && (create != null)) {
       const newService: EquoService<T> = create()
@@ -43,7 +43,7 @@ export namespace EquoService {
     throw new Error(`${id} has not been installed`)
   }
 
-  export function install<T> (service: EquoService<T>): void {
+  export function install<T>(service: EquoService<T>): void {
     if (global[service.id]) {
       return
     }

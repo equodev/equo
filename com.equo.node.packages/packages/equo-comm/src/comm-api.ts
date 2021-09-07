@@ -57,12 +57,12 @@ export class EquoComm {
        * @name EquoComm
        * @class
        */
-  constructor (port: number) {
+  constructor(port: number) {
     this.port = port
     this.openComm()
   }
 
-  private openComm (): void {
+  private openComm(): void {
     if (this.ws !== undefined && this.ws.readyState !== WebSocket.CLOSED) {
       return
     }
@@ -97,7 +97,7 @@ export class EquoComm {
     this.ws.onclose = (): void => { }
   }
 
-  private processMessage (event: string): UserEvent & FrameworkArgs | null {
+  private processMessage(event: string): UserEvent & FrameworkArgs | null {
     if (typeof event === 'undefined') {
       return null
     }
@@ -111,7 +111,7 @@ export class EquoComm {
   // Expose the below methods via the equo interface while
   // hiding the implementation of the method within the
   // function() block
-  private sendToCommServer (userEvent: UserEvent, frameworkData?: FrameworkArgs): void {
+  private sendToCommServer(userEvent: UserEvent, frameworkData?: FrameworkArgs): void {
     // Wait until the state of the comm is not ready and send the message when it is...
     this.waitForCommConnection(this, () => {
       var event: string = JSON.stringify({
@@ -125,7 +125,7 @@ export class EquoComm {
   }
 
   // Make the function wait until the connection is made...
-  private waitForCommConnection (comm: EquoComm, callback: Function): void {
+  private waitForCommConnection(comm: EquoComm, callback: Function): void {
     setTimeout(
       () => {
         if (this.ws !== undefined && this.ws.readyState === WebSocket.OPEN) {
@@ -148,7 +148,7 @@ export class EquoComm {
      * @param {Args} [args] Extra framework arguments - Optional
      * @returns {void}
      */
-  public send (actionId: string, payload?: Payload, args?: Args): void {
+  public send(actionId: string, payload?: Payload, args?: Args): void {
     var userEvent: UserEvent = { actionId: actionId, payload: payload, args: args }
     this.sendToCommServer(userEvent)
   };
@@ -159,7 +159,7 @@ export class EquoComm {
      * @param {UserEventCallback} callback
      * @returns {void}
      */
-  public on (userEventActionId: string, onSuccessCallback: Function, onErrorCallback?: Function, args?: CallbackArgs): void {
+  public on(userEventActionId: string, onSuccessCallback: Function, onErrorCallback?: Function, args?: CallbackArgs): void {
     var callback: UserEventCallback = { onSuccess: onSuccessCallback, onError: onErrorCallback, args: args }
     this.userEventCallbacks.set(userEventActionId, callback)
   };
@@ -200,7 +200,7 @@ export namespace EquoCommService {
        * @name create
        * @returns {EquoService<EquoComm>}
        */
-  export function create (): EquoService<EquoComm> {
+  export function create(): EquoService<EquoComm> {
     return {
       id: COMM_SERVICE_ID,
       service: new EquoComm(port)
@@ -212,7 +212,7 @@ export namespace EquoCommService {
        * @name get
        * @returns {EquoComm}
        */
-  export function get (): EquoComm {
+  export function get(): EquoComm {
     return EquoService.get<EquoComm>(COMM_SERVICE_ID, create)
   }
 }

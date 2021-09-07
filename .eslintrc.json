@@ -13,7 +13,15 @@
       },
       "rules": {
         "@typescript-eslint/strict-boolean-expressions": 0,
-        "@typescript-eslint/no-namespace": 0
+        "@typescript-eslint/no-namespace": 0,
+        "@typescript-eslint/space-before-function-paren": [
+          2,
+          {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+          }
+        ]
       }
     },
     {
@@ -23,7 +31,17 @@
       "env": {
         "browser": true
       },
-      "extends": "./node_modules/standard/eslintrc.json"
+      "extends": "./node_modules/standard/eslintrc.json",
+      "rules": {
+        "space-before-function-paren": [
+          2,
+          {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+          }
+        ]
+      }
     },
     {
       "files": [

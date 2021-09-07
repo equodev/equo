@@ -122,7 +122,7 @@ export namespace EquoLoggingService {
      * @param {string} message
      * @returns {void}
      */
-  export function logInfo (message: string): void {
+  export function logInfo(message: string): void {
     sendLog(message, LOG_TYPES.INFO)
   }
   /**
@@ -132,7 +132,7 @@ export namespace EquoLoggingService {
      * @param {string} message
      * @returns {void}
      */
-  export function logError (message: string): void {
+  export function logError(message: string): void {
     sendLog(message, LOG_TYPES.ERROR)
   }
   /**
@@ -142,7 +142,7 @@ export namespace EquoLoggingService {
      * @param {string} message
      * @returns {void}
      */
-  export function logWarn (message: string): void {
+  export function logWarn(message: string): void {
     sendLog(message, LOG_TYPES.WARNING)
   }
   /**
@@ -152,7 +152,7 @@ export namespace EquoLoggingService {
      * @param {string} message
      * @returns {void}
      */
-  export function logDebug (message: string): void {
+  export function logDebug(message: string): void {
     sendLog(message, LOG_TYPES.DEBUG)
   }
   /**
@@ -162,7 +162,7 @@ export namespace EquoLoggingService {
      * @param {string} message
      * @returns {void}
      */
-  export function logTrace (message: string): void {
+  export function logTrace(message: string): void {
     sendLog(message, LOG_TYPES.TRACE)
   }
   /**
@@ -172,7 +172,7 @@ export namespace EquoLoggingService {
      * @param {Function} callback
      * @returns {void}
      */
-  export function getJsLoggerLevel (callback: Function): void {
+  export function getJsLoggerLevel(callback: Function): void {
     returnResponse(callback)
     sendLog('', LOG_TYPES.GET_LEVEL)
   }
@@ -185,7 +185,7 @@ export namespace EquoLoggingService {
      * @param {string} level - Use constant log level.
      * @returns {void}
      */
-  export function setJsLoggerLevel (level: string): void {
+  export function setJsLoggerLevel(level: string): void {
     sendLog(level, LOG_TYPES.SET_LEVEL)
   }
   /**
@@ -195,7 +195,7 @@ export namespace EquoLoggingService {
      * @param {Function} callback
      * @returns {void}
      */
-  export function getGlobalLoggerLevel (callback: Function): void {
+  export function getGlobalLoggerLevel(callback: Function): void {
     returnResponse(callback)
     sendLog('', LOG_TYPES.GET_GLOBAL_LEVEL)
   }
@@ -206,7 +206,7 @@ export namespace EquoLoggingService {
      * @param {string} level - Use constant log level.
      * @returns {void}
      */
-  export function setGlobalLoggerLevel (level: string): void {
+  export function setGlobalLoggerLevel(level: string): void {
     sendLog(level, LOG_TYPES.SET_GLOBAL_LEVEL)
   }
 }

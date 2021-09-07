@@ -43,7 +43,7 @@ export namespace EquoFramework {
      * @param {BrowserParams} browserParams
      * @returns {void}
      */
-  export function openBrowser (browserParams: BrowserParams): void {
+  export function openBrowser(browserParams: BrowserParams): void {
     comm.send(EQUO_EVENTS.OPEN_BROWSER, browserParams)
   }
   /**
@@ -53,7 +53,7 @@ export namespace EquoFramework {
      * @param {BrowserParams} browserParams
      * @returns {void}
      */
-  export function updateBrowser (browserParams: BrowserParams): void {
+  export function updateBrowser(browserParams: BrowserParams): void {
     comm.send(EQUO_EVENTS.UPDATE_BROWSER, browserParams)
   }
 
@@ -65,7 +65,7 @@ export namespace EquoFramework {
      * @param {Function} callback
      * @returns {void}
      */
-  export function addShortcut (shortcut: string, callback: Function): void {
+  export function addShortcut(shortcut: string, callback: Function): void {
     const payload = {
       shortcut,
       event: `_exec_shotcut_${shortcut}`
@@ -82,7 +82,7 @@ export namespace EquoFramework {
      * @param {string} event
      * @returns {void}
      */
-  export function addShortcutToEvent (shortcut: string, event: string): void {
+  export function addShortcutToEvent(shortcut: string, event: string): void {
     const payload = {
       shortcut,
       event
@@ -97,7 +97,7 @@ export namespace EquoFramework {
      * @param {string} shortcut
      * @returns {void}
      */
-  export function removeShortcut (shortcut: string): void {
+  export function removeShortcut(shortcut: string): void {
     const payload = {
       shortcut
     }
@@ -110,21 +110,21 @@ export class BrowserParams {
   private readonly name: string
   private readonly position: string
 
-  constructor (url: string, name: string, position: string) {
+  constructor(url: string, name: string, position: string) {
     this.url = url
     this.name = name
     this.position = position
   }
 
-  public getUrl (): string {
+  public getUrl(): string {
     return this.url
   }
 
-  public getName (): string {
+  public getName(): string {
     return this.name
   }
 
-  public getPosition (): string {
+  public getPosition(): string {
     return this.position
   }
 }
