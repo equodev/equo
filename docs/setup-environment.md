@@ -102,10 +102,11 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
 
 ### Visual Studio Code
 
-   If you want work with typescript files into framework, only few extensions are needed:
+   If you want work with typescript or javascript files into framework, only few extensions are needed:
 
    1. [Error Lens][ERROR_LENS]
    2. [ESLint][ESLINT]
+   3. [EditorConfig for VS Code][EDITOR_CONFIG]
 
   And a few settings in your local settings of vscode are nedeed:
 
@@ -121,13 +122,36 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
     ],
     "errorLens.messageTemplate": "[$severity] $message",
     "[json]": {
-      "editor.defaultFormatter": "vscode.json-language-features"
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[javascript]": {
       "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[typescript]": {
       "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "eslint.format.enable": true,
+    "eslint.validate": [
+      "javascript",
+      "typescript",
+      "vue",
+      "json",
+      "html"
+    ],
+    "eslint.options": {
+      "extensions": [
+          ".ts",
+          ".js",
+          ".vue"
+          ".json",
+          ".html"
+      ]
     },
   }
   ```
@@ -136,3 +160,4 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
    [ECLIPSE]: https://wiki.eclipse.org/Eclipse_Installer
    [ERROR_LENS]: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
    [ESLINT]: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+   [EDITOR_CONFIG]: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
