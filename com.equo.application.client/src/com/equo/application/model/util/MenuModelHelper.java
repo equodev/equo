@@ -39,8 +39,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
+import com.equo.application.model.EquoApplicationModel;
 import com.equo.application.model.OptionalViewBuilder;
 import com.equo.application.util.IConstants;
 
@@ -51,9 +51,6 @@ import com.equo.application.util.IConstants;
 public class MenuModelHelper {
 
   public static final String ENABLE_WEB_MENU_SYSTEM_PROPERTY = "enableWebMenu";
-
-  @Reference
-  private MApplication mApplication;
 
   /**
    * Gets a WindowManager instance.
@@ -105,6 +102,8 @@ public class MenuModelHelper {
       }
       MHandler itemCommandHandler =
           (MHandler) item.getCommand().getTransientData().get("thisHandler");
+
+      MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
 
       mApplication.getCommands().remove(itemCommand);
       if (itemCommandHandler != null) {

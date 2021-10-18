@@ -55,12 +55,10 @@ public class WindowManager {
   @Reference
   private IEquoEventHandler eventHandler;
 
-  @Reference
-  private MApplication mApplication;
-
   private Display display;
 
   private Display getDisplay() {
+    MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
     if (display == null || display.isDisposed()) {
       display = mApplication.getContext().get(Display.class);
     }
@@ -133,6 +131,7 @@ public class WindowManager {
    * @return top level window or null
    */
   public MWindow getTopLevelWindow() {
+    MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
     for (MWindow window : mApplication.getChildren()) {
       if (window.getTags().contains("topLevel")) {
         return window;
@@ -150,6 +149,7 @@ public class WindowManager {
     if (name == null) {
       return null;
     }
+    MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
     for (MWindow window : mApplication.getChildren()) {
       if (window.getLabel().equals(name)) {
         return window;
@@ -186,6 +186,7 @@ public class WindowManager {
       windowToOpen.setLabel(name);
     }
 
+    MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
     mApplication.getChildren().add(windowToOpen);
 
     MPart part = MBasicFactory.INSTANCE.createPart();
