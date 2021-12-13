@@ -21,5 +21,4 @@ cnf/cache
 cnf/*/
 !cnf/ext
 *.prefs
-.npmrc
 node_modules

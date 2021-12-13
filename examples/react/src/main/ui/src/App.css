@@ -1,0 +1,55 @@
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  padding-top: 0px;
+}
+
+.logo {
+  height: 300px;
+  width: 300px;
+}
+
+.useful-links {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+}
+
+.useful-minicard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  border: 1px rgba(150, 121, 255, 0.377) solid;
+  height: 80px;
+  width: 350px;
+
+  padding: 25px;
+  margin: 15px;
+}
+
+.useful-minicard:hover {
+  background-color: #3884ff;
+}
+
+.link {
+  align-items: center;
+  color: black;
+  display: flex;
+  justify-content: center;
+
+  text-decoration: none;
+}
+
+.arrow-icon {
+  height: 30px;
+
+  margin-left: 10px;
+}
