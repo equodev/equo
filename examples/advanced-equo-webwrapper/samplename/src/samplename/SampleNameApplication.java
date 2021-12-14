@@ -1,4 +1,4 @@
-package SampleName;
+package samplename;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -11,7 +11,7 @@ public class SampleNameApplication implements IEquoApplication {
 	@Override
 	public EquoApplicationBuilder buildApp(EquoApplicationBuilder appBuilder) {
 		return appBuilder
-			.withUI("index.html")
+			.wrap("sampleurl")
 
 			// Add custom scripts to modify the Web application
 			.withCustomScript("js/actions.js")

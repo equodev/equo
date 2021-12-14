@@ -2,6 +2,7 @@
   "src/main/ui/angular.json",
   "src/main/ui/package.json",
   "src/main/ui/karma.conf.js",
+  "src/main/ui/README.md",
   "src/main/ui/src/index.html",
   "src/main/ui/src/app/app.component.spec.ts",
   "src/main/ui/src/app/app.component.ts",

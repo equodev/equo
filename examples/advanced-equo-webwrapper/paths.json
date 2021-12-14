@@ -1,6 +1,6 @@
 [
-  "SampleName/bnd.bnd",
-  "SampleName/src/SampleName/SampleNameApplication.java",
-  "SampleName/src/SampleName",
-  "SampleName"
+  "samplename/bnd.bnd",
+  "samplename/src/samplename/SampleNameApplication.java",
+  "samplename/src/samplename",
+  "samplename"
 ]
