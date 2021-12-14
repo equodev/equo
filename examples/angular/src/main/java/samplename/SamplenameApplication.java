@@ -6,7 +6,7 @@ import com.equo.dev.EquoApp;
 import org.osgi.service.component.annotations.Component;
 
 @Component
-public class SamplenameApplication implements IEquoApplication {
+public class SampleNameApplication implements IEquoApplication {
 
     public static void main(String[] args) throws Exception {
         EquoApp.launch();

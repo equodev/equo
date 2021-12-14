@@ -1,0 +1,7 @@
+[
+  "src/main/java/samplename/SampleNameApplication.java",
+  "src/main/java/samplename/MyEventHandler.java",
+  "src/main/java/samplename",
+  "src/main/ui/public/index.html",
+  "pom.xml"
+]
