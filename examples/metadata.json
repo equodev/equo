@@ -1,0 +1,36 @@
+[
+  {
+    "title": "Equo App",
+    "slug": "equo-app",
+    "prefixFrontend": "",
+    "frontends": [
+      "VUE",
+      "ANGULAR",
+      "REACT"
+    ]
+  },
+  {
+    "title": "Equo WebWrapper",
+    "slug": "equo-webwrapper",
+    "webWrapper": true
+  },
+  {
+    "title": "Advanced Equo App",
+    "slug": "advanced-equo-app",
+    "prefixFrontend": "",
+    "frontends": []
+  },
+  {
+    "title": "Advanced Equo WebWrapper",
+    "slug": "advanced-equo-webwrapper",
+    "webWrapper": true
+  },
+  {
+    "title": "Kotlin App",
+    "slug": "kotlin",
+    "prefixFrontend": "kotlin",
+    "frontends": [
+      "REACT"
+    ]
+  }
+]

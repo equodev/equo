@@ -26,11 +26,11 @@ function App() {
         />
         <h1>Welcome to your first Equo App</h1>
         <p>For a guide and recipes on how to configure / customize an Equo App,
-            check out the <a href="https://docs.equoplatform.com/" target="_blank" rel="noreferrer noredirect"> Framework documentation</a> .</p>
+            check out the <a href="https://docs.equoplatform.com/" target="_blank" rel="noreferrer noredirect"> SDK documentation</a> .</p>
         <h2>Useful Links</h2>
         <div class="useful-links">
             <div class="useful-minicard">
-                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/framework/1.1.x/developing/first-application.html">
+                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/sdk/1.1.x/getting-started/creating.html">
                     Development guide
                     <img
                       alt="arrow icon"
@@ -40,7 +40,7 @@ function App() {
                 </a>
             </div>
             <div class="useful-minicard">
-                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/framework/1.1.x/developing/hot-reload.html">
+                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/sdk/1.1.x/developing/hot-reload.html">
                     Web UI frameworks Development
                     <img 
                       alt="arrow icon"
@@ -52,7 +52,7 @@ function App() {
         </div>
         <div class="useful-links">
             <div class="useful-minicard">
-                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/framework/1.1.x/index-api-javascript.html">
+                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/sdk/1.1.x/index-api-javascript.html">
                     Javascript API documentation
                     <img
                       alt="arrow icon"
@@ -62,7 +62,7 @@ function App() {
                 </a>
             </div>
             <div class="useful-minicard">
-                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/framework/1.1.x/index-api-java.html">
+                <a class="link" target="_blank" rel="noreferrer noredirect" href="https://docs.equoplatform.com/sdk/1.1.x/index-api-java.html">
                     Java API documentation
                     <img
                       alt="arrow icon"

@@ -13,7 +13,7 @@
         target="_blank"
         rel="noreferrer noredirect"
       >
-        Framework documentation
+        SDK documentation
       </a> .
     </p>
     <h2>Useful Links</h2>
@@ -21,7 +21,7 @@
       <div class="useful-minicard">
         <a
           class="link"
-          href="https://docs.equoplatform.com/framework/1.1.x/developing/first-application.html"
+          href="https://docs.equoplatform.com/sdk/1.1.x/getting-started/creating.html"
           target="_blank"
           rel="noreferrer noredirect"
         >
@@ -32,7 +32,7 @@
       <div class="useful-minicard">
         <a
           class="link"
-          href="https://docs.equoplatform.com/framework/1.1.x/developing/hot-reload.html"
+          href="https://docs.equoplatform.com/sdk/1.1.x/developing/hot-reload.html"
           target="_blank"
           rel="noreferrer noredirect"
         >
@@ -45,7 +45,7 @@
       <div class="useful-minicard">
         <a
           class="link"
-          href="https://docs.equoplatform.com/framework/1.1.x/index-api-javascript.html"
+          href="https://docs.equoplatform.com/sdk/1.1.x/index-api-javascript.html"
           target="_blank"
           rel="noreferrer noredirect"
         >
@@ -56,7 +56,7 @@
       <div class="useful-minicard">
         <a
           class="link"
-          href="https://docs.equoplatform.com/framework/1.1.x/index-api-java.html"
+          href="https://docs.equoplatform.com/sdk/1.1.x/index-api-java.html"
           target="_blank"
           rel="noreferrer noredirect"
         >
