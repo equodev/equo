@@ -8,3 +8,4 @@ node_modules/
 com.equo.node.packages.tests/resources/
 tsconfig.json
 package-lock.json
+examples/
