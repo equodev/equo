@@ -1,8 +1,0 @@
-[
-  "settings.gradle.kts",
-  "build.gradle.kts",
-  "src/main/ui/settings.gradle.kts",
-  "src/main/ui/build.gradle.kts",
-  "src/main/kotlin/samplename/SampleNameApp.kt",
-  "src/main/kotlin/samplename"
-]
