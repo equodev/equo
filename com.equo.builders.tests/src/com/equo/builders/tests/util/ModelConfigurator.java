@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -38,13 +38,13 @@ import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 public class ModelConfigurator {
 
 	MApplication mainApplication;
-	
+
 	private MApplication getModelApplication() {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		ApplicationPackageImpl.init();
 		URI uri = URI.createURI(
 				"../com.equo.application.client/resources/Application.e4xmi");
-		
+
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("e4xmi", new E4XMIResourceFactory());
 		Resource res = resourceSet.getResource(uri, true);
 		MApplication app = (MApplication) res.getContents().get(0);
@@ -65,5 +65,5 @@ public class ModelConfigurator {
 	public MApplication getMainApplication() {
 		return mainApplication;
 	}
-	
+
 }

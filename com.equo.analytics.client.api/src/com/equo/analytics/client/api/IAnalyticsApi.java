@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -30,19 +30,19 @@ import com.google.gson.JsonObject;
  * to know which countries were top watchers of the movie The Wolf Of Wall
  * Street. The application may register a call to the Analytics API service
  * whenever a movie is played, something like this:
- * 
+ *
  * {@code equoAnalytics.registerEvent("movies_summary", jsonObject)} or
  * {@code equoAnalytics.registerEvent("movies_summary", 1, jsonObject)} or
  * {@code equoAnalytics.registerEvent("movies_summary", 1, "{"title": "The Wolf
  * of Wall Street", "Country": "Germany"}")}
- * 
+ *
  */
 public interface IAnalyticsApi {
 
   /**
    * Register an event in which the default value of mandatory field
    * {<code>count</code> is 1.
-   * 
+   *
    * @param eventKey event key to register
    */
   public void registerEvent(String eventKey);
@@ -50,7 +50,7 @@ public interface IAnalyticsApi {
   /**
    * Register an event with segmentation in which the default value of the
    * mandatory field {<code>count</code> is 1.
-   * 
+   *
    * @param eventKey     event key to register
    * @param segmentation segmentation
    */
@@ -59,7 +59,7 @@ public interface IAnalyticsApi {
   /**
    * Register an event with segmentation in which the default value of the
    * mandatory field {<code>count</code> is 1.
-   * 
+   *
    * @param eventKey             event key to register
    * @param segmentationAsString segmentation
    */

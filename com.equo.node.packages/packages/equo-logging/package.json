@@ -1,7 +1,7 @@
 {
   "name": "@equo/logging",
   "version": "0.1.4",
-  "description": "Logging API for usage within the Equo Framework",
+  "description": "Logging API for usage within the Equo SDK",
   "license": "UNLICENSED",
   "main": "./lib/index.js",
   "typings": "./lib/index",

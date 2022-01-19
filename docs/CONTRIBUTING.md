@@ -1,6 +1,6 @@
-# Contributing to Equo Framework
+# Contributing to Equo SDK
 
-Thank you for your interest in contributing to Equo Framework! We want to make contributing to this project as easy and transparent as
+Thank you for your interest in contributing to Equo SDK! We want to make contributing to this project as easy and transparent as
 possible.
 
 ## Issue Reporting Guidelines
@@ -25,12 +25,12 @@ possible.
 
 First of all, join our [Discord server](https://discord.gg/fFEEhm8etB) and let us know that you want to contribute.
 
-Then, to develop and contribute to the framework you must:
+Then, to develop and contribute to the SDK you must:
 
 * [Setup the development environment](setup-environment.md).
-* After that, clone this project. Open a terminal in the framework folder and build it with Gradle for the first time with `./gradlew assemble`.
+* After that, clone this project. Open a terminal in the SDK folder and build it with Gradle for the first time with `./gradlew assemble`.
 * Import the project in Eclipse (the one configured before in the setup phase) into a new workspace.
-* Then, you can start to make modifications. Eclipse will automatically be building the framework on saved changes and you can [develop an Equo app in parallel consuming local framework](develop-app-in-parallel.md) to test the changes.
+* Then, you can start to make modifications. Eclipse will automatically be building the SDK on saved changes and you can [develop an Equo app in parallel consuming local SDK](develop-app-in-parallel.md) to test the changes.
 
 ## Coding Style
 

@@ -1,15 +1,15 @@
 Bundle-ActivationPolicy: lazy
 
--plugin.1.Baseline: \
-    aQute.bnd.repository.osgi.OSGiRepository; \
-        name = "Baseline"; \
-        locations = "https://dl.equoplatform.com/framework/${previous_version}/repo/index.xml.gz"; \
-        poll.time = -1
+#-plugin.1.Baseline: \
+#    aQute.bnd.repository.osgi.OSGiRepository; \
+#        name = "Baseline"; \
+#        locations = "https://dl.equo.dev/core/${previous_version}/repo/index.xml.gz"; \
+#        poll.time = -1
 
--baseline: *
+#-baseline: *
 
 -diffignore: META-INF/maven/**
--baselinerepo: Baseline
+#-baselinerepo: Baseline
 
 -groupid: com.equo
 -pom: true

@@ -1,6 +1,6 @@
 {
-  "name": "framework",
-  "description": "[Equo Framework](https://www.equoplatform.com/framework) is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.",
+  "name": "sdk",
+  "description": "[Equo SDK](https://www.equo.dev/sdk) is an open source SDK which allows users to write modern GUI applications once, and deploy them across desktop and embedded operating systems without rewriting the source code.",
   "scripts": {
     "lint": "eslint . --ext .ts,.js,.json --fix",
     "prepare": "husky install"

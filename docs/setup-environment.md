@@ -1,43 +1,43 @@
-# Equo Framework
+# Equo SDK
 
 ## Development Environment
 
 1. Download [<u>_Eclipse Installer_</u>][ECLIPSE] and run it (Click _advanced mode_ button):
 
-   ![img](img/equo-framework-development-environment-1.png)
+   ![img](img/equo-sdk-development-environment-1.png)
 
 2. Open the installer you just downloaded and switch to advance mode
 
-   ![img](img/equo-framework-development-environment-2.png)
+   ![img](img/equo-sdk-development-environment-2.png)
 
-3. Copy the **content** of the file _EquoFrameworkConfig.setup_ located in _cnf_ folder of this project.
+3. Copy the **content** of the file _EquoSDKConfig.setup_ located in _cnf_ folder of this project.
 
    ```bash
       # Linux & Mac
-      cat framework/cnf/EquoFrameworkConfig.setup
+      cat core/cnf/EquoSDKConfig.setup
    ```
 
    ```powershell
       # Windows
-      type framework\cnf\EquoFrameworkConfig.setup
+      type core\cnf\EquoSDKConfig.setup
    ```
 
-4. Go back to the Eclipse Installer, you will see a button in the toolbar which allows to paste the configuration you just copied to the clipboard. That's the _EquoFrameworkConfig.setup_ configuration. Click that button.
+4. Go back to the Eclipse Installer, you will see a button in the toolbar which allows to paste the configuration you just copied to the clipboard. That's the _EquoSDKConfig.setup_ configuration. Click that button.
 
-   ![img](img/equo-framework-development-environment-3.png)
+   ![img](img/equo-sdk-development-environment-3.png)
 
 5. Click **Next** and then **Finish** to proceed with the installation.
 
-   ![img](img/equo-framework-development-environment-4.png)
-   ![img](img/equo-framework-development-environment-5.png)
-   ![img](img/equo-framework-development-environment-6.png)
-   ![img](img/equo-framework-development-environment-7.png)
-   ![img](img/equo-framework-development-environment-8.png)
-   ![img](img/equo-framework-development-environment-9.png)
+   ![img](img/equo-sdk-development-environment-4.png)
+   ![img](img/equo-sdk-development-environment-5.png)
+   ![img](img/equo-sdk-development-environment-6.png)
+   ![img](img/equo-sdk-development-environment-7.png)
+   ![img](img/equo-sdk-development-environment-8.png)
+   ![img](img/equo-sdk-development-environment-9.png)
 
 ## Workspace configurations
 
-Once you open a new workspace in Eclipse (the IDE installed before), there are a few settings needed to work well with the Framework:
+Once you open a new workspace in Eclipse (the IDE installed before), there are a few settings needed to work well with the SDK:
 
 1. Configure compilance compatibility to generate _.class_ files for Java 1.8 (`Window ⟶ Preferences ⟶ Java ⟶ Compiler`).
 
@@ -102,7 +102,7 @@ Once you open a new workspace in Eclipse (the IDE installed before), there are a
 
 ### Visual Studio Code
 
-   If you want work with typescript or javascript files into framework, only few extensions are needed:
+   If you want work with typescript or javascript files into SDK, only few extensions are needed:
 
    1. [Error Lens][ERROR_LENS]
    2. [ESLint][ESLINT]

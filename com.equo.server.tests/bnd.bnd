@@ -3,26 +3,26 @@
 
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include: https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundle.bnd,\
-    https://dl.equoplatform.com/testing-core/${testing_core_version}/testbundlecoverage.bnd,\
-    ${build}/equochromium.bnd
+-include: https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundle.bnd,\
+  https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundlecoverage.bnd,\
+  ${build}/equochromium.bnd
 
 -includeresource: \
-    resources/
+  resources/
 
 -buildpath: \
-	com.equo.testing.common;version=latest,\
-	com.equo.contribution.api;version=latest,\
-	com.equo.comm.api;version=latest,\
-	com.equo.server.api;version=latest,\
-	com.equo.chromium,\
-	org.awaitility,\
-	org.eclipse.swt.chromium,\
-	org.apache.commons.io
+  com.equo.testing.common;version=latest,\
+  com.equo.contribution.api;version=latest,\
+  com.equo.comm.api;version=latest,\
+  com.equo.server.api;version=latest,\
+  com.equo.chromium,\
+  org.awaitility,\
+  org.eclipse.swt.chromium,\
+  org.apache.commons.io;version='[2.6.0,3.0.0)'
 
 -privatepackage: com.equo.server.tests
 
 -runbundles: \
-    org.eclipse.swt.chromium.64b,\
-    com.equo.testing.common.internal;version=latest,\
-    com.equo.server.tests;version=latest
+  org.eclipse.swt.chromium.64b,\
+  com.equo.testing.common.internal;version=latest,\
+  com.equo.server.tests;version=latest

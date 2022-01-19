@@ -10,8 +10,8 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
     xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
-    name="equo.framework"
-    label="Equo Framework">
+    name="equo.sdk"
+    label="Equo SDK">
   <setupTask
       xsi:type="jdt:JRETask"
       version="JavaSE-1.8"
@@ -51,10 +51,10 @@
       name="gitlab.remoteURIs"
       label="Gitlab repository">
     <choice
-        value="git@@{remoteURI}:maketechnology/equo/framework.git"
+        value="git@@{remoteURI}:maketechnology/equo/core.git"
         label="GIT SSH (requires pre ssh-keys)"/>
     <choice
-        value="https://@{remoteURI}/maketechnology/equo/framework.git"
+        value="https://@{remoteURI}/maketechnology/equo/core.git"
         label="HTTPS (with user/pass)"/>
   </setupTask>
   <setupTask
@@ -147,8 +147,8 @@
       xsi:type="setup:RedirectionTask"
       id="setup.redirect"
       disabled="true"
-      sourceURL="https://dl.equoplatform.com/framework/rls/EquoFramework.setup"
-      targetURL="${workspace.location|uri}/git/cnf/EquoFramework.setup">
+      sourceURL="https://dl.equo.dev/core/rls/EquoSDK.setup"
+      targetURL="${workspace.location|uri}/git/cnf/EquoSDK.setup">
     <description>
       Redirects setup from public https://github.com/maketechnology
       to checkouted GIT repo.
@@ -159,8 +159,8 @@
       label="Master">
     <setupTask
         xsi:type="setup:EclipseIniTask"
-        option="-Doomph.redirection.equo.framework"
-        value="=https://dl.equoplatform.com/framework/EquoFramework.setup->${git.clone.location|uri}/cnf/EquoFramework.setup"
+        option="-Doomph.redirection.equo.core"
+        value="=https://dl.equo.dev/core/EquoSDK.setup->${git.clone.location|uri}/cnf/EquoSDK.setup"
         vm="true">
       <description>Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.</description>
     </setupTask>
@@ -168,5 +168,5 @@
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
-  <description>Equo Framework provides cool stuff.</description>
+  <description>Equo SDK provides cool stuff.</description>
 </setup:Project>

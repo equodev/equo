@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -51,7 +51,7 @@ import com.equo.logging.client.api.LoggerFactory;
 public class MenuItemBuilder extends ItemBuilder {
   private static MCommand disabledCommand;
   private static Logger logger = LoggerFactory.getLogger(MenuItemBuilder.class);
-  
+
   static {
     disabledCommand = CommandsFactoryImpl.eINSTANCE.createCommand();
     disabledCommand.setElementId("DISABLEDCOMMAND");
@@ -79,7 +79,7 @@ public class MenuItemBuilder extends ItemBuilder {
   public MenuItemBuilder addMenuItem(String label) {
     return new MenuItemBuilder(this.getOptionalFieldBuilder(), createMenuItem(label), menuBuilder);
   }
-  
+
   /**
    * Adds an icon to a menu item.
    * @param  iconPath the icon relative path to resources folder.

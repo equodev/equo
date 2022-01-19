@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -51,12 +51,12 @@ public abstract class AbstractBuilderTest {
 
 	@Inject
 	protected EquoApplicationBuilder appBuilder;
-	
+
 	@Inject
-	protected IEquoApplication equoApp; 
-	
+	protected IEquoApplication equoApp;
+
 	protected ModelConfigurator modelTestingConfigurator = new ModelConfigurator();
-	
+
 	@Rule
 	public EquoRule injector = new EquoRule(this);
 
@@ -65,15 +65,15 @@ public abstract class AbstractBuilderTest {
 		modelTestingConfigurator.configure(appBuilder,equoApp);
 		assertThat(appBuilder).isNotNull();
 	}
-	
+
 	protected void assertCheckToolItemTooltip(String tooltip, ToolbarItemBuilder toolItemBuilder) {
 		assertThat(toolItemBuilder).isNotNull()
-			.extracting("item").isNotNull();	
+			.extracting("item").isNotNull();
 		assertThat(toolItemBuilder)
 			.extracting("toolbarBuilder.toolbar").asInstanceOf(type(MToolBar.class)).isNotNull()
 			.extracting(MToolBar::getChildren).asInstanceOf(list(MHandledItem.class)).extracting(MHandledItem::getTooltip).contains(tooltip);
 	}
-	
+
 	protected void assertCheckMenuItemLabel(String label, MenuItemBuilder menuItemBuilder) {
 		assertThat(menuItemBuilder)
 			.isNotNull()
@@ -82,7 +82,7 @@ public abstract class AbstractBuilderTest {
 			.extracting("menuBuilder.menu").asInstanceOf(type(MMenu.class)).isNotNull()
 			.extracting(MMenu::getChildren).asInstanceOf(list(MMenuElement.class)).extracting(MMenuElement::getLabel).contains(label);
 	}
-	
+
 	@SuppressWarnings("restriction")
 	protected void assertCheckItemShortcut(String shortcut) {
 		assertThat(appBuilder)
@@ -99,10 +99,10 @@ public abstract class AbstractBuilderTest {
 				assertThat(bindingTable.getBindings()).extracting(key -> key.getKeySequence()).contains(shortcut);
 			});
 	}
-	
+
 	protected <T> Object getValueFromField(Class<T> clazz, Object O, String fieldName)
 			throws NoSuchFieldException, IllegalAccessException {
-		Field field = clazz.getDeclaredField(fieldName);    
+		Field field = clazz.getDeclaredField(fieldName);
 		  field.setAccessible(true);
 		  Object value = field.get(O);
 		return value;

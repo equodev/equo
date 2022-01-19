@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -86,7 +86,7 @@ public class EquoApplicationBuilder {
 
   /**
    * Configures the Equo application builder. This method is intended to be called
-   * by the Equo Framework, it should not be called by clients/users applications.
+   * by the Equo SDK, it should not be called by clients/users applications.
    * @return app builder
    */
   OptionalViewBuilder configure(EquoApplicationModel equoApplicationModel,

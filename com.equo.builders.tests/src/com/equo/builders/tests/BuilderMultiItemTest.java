@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -43,7 +43,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 
 		assertCheckToolItemTooltip(tooltip1, toolItemBuilder1);
 		assertCheckItemShortcut(shortcut1);
-		
+
 		assertCheckToolItemTooltip(tooltip2, toolItemBuilder2);
 		assertCheckItemShortcut(shortcut2);
 	}
@@ -62,7 +62,7 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 
 		assertCheckMenuItemLabel(label1, menuItemBuilder1);
 		assertCheckItemShortcut(shortcut1);
-		
+
 		assertCheckMenuItemLabel(label2, menuItemBuilder2);
 		assertCheckItemShortcut(shortcut2);
 	}
@@ -92,13 +92,13 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 
 		assertCheckToolItemTooltip(tooltip1, toolItemBuilder1);
 		assertCheckItemShortcut(shortcutToolbar1);
-		
+
 		assertCheckToolItemTooltip(tooltip2, toolItemBuilder2);
 		assertCheckItemShortcut(shortcutToolbar2);
-		
+
 		assertCheckMenuItemLabel(label1, menuItemBuilder1);
 		assertCheckItemShortcut(shortcutMenu1);
-		
+
 		assertCheckMenuItemLabel(label2, menuItemBuilder2);
 		assertCheckItemShortcut(shortcutMenu2);
 		}
@@ -125,16 +125,16 @@ public class BuilderMultiItemTest extends AbstractBuilderTest {
 		String shortcutToolbar2 = "Alt + Y";
 		ToolbarItemBuilder toolItemBuilder2 = toolItemBuilder1.addToolItem("text", tooltip2)
 				.onClick(() -> System.out.println("toolitem event 2")).withShortcut(shortcutToolbar2);
-		
+
 		assertCheckMenuItemLabel(label1, menuItemBuilder1);
 		assertCheckItemShortcut(shortcutMenu1);
-		
+
 		assertCheckMenuItemLabel(label2, menuItemBuilder2);
 		assertCheckItemShortcut(shortcutMenu2);
-		
+
 		assertCheckToolItemTooltip(tooltip1, toolItemBuilder1);
 		assertCheckItemShortcut(shortcutToolbar1);
-		
+
 		assertCheckToolItemTooltip(tooltip2, toolItemBuilder2);
 		assertCheckItemShortcut(shortcutToolbar2);
 	}

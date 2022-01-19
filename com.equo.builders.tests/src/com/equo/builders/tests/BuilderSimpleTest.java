@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -34,7 +34,7 @@ public class BuilderSimpleTest extends AbstractBuilderTest {
 		String tooltip = "text1";
 		ToolbarItemBuilder toolItemBuilder = appBuilder.withUI("/").withToolbar().addToolItem("text", tooltip);
 		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
-			
+
 	}
 
 	@Test
@@ -43,19 +43,19 @@ public class BuilderSimpleTest extends AbstractBuilderTest {
 		MenuItemBuilder menuItemBuilder = appBuilder.withUI("/").withMainMenu("Menu").addMenuItem(label);
 
 		assertCheckMenuItemLabel(label, menuItemBuilder);
-		
+
 	}
 
 	@Test
 	public void should_Create_MenuToolbar_With_An_Item() throws Exception {
 		String label = "item1";
 		MenuItemBuilder menuItemBuilder = appBuilder.withUI("/").withMainMenu("Menu").addMenuItem(label);
-		
+
 		String tooltip = "text1";
 		ToolbarItemBuilder toolItemBuilder = menuItemBuilder.withToolbar().addToolItem("text", tooltip);
 
 		assertCheckMenuItemLabel(label, menuItemBuilder);
-		
+
 		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
 	}
 
@@ -66,12 +66,12 @@ public class BuilderSimpleTest extends AbstractBuilderTest {
 
 		String label = "item1";
 		MenuItemBuilder menuItemBuilder = toolItemBuilder.withMainMenu("Menu").addMenuItem(label);
-		
+
 		assertCheckToolItemTooltip(tooltip, toolItemBuilder);
-		
+
 		assertCheckMenuItemLabel(label, menuItemBuilder);
 	}
 
 
-	
+
 }

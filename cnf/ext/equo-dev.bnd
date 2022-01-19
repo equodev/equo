@@ -18,7 +18,7 @@ javac.debug: on
 
 -plugin.3.Equo-Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
-        releaseUrl = "https://dl.equoplatform.com/central/release"; \
+        releaseUrl = "https://dl.equo.dev/central/release"; \
         index = ${.}/equo.mvn; \
         name = "Equo Central"; \
         readOnly = true; \
@@ -27,8 +27,8 @@ javac.debug: on
 -plugin.4.Chromium: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = Chromium; \
-        locations = "https://dl.equoplatform.com/chromium-swt-ee/equo/mvn/index.xml.gz"; \
+        locations = "https://dl.equo.dev/chromium-swt-ee/equo/mvn/index.xml.gz"; \
         location = ~/.bnd/cache/chromium
 
 # JUnit
-junit: org.apache.servicemix.bundles.junit; version=4.12
+junit: osgi.enroute.junit.wrapper; version=4.12

@@ -2,14 +2,14 @@
  **
  ** Copyright (C) 2021 Equo
  **
- ** This file is part of Equo Framework.
+ ** This file is part of the Equo SDK.
  **
  ** Commercial License Usage
  ** Licensees holding valid commercial Equo licenses may use this file in
  ** accordance with the commercial license agreement provided with the
  ** Software or, alternatively, in accordance with the terms contained in
  ** a written agreement between you and Equo. For licensing terms
- ** and conditions see https://www.equoplatform.com/terms.
+ ** and conditions see https://www.equo.dev/terms.
  **
  ** GNU General Public License Usage
  ** Alternatively, this file may be used under the terms of the GNU
@@ -42,7 +42,7 @@ export interface UserEventCallback {
   args?: CallbackArgs
 };
 
-interface FrameworkArgs {
+interface SDKArgs {
   callerId?: string
   success?: boolean
 }
@@ -77,7 +77,7 @@ export class EquoComm {
     }
 
     this.ws.onmessage = (event: any): void => {
-      var message: UserEvent & FrameworkArgs | null = this.processMessage(event.data)
+      var message: UserEvent & SDKArgs | null = this.processMessage(event.data)
       if (message) {
         var actionId: string = message.actionId
         if (this.userEventCallbacks.has(actionId)) {
@@ -97,7 +97,7 @@ export class EquoComm {
     this.ws.onclose = (): void => { }
   }
 
-  private processMessage(event: string): UserEvent & FrameworkArgs | null {
+  private processMessage(event: string): UserEvent & SDKArgs | null {
     if (typeof event === 'undefined') {
       return null
     }
@@ -111,14 +111,14 @@ export class EquoComm {
   // Expose the below methods via the equo interface while
   // hiding the implementation of the method within the
   // function() block
-  private sendToCommServer(userEvent: UserEvent, frameworkData?: FrameworkArgs): void {
+  private sendToCommServer(userEvent: UserEvent, sdkData?: SDKArgs): void {
     // Wait until the state of the comm is not ready and send the message when it is...
     this.waitForCommConnection(this, () => {
       var event: string = JSON.stringify({
         actionId: userEvent.actionId,
         payload: userEvent.payload,
         args: userEvent.args,
-        callerId: frameworkData?.callerId
+        callerId: sdkData?.callerId
       })
       this.ws?.send(event)
     })
@@ -142,10 +142,10 @@ export class EquoComm {
   };
 
   /**
-     * Sends an action to execute in Framework.
+     * Sends an action to execute in SDK.
      * @param {string} actionId
      * @param {Payload} [payload] - Optional
-     * @param {Args} [args] Extra framework arguments - Optional
+     * @param {Args} [args] Extra SDK arguments - Optional
      * @returns {void}
      */
   public send(actionId: string, payload?: Payload, args?: Args): void {
@@ -165,7 +165,7 @@ export class EquoComm {
   };
 
   /**
-     * Sends a user event to the Framework. Returns a promise that resolves with the response's payload as argument.
+     * Sends a user event to the SDK. Returns a promise that resolves with the response's payload as argument.
      * @param userEvent
      * @returns {Promise<T | void>}
      */
@@ -179,7 +179,7 @@ export class EquoComm {
 }
 /**
  * @namespace
- * @description Comm API for usage within the Equo Framework.
+ * @description Comm API for usage within the Equo SDK.
  *
  * This document specifies the usage methods for equo-comm.
  */

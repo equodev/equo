@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -65,7 +65,7 @@ class EquoWebSocketServer extends WebSocketServer {
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
     broadcast("new connection: " + handshake.getResourceDescriptor());
     logger.debug(conn.getRemoteSocketAddress().getAddress().getHostAddress()
-        + " entered the Equo Framework!");
+        + " entered the Equo SDK!");
     this.firstClientConnected = true;
     synchronized (messagesToSend) {
       for (String messageToSend : messagesToSend) {
@@ -77,8 +77,8 @@ class EquoWebSocketServer extends WebSocketServer {
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-    broadcast(conn + " has left the Equo Framework!");
-    logger.debug(conn + " has left the Equo Framework!");
+    broadcast(conn + " has left the Equo SDK!");
+    logger.debug(conn + " has left the Equo SDK!");
   }
 
   @SuppressWarnings({ "unchecked" })

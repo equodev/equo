@@ -16,7 +16,7 @@ Now when you run your app, open a browser in `localhost:8888` URL (or whatever p
 
 In an advanced app (Bnd) this property is just added in the `bnd.bnd` file of your app like this:
 ```
--include: https://dl.equoplatform.com/framework/1.1/equoapp.bnd
+-include: https://dl.equo.dev/core/1.0/equoapp.bnd
 
 Bundle-Version: ${version}.${tstamp}
 Private-Package: com.equo.testapp
@@ -27,12 +27,12 @@ chromium.remote-debugging-port=8888
 
 ## Remote debug
 
-Remote debug may be useful to debug the framework when running an app in another workspace
+Remote debug may be useful to debug the SDK when running an app in another workspace
 
 1. Open the `bnd.bnd` file of the app you want to debug. Add this line to the file:
 `-runvm.debug: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044"`
 2.  Run the app. It will suspend until you connect a remote debugger.
-3.  In Eclipse, on the framework workspace, go to _Run -> Debug configurations..._
+3.  In Eclipse, on the SDK workspace, go to _Run -> Debug configurations..._
 4.  Create a new Remote Java Application debug configuration, set port to 1044. Start debug
 
 ## How to install OSGi Console

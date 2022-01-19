@@ -1,7 +1,7 @@
 {
   "name": "@equo/comm",
   "version": "0.2.0",
-  "description": "Comm API for usage within the Equo Framework",
+  "description": "Comm API for usage within the Equo SDK",
   "license": "UNLICENSED",
   "main": "./lib/index.js",
   "typings": "./lib/index",

@@ -10,11 +10,11 @@
       source="http://www.eclipse.org/oomph/setup/BrandingInfo">
     <detail
         key="imageURI">
-      <value>https://www.dev.equoplatform.com/assets/img/blue_logo_navbar.png</value>
+      <value>https://www.dev.equo.dev/assets/img/blue_logo_navbar.png</value>
     </detail>
     <detail
         key="siteURI">
-      <value>https://www.appmanager.dev.equoplatform.com/</value>
+      <value>https://www.appmanager.dev.equo.dev/</value>
     </detail>
   </annotation>
   <setupTask

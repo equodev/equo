@@ -3,21 +3,21 @@ javac.debug:            on
 -plugin.1.Equo: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = Equo; \
-        locations = "https://dl.equoplatform.com/framework/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
+        locations = "https://dl.equo.dev/core/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
         poll.time = -1; \
         cache = ~/.bnd/cache/equo
 
 -plugin.1.EquoExt: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = EquoExt; \
-        locations = "https://dl.equoplatform.com/framework-ext/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
+        locations = "https://dl.equo.dev/core-ext/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
         poll.time = -1; \
-        cache = ~/.bnd/cache/equo-framework-ext
+        cache = ~/.bnd/cache/equo-core-ext
 
 #-plugin.1.Equo: \
 #    aQute.bnd.repository.osgi.OSGiRepository; \
 #        name = Equo; \
-#        locations = "file:///home/guille/ws/equo/framework/cnf/release/index.xml.gz"; \
+#        locations = "file:///home/guille/ws/equo/core/cnf/release/index.xml.gz"; \
 #        poll.time = -1
 
 -plugin.2.Release: \

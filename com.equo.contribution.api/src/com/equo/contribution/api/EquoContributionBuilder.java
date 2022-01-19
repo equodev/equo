@@ -2,14 +2,14 @@
 **
 ** Copyright (C) 2021 Equo
 **
-** This file is part of Equo Framework.
+** This file is part of the Equo SDK.
 **
 ** Commercial License Usage
 ** Licensees holding valid commercial Equo licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and Equo. For licensing terms
-** and conditions see https://www.equoplatform.com/terms.
+** and conditions see https://www.equo.dev/terms.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -194,7 +194,7 @@ public class EquoContributionBuilder {
 
   /**
    * Changes the URL resolver of the contribution. The URL resolver is required by
-   * the framework to process file requests to the contribution.
+   * the SDK to process file requests to the contribution.
    * @param  urlResolver the new URL resolver
    * @return             this
    */
@@ -206,7 +206,7 @@ public class EquoContributionBuilder {
   /**
    * Changes the custom filter of the contribution. Default is a no-op filter.
    * This filter is called before any resource handling is attempted by the
-   * framework.
+   * SDK.
    * @param  filter the new request filter
    * @return        this
    */
@@ -217,7 +217,7 @@ public class EquoContributionBuilder {
 
   /**
    * Changes the adapter handler of the contribution. The handler is called by the
-   * framework with the original request to be proxied and the request's response
+   * SDK with the original request to be proxied and the request's response
    * is delegated to the adapter returned by this handler.
    * @param  filtersAdapterHandler the new adapter handler
    * @return                       this
