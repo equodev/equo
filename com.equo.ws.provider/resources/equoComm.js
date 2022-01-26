@@ -49,9 +49,9 @@ window.equo = window.equo || {};
        * }}
        */
       const parsedPayload = JSON.parse(event)
-      const actionId = parsedPayload.action
+      const actionId = parsedPayload.actionId
       if (actionId in userEventCallbacks) {
-        const { params } = parsedPayload
+        const params = parsedPayload.payload
         userEventCallbacks[actionId](params)
       }
     } catch (err) { /*  */ }
