@@ -140,11 +140,13 @@ export class EquoComm {
       window.equoSend({
         request: event,
         onSuccess: (response: any) => {
+          var jsonResponse
           try {
-            callback?.onSuccess(JSON.parse(response))
+            jsonResponse = JSON.parse(response)
           } catch (error) {
-            callback?.onSuccess(response)
+            jsonResponse = response
           }
+          callback?.onSuccess(jsonResponse)
         },
         onError: callback?.onError ?? (() => { }),
         persistent: !callback?.args?.once
