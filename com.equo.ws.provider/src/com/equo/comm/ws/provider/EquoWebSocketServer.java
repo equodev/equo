@@ -20,13 +20,14 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.ws.provider;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -45,27 +46,31 @@ class EquoWebSocketServer extends WebSocketServer {
   private Gson gsonParser;
   private Map<String, Function<?, ?>> functionActionHandlers;
   private Map<String, Consumer<?>> consumerActionHandlers;
+  private Map<String, CompletableFuture<Object>> responseActionHandlers;
   private Map<String, Class<?>> actionParamTypes;
   private boolean firstClientConnected = false;
-  List<String> messagesToSend = new ArrayList<>();
+  private List<String> messagesToSend = new ArrayList<>();
 
   private volatile boolean started;
 
   public EquoWebSocketServer(Map<String, Function<?, ?>> functionActionHandlers,
-      Map<String, Consumer<?>> consumerActionHandlers, Map<String, Class<?>> actionParamTypes) {
+      Map<String, Consumer<?>> consumerActionHandlers,
+      Map<String, CompletableFuture<Object>> responseActionHandlers,
+      Map<String, Class<?>> actionParamTypes, Gson gsonParser) {
     super(new InetSocketAddress(0));
     this.functionActionHandlers = functionActionHandlers;
     this.consumerActionHandlers = consumerActionHandlers;
+    this.responseActionHandlers = responseActionHandlers;
     this.actionParamTypes = actionParamTypes;
-    this.gsonParser = new Gson();
+    this.gsonParser = gsonParser;
     this.started = false;
   }
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
     broadcast("new connection: " + handshake.getResourceDescriptor());
-    logger.debug(conn.getRemoteSocketAddress().getAddress().getHostAddress()
-        + " entered the Equo SDK!");
+    logger.debug(
+        conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the Equo SDK!");
     this.firstClientConnected = true;
     synchronized (messagesToSend) {
       for (String messageToSend : messagesToSend) {
@@ -91,6 +96,10 @@ class EquoWebSocketServer extends WebSocketServer {
     }
 
     String actionId = actionMessage.getActionId();
+    if (responseActionHandlers.containsKey(actionId)) {
+      responseActionHandlers.get(actionId).complete(actionMessage.getPayload());
+    }
+
     if (functionActionHandlers.containsKey(actionId)
         || consumerActionHandlers.containsKey(actionId)) {
       Object parsedPayload = null;
@@ -120,9 +129,9 @@ class EquoWebSocketServer extends WebSocketServer {
         Consumer<?> consumer = consumerActionHandlers.get(actionId);
         ((Consumer<Object>) consumer).accept(parsedPayload);
       }
-      if (actionMessage.getCallerUuid() != null && response != null) {
-        NamedActionMessage responseMessage =
-            new NamedActionMessage(actionMessage.getCallerUuid(), response);
+      String callbackId = actionMessage.getCallbackId();
+      if (callbackId != null) {
+        NamedActionMessage responseMessage = new NamedActionMessage(callbackId, response);
         super.broadcast(gsonParser.toJson(responseMessage));
       }
     } else if (broadcast) {

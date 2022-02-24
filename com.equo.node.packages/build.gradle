@@ -1,7 +1,22 @@
 apply plugin: "com.moowork.node"
 
-task yarnPublish(type: YarnTask) {
+task yarnBuild(type: YarnTask) {
   dependsOn yarn_install
+  outputs.dirs {
+    project.files(
+      'packages/equo-comm/lib',
+      'packages/equo-comm/lib-browser',
+      'packages/equo-application-menu/lib',
+      'packages/equo-logging/lib',
+      'packages/equo-sdk/lib',
+      'packages/equo-service-manager/lib'
+      )
+  }
+  args = [ 'run', 'build' ]
+}
+
+task yarnPublish(type: YarnTask) {
+  dependsOn yarnBuild
   args = ['run', 'publishFromPackage', System.getProperty('registryUrl', '')]
 }
 
@@ -17,7 +32,7 @@ yarn_install {
     project.file('node_modules')
   }
   outputs.cacheIf {
-    true
+    false
   }
   args = ['--network-timeout', '1000000']
 }
@@ -29,5 +44,5 @@ node {
 }
 
 processResources {
-  from yarn_install
+  from yarnBuild
 }

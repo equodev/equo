@@ -22,6 +22,7 @@
 
 package com.equo.comm.api;
 
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -29,18 +30,32 @@ import java.util.function.Function;
  * Interface for event handlers. Allows to listen and send events.
  */
 public interface IEquoEventHandler {
+
   /**
    * Sends a null data to later be transmitted using the userEvent as ID.
    * @param userEvent the event ID.
    */
-  void send(String userEvent);
+  public void send(String userEvent);
 
   /**
    * Sends the specified data to later be transmitted using the userEvent as ID.
    * @param userEvent the event ID.
    * @param payload   the data to send.
    */
-  void send(String userEvent, Object payload);
+  public void send(String userEvent, Object payload);
+
+  /**
+   * Sends a null data to later be transmitted using the userEvent as ID.
+   * @param userEvent the event ID.
+   */
+  <T> Future<T> send(String userEvent, Class<T> responseTypeClass);
+
+  /**
+   * Sends the specified data to later be transmitted using the userEvent as ID.
+   * @param userEvent the event ID.
+   * @param payload   the data to send.
+   */
+  <T> Future<T> send(String userEvent, Object payload, Class<T> responseTypeClass);
 
   /**
    * Defines a custom actionHandler for an specific event ID.

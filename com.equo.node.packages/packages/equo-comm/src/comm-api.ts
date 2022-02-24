@@ -23,81 +23,101 @@
 import { EquoService } from '@equo/service-manager'
 import { UUID } from './util'
 
-type Payload = any
-type Args = any
-
+export type OnSuccessCallback<T> = (response: T) => any
+export type OnErrorCallback = (error: SDKCommError) => any
+export type Payload = any
 export interface CallbackArgs {
   once: boolean
 };
 
+export interface SDKCommError {
+  code?: number
+  message: string
+}
+
 export interface UserEvent {
   actionId: string
   payload?: Payload
-  args?: any
 };
 
-export interface UserEventCallback {
-  onSuccess: Function
-  onError?: Function
+type SDKMessage = UserEvent & { error?: SDKCommError } & { success?: boolean, callbackId?: string } | null
+
+interface UserEventCallback {
+  id?: string
+  onSuccess: OnSuccessCallback<JSON>
+  onError?: OnErrorCallback
   args?: CallbackArgs
 };
 
-interface SDKArgs {
-  callerId?: string
-  success?: boolean
-}
-
 export class EquoComm {
-  private readonly HOST = '127.0.0.1'
-  private readonly port: number
   private readonly userEventCallbacks: Map<string, UserEventCallback> = new Map()
-  private ws?: WebSocket
+  private readonly ws?: WebSocket
 
   /**
        * @name EquoComm
        * @class
        */
-  constructor(port: number) {
-    this.port = port
-    this.openComm()
+  constructor(port?: number) {
+    this.ws = this.getWebSocketIfExists(port)
+    if (typeof this.ws === 'undefined') {
+      // @ts-expect-error
+      window.equoReceiveMessage = (event) => {
+        this.receiveMessage(event)
+      }
+    }
   }
 
-  private openComm(): void {
-    if (this.ws !== undefined && this.ws.readyState !== WebSocket.CLOSED) {
+  private getWebSocketIfExists(port?: number): WebSocket | undefined {
+    if (typeof port === 'undefined') {
       return
     }
-    this.ws = new WebSocket(`ws://${this.HOST}:${this.port}`)
-
-    // Binds functions to the listeners for the comm.
-    this.ws.onopen = (event: any): void => {
-      // For reasons I can't determine, onopen gets called twice
-      // and the first time event.data is undefined.
-      // Leave a comment if you know the answer.
-      if (event.data === undefined) { }
+    if (typeof this.ws !== 'undefined' && this.ws.readyState !== WebSocket.CLOSED) {
+      return this.ws
     }
 
-    this.ws.onmessage = (event: any): void => {
-      var message: UserEvent & SDKArgs | null = this.processMessage(event.data)
-      if (message) {
-        var actionId: string = message.actionId
-        if (this.userEventCallbacks.has(actionId)) {
-          var callback: UserEventCallback | undefined = this.userEventCallbacks.get(message.actionId)
-          if (callback?.args?.once) {
-            this.userEventCallbacks.delete(actionId)
+    const HOST: string = '127.0.0.1'
+
+    var ws: WebSocket = new WebSocket(`ws://${HOST}:${port}`)
+
+    // Binds functions to the listeners for the comm.
+    ws.onopen = (event: any): void => {
+    }
+
+    ws.onclose = (): void => {
+    }
+
+    ws.onmessage = (event: any): void => {
+      this.receiveMessage(event.data)
+    }
+
+    return ws
+  }
+
+  private receiveMessage(event: any): void {
+    var message: SDKMessage = this.processMessage(event)
+    if (message) {
+      var actionId: string = message.actionId
+      if (this.userEventCallbacks.has(actionId)) {
+        var callback: UserEventCallback | undefined = this.userEventCallbacks.get(message.actionId)
+        if (callback?.args?.once) {
+          this.userEventCallbacks.delete(actionId)
+        }
+        // Success and error callbacks are not implemented yet
+        if (typeof message.success === 'undefined' || message.success) {
+          var response: any = callback?.onSuccess(message.payload)
+          if (typeof message.callbackId !== 'undefined') {
+            this.sendToJava({ actionId: message.callbackId, payload: response })
           }
-          if (typeof message.success === 'undefined' || message.success) {
-            callback?.onSuccess(message.payload)
-          } else if (callback?.onError) {
-            callback.onError(message.payload)
+        } else if (callback?.onError) {
+          if (typeof message.error !== 'undefined') {
+            callback.onError(message.error)
           }
         }
       }
     }
-
-    this.ws.onclose = (): void => { }
   }
 
-  private processMessage(event: string): UserEvent & SDKArgs | null {
+  private processMessage(event: string): SDKMessage {
     if (typeof event === 'undefined') {
       return null
     }
@@ -108,35 +128,47 @@ export class EquoComm {
     return null
   }
 
-  // Expose the below methods via the equo interface while
-  // hiding the implementation of the method within the
-  // function() block
-  private sendToCommServer(userEvent: UserEvent, sdkData?: SDKArgs): void {
-    // Wait until the state of the comm is not ready and send the message when it is...
-    this.waitForCommConnection(this, () => {
-      var event: string = JSON.stringify({
-        actionId: userEvent.actionId,
-        payload: userEvent.payload,
-        args: userEvent.args,
-        callerId: sdkData?.callerId
-      })
-      this.ws?.send(event)
+  private sendToJava(userEvent: UserEvent, callback?: UserEventCallback): void {
+    var event: string = JSON.stringify({
+      actionId: userEvent.actionId,
+      payload: userEvent.payload,
+      callbackId: callback?.id
     })
+    // @ts-expect-error
+    if (typeof window.equoSend !== 'undefined') {
+      // @ts-expect-error
+      window.equoSend({
+        request: event,
+        onSuccess: (response: any) => {
+          try {
+            callback?.onSuccess(JSON.parse(response))
+          } catch (error) {
+            callback?.onSuccess(response)
+          }
+        },
+        onError: callback?.onError ?? (() => { }),
+        persistent: !callback?.args?.once
+      })
+    } else if (typeof this.ws !== 'undefined') {
+      // Wait until the state of the comm is not ready and send the message when it is...
+      this.waitForCommConnection(this, () => {
+        this.ws?.send(event)
+      })
+    }
   }
 
   // Make the function wait until the connection is made...
   private waitForCommConnection(comm: EquoComm, callback: Function): void {
     setTimeout(
       () => {
-        if (this.ws !== undefined && this.ws.readyState === WebSocket.OPEN) {
-          if (callback != null) {
-            callback()
+        if (typeof this.ws !== 'undefined') {
+          if (this.ws.readyState === WebSocket.OPEN) {
+            if (callback != null) {
+              callback()
+            }
+          } else {
+            comm.waitForCommConnection(comm, callback)
           }
-        } else {
-          try {
-            this.openComm()
-          } catch (err) { }
-          comm.waitForCommConnection(comm, callback)
         }
       }, 5) // wait 5 milisecond for the connection...
   };
@@ -145,74 +177,53 @@ export class EquoComm {
      * Sends an action to execute in SDK.
      * @param {string} actionId
      * @param {Payload} [payload] - Optional
-     * @param {Args} [args] Extra SDK arguments - Optional
-     * @returns {void}
+     * @returns {Promise<T | any>}
      */
-  public send(actionId: string, payload?: Payload, args?: Args): void {
-    var userEvent: UserEvent = { actionId: actionId, payload: payload, args: args }
-    this.sendToCommServer(userEvent)
+  public async send<T>(actionId: string, payload?: Payload): Promise<T | any> {
+    return await new Promise<T | any>((resolve, reject) => {
+      var userEvent: UserEvent = { actionId: actionId, payload: payload }
+      var callback: UserEventCallback = { onSuccess: resolve, onError: reject, args: { once: true } }
+      if (typeof this.ws !== 'undefined') {
+        callback.id = UUID.getUuid()
+        this.on(callback.id, resolve, reject, callback.args)
+      }
+      this.sendToJava(userEvent, callback)
+    })
   };
 
   /**
      * Listens for an event with the given name.
      * @param {string} userEventId
-     * @param {UserEventCallback} callback
+     * @param {OnSuccessCallback<any>} onSuccessCallback
+     * @param {OnErrorCallback} onSuccessCallback - Optional
+     * @param {CallbackArgs} CallbackArgs - Optional
      * @returns {void}
      */
-  public on(userEventActionId: string, onSuccessCallback: Function, onErrorCallback?: Function, args?: CallbackArgs): void {
+  public on(userEventActionId: string, onSuccessCallback: OnSuccessCallback<any>, onErrorCallback?: OnErrorCallback, args?: CallbackArgs): void {
     var callback: UserEventCallback = { onSuccess: onSuccessCallback, onError: onErrorCallback, args: args }
     this.userEventCallbacks.set(userEventActionId, callback)
   };
+}
 
-  /**
-     * Sends a user event to the SDK. Returns a promise that resolves with the response's payload as argument.
-     * @param userEvent
-     * @returns {Promise<T | void>}
-     */
-  public async call<T>(userEvent: UserEvent, callbackArgs: CallbackArgs = { once: true }): Promise<T | undefined> {
-    return await new Promise<T | undefined>((resolve, reject) => {
-      var callerUuid = UUID.getUuid()
-      this.on(callerUuid, resolve, reject, { once: callbackArgs.once })
-      this.sendToCommServer(userEvent, { callerId: callerUuid })
-    })
+const ID = 'equo-comm'
+
+function create(): EquoService<EquoComm> {
+  var port: number | undefined
+  // @ts-expect-error
+  if (typeof window.equoSend === 'undefined') {
+    const queryParams: URLSearchParams = new URLSearchParams(
+      window.location.search
+    )
+    const portS: string | null = queryParams.get('equocommport')
+    port = portS === null ? undefined : +portS
+  }
+
+  return {
+    id: ID,
+    service: new EquoComm(port)
   }
 }
-/**
- * @namespace
- * @description Comm API for usage within the Equo SDK.
- *
- * This document specifies the usage methods for equo-comm.
- */
-export namespace EquoCommService {
-  const COMM_SERVICE_ID = 'equo-comm'
-  const queryParams: URLSearchParams = new URLSearchParams(
-    window.location.search
-  )
-  const portS: string | null = queryParams.get('equocommport')
-  const port: number = portS === null ? 0 : +portS
 
-  if (port === 0) {
-    throw new Error('Comm port could not be found.')
-  }
-  /**
-       * Creates an EquoCommService instance.
-       * @function
-       * @name create
-       * @returns {EquoService<EquoComm>}
-       */
-  export function create(): EquoService<EquoComm> {
-    return {
-      id: COMM_SERVICE_ID,
-      service: new EquoComm(port)
-    }
-  }
-  /**
-       * Obtains existing EquoComm service instance or else create a new one.
-       * @function
-       * @name get
-       * @returns {EquoComm}
-       */
-  export function get(): EquoComm {
-    return EquoService.get<EquoComm>(COMM_SERVICE_ID, create)
-  }
-}
+const EquoCommService = EquoService.get<EquoComm>(ID, create)
+
+export { EquoCommService }

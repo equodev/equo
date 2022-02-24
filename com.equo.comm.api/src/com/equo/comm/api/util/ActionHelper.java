@@ -20,7 +20,7 @@
  **
  ****************************************************************************/
 
-package com.equo.ws.provider.util;
+package com.equo.comm.api.util;
 
 import java.util.Optional;
 

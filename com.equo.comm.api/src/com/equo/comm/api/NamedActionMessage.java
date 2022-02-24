@@ -28,7 +28,7 @@ package com.equo.comm.api;
 public class NamedActionMessage extends ActionMessage implements IdentifiableActionMessage {
 
   private Object payload;
-  private String callerId;
+  private String callbackId;
 
   public NamedActionMessage(String actionId, Object payload) {
     super(actionId);
@@ -40,12 +40,12 @@ public class NamedActionMessage extends ActionMessage implements IdentifiableAct
    * values.
    * @param actionId ID of this action
    * @param payload  parameters of this action
-   * @param callerId id of this action's caller
+   * @param callbackId id of this action's callback
    */
-  public NamedActionMessage(String actionId, Object payload, String callerId) {
+  public NamedActionMessage(String actionId, Object payload, String callbackId) {
     super(actionId);
     this.payload = payload;
-    this.callerId = callerId;
+    this.callbackId = callbackId;
   }
 
   public Object getPayload() {
@@ -53,7 +53,7 @@ public class NamedActionMessage extends ActionMessage implements IdentifiableAct
   }
 
   @Override
-  public String getCallerUuid() {
-    return callerId;
+  public String getCallbackId() {
+    return callbackId;
   }
 }

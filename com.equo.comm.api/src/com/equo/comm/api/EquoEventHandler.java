@@ -20,8 +20,9 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.api;
 
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -30,26 +31,31 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
-import com.equo.comm.api.IEquoCommService;
-import com.equo.comm.api.IEquoEventHandler;
-
 /**
  * Implements the handler actions for send and received web-socket events using
  * equoCommService instance.
  */
-@Component
+@Component(immediate = true)
 public class EquoEventHandler implements IEquoEventHandler {
 
   private IEquoCommService equoCommService;
 
-  @Override
   public void send(String userEvent) {
-    this.send(userEvent, null);
+    equoCommService.send(userEvent, null);
+  }
+
+  public void send(String userEvent, Object payload) {
+    equoCommService.send(userEvent, payload);
   }
 
   @Override
-  public void send(String userEvent, Object payload) {
-    equoCommService.send(userEvent, payload);
+  public <T> Future<T> send(String userEvent, Class<T> responseTypeClass) {
+    return equoCommService.send(userEvent, null, responseTypeClass);
+  }
+
+  @Override
+  public <T> Future<T> send(String userEvent, Object payload, Class<T> responseTypeClass) {
+    return equoCommService.send(userEvent, payload, responseTypeClass);
   }
 
   @Override

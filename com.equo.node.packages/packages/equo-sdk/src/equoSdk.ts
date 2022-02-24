@@ -20,14 +20,14 @@
  **
  ****************************************************************************/
 
-import { EquoComm, EquoCommService } from '@equo/comm'
+import { EquoComm, EquoCommService, SDKCommError } from '@equo/comm'
 /**
  * @namespace
  * @description Equo SDK Javascript API.
  * Use the ***SDK*** package for basic browser management.
  */
 export namespace EquoSDK {
-  const comm: EquoComm = EquoCommService.get()
+  const comm: EquoComm = EquoCommService
 
   const EQUO_EVENTS = {
     OPEN_BROWSER: 'openBrowser',
@@ -44,6 +44,7 @@ export namespace EquoSDK {
      * @returns {void}
      */
   export function openBrowser(browserParams: BrowserParams): void {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     comm.send(EQUO_EVENTS.OPEN_BROWSER, browserParams)
   }
   /**
@@ -54,6 +55,7 @@ export namespace EquoSDK {
      * @returns {void}
      */
   export function updateBrowser(browserParams: BrowserParams): void {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     comm.send(EQUO_EVENTS.UPDATE_BROWSER, browserParams)
   }
 
@@ -68,10 +70,13 @@ export namespace EquoSDK {
   export function addShortcut(shortcut: string, callback: Function): void {
     const payload = {
       shortcut,
-      event: `_exec_shotcut_${shortcut}`
+      event: `_exec_shortcut_${shortcut}`
     }
-    comm.on(payload.event, callback)
     comm.send(EQUO_EVENTS.ADD_SHORTCUT, payload)
+      .then(callback as ((response: any) => any) | undefined)
+      .catch((error: SDKCommError) => {
+        console.error(`Error adding shortcut ${payload.shortcut}.`, error)
+      })
   }
 
   /**
@@ -87,6 +92,7 @@ export namespace EquoSDK {
       shortcut,
       event
     }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     comm.send(EQUO_EVENTS.ADD_SHORTCUT, payload)
   }
 
@@ -101,6 +107,7 @@ export namespace EquoSDK {
     const payload = {
       shortcut
     }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     comm.send(EQUO_EVENTS.REMOVE_SHORTCUT, payload)
   }
 }

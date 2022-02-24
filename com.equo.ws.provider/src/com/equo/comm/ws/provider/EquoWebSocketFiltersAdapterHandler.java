@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.ws.provider;
 
 import org.littleshoot.proxy.HttpFiltersAdapter;
 

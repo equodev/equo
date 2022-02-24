@@ -113,7 +113,7 @@ export class MenuItemSeparatorBuilder {
 }
 
 export class MenuBuilder {
-  private readonly comm = EquoCommService.get()
+  private readonly comm = EquoCommService
   protected menus = new Array<EquoMenu>()
   private linker: Linker
   private indexToAddItem!: number
@@ -224,6 +224,7 @@ export class MenuBuilder {
 
       this.linker.execBuildWithCurrentModel()
     })
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.comm.send('_getMenu', {})
   }
 
@@ -258,6 +259,7 @@ export class MenuBuilder {
      * @returns {void}
      */
   public setApplicationMenuWithJson(json: JSON): void {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.comm.send('_setMenu', json)
   }
 
@@ -710,7 +712,7 @@ export class EquoMenu {
      * @returns {void}
      */
   public setRunnable(runnable: () => void): void {
-    EquoCommService.get().on(this.id, runnable)
+    EquoCommService.on(this.id, runnable)
     this.setAction(this.id)
   }
 

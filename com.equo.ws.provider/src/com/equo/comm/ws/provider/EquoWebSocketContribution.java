@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.ws.provider;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;

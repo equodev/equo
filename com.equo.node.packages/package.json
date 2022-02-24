@@ -5,6 +5,7 @@
   ],
   "scripts": {
     "prepare": "lerna run prepare",
+    "build": "lerna run build",
     "publishFromPackage": "lerna publish from-package --yes --registry",
     "lint": "eslint . --ext .ts"
   },

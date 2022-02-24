@@ -1,6 +1,6 @@
 {
   "name": "@equo/logging",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Logging API for usage within the Equo SDK",
   "license": "UNLICENSED",
   "main": "./lib/index.js",
@@ -9,14 +9,14 @@
     "/lib"
   ],
   "scripts": {
-    "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
+    "prepackage": "yarn run build",
     "clean": "rimraf lib",
-    "build": "yarn run compile",
+    "build": "yarn run clean && yarn run compile && yarn run jsdoc2md",
     "compile": "tsc",
     "jsdoc2md": "jsdoc2md lib/**/*.js > equo-logging-doc.md"
   },
   "dependencies": {
-    "@equo/comm": "^0.2.0"
+    "@equo/comm": "^0.3.0"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^6.0.0"

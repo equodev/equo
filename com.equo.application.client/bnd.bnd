@@ -1,8 +1,7 @@
 Bundle-Version: 2.0.1.${tstamp}
 Export-Package: \
     com.equo.application.api,\
-    com.equo.application.model,\
-    org.osgi.service.component.annotations
+    com.equo.application.model
 -includeresource: resources/
 -buildpath: \
     com.equo.aer.api;version=latest,\

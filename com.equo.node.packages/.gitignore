@@ -1,5 +1,6 @@
 .gradle/
 lib/
+lib-browser/
 node_modules/
 dist/
 yarn-error.log

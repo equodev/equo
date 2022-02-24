@@ -1,6 +1,6 @@
 {
   "name": "@equo/comm",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comm API for usage within the Equo SDK",
   "license": "UNLICENSED",
   "main": "./lib/index.js",
@@ -9,17 +9,20 @@
     "/lib"
   ],
   "scripts": {
-    "prepare": "yarn run clean && yarn run build && yarn run jsdoc2md",
-    "clean": "rimraf lib",
-    "build": "yarn run compile",
-    "compile": "tsc",
-    "jsdoc2md": "jsdoc2md lib/**/*.js > equo-comm-doc.md"
+    "prepackage": "yarn run build",
+    "clean": "rimraf lib && rimraf lib-browser",
+    "build": "yarn run clean && yarn run compile && yarn run build-browser-lib && yarn run jsdoc2md",
+    "compile": "tsc && yarn run build-browser-lib",
+    "jsdoc2md": "jsdoc2md lib/**/*.js > equo-comm-doc.md",
+    "build-browser-lib": "webpack"
   },
   "dependencies": {
     "@equo/service-manager": "^0.1.1"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^6.0.0"
+    "jsdoc-to-markdown": "^6.0.0",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   },
   "publishConfig": {
     "access": "restricted"

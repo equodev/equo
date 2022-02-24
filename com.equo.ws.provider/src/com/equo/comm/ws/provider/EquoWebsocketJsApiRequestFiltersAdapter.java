@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.ws.provider;
 
 import static com.equo.comm.api.EquoCommContribution.COMM_CONTRIBUTION_NAME;
 

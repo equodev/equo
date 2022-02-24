@@ -9,9 +9,9 @@
     "/lib"
   ],
   "scripts": {
-    "prepare": "yarn run clean && yarn run build",
+    "prepackage": "yarn run build",
     "clean": "rimraf lib",
-    "build": "yarn run compile",
+    "build": "yarn run clean && yarn run compile",
     "compile": "tsc"
   },
   "publishConfig": {

@@ -27,7 +27,7 @@ import { EquoCommService, EquoComm } from '@equo/comm'
 // @ts-expect-error
 import { Menu, MenuBuilder } from '@equo/equo-application-menu'
 
-const comm: EquoComm = EquoCommService.get()
+const comm: EquoComm = EquoCommService
 
 comm.on('_makeLogs', () => {
   EquoLoggingService.logInfo('testInfo')
@@ -56,7 +56,7 @@ comm.on('_makeLogs', () => {
   })
 })
 
-function initMenu (elementMenu: MenuBuilder, func?: Function): void {
+function initMenu(elementMenu: MenuBuilder, func?: Function): void {
   elementMenu.withMainMenu('Menu1')
     .addMenuItem('SubMenu11').onClick('_test').withShortcut('M1+W')
     .addMenu('SubMenu12')
@@ -196,7 +196,7 @@ comm.on('_customActionOnClick', () => {
 })
 
 comm.on('_resolvePromise', () => {
-  comm.call<any>({ actionId: 'testPromise', payload: { testParam1: 'someString', testParam2: 256 } }).then((response: any) => {
+  comm.send('testPromise', { testParam1: 'someString', testParam2: 256 }).then((response: any) => {
     if (response.testParam2 === 512 && response.testParam1 === 'someStringAppended') {
       comm.send('_promiseResolved')
     }

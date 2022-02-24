@@ -23,7 +23,7 @@
 package com.equo.logging.client.core.provider;
 
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -55,7 +55,7 @@ public class JavascriptLogger {
     equoEventHandler.on(LOGGING_EVENT_KEY, JsonObject.class, new LoggingEventActionHandler());
   }
 
-  private class LoggingEventActionHandler implements Consumer<JsonObject> {
+  private class LoggingEventActionHandler implements Function<JsonObject, String> {
 
     private static final String MESSAGE_LOG = "message";
     private static final String TYPE_LOG = "type";
@@ -76,7 +76,7 @@ public class JavascriptLogger {
     private static final String TYPE_SET_GLOBAL_LEVEL = "setGlobalLevel";
 
     @Override
-    public void accept(JsonObject payload) {
+    public String apply(JsonObject payload) {
       JsonElement messageJsonElement = payload.get(MESSAGE_LOG);
       JsonElement typeJsonElement = payload.get(TYPE_LOG);
 
@@ -115,15 +115,12 @@ public class JavascriptLogger {
           if (loggerLevel.isPresent()) {
             level = loggerLevel.get().toString();
           }
-          equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY, level);
-          break;
+          return level;
         case TYPE_SET_GLOBAL_LEVEL:
           LoggerConfiguration.setGlobalLevel(Level.toLevel(message, null));
           break;
         case TYPE_GET_GLOBAL_LEVEL:
-          equoEventHandler.send(LOGGING_RESPONSE_EVENT_KEY,
-              LoggerConfiguration.getGlobalLevel().toString());
-          break;
+          return LoggerConfiguration.getGlobalLevel().toString();
         case TYPE_JS_ERROR:
           final JsonObject messageJsonObject = messageJsonElement.getAsJsonObject();
           final String msg = messageJsonObject.get("msg").getAsString();
@@ -135,6 +132,7 @@ public class JavascriptLogger {
         default:
           logger.error("Incorrect log type from Equo Logging Javascript API");
       }
+      return null;
     }
   }
 

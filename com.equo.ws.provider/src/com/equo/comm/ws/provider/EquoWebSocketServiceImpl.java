@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-package com.equo.ws.provider;
+package com.equo.comm.ws.provider;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +28,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -43,10 +47,10 @@ import com.equo.comm.api.IEquoCommService;
 import com.equo.comm.api.NamedActionMessage;
 import com.equo.comm.api.actions.IActionHandler;
 import com.equo.comm.api.annotations.EventName;
+import com.equo.comm.api.util.ActionHelper;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerFactory;
-import com.equo.ws.provider.util.ActionHelper;
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
 
 /**
  * Websocket service implementation. Manages the websocket server lifecycle and
@@ -56,9 +60,13 @@ import com.google.gson.GsonBuilder;
 public class EquoWebSocketServiceImpl implements IEquoCommService {
   protected static final Logger logger = LoggerFactory.getLogger(EquoWebSocketServiceImpl.class);
 
+  private Gson gsonParser = new Gson();
+
   private Map<String, Function<?, ?>> functionActionHandlers = new HashMap<>();
   private Map<String, Consumer<?>> consumerActionHandlers = new HashMap<>();
+  private Map<String, CompletableFuture<Object>> responseActionHandlers = new HashMap<>();
   private Map<String, Class<?>> actionParamTypes = new HashMap<>();
+
   private EquoWebSocketServer equoWebSocketServer;
 
   /**
@@ -67,8 +75,8 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
   @Activate
   public void start() {
     logger.info("Initializing Equo websocket server...");
-    equoWebSocketServer =
-        new EquoWebSocketServer(functionActionHandlers, consumerActionHandlers, actionParamTypes);
+    equoWebSocketServer = new EquoWebSocketServer(functionActionHandlers, consumerActionHandlers,
+        responseActionHandlers, actionParamTypes, gsonParser);
     equoWebSocketServer.start();
   }
 
@@ -106,10 +114,37 @@ public class EquoWebSocketServiceImpl implements IEquoCommService {
 
   @Override
   public void send(String userEvent, Object payload) {
-    GsonBuilder gsonBuilder = new GsonBuilder();
     NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload);
-    String messageAsJson = gsonBuilder.create().toJson(namedActionMessage);
+    String messageAsJson = gsonParser.toJson(namedActionMessage);
     equoWebSocketServer.broadcast(messageAsJson);
+  }
+
+  @Override
+  public <T> Future<T> send(String userEvent, Object payload, Class<T> responseTypeClass) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        String uuid = UUID.randomUUID().toString();
+        NamedActionMessage namedActionMessage = new NamedActionMessage(userEvent, payload, uuid);
+        String messageAsJson = gsonParser.toJson(namedActionMessage);
+        equoWebSocketServer.broadcast(messageAsJson);
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        responseActionHandlers.put(uuid, future);
+        while (!future.isDone()) {
+          // Sleep?
+        }
+        return (T) gsonParser.fromJson(future.get().toString(), responseTypeClass);
+      } catch (InterruptedException e) {
+        logger.debug("Thread was interrupted");
+        return null;
+      } catch (ExecutionException e) {
+        logger.debug(
+            "An unexpected exception was thrown when retrieving the response from javascript.");
+        return null;
+      } catch (Exception e) {
+        logger.debug("Unexpected exception");
+        return null;
+      }
+    });
   }
 
   @Override

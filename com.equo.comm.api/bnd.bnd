@@ -10,4 +10,5 @@ Export-Package: \
 	com.equo.comm.api,\
 	com.equo.comm.api.annotations,\
 	com.equo.comm.api.lambda,\
-	com.equo.comm.api.actions
+	com.equo.comm.api.actions,\
+	com.equo.comm.api.util

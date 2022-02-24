@@ -4,6 +4,8 @@ Export-Package: \
     com.equo.testing.common.internal.components
 
 -buildpath: \
+    osgi.cmpn,\
+    osgi.annotation,\
     com.equo.application.client;version=latest,\
     org.eclipse.e4.ui.workbench,\
     org.eclipse.e4.ui.model.workbench,\

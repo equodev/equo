@@ -20,7 +20,7 @@
  **
  ****************************************************************************/
 
-import { EquoComm, EquoCommService } from '@equo/comm'
+import { EquoComm, EquoCommService, SDKCommError } from '@equo/comm'
 
 export interface LogPayload {
   message: string
@@ -50,7 +50,7 @@ const LOG_TYPES = {
 }
 
 export namespace EquoLoggingService {
-  const comm: EquoComm = EquoCommService.get()
+  const comm: EquoComm = EquoCommService
 
   /**
      * @constant
@@ -103,16 +103,16 @@ export namespace EquoLoggingService {
      */
   export const LOG_LEVEL_NOT_CONFIGURED = 'NOT CONFIGURED'
 
-  const sendLog = function (message: string, type: string): void {
+  const sendLog = function (message: string, type: string, callback?: Function): void {
     const payload: LogPayload = {
       message,
       type
     }
     comm.send(LOG_EVENTS.LOGGING_EVENT, payload)
-  }
-
-  const returnResponse = function (callback: Function): void {
-    comm.on(LOG_EVENTS.LOGGING_RESPONSE_EVENT, callback)
+      .then(callback as undefined)
+      .catch((error: SDKCommError) => {
+        console.error(`Logging event ${payload.message} failed.`, error)
+      })
   }
 
   /**
@@ -173,8 +173,7 @@ export namespace EquoLoggingService {
      * @returns {void}
      */
   export function getJsLoggerLevel(callback: Function): void {
-    returnResponse(callback)
-    sendLog('', LOG_TYPES.GET_LEVEL)
+    sendLog('', LOG_TYPES.GET_LEVEL, callback)
   }
   /**
      * Sets a custom level for javascript logs. Javascrips logs will use this
@@ -196,8 +195,7 @@ export namespace EquoLoggingService {
      * @returns {void}
      */
   export function getGlobalLoggerLevel(callback: Function): void {
-    returnResponse(callback)
-    sendLog('', LOG_TYPES.GET_GLOBAL_LEVEL)
+    sendLog('', LOG_TYPES.GET_GLOBAL_LEVEL, callback)
   }
   /**
      * Sets a global log level.

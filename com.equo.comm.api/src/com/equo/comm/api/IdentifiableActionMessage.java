@@ -28,6 +28,6 @@ package com.equo.comm.api;
  */
 public interface IdentifiableActionMessage {
 
-  public String getCallerUuid();
+  public String getCallbackId();
 
 }
