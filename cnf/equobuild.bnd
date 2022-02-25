@@ -1,13 +1,20 @@
 javac.debug:            on
 
--plugin.1.Equo: \
+-plugin.osgi: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        releaseUrl=https://repo.maven.apache.org/maven2/; \
+        source="org.osgi:osgi.cmpn:7.0.0"; \
+        readOnly=true; \
+        name="OSGi Bundles"
+
+-plugin.equo: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = Equo; \
         locations = "https://dl.equo.dev/core/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
         poll.time = -1; \
-        cache = ~/.bnd/cache/equo
+        cache = ~/.bnd/cache/equo-core
 
--plugin.1.EquoExt: \
+-plugin.equo-ext: \
     aQute.bnd.repository.osgi.OSGiRepository; \
         name = EquoExt; \
         locations = "https://dl.equo.dev/core-ext/VERSIONPLACEHOLDER/repo/index.xml.gz"; \
