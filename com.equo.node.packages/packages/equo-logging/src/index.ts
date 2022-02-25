@@ -28,7 +28,7 @@ export interface LogPayload {
 }
 /**
  * @namespace
- * @description Equo SDK Javascript API.
+ * @description Logging JavaScript API.
  * Configure logs levels using ***equo-logging***
  */
 

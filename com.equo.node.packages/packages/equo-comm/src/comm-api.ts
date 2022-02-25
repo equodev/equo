@@ -176,7 +176,7 @@ export class EquoComm {
   };
 
   /**
-     * Sends an action to execute in SDK.
+     * Sends an action to execute in java with the given payload.
      * @param {string} actionId
      * @param {Payload} [payload] - Optional
      * @returns {Promise<T | any>}
@@ -197,8 +197,8 @@ export class EquoComm {
      * Listens for an event with the given name.
      * @param {string} userEventId
      * @param {OnSuccessCallback<any>} onSuccessCallback
-     * @param {OnErrorCallback} onSuccessCallback - Optional
-     * @param {CallbackArgs} CallbackArgs - Optional
+     * @param {OnErrorCallback} onErrorCallback - Optional
+     * @param {CallbackArgs} callbackArgs - Optional
      * @returns {void}
      */
   public on(userEventActionId: string, onSuccessCallback: OnSuccessCallback<any>, onErrorCallback?: OnErrorCallback, args?: CallbackArgs): void {

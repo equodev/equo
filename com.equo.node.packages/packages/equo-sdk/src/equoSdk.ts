@@ -23,7 +23,7 @@
 import { EquoComm, EquoCommService, SDKCommError } from '@equo/comm'
 /**
  * @namespace
- * @description Equo SDK Javascript API.
+ * @description JavaScript API containing functionality to manipulate the application.
  * Use the ***SDK*** package for basic browser management.
  */
 export namespace EquoSDK {
