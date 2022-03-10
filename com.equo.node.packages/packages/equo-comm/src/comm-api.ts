@@ -148,7 +148,7 @@ export class EquoComm {
           }
           callback?.onSuccess(jsonResponse)
         },
-        onError: callback?.onError ?? (() => { }),
+        onFailure: (code: number, message: string) => { if (typeof callback?.onError !== 'undefined') { callback.onError({ code, message }) } },
         persistent: !callback?.args?.once
       })
     } else if (typeof this.ws !== 'undefined') {
