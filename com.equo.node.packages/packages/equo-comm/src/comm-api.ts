@@ -38,9 +38,10 @@ export interface SDKCommError {
 export interface UserEvent {
   actionId: string
   payload?: Payload
+  error?: SDKCommError | string
 };
 
-type SDKMessage = UserEvent & { error?: SDKCommError } & { success?: boolean, callbackId?: string } | null
+type SDKMessage = UserEvent & { callbackId?: string } | null
 
 interface UserEventCallback {
   id?: string
@@ -103,15 +104,24 @@ export class EquoComm {
           this.userEventCallbacks.delete(actionId)
         }
         // Success and error callbacks are not implemented yet
-        if (typeof message.success === 'undefined' || message.success) {
-          var response: any = callback?.onSuccess(message.payload)
+        if (typeof message.error === 'undefined') {
           if (typeof message.callbackId !== 'undefined') {
-            this.sendToJava({ actionId: message.callbackId, payload: response })
+            try {
+              var response: any = callback?.onSuccess(message.payload)
+              this.sendToJava({ actionId: message.callbackId, payload: response })
+            } catch (error) {
+              if (typeof error === 'string') {
+                this.sendToJava({ actionId: message.callbackId, error: error })
+              } else if (typeof error !== 'undefined') {
+                const ERROR_AS_STRING = JSON.stringify(error)
+                this.sendToJava({ actionId: message.callbackId, error: ERROR_AS_STRING })
+              }
+            }
+          } else {
+            callback?.onSuccess(message.payload)
           }
-        } else if (callback?.onError) {
-          if (typeof message.error !== 'undefined') {
-            callback.onError(message.error)
-          }
+        } else if (typeof message.error !== 'undefined' && callback?.onError) {
+          callback.onError(message.error as SDKCommError)
         }
       }
     }
@@ -123,15 +133,17 @@ export class EquoComm {
     }
     try {
       return JSON.parse(event)
-    } catch (err) {
+    } catch (error) {
+      console.error(error)
+      return null
     }
-    return null
   }
 
   private sendToJava(userEvent: UserEvent, callback?: UserEventCallback): void {
     var event: string = JSON.stringify({
       actionId: userEvent.actionId,
       payload: userEvent.payload,
+      error: userEvent.error,
       callbackId: callback?.id
     })
     // @ts-expect-error
