@@ -24,7 +24,7 @@ Bundle-ActivationPolicy:
     com.equo.builders.tests.util,\
     com.equo.builders.tests.mocks
 -runrequires: \
-    osgi.identity;filter:='(osgi.identity=com.equo.ws.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.analytics.internal.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.aer.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.server.provider)',\

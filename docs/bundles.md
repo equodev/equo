@@ -11,7 +11,6 @@ The bundles that provide the core functionality of the SDK:
 | com.equo.analytics.client.api | API for Analytics. Defines how the developer will register events to App Manager. It does nothing without the SDK running | 
 | com.equo.analytics.internal.api | Internal Analytics API. Used by the SDK to register internal events. It does nothing without the SDK running | 
 | com.equo.application.client | The main API entry point of the Equo SDK. Here we have the app structure, with Equo builders to create it, and its model (which includes the main window, toolbars, shortcuts, menus, etc). We also have the app lifecycle and Eclipse handlers to manage the E4 app | 
-| com.equo.comm.api | API of the comm service. Contains the EquoEventHandler API (the interface with which to use the service) and different payload types and runnables to send/receive messages  | 
 | com.equo.contribution.api | API defined to allow other bundles to contribute resources to the app such as css, js scripts, startup scripts, and more |
 | com.equo.contribution.provider | Contributions API implementation. It has the manager and resolver to process contributions in runtime | 
 | com.equo.logging.client.api | API for Equo logging service. It contains the API, configurations, a logger factory and a basic logger implementation that logs to stdout using [Logback](https://logback.qos.ch) | 
@@ -20,8 +19,6 @@ The bundles that provide the core functionality of the SDK:
 | com.equo.server.api | API for the server running in Equo apps | 
 | com.equo.server.offline.api | API of the offline server support |
 | com.equo.server.provider | Provides a modified Littleproxy server. This server runs at start and it's responsable to inject custom resources on the Equo app. Here the browser is configured to use the server as proxy for its requests | 
-| com.equo.ws.provider | Provider for the comm service. Provides the comm server, comm javascript API, and Event Handler implementations | 
-
 ### Test bundles
 
 This bundles contain integration tests or provide the necessary elements for them:

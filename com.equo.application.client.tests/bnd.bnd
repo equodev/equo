@@ -20,7 +20,7 @@ Bundle-ActivationPolicy:
 
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=com.equo.application.client.tests)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.ws.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.application.client)',\
     osgi.identity;filter:='(osgi.identity=com.equo.server.provider)',\
     osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.1.14))'
@@ -44,7 +44,7 @@ Bundle-ActivationPolicy:
 	com.equo.analytics.internal.api;version=snapshot,\
 	com.equo.application.client;version=snapshot,\
 	com.equo.application.client.tests;version=snapshot,\
-	com.equo.comm.api;version=snapshot,\
+	com.equo.comm.api;version=latest,\
 	com.equo.contribution.api;version=snapshot,\
 	com.equo.logging.client.api;version=snapshot,\
 	com.equo.server.api;version=snapshot,\
@@ -52,7 +52,7 @@ Bundle-ActivationPolicy:
 	com.equo.server.provider;version=snapshot,\
 	com.equo.testing.common;version>=1.0.0,\
 	com.equo.testing.common.internal;version=snapshot,\
-	com.equo.ws.provider;version=snapshot,\
+	com.equo.comm.ws.provider;version=latest,\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.9.93,2.9.94)',\
