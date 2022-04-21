@@ -30,5 +30,11 @@ javac.debug: on
         locations = "https://dl.equo.dev/chromium-swt-ee/equo/mvn/index.xml.gz"; \
         location = ~/.bnd/cache/chromium
 
+-plugin.comm: \
+    aQute.bnd.repository.osgi.OSGiRepository; \
+        name = Comm; \
+        locations = "https://dl.equo.dev/comm-oss/develop/repo/index.xml.gz"; \
+        location = ~/.bnd/cache/equo-comm
+
 # JUnit
 junit: osgi.enroute.junit.wrapper; version=4.12
