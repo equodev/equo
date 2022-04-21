@@ -24,6 +24,8 @@ package com.equo.application.parts;
 
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -33,8 +35,13 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 
-import com.equo.comm.api.EquoCommHelper;
+import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 
 /**
  * Main part for Equo apps, where the browser with the web front-end is placed.
@@ -64,12 +71,27 @@ public class SinglePagePart {
   @PostConstruct
   public void createControls(Composite parent) {
     String equoAppUrl = removeTrailingSlashes(thisPart.getProperties().get(MAIN_URL_KEY));
-    int equoWsPort = EquoCommHelper.getCommService().getPort();
+    int equoWsPort = -1;
+    try {
+      Optional<EquoWebSocketServiceImpl> websocket = findWsEventHandlerInstance();
+      if (websocket.isPresent()) {
+        equoWsPort = websocket.get().getPort();
+      }
+    } catch (Exception e) {
+      // Could happen if the app is run without our open source IEventHandler implementation.
+      // Log exception
+    }
     if (equoAppUrl != null) {
       Composite composite = new Composite(parent, SWT.NONE);
       composite.setLayout(GridLayoutFactory.fillDefaults().create());
       browser = new Browser(composite, SWT.NONE);
-      browser.setUrl(equoAppUrl + String.format("?equocommport=%s", equoWsPort));
+      StringBuilder sb = new StringBuilder();
+      sb.append(equoAppUrl);
+      if (equoWsPort > 0) {
+        sb.append("?equocommport=");
+        sb.append(equoWsPort);
+      }
+      browser.setUrl(sb.toString());
       browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
   }
@@ -86,6 +108,25 @@ public class SinglePagePart {
 
   public void loadUrl(String newUrl) {
     browser.setUrl(newUrl);
+  }
+
+  private Optional<EquoWebSocketServiceImpl> findWsEventHandlerInstance() {
+    Bundle ctxBundle = FrameworkUtil.getBundle(getClass());
+    if (ctxBundle != null) {
+      BundleContext ctx = ctxBundle.getBundleContext();
+      if (ctx != null) {
+        @SuppressWarnings("unchecked")
+        ServiceReference<IEventHandler> serviceReference =
+            (ServiceReference<IEventHandler>) ctx.getServiceReference(IEventHandler.class);
+        if (serviceReference != null) {
+          IEventHandler eventHandler = ctx.getService(serviceReference);
+          if (eventHandler instanceof EquoWebSocketServiceImpl) {
+            return Optional.of((EquoWebSocketServiceImpl) eventHandler);
+          }
+        }
+      }
+    }
+    return Optional.empty();
   }
 
 }

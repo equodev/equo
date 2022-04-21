@@ -38,7 +38,7 @@ import com.equo.application.api.IEquoApplication;
 import com.equo.application.handlers.ParameterizedCommandRunnable;
 import com.equo.application.impl.HandlerBuilder;
 import com.equo.application.util.IConstants;
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +60,7 @@ public class EquoApplicationBuilder {
 
   private EquoApplicationModel equoApplicationModel;
   private String applicationName;
-  private IEquoEventHandler equoEventHandler;
+  private ICommService commService;
   private OptionalViewBuilder optionalViewBuilder;
 
   /**
@@ -117,7 +117,7 @@ public class EquoApplicationBuilder {
   }
 
   private void configureJavascriptApis() {
-    equoEventHandler.on("_setMenu", payload -> {
+    commService.on("_setMenu", payload -> {
 
       CustomDeserializer deserializer = new CustomDeserializer();
       deserializer.registerMenuType(EquoMenuItem.CLASSNAME, EquoMenuItem.class);
@@ -127,18 +127,18 @@ public class EquoApplicationBuilder {
       gson.fromJson(payload, Menu.class).setApplicationMenu();
     });
 
-    equoEventHandler.on("_getMenu", JsonObject.class, payload -> {
-      equoEventHandler.send("_doGetMenu", Menu.getActiveMenu().serialize());
+    commService.on("_getMenu", JsonObject.class, payload -> {
+      commService.send("_doGetMenu", Menu.getActiveMenu().serialize());
     });
 
-    equoEventHandler.on("_addShortcut", JsonObject.class, payload -> {
+    commService.on("_addShortcut", JsonObject.class, payload -> {
       final String shortcut = payload.get("shortcut").getAsString();
       final String event = payload.get("event").getAsString();
       new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, event)
           .addGlobalShortcut(shortcut);
     });
 
-    equoEventHandler.on("_removeShortcut", JsonObject.class, payload -> {
+    commService.on("_removeShortcut", JsonObject.class, payload -> {
       final String shortcut = payload.get("shortcut").getAsString();
       new GlobalShortcutBuilder(this, this.viewBuilder.getPart().getElementId(), null, null)
           .removeShortcut(shortcut);
@@ -149,7 +149,7 @@ public class EquoApplicationBuilder {
     createCommTriggeredCommand(mApplication, IConstants.EQUO_COMM_OPEN_BROWSER,
         IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
 
-    equoEventHandler.on("openBrowser", new ParameterizedCommandRunnable(
+    commService.on("openBrowser", new ParameterizedCommandRunnable(
         IConstants.EQUO_COMM_OPEN_BROWSER, getmApplication().getContext()));
 
     // if (action.equals(EXECUTE_ACTION_ID)) {
@@ -162,7 +162,7 @@ public class EquoApplicationBuilder {
     createUpdateBrowserCommand(mApplication, IConstants.EQUO_COMM_UPDATE_BROWSER,
         IConstants.UPDATE_BROWSER_CONTRIBUTION_URI);
 
-    equoEventHandler.on("updateBrowser", new ParameterizedCommandRunnable(
+    commService.on("updateBrowser", new ParameterizedCommandRunnable(
         IConstants.EQUO_COMM_UPDATE_BROWSER, getmApplication().getContext()));
   }
 
@@ -283,8 +283,8 @@ public class EquoApplicationBuilder {
   }
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY)
-  void setEquoEventHandler(IEquoEventHandler equoEventHandler) {
-    this.equoEventHandler = equoEventHandler;
+  void setEquoEventHandler(ICommService commService) {
+    this.commService = commService;
   }
 
   private boolean isAnEclipseBasedApp() {

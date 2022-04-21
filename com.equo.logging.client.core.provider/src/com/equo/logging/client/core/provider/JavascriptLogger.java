@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
 import com.equo.logging.client.api.Level;
 import com.equo.logging.client.api.Logger;
 import com.equo.logging.client.api.LoggerConfiguration;
@@ -48,11 +48,11 @@ public class JavascriptLogger {
   private static final String LOGGING_RESPONSE_EVENT_KEY = "loggingResponseEvent";
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY)
-  private IEquoEventHandler equoEventHandler;
+  private ICommService commService;
 
   @Activate
   public void start() {
-    equoEventHandler.on(LOGGING_EVENT_KEY, JsonObject.class, new LoggingEventActionHandler());
+    commService.on(LOGGING_EVENT_KEY, JsonObject.class, new LoggingEventActionHandler());
   }
 
   private class LoggingEventActionHandler implements Function<JsonObject, String> {

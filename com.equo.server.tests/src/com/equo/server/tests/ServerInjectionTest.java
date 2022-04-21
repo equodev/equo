@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.chromium.Browser;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -45,8 +45,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.equo.comm.api.IEquoCommService;
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
+import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 import com.equo.server.api.IEquoServer;
 import com.equo.testing.common.util.EquoRule;
 
@@ -55,13 +56,13 @@ public class ServerInjectionTest {
   private static final String TEST_URL = "http://servertest";
 
   @Inject
-  protected IEquoCommService commService;
-
-  @Inject
   protected IEquoServer equoServer;
 
   @Inject
-  protected IEquoEventHandler handler;
+  protected ICommService commService;
+
+  @Inject
+  protected IEventHandler eventHandler;
 
   protected Browser chromium;
 
@@ -82,10 +83,18 @@ public class ServerInjectionTest {
 
   private void goToUrl(String url) {
     AtomicBoolean start = new AtomicBoolean(false);
-    handler.on("_ready", runnable -> {
+    commService.on("_ready", runnable -> {
       start.set(true);
     });
-    goToUrlWithoutWaitForLoad(url + String.format("?equocommport=%d", commService.getPort()));
+    StringBuilder sb = new StringBuilder();
+    sb.append(url);
+    if (eventHandler instanceof EquoWebSocketServiceImpl) {
+      int port = ((EquoWebSocketServiceImpl) eventHandler).getPort();
+      sb.append("?equocommport=");
+      sb.append(port);
+    }
+
+    goToUrlWithoutWaitForLoad(sb.toString());
     await().untilTrue(start);
   }
 
@@ -140,7 +149,7 @@ public class ServerInjectionTest {
   @Test
   public void scriptsAreInjectedBeforeHtmlCode() {
     AtomicBoolean textReceived = new AtomicBoolean(false);
-    handler.on("_testIndexJs", runnable -> {
+    commService.on("_testIndexJs", runnable -> {
       textReceived.set(true);
     });
     goToUrl(TEST_URL + "/indexWithJs.html");
@@ -155,7 +164,7 @@ public class ServerInjectionTest {
 
   private StringBuilder receiveXmlFileResponseContent(AtomicBoolean textReceived) {
     StringBuilder stringBuilder = new StringBuilder();
-    handler.on("_sendText", s -> {
+    commService.on("_sendText", s -> {
       stringBuilder.append(s);
       textReceived.set(true);
     });

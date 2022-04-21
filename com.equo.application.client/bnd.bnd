@@ -10,6 +10,7 @@ Export-Package: \
     com.equo.logging.client.api;version=latest,\
     com.equo.server.api;version=latest,\
     com.equo.comm.api;version=latest,\
+    com.equo.comm.ws.provider;version=latest,\
     com.equo.analytics.internal.api;version=latest,\
     com.equo.server.offline.api;version=latest,\
     org.eclipse.swt.chromium,\

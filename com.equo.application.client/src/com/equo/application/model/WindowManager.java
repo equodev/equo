@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.equo.application.handlers.BrowserParams;
 import com.equo.application.util.IConstants;
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
 import com.google.gson.Gson;
 
 /**
@@ -53,7 +53,7 @@ import com.google.gson.Gson;
 public class WindowManager {
 
   @Reference
-  private IEquoEventHandler eventHandler;
+  private ICommService commService;
 
   private Display display;
 
@@ -67,27 +67,27 @@ public class WindowManager {
 
   public void openBrowser(String url) {
     BrowserParams browserParams = new BrowserParams(url);
-    eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   public void openBrowser(String url, String browserName) {
     BrowserParams browserParams = new BrowserParams(url, browserName);
-    eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   public void openBrowser(String url, String browserName, String position) {
     BrowserParams browserParams = new BrowserParams(url, browserName, position);
-    eventHandler.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   public void updateBrowser(String url) {
     BrowserParams browserParams = new BrowserParams(url);
-    eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   public void updateBrowser(String url, String browserName) {
     BrowserParams browserParams = new BrowserParams(url, browserName);
-    eventHandler.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("updateBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   /**

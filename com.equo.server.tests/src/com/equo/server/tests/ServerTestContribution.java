@@ -22,7 +22,6 @@
 
 package com.equo.server.tests;
 
-import static com.equo.comm.api.EquoCommContribution.COMM_CONTRIBUTION_NAME;
 import static com.equo.server.api.EquoServerContribution.SERVER_CONTRIBUTION_NAME;
 
 import org.osgi.service.component.annotations.Activate;
@@ -44,7 +43,7 @@ public class ServerTestContribution {
         .withContributionName("servertest") //
         .withBaseHtmlResource("index.html") //
         .withScriptFile("testSimpleInjection.js") //
-        .withDependencies(COMM_CONTRIBUTION_NAME, SERVER_CONTRIBUTION_NAME) //
+        .withDependencies("equocomm", SERVER_CONTRIBUTION_NAME) //
         .withPathWithScript("xmlrequest.html", "testXmlRequest.js") //
         .withUrlResolver(new EquoGenericUrlResolver(ServerTestContribution.class.getClassLoader())) //
         .build();

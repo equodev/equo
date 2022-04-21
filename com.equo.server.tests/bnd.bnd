@@ -14,6 +14,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
   com.equo.testing.common;version=latest,\
   com.equo.contribution.api;version=latest,\
   com.equo.comm.api;version=latest,\
+  com.equo.comm.ws.provider;Version=latest,\
   com.equo.server.api;version=latest,\
   com.equo.chromium,\
   org.awaitility,\

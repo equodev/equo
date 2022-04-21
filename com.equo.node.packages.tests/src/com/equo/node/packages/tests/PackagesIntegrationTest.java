@@ -48,8 +48,9 @@ import com.equo.application.model.CustomDeserializer;
 import com.equo.application.model.EquoMenuItem;
 import com.equo.application.model.EquoMenuItemSeparator;
 import com.equo.application.model.Menu;
-import com.equo.comm.api.IEquoCommService;
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
+import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 import com.equo.logging.client.api.Logger;
 import com.equo.node.packages.tests.common.ChromiumSetup;
 import com.equo.node.packages.tests.mocks.LoggingServiceMock;
@@ -72,10 +73,10 @@ public class PackagesIntegrationTest {
   protected Logger loggingServiceMock;
 
   @Inject
-  protected IEquoCommService commService;
+  protected ICommService commService;
 
   @Inject
-  protected IEquoEventHandler handler;
+  protected IEventHandler eventHandler;
 
   protected Browser chromium;
 
@@ -99,7 +100,7 @@ public class PackagesIntegrationTest {
   @Before
   public void before() {
     AtomicBoolean start = new AtomicBoolean(false);
-    handler.on("_ready", runnable -> {
+    commService.on("_ready", runnable -> {
       start.set(true);
     });
 
@@ -115,8 +116,14 @@ public class PackagesIntegrationTest {
       data.grabExcessHorizontalSpace = true;
       data.grabExcessVerticalSpace = true;
       chromium.setLayoutData(data);
-      chromium
-          .setUrl("http://testbundles/" + String.format("?equocommport=%d", commService.getPort()));
+      StringBuilder sb = new StringBuilder();
+      sb.append("http://testbundles/");
+      if (eventHandler instanceof EquoWebSocketServiceImpl) {
+        int port = ((EquoWebSocketServiceImpl) eventHandler).getPort();
+        sb.append("?equocommport=");
+        sb.append(port);
+      }
+      chromium.setUrl(sb.toString());
       shell.open();
       forceBrowserToStart();
     });
@@ -136,14 +143,14 @@ public class PackagesIntegrationTest {
 
   private void testMenuTemplate(String userActionOn, String userActionSend, String json) {
     AtomicReference<Boolean> wasCorrectly = new AtomicReference<>(false);
-    handler.on(userActionOn, JsonObject.class, payload -> {
+    commService.on(userActionOn, JsonObject.class, payload -> {
       if (payload.get("code") != null) {
         wasCorrectly.set(payload.toString().contains(json));
       } else {
         wasCorrectly.set(gson.fromJson(payload, Menu.class).serialize().toString().equals(json));
       }
     });
-    handler.send(userActionSend);
+    commService.send(userActionSend);
     await().until(() -> wasCorrectly.get());
   }
 
@@ -257,8 +264,8 @@ public class PackagesIntegrationTest {
 
   @Test
   public void buildWithCurrentModel() {
-    handler.on("_getMenu", payload -> {
-      handler.send("_doGetMenu", createTestMenuModel().serialize());
+    commService.on("_getMenu", payload -> {
+      commService.send("_doGetMenu", createTestMenuModel().serialize());
     });
 
     testMenuTemplate("_testSetMenu10", "_buildWithCurrentModel",
@@ -274,8 +281,8 @@ public class PackagesIntegrationTest {
 
   @Test
   public void buildWithCurrentModelWithRepeatedMenus() {
-    handler.on("_getMenu", payload -> {
-      handler.send("_doGetMenu", createTestMenuModel().serialize());
+    commService.on("_getMenu", payload -> {
+      commService.send("_doGetMenu", createTestMenuModel().serialize());
     });
 
     testMenuTemplate("_testSetMenu11", "_buildWithCurrentModelWithRepeatedMenus",
@@ -285,23 +292,23 @@ public class PackagesIntegrationTest {
   @Test
   public void customActionOnClick() {
     AtomicReference<Boolean> wasCorrectly = new AtomicReference<>(false);
-    handler.on("_customActionOnClickResponse", runnable -> {
+    commService.on("_customActionOnClickResponse", runnable -> {
       wasCorrectly.set(true);
     });
-    handler.on("_testCustomOnClick", JsonObject.class, payload -> {
+    commService.on("_testCustomOnClick", JsonObject.class, payload -> {
       JsonArray menus = payload.get("menus").getAsJsonArray();
       String action =
           ((JsonObject) ((JsonArray) ((JsonObject) menus.get(0)).get("children")).get(0))
               .get("action").getAsString();
-      handler.send(action);
+      commService.send(action);
     });
-    handler.send("_customActionOnClick");
+    commService.send("_customActionOnClick");
     await().until(() -> wasCorrectly.get());
   }
 
   @Test
   public void loggingMessagesAreReceivedCorrectlyByTheService() {
-    handler.send("_makeLogs");
+    commService.send("_makeLogs");
     await().untilAsserted(() -> {
       assertThat(loggingServiceMock).isInstanceOf(LoggingServiceMock.class)
           .extracting("receivedMessages").asInstanceOf(list(String.class)).contains("testInfo",
@@ -314,10 +321,10 @@ public class PackagesIntegrationTest {
   @Test
   public void promiseResolvesSucessfully() {
     AtomicReference<Boolean> wasCorrectly = new AtomicReference<>(false);
-    handler.on("_promiseResolved", runnable -> {
+    commService.on("_promiseResolved", runnable -> {
       wasCorrectly.set(true);
     });
-    handler.send("_resolvePromise");
+    commService.send("_resolvePromise");
     await().until(() -> wasCorrectly.get());
   }
 }

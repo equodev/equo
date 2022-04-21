@@ -30,7 +30,7 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.swt.widgets.Display;
 
 import com.equo.application.util.IConstants;
-import com.equo.comm.api.IEquoEventHandler;
+import com.equo.comm.api.ICommService;
 
 /**
  * Handler for parameterized commands.
@@ -43,12 +43,12 @@ public class ParameterizedCommandHandler {
    * @param userEvent        event to respond once the command has been executed
    * @param mApplication     model of the current application
    * @param modelService     Eclipse model service
-   * @param equoEventHandler handler for comm events.
+   * @param commService handler for comm events.
    */
   @Execute
   public void execute(@Named("commandId") String commandId,
       @Named(IConstants.EQUO_COMM_USER_EMITTED_EVENT) String userEvent,
-      MApplication mApplication, EModelService modelService, IEquoEventHandler equoEventHandler) {
+      MApplication mApplication, EModelService modelService, ICommService commService) {
     Runnable runnable = (Runnable) mApplication.getTransientData().get(commandId);
 
     if (runnable != null) {
@@ -63,7 +63,7 @@ public class ParameterizedCommandHandler {
     }
 
     if (userEvent != null) {
-      equoEventHandler.send(userEvent);
+      commService.send(userEvent);
     }
   }
 

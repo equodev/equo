@@ -20,6 +20,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
     com.equo.server.api;version=latest,\
     com.equo.testing.common;version=latest,\
     com.equo.comm.api;version=latest,\
+    com.equo.comm.ws.provider;version=latest,\
     org.eclipse.e4.ui.model.workbench,\
     org.eclipse.e4.ui.workbench.renderers.swt,\
     org.eclipse.e4.ui.workbench,\
