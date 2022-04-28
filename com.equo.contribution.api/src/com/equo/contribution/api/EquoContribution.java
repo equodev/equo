@@ -164,4 +164,17 @@ public class EquoContribution {
     return runnableAtStart;
   }
 
+  @Override
+  // Contributions with the same name are considered equal
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof EquoContribution)) {
+      return false;
+    }
+    EquoContribution oc = (EquoContribution) o;
+    return this.contributionName.equals(oc.contributionName);
+  }
+
 }

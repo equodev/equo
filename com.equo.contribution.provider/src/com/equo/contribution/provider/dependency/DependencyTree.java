@@ -23,7 +23,6 @@
 package com.equo.contribution.provider.dependency;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,77 +38,47 @@ import com.equo.contribution.api.EquoContribution;
 @Component
 public class DependencyTree implements IDependencyTreeManager {
 
-  private Map<String, List<EquoContribution>> dependencies;
-  private Set<String> pendingContributions;
+  private Set<EquoContribution> pendingContributions;
 
   /**
    * DependencyTree constructor.
    */
   public DependencyTree() {
-    dependencies = new HashMap<>();
     pendingContributions = new HashSet<>();
   }
 
   @Override
   public void addContribution(EquoContribution equoContribution) {
-    pendingContributions.add(equoContribution.getContributionName());
-    equoContribution.getDependencies().forEach((dependency) -> {
-      String dep = dependency.toLowerCase();
-      if (dependencies.containsKey(dep)) {
-        dependencies.get(dep).add(equoContribution);
-      } else {
-        List<EquoContribution> equoContributionList = new ArrayList<>();
-        equoContributionList.add(equoContribution);
-        dependencies.put(dep, equoContributionList);
-      }
-    });
+    pendingContributions.add(equoContribution);
   }
 
   private void removeContribution(EquoContribution equoContribution) {
-    pendingContributions.remove(equoContribution.getContributionName());
-  }
-
-  private List<EquoContribution> getContributions(String dependency) {
-    String dep = dependency.toLowerCase();
-    if (dependencies.containsKey(dep)) {
-      return dependencies.get(dep);
-    }
-    return new ArrayList<EquoContribution>();
+    pendingContributions.remove(equoContribution);
   }
 
   @Override
-  public List<EquoContribution> pullSatisfiedContributions(String dependency) {
+  public List<EquoContribution>
+      pullSatisfiedContributions(Map<String, EquoContribution> currentContributions) {
     List<EquoContribution> satisfiedContributions = new ArrayList<>();
-    for (EquoContribution equoContribution : getContributions(dependency)) {
-      List<String> deps = equoContribution.getDependencies();
-      deps.remove(dependency);
+    for (EquoContribution pendingContribution : pendingContributions) {
+      List<String> deps = pendingContribution.getDependencies();
       boolean dependenciesSatisfied = true;
       for (String dep : deps) {
-        if (dependencies.containsKey(dep)) {
+        if (!currentContributions.containsKey(dep)) {
           dependenciesSatisfied = false;
           break;
         }
       }
       if (dependenciesSatisfied) {
-        removeContribution(equoContribution);
-        satisfiedContributions.add(equoContribution);
+        removeContribution(pendingContribution);
+        satisfiedContributions.add(pendingContribution);
       }
     }
-    // Update tree
-    removeDependency(dependency);
     return satisfiedContributions;
   }
 
   @Override
-  public void removeDependency(String dependency) {
-    String dep = dependency.toLowerCase();
-    if (dependencies.containsKey(dep)) {
-      dependencies.remove(dep);
-    }
-  }
-
-  @Override
-  public List<String> getPendingContributions() {
-    return new ArrayList<String>(pendingContributions);
+  public List<EquoContribution> getPendingContributions() {
+    return new ArrayList<EquoContribution>(pendingContributions);
   }
 }

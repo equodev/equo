@@ -25,6 +25,7 @@ package com.equo.contribution.api.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -33,13 +34,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.equo.contribution.api.EquoContribution;
+import com.equo.contribution.api.IEquoContributionManager;
 import com.equo.contribution.api.tests.util.IContributionTest1;
 import com.equo.contribution.api.tests.util.IContributionTest2;
 import com.equo.contribution.api.tests.util.IContributionTest3;
 import com.equo.contribution.api.tests.util.IContributionTest4;
 import com.equo.contribution.api.tests.util.IContributionTest5;
 import com.equo.testing.common.util.EquoRule;
-import com.equo.contribution.api.IEquoContributionManager;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EquoContributionTest {
@@ -98,8 +100,11 @@ public class EquoContributionTest {
   // Check the list of pending contributions after the tests
   @Test
   public void test_noLoadedContributions() {
-    List<String> equoContributions = equoContributionManager.getPendingContributions();
-    assertThat(equoContributions).contains("contributiontest4", "contributiontest5",
+    List<EquoContribution> equoContributions = equoContributionManager.getPendingContributions();
+    List<String> contributionNames = equoContributions.stream().map(contribution -> {
+      return contribution.getContributionName();
+    }).collect(Collectors.toList());
+    assertThat(contributionNames).contains("contributiontest4", "contributiontest5",
         "contributiontest3");
   }
 }

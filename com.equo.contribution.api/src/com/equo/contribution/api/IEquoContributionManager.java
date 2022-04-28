@@ -51,7 +51,7 @@ public interface IEquoContributionManager {
 
   List<String> getContributions();
 
-  List<String> getPendingContributions();
+  List<EquoContribution> getPendingContributions();
 
   void reportPendingContributions();
 

@@ -82,7 +82,7 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
       logger.info("Equo Contribution added: " + contributionName);
 
       // Check if any pending contributions can be loaded.
-      dependencyTreeManager.pullSatisfiedContributions(contributionName)
+      dependencyTreeManager.pullSatisfiedContributions(equoContributions)
           .forEach((equoContribution) -> {
             addContribution(equoContribution);
           });
@@ -150,16 +150,16 @@ public class DefaultEquoContributionManager implements IEquoContributionManager 
   }
 
   @Override
-  public List<String> getPendingContributions() {
+  public List<EquoContribution> getPendingContributions() {
     return dependencyTreeManager.getPendingContributions();
   }
 
   @Override
   public void reportPendingContributions() {
-    List<String> pendingDependencies = dependencyTreeManager.getPendingContributions();
+    List<EquoContribution> pendingDependencies = getPendingContributions();
     if (pendingDependencies.size() > 0) {
-      logger.error("The following " + pendingDependencies
-          + " contributions could not be loaded due to dependency conflicts.");
+      logger.error("The following contributions could not be loaded due to dependency conflicts: "
+          + pendingDependencies);
     }
   }
 }

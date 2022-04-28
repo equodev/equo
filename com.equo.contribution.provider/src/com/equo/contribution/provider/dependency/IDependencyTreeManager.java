@@ -23,6 +23,7 @@
 package com.equo.contribution.provider.dependency;
 
 import java.util.List;
+import java.util.Map;
 
 import com.equo.contribution.api.EquoContribution;
 
@@ -39,22 +40,17 @@ public interface IDependencyTreeManager {
   void addContribution(EquoContribution equoContribution);
 
   /**
-   * Gets and extract a list of contributions that are ready to be uploaded. This implies that
-   * the contributions are discarded from the dependency tree.
-   * @param  dependency Satisfied dependence
-   * @return            List of contributions.
+   * Gets and extract a list of contributions that are ready to be uploaded. This
+   * implies that the contributions are discarded from the dependency tree.
+   * @param  currentContributions Current satisfied contributions
+   * @return                      List of contributions.
    */
-  List<EquoContribution> pullSatisfiedContributions(String dependency);
-
-  /**
-   * Removes dependency key to dependency tree.
-   * @param dependency Dependency to remove.
-   */
-  void removeDependency(String dependency);
+  List<EquoContribution>
+      pullSatisfiedContributions(Map<String, EquoContribution> currentContributions);
 
   /**
    * Gets a list of pending contributions.
    * @return List of pending contributions.
    */
-  List<String> getPendingContributions();
+  List<EquoContribution> getPendingContributions();
 }
