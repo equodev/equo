@@ -105,7 +105,6 @@ public class JavascriptLogger {
         case TYPE_TRACE:
           logger.trace(message);
           break;
-
         case TYPE_SET_LEVEL:
           logger.setLoggerLevel(Level.toLevel(message, null));
           break;

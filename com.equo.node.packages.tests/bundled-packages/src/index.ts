@@ -73,13 +73,9 @@ function initMenu(elementMenu: MenuBuilder, func?: Function): void {
     .setApplicationMenu(func)
 }
 
-comm.on('_createMenuImpl', () => {
+comm.on('_createMenu', () => {
   const menu1 = Menu.create()
   initMenu(menu1, (comm: EquoComm, json: JSON) => { comm.send('_testSetMenu1', json) })
-})
-
-comm.on('_createMenu', () => {
-  comm.send('_createMenuImpl')
 })
 
 comm.on('_appendMenuItem', () => {

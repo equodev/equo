@@ -38,3 +38,17 @@ javac.debug: on
 
 # JUnit
 junit: osgi.enroute.junit.wrapper; version=4.12
+
+-runfw: org.eclipse.osgi;version='[3.15.200.v20200214-1600,3.15.200.v20200214-1600]'
+-runee: JavaSE-1.8
+
+-runblacklist.platformspecific: \
+    osgi.identity;filter:='(osgi.identity=*linux*)',\
+    osgi.identity;filter:='(osgi.identity=*macos*)',\
+    osgi.identity;filter:='(osgi.identity=*win32*)'
+
+-runblacklist: \
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.rwt.osgi)',\
+    osgi.identity;filter:='(osgi.identity=org.eclipse.rap.jface)',\
+    osgi.identity;filter:='(osgi.identity=osgi.cmpn)'

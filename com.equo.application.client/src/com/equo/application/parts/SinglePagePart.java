@@ -115,7 +115,6 @@ public class SinglePagePart {
     if (ctxBundle != null) {
       BundleContext ctx = ctxBundle.getBundleContext();
       if (ctx != null) {
-        @SuppressWarnings("unchecked")
         ServiceReference<IEventHandler> serviceReference =
             (ServiceReference<IEventHandler>) ctx.getServiceReference(IEventHandler.class);
         if (serviceReference != null) {

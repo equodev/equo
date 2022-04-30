@@ -28,7 +28,7 @@ $(() => {
     url: 'pom.xml',
     complete: function (content) {
       // eslint-disable-next-line no-undef
-      equo.send('_sendText', content.responseText)
+      EquoCommService.send('_sendText', content.responseText)
     }
   })
 })

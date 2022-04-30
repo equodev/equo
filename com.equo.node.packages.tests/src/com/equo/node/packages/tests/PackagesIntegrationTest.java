@@ -309,7 +309,7 @@ public class PackagesIntegrationTest {
   @Test
   public void loggingMessagesAreReceivedCorrectlyByTheService() {
     commService.send("_makeLogs");
-    await().untilAsserted(() -> {
+    await().forever().untilAsserted(() -> {
       assertThat(loggingServiceMock).isInstanceOf(LoggingServiceMock.class)
           .extracting("receivedMessages").asInstanceOf(list(String.class)).contains("testInfo",
               "testWarn", "testError", "testTrace", "testDebug", "Current is NOT CONFIGURED",

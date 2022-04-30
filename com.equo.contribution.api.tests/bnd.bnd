@@ -120,8 +120,6 @@ Bundle-ActivationPolicy:
 	org.eclipse.reddeer.uiforms;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench.core;version='[2.9.0,2.9.1)',\
-	org.eclipse.swt;version='[3.113.0,3.113.1)',\
-	org.eclipse.swt.cocoa.macosx.x86_64;version='[3.114.0,3.114.1)',\
 	org.eclipse.text;version='[3.10.100,3.10.101)',\
 	org.eclipse.ui;version='[3.116.0,3.116.1)',\
 	org.eclipse.ui.browser;version='[3.6.700,3.6.701)',\
@@ -145,7 +143,16 @@ Bundle-ActivationPolicy:
 	org.w3c.dom.smil;version='[1.0.1,1.0.2)',\
 	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
 	org.xbill.dns;version='[2.0.8,2.0.9)',\
-	org.yaml.snakeyaml;version='[1.14.0,1.14.1)'
+	org.yaml.snakeyaml;version='[1.14.0,1.14.1)',\
+	com.equo.contribution.provider;version=snapshot,\
+	org.eclipse.swt;version='[3.114.0,3.114.1)',\
+	Java-WebSocket;version='[1.5.1,1.5.2)',\
+	com.equo.comm.api;version=latest,\
+	com.equo.comm.ws.provider;version=latest,\
+	com.equo.logging.client.core.provider;version=snapshot
 
 -runrequires: \
-    osgi.identity;filter:='(osgi.identity=com.equo.contribution.api.tests)'
+    osgi.identity;filter:='(osgi.identity=com.equo.contribution.api.tests)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.logging.client.core.provider)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)'

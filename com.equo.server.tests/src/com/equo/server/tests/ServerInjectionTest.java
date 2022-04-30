@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.chromium.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -86,6 +86,12 @@ public class ServerInjectionTest {
     commService.on("_ready", runnable -> {
       start.set(true);
     });
+
+    goToUrlWithoutWaitForLoad(url);
+    await().untilTrue(start);
+  }
+
+  private void goToUrlWithoutWaitForLoad(String url) {
     StringBuilder sb = new StringBuilder();
     sb.append(url);
     if (eventHandler instanceof EquoWebSocketServiceImpl) {
@@ -94,13 +100,8 @@ public class ServerInjectionTest {
       sb.append(port);
     }
 
-    goToUrlWithoutWaitForLoad(sb.toString());
-    await().untilTrue(start);
-  }
-
-  private void goToUrlWithoutWaitForLoad(String url) {
     display.syncExec(() -> {
-      chromium.setUrl(url);
+      chromium.setUrl(sb.toString());
     });
   }
 

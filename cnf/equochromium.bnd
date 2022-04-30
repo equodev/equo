@@ -8,4 +8,6 @@ chromium.fragment: org.eclipse.swt.chromium.${ws}.${chromiumos}.x86_64
 fragment.and.cocoa:${if;${matches;${tolower;${os.name}};.*mac.*};${swt.fragment},\${cef.fragment},\${devtools.fragment},\${chromium.fragment},\org.eclipse.e4.ui.workbench.renderers.swt.cocoa;${swt.fragment},\${cef.fragment}},\${devtools.fragment},\${chromium.fragment}
 
 -runbundles.chromium.fragments: \
-    ${fragment.and.cocoa}
+    ${fragment.and.cocoa},\
+    org.eclipse.swt.chromium.64b,\
+    org.eclipse.swt.chromium
