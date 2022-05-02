@@ -28,7 +28,7 @@ The core provides:
 
 ## Getting Started
 
-If you are interested in creating an Equo application, you need to first download the [CLI](https://www.equoplatform.com/cli), and then you can start developing your application. Please visit the documentation website to [start creating an application](https://docs.equoplatform.com/framework/1.1.x/getting-started/creating.html). This README is more useful for those who are interested in contributing to the core SDK.
+If you are interested in creating an Equo application, you need to first download the [CLI](https://www.equoplatform.com/cli), and then you can start developing your application. Please visit the documentation website to [start creating an application](https://docs.dev.equo.dev/sdk/develop/getting-started/introduction.html). This README is more useful for those who are interested in contributing to the core SDK.
 
 ## Contributing
 
