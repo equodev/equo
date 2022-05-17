@@ -66,7 +66,6 @@ public class EquoHttpFiltersSourceAdapter extends HttpFiltersSourceAdapter {
     if (ProxyUtils.isCONNECT(originalRequest)) {
       return new HttpFiltersAdapter(originalRequest, clientCtx);
     }
-
     HttpFilters filter = contributionRequestHandler.handle(originalRequest);
 
     if (filter != null) {

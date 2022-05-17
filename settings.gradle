@@ -1,5 +1,8 @@
 buildscript {
     ext.repos = {
+        maven {
+            url "https://dl.equo.dev/bndtools/mvn/"
+        }
         gradlePluginPortal()
         maven {
             url "https://dl.equo.dev/gradle/0.6.2/"

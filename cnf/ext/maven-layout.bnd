@@ -1,0 +1,15 @@
+#
+# Sets the layout to the maven dirctory layout
+#
+
+#
+# when used in gradle, we use a special bin and test-bin folder
+#
+
+mvn-driver-modifier                   =         ${if;${is;${driver};gradle};/gradle}
+
+target-dir                            =         target
+src                                   =         src/main/java, src/main/resources
+testsrc                               =         src/test/java
+bin                                   =         ${target-dir}${mvn-driver-modifier}/classes
+testbin                               =         ${target-dir}${mvn-driver-modifier}/test-classes
