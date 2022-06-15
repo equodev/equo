@@ -24,6 +24,7 @@ package com.equo.application.model;
 
 import java.util.List;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingContext;
 import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
@@ -145,12 +146,9 @@ public class EquoApplicationBuilder {
     });
   }
 
-  private void addAppLevelCommands(MApplication mApplication) {
+  private void addAppLevelCommands() {
     createCommTriggeredCommand(mApplication, IConstants.EQUO_COMM_OPEN_BROWSER,
         IConstants.OPEN_BROWSER_COMMAND_CONTRIBUTION_URI);
-
-    commService.on("openBrowser", new ParameterizedCommandRunnable(
-        IConstants.EQUO_COMM_OPEN_BROWSER, getmApplication().getContext()));
 
     // if (action.equals(EXECUTE_ACTION_ID)) {
     // TODO call user application code with the class passed as param
@@ -162,8 +160,6 @@ public class EquoApplicationBuilder {
     createUpdateBrowserCommand(mApplication, IConstants.EQUO_COMM_UPDATE_BROWSER,
         IConstants.UPDATE_BROWSER_CONTRIBUTION_URI);
 
-    commService.on("updateBrowser", new ParameterizedCommandRunnable(
-        IConstants.EQUO_COMM_UPDATE_BROWSER, getmApplication().getContext()));
   }
 
   private void createUpdateBrowserCommand(MApplication mApplication, String commandId,
@@ -239,7 +235,17 @@ public class EquoApplicationBuilder {
     handlerBuilder.createCommandAndHandler(commandId);
   }
 
+  private void addAppLevelCommHandlers() {
+    IEclipseContext context = getmApplication().getContext();
+    commService.on("openBrowser",
+        new ParameterizedCommandRunnable(IConstants.EQUO_COMM_OPEN_BROWSER, context));
+
+    commService.on("updateBrowser",
+        new ParameterizedCommandRunnable(IConstants.EQUO_COMM_UPDATE_BROWSER, context));
+  }
+
   private void createDefaultBindingsAndCommandsIfNeeded() {
+    addAppLevelCommHandlers();
     if (!getmApplication().getRootContext().isEmpty()) {
       return;
     }
@@ -267,7 +273,7 @@ public class EquoApplicationBuilder {
     getmApplication().getRootContext().add(windowAndDialogBindingContext);
     getmApplication().getBindingContexts().add(windowAndDialogBindingContext);
 
-    addAppLevelCommands(getmApplication());
+    addAppLevelCommands();
   }
 
   protected ViewBuilder getViewBuilder() {
