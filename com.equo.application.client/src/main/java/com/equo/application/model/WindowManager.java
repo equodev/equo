@@ -65,17 +65,17 @@ public class WindowManager {
     return display;
   }
 
-  public void openBrowser(String url) {
+  public void createWindow(String url) {
     BrowserParams browserParams = new BrowserParams(url);
     commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
-  public void openBrowser(String url, String browserName) {
+  public void createWindow(String url, String browserName) {
     BrowserParams browserParams = new BrowserParams(url, browserName);
     commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
-  public void openBrowser(String url, String browserName, String position) {
+  public void createWindow(String url, String browserName, String position) {
     BrowserParams browserParams = new BrowserParams(url, browserName, position);
     commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
@@ -156,47 +156,6 @@ public class WindowManager {
       }
     }
     return null;
-  }
-
-  /**
-   * Creates a window with the given name containing a browser pointing to the
-   * given url. Equivalent to calling createWindow(name, url, SWT.NO_TRIM).
-   * @param  name the window name
-   * @param  url  to open inside the browser
-   * @return      newly created window
-   */
-  public MWindow createWindow(String name, String url) {
-    return createWindow(name, url, SWT.NO_TRIM);
-  }
-
-  /**
-   * Creates a window with the given name containing a browser pointing to the
-   * given url with the given style.
-   * @param  name  the window name
-   * @param  url   to open inside the browser
-   * @param  style for the window (SWT style constants)
-   * @return       newly created window
-   */
-  public MWindow createWindow(String name, String url, int style) {
-    MTrimmedWindow windowToOpen = MBasicFactory.INSTANCE.createTrimmedWindow();
-    windowToOpen.getPersistedState().put(IPresentationEngine.STYLE_OVERRIDE_KEY,
-        Integer.toString(style));
-
-    if (name != null) {
-      windowToOpen.setLabel(name);
-    }
-
-    MApplication mApplication = EquoApplicationModel.getApplicaton().getMainApplication();
-    mApplication.getChildren().add(windowToOpen);
-
-    MPart part = MBasicFactory.INSTANCE.createPart();
-    part.setElementId(IConstants.MAIN_PART_ID + "." + name != null ? name : "popup");
-    part.setContributionURI(IConstants.SINGLE_PART_CONTRIBUTION_URI);
-    part.getProperties().put(IConstants.MAIN_URL_KEY, url);
-
-    windowToOpen.getChildren().add(part);
-
-    return windowToOpen;
   }
 
   /**
@@ -358,21 +317,21 @@ public class WindowManager {
     }
 
     @Override
-    public void openBrowser(String url) {
+    public void createWindow(String url) {
       obtainInstance();
-      instance.openBrowser(url);
+      instance.createWindow(url);
     }
 
     @Override
-    public void openBrowser(String url, String browserName) {
+    public void createWindow(String url, String browserName) {
       obtainInstance();
-      instance.openBrowser(url, browserName);
+      instance.createWindow(url, browserName);
     }
 
     @Override
-    public void openBrowser(String url, String browserName, String position) {
+    public void createWindow(String url, String browserName, String position) {
       obtainInstance();
-      instance.openBrowser(url, browserName, position);
+      instance.createWindow(url, browserName, position);
     }
 
     @Override
