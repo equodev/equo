@@ -121,7 +121,9 @@ public class OpenBrowserCommandHandler implements BrowserCommandHandler {
       params = new Parameterization[] {
           new Parameterization(command.getParameter(commandParameterId), browserParams.getUrl()),
           new Parameterization(command.getParameter(IConstants.EQUO_BROWSER_WINDOW_NAME),
-              browserParams.getName()) };
+              browserParams.getName()),
+          new Parameterization(command.getParameter(IConstants.EQUO_BROWSER_WINDOW_STYLE),
+              Integer.toString(browserParams.getStyle())) };
       ParameterizedCommand parametrizedCommand = new ParameterizedCommand(command, params);
       handlerService.executeHandler(parametrizedCommand);
     } catch (NotDefinedException e) {

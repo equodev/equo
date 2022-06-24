@@ -30,6 +30,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.workbench.IPresentationEngine;
 
 import com.equo.application.util.IConstants;
 
@@ -48,10 +49,12 @@ public class OpenBrowserAsWindowCommandHandler {
    */
   @Execute
   public void execute(@Named(IConstants.EQUO_OPEN_BROWSER_AS_WINDOW) String url,
-      @Named(IConstants.EQUO_BROWSER_WINDOW_NAME) String windowName, MApplication mApplication,
+      @Named(IConstants.EQUO_BROWSER_WINDOW_NAME) String windowName,
+      @Named(IConstants.EQUO_BROWSER_WINDOW_STYLE) String style, MApplication mApplication,
       UISynchronize sync) {
     sync.syncExec(() -> {
       MTrimmedWindow windowToOpen = MBasicFactory.INSTANCE.createTrimmedWindow();
+      windowToOpen.getPersistedState().put(IPresentationEngine.STYLE_OVERRIDE_KEY, style);
       if (windowName != null) {
         windowToOpen.setLabel(windowName);
       } else {

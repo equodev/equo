@@ -217,7 +217,9 @@ public class EquoApplicationBuilder {
           protected List<MCommandParameter> createCommandParameters() {
             MCommandParameter windowNameCommandParameter = createCommandParameter(
                 IConstants.EQUO_BROWSER_WINDOW_NAME, "Browser Window Name", true);
-            return Lists.newArrayList(windowNameCommandParameter);
+            MCommandParameter windowStyleCommandParameter = createCommandParameter(
+                IConstants.EQUO_BROWSER_WINDOW_STYLE, "Browser Window Style", true);
+            return Lists.newArrayList(windowNameCommandParameter, windowStyleCommandParameter);
           }
         };
     handlerBuilder.createCommandAndHandler(commandId);
