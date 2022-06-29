@@ -12,13 +12,14 @@ To develop this apps and continue developing the Equo SDK in parallel, follow th
 
 4. Import the application projects from the location you cloned it. If you see errors on your projects, go to Projects -> clean, and clean all.
 
+**Note**: If you do not want to use your own version of the SDK, jump to step 8.
+
 5. This apps run by default with the released version of the SDK, consumed online from Equo repositories. To **use a local version of the SDK** (the one you are working on) you need to **make two changes**:
 
     - Open the `cnf/build.bnd` file and add a **local OSGi repository with an URL pointing to your local SDK build repository** (`cnf/release/index.xml.gz` index file inside the SDK). The modified file will be something like this, with the first plugin being the new one we just added:
 
       ```
-      -include: https://dl.equo.dev/core/1.0/equobuild.bnd,\
-                https://dl.equo.dev/filesystem/1.0/equobuild.bnd
+      -include: https://dl.equo.dev/core/1.0/equobuild.bnd
 
       -plugin.1.EquoLocal: \
         aQute.bnd.repository.osgi.OSGiRepository; \
@@ -29,13 +30,10 @@ To develop this apps and continue developing the Equo SDK in parallel, follow th
 
       You can add more local repositories for each component of the SDK that you are developing ([Filesystem](https://github.com/equoplatform/filesystem), [Renderers](https://github.com/equoplatform/renderers))
 
-    - Open the `<app_to_run_bundle>/bnd.bnd` file and modify the first `-include` sentence so that it points to the `equoapp.bnd` file of your local Equo SDK (or to your local renderers/filesystem bnd file) instead of consuming it online. After your change, it should look like this:
+    - Open the `<app_to_run_bundle>/bnd.bnd` file, select `source` in the editor tool bar and modify the first `-include` sentence so that it points to the `equoapp.bnd` file of your local Equo SDK (or to your local renderers/filesystem bnd file) instead of consuming it online. After your change, it should look like this:
 
       ```
-      -include: /home/username/Equo/core/cnf/equoapp.bnd,\
-        https://dl.equo.dev/filesystem/1.0/module.bnd
-      Bundle-Version: ${version}.${tstamp}
-      Private-Package: com.equo.testapp
+      -include: /home/username/Equo/core/cnf/equoapp.bnd
       ```
 
 6. Rebuild the entire workspace: Project -> clean -> clean all.
