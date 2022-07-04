@@ -96,13 +96,15 @@ public interface IConstants {
   public static final String EQUO_BROWSER_WINDOW_NAME =
       EQUO_APPLICATION_ID + ".browser.window.name";
 
+  public static final String EQUO_BROWSER_WINDOW_STYLE =
+      EQUO_APPLICATION_ID + ".browser.window.style";
+
   public static final String EQUO_BROWSER_PART_NAME = EQUO_APPLICATION_ID + ".browser.part.name";
 
   public static final String EQUO_BROWSER_PART_POSITION =
       EQUO_APPLICATION_ID + ".browser.part.position";
 
-  public static final String EQUO_COMM_UPDATE_BROWSER =
-      EQUO_COMM_PREFIX + ".updatebrowser";
+  public static final String EQUO_COMM_UPDATE_BROWSER = EQUO_COMM_PREFIX + ".updatebrowser";
 
   public static final String UPDATE_BROWSER_CONTRIBUTION_URI = "bundleclass://"
       + "com.equo.application.client/com.equo.application.handlers.UpdateBrowserCommandHandler";
@@ -113,8 +115,7 @@ public interface IConstants {
 
   public static final String EQUO_BROWSER_IN_PARTSTACK_ID = EQUO_PART_IN_PARTSTACK_ID + ".browser";
 
-  public static final String EQUO_COMM_USER_EMITTED_EVENT =
-      EQUO_COMM_PREFIX + ".useremittedevent";
+  public static final String EQUO_COMM_USER_EMITTED_EVENT = EQUO_COMM_PREFIX + ".useremittedevent";
 
   public static final String DEFAULT_EXIT_LABEL = "Exit";
 

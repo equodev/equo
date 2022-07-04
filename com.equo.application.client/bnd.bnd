@@ -1,7 +1,8 @@
 Bundle-Version: 2.0.1.${tstamp}
 Export-Package: \
     com.equo.application.api,\
-    com.equo.application.model
+    com.equo.application.model,\
+    com.equo.application.model.window
 -includeresource: resources/
 -buildpath: \
     com.equo.aer.api;version=latest,\
