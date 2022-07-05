@@ -48,7 +48,6 @@ Bundle-ActivationPolicy:
 	com.equo.server.api;version=snapshot,\
 	com.equo.server.offline.api;version=snapshot,\
 	com.equo.server.provider;version=snapshot,\
-	com.equo.testing.common;version='[2.0.4,2.0.5)',\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.9.93,2.9.94)',\
@@ -173,6 +172,7 @@ Bundle-ActivationPolicy:
 	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	org.yaml.snakeyaml;version='[1.14.0,1.14.1)',\
 	com.equo.contribution.provider;version=snapshot,\
+	com.equo.testing.common.internal;version=snapshot,\
 	com.equo.comm.api;version=latest,\
 	com.equo.comm.ws.provider;version=latest,\
-	com.equo.testing.common.internal;version=snapshot
+	com.equo.testing.common;version='[2.1.0,2.1.1)'
