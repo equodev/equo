@@ -13,17 +13,14 @@ Bundle-ActivationPolicy:
     com.equo.contribution.api.tests.util
 
 -runbundles: \
-	com.equo.contribution.api;version=snapshot,\
 	com.equo.contribution.api.tests;version=snapshot,\
 	assertj-core;version='[3.16.0,3.16.1)',\
 	ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.core;version='[1.1.2,1.1.3)',\
 	com.equo.aer.api;version=snapshot,\
 	com.equo.logging.client.api;version=snapshot,\
-	com.equo.server.api;version=snapshot,\
 	com.equo.server.offline.api;version=snapshot,\
 	com.equo.server.provider;version=snapshot,\
-	com.equo.testing.common;version='[2.0.4,2.0.5)',\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.9.93,2.9.94)',\
@@ -147,12 +144,17 @@ Bundle-ActivationPolicy:
 	com.equo.contribution.provider;version=snapshot,\
 	org.eclipse.swt;version='[3.114.0,3.114.1)',\
 	Java-WebSocket;version='[1.5.1,1.5.2)',\
+	com.equo.logging.client.core.provider;version=snapshot,\
+	com.equo.server.api;version='[1.1.0,1.1.1)',\
+	com.equo.testing.common;version='[2.1.0,2.1.1)',\
 	com.equo.comm.api;version=latest,\
 	com.equo.comm.ws.provider;version=latest,\
-	com.equo.logging.client.core.provider;version=snapshot
+	com.equo.contribution.api;version='[2.0.0,2.0.1)',\
+	javax.annotation;version='[1.2.0,1.2.1)'
 
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.api.tests)',\
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.logging.client.core.provider)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)'
+    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
+    osgi.identity;filter:='(osgi.identity=javax.annotation)'

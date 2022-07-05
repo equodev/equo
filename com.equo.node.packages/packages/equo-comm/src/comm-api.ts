@@ -217,6 +217,10 @@ export class EquoComm {
     var callback: UserEventCallback = { onSuccess: onSuccessCallback, onError: onErrorCallback, args: args }
     this.userEventCallbacks.set(userEventActionId, callback)
   };
+
+  public remove(userEventActionId: string): void {
+    this.userEventCallbacks.delete(userEventActionId)
+  }
 }
 
 const ID = 'equo-comm'

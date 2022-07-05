@@ -34,7 +34,6 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	com.equo.server.offline.api;version=snapshot,\
 	com.equo.server.provider;version=snapshot,\
 	com.equo.server.tests;version=snapshot,\
-	com.equo.testing.common;version='[2.0.4,2.0.5)',\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.9.93,2.9.94)',\
@@ -132,7 +131,6 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.eclipse.reddeer.uiforms;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench.core;version='[2.9.0,2.9.1)',\
-	org.eclipse.swt;version='[3.113.0,3.113.1)',\
 	org.eclipse.text;version='[3.10.100,3.10.101)',\
 	org.eclipse.ui;version='[3.116.0,3.116.1)',\
 	org.eclipse.ui.browser;version='[3.6.700,3.6.701)',\
@@ -160,9 +158,14 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.yaml.snakeyaml;version='[1.14.0,1.14.1)',\
 	com.equo.contribution.provider;version=snapshot,\
 	com.equo.comm.api;version=latest,\
-	com.equo.comm.ws.provider;version=latest
+	com.equo.comm.ws.provider;version=latest,\
+	com.equo.testing.common;version='[2.1.0,2.1.1)',\
+	org.eclipse.swt;version='[3.114.0,3.114.1)',\
+	org.eclipse.swt.chromium;version='[76.0.10,76.0.11)',\
+	javax.annotation;version='[1.2.0,1.2.1)'
 
 -runrequires: \
     osgi.identity;filter:='(osgi.identity=com.equo.server.tests)',\
     osgi.identity;filter:='(osgi.identity=com.equo.server.provider)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)'
+    osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
+    osgi.identity;filter:='(osgi.identity=javax.annotation)'
