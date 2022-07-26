@@ -47,7 +47,7 @@ public class WindowClient {
   }
 
   public void build() {
-    commService.send("openBrowser", new Gson().toJsonTree(browserParams).getAsJsonObject());
+    commService.send("createWindow", new Gson().toJsonTree(browserParams).getAsJsonObject());
   }
 
   public WindowClient setUrl(String url) {

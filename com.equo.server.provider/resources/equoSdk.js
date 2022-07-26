@@ -19,20 +19,21 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
+/* global EquoCommService */
 
 window.equo = window.equo || {};
 
 (function (equo) {
-  equo.openBrowser = function (browserParams) {
-    equo.sendToCommServer('openBrowser', browserParams)
+  equo.createWindow = function (browserParams) {
+    EquoCommService.send('createWindow', browserParams)
   }
 
   equo.updateBrowser = function (browserParams) {
-    equo.sendToCommServer('updateBrowser', browserParams)
+    EquoCommService.send('updateBrowser', browserParams)
   }
 
   equo.addMenu = function (menuModel) {
-    equo.sendToCommServer('_setMenu', menuModel)
+    EquoCommService.send('_setMenu', menuModel)
   }
 
   equo.addShortcut = function (shortcut, callback) {
@@ -41,7 +42,7 @@ window.equo = window.equo || {};
       event: `_exec_shotcut_${shortcut}`
     }
     equo.on(payload.event, callback)
-    equo.sendToCommServer('_addShortcut', payload)
+    EquoCommService.send('_addShortcut', payload)
   }
 
   equo.addShortcutToEvent = function (shortcut, event) {
@@ -49,7 +50,7 @@ window.equo = window.equo || {};
       shortcut,
       event
     }
-    equo.sendToCommServer('_addShortcut', payload)
+    EquoCommService.send('_addShortcut', payload)
   }
 
   // 'event' is declared but its value is never read.
@@ -57,6 +58,6 @@ window.equo = window.equo || {};
     const payload = {
       shortcut
     }
-    equo.sendToCommServer('_removeShortcut', payload)
+    EquoCommService.send('_removeShortcut', payload)
   }
 })(window.equo)

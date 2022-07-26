@@ -239,7 +239,7 @@ public class EquoApplicationBuilder {
 
   private void addAppLevelCommHandlers() {
     IEclipseContext context = getmApplication().getContext();
-    commService.on("openBrowser",
+    commService.on("createWindow",
         new ParameterizedCommandRunnable(IConstants.EQUO_COMM_OPEN_BROWSER, context));
 
     commService.on("updateBrowser",
