@@ -80,7 +80,6 @@ Bundle-ActivationPolicy:
 	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
 	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	org.yaml.snakeyaml;version='[1.14.0,1.14.1)',\
-	com.equo.testing.common;version='[2.0.4,2.0.5)',\
 	org.eclipse.compare.core;version='[3.6.800,3.6.801)',\
 	org.eclipse.core.commands;version='[3.9.700,3.9.701)',\
 	org.eclipse.core.contenttype;version='[3.7.600,3.7.601)',\
@@ -151,7 +150,6 @@ Bundle-ActivationPolicy:
 	org.eclipse.reddeer.uiforms;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench.core;version='[2.9.0,2.9.1)',\
-	org.eclipse.swt;version='[3.113.0,3.113.1)',\
 	org.eclipse.swt.chromium;version='[76.0.10,76.0.11)',\
 	org.eclipse.text;version='[3.10.100,3.10.101)',\
 	org.eclipse.ui;version='[3.116.0,3.116.1)',\
@@ -165,9 +163,11 @@ Bundle-ActivationPolicy:
 	org.eclipse.ui.workbench;version='[3.118.0,3.118.1)',\
 	org.eclipse.ui.workbench.texteditor;version='[3.14.100,3.14.101)',\
 	org.jsoup;version='[1.8.3,1.8.4)',\
+	com.equo.contribution.provider;version=snapshot,\
 	com.equo.comm.api;version=latest,\
 	com.equo.comm.ws.provider;version=latest,\
-	com.equo.contribution.provider;version=snapshot
+	com.equo.testing.common;version='[2.1.0,2.1.1)',\
+	org.eclipse.swt;version='[3.114.0,3.114.1)'
 
 Private-Package: \
     com.equo.application.model.tests

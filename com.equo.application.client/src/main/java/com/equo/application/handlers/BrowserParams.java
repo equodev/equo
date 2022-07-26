@@ -30,12 +30,13 @@ public class BrowserParams {
   private String url;
   private String name;
   private String position;
+  private int style;
 
   public BrowserParams() {
+
   }
 
   public BrowserParams(String url) {
-    this();
     this.url = url;
   }
 
@@ -44,9 +45,18 @@ public class BrowserParams {
     this.name = name;
   }
 
-  public BrowserParams(String url, String name, String position) {
-    this(url, name);
+  /**
+   * BrowserParams constructor.
+   * @param: url      url to open.
+   * @param: name     browser name.
+   * @param: position position to open browser.
+   * @param: style    to set frameless or normal window.
+   */
+  public BrowserParams(String url, String name, String position, int style) {
+    this.url = url;
+    this.name = name;
     this.position = position;
+    this.style = style;
   }
 
   public void setUrl(String url) {
@@ -61,6 +71,10 @@ public class BrowserParams {
     this.position = position;
   }
 
+  public void setStyle(int style) {
+    this.style = style;
+  }
+
   public String getUrl() {
     return url;
   }
@@ -71,6 +85,10 @@ public class BrowserParams {
 
   public String getPosition() {
     return position;
+  }
+
+  public int getStyle() {
+    return style;
   }
 
 }
