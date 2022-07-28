@@ -19,6 +19,7 @@
  ** be met: https://www.gnu.org/licenses/gpl-3.0.html.
  **
  ****************************************************************************/
+/* global EquoCommService */
 
 window.equo = window.equo || {};
 
@@ -38,7 +39,7 @@ window.equo = window.equo || {};
     const payload = {}
     payload.message = message
     payload.type = type
-    equo.sendToCommServer('loggingEvent', payload)
+    EquoCommService.send('loggingEvent', payload)
   }
 
   const returnResponse = function (callback) {
