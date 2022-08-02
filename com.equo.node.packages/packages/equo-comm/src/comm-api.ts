@@ -55,9 +55,9 @@ export class EquoComm {
   private readonly ws?: WebSocket
 
   /**
-       * @name EquoComm
-       * @class
-       */
+   * @name EquoComm
+   * @class
+   */
   constructor(port?: number) {
     this.ws = this.getWebSocketIfExists(port)
     if (typeof this.ws === 'undefined') {
@@ -95,7 +95,7 @@ export class EquoComm {
   }
 
   private receiveMessage(event: any): void {
-    var message: SDKMessage = this.processMessage(event)
+    const message: SDKMessage = this.processMessage(event)
     if (message) {
       var actionId: string = message.actionId
       if (this.userEventCallbacks.has(actionId)) {
@@ -107,8 +107,15 @@ export class EquoComm {
         if (typeof message.error === 'undefined') {
           if (typeof message.callbackId !== 'undefined') {
             try {
-              var response: any = callback?.onSuccess(message.payload)
-              this.sendToJava({ actionId: message.callbackId, payload: response })
+              Promise
+                .resolve(callback?.onSuccess(message.payload))
+                .then(response => {
+                  this.sendToJava({ actionId: message.callbackId as string, payload: response })
+                })
+                .catch(error => {
+                  // Should probably be unreachable, promises in callbacks shouldn't be rejected?
+                  console.log(error)
+                })
             } catch (error) {
               if (typeof error === 'string') {
                 this.sendToJava({ actionId: message.callbackId, error: error })
