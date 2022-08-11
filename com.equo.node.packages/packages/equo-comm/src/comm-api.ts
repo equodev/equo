@@ -103,32 +103,42 @@ export class EquoComm {
         if (callback?.args?.once) {
           this.userEventCallbacks.delete(actionId)
         }
-        // Success and error callbacks are not implemented yet
         if (typeof message.error === 'undefined') {
           if (typeof message.callbackId !== 'undefined') {
-            try {
-              Promise
-                .resolve(callback?.onSuccess(message.payload))
-                .then(response => {
-                  this.sendToJava({ actionId: message.callbackId as string, payload: response })
-                })
-                .catch(error => {
-                  // Should probably be unreachable, promises in callbacks shouldn't be rejected?
-                  console.log(error)
-                })
-            } catch (error) {
-              if (typeof error === 'string') {
-                this.sendToJava({ actionId: message.callbackId, error: error })
-              } else if (typeof error !== 'undefined') {
-                const ERROR_AS_STRING = JSON.stringify(error)
-                this.sendToJava({ actionId: message.callbackId, error: ERROR_AS_STRING })
-              }
-            }
+            Promise
+              .resolve((async () => {
+                return callback?.onSuccess(message.payload)
+              })())
+              .then(response => {
+                this.sendToJava({ actionId: message.callbackId as string, payload: response })
+              })
+              .catch(error => {
+                if (typeof error === 'string') {
+                  this.sendToJava({ actionId: message.callbackId as string, error: error })
+                } else if (typeof error !== 'undefined') {
+                  const ERROR_AS_STRING = JSON.stringify(error)
+                  this.sendToJava({ actionId: message.callbackId as string, error: ERROR_AS_STRING })
+                }
+              })
           } else {
-            callback?.onSuccess(message.payload)
+            Promise
+              .resolve((async () => {
+                return callback?.onSuccess(message.payload)
+              })())
+              .catch(error => {
+                // Log it
+                console.error(error)
+              })
           }
         } else if (typeof message.error !== 'undefined' && callback?.onError) {
-          callback.onError(message.error as SDKCommError)
+          Promise
+            .resolve((async () => {
+              return (callback.onError as OnErrorCallback)(message.error as SDKCommError)
+            })())
+            .catch(error => {
+              // Log it
+              console.error(error)
+            })
         }
       }
     }
@@ -172,24 +182,27 @@ export class EquoComm {
       })
     } else if (typeof this.ws !== 'undefined') {
       // Wait until the state of the comm is not ready and send the message when it is...
-      this.waitForCommConnection(this, () => {
+      this.waitForCommConnection(() => {
         this.ws?.send(event)
       })
     }
   }
 
   // Make the function wait until the connection is made...
-  private waitForCommConnection(comm: EquoComm, callback: Function): void {
+  private waitForCommConnection(callback: Function): void {
     setTimeout(
       () => {
         if (typeof this.ws !== 'undefined') {
           if (this.ws.readyState === WebSocket.OPEN) {
-            if (callback != null) {
-              callback()
-            }
+            callback()
           } else {
-            comm.waitForCommConnection(comm, callback)
+            this.waitForCommConnection(callback)
           }
+          // @ts-expect-error
+        } else if (typeof window.equoSend === 'undefined') {
+          this.waitForCommConnection(callback)
+        } else {
+          callback()
         }
       }, 5) // wait 5 milisecond for the connection...
   };
@@ -214,10 +227,10 @@ export class EquoComm {
 
   /**
      * Listens for an event with the given name.
-     * @param {string} userEventId
+     * @param {string} userEventActionId
      * @param {OnSuccessCallback<any>} onSuccessCallback
      * @param {OnErrorCallback} onErrorCallback - Optional
-     * @param {CallbackArgs} callbackArgs - Optional
+     * @param {CallbackArgs} args - Optional
      * @returns {void}
      */
   public on(userEventActionId: string, onSuccessCallback: OnSuccessCallback<any>, onErrorCallback?: OnErrorCallback, args?: CallbackArgs): void {
@@ -225,6 +238,11 @@ export class EquoComm {
     this.userEventCallbacks.set(userEventActionId, callback)
   };
 
+  /**
+   * Removes an event with the given name
+   * @param {string} userEventActionId
+   * @returns {void}
+   */
   public remove(userEventActionId: string): void {
     this.userEventCallbacks.delete(userEventActionId)
   }
