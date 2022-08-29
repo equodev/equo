@@ -113,11 +113,16 @@ export class EquoComm {
                 this.sendToJava({ actionId: message.callbackId as string, payload: response })
               })
               .catch(error => {
+                const myError = {
+                  code: -1,
+                  message: ''
+                }
                 if (typeof error === 'string') {
-                  this.sendToJava({ actionId: message.callbackId as string, error: error })
+                  myError.message = error
+                  this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
                 } else if (typeof error !== 'undefined') {
-                  const ERROR_AS_STRING = JSON.stringify(error)
-                  this.sendToJava({ actionId: message.callbackId as string, error: ERROR_AS_STRING })
+                  myError.message = JSON.stringify(error)
+                  this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
                 }
               })
           } else {
@@ -139,6 +144,15 @@ export class EquoComm {
               // Log it
               console.error(error)
             })
+        }
+      } else {
+        if (typeof message.callbackId !== 'undefined') {
+          const ERROR_CALLBACK_DOES_NOT_EXISTS = 'An event handler does not exist for the user event \'' + message.actionId + '\''
+          const myError = {
+            code: 255,
+            message: ERROR_CALLBACK_DOES_NOT_EXISTS
+          }
+          this.sendToJava({ actionId: message.callbackId, payload: myError, error: '1' })
         }
       }
     }
