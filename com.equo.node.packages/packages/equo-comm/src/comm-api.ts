@@ -121,6 +121,9 @@ export class EquoComm {
                   myError.message = error
                   this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
                 } else if (typeof error !== 'undefined') {
+                  if (typeof error.code === 'number') {
+                    myError.code = error.code
+                  }
                   myError.message = JSON.stringify(error)
                   this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
                 }
