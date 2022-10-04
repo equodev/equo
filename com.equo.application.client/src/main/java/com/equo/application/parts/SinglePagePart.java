@@ -40,7 +40,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.api.internal.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 
 /**
@@ -78,7 +78,7 @@ public class SinglePagePart {
         equoWsPort = websocket.get().getPort();
       }
     } catch (Exception e) {
-      // Could happen if the app is run without our open source IEventHandler implementation.
+      // Could happen if the app is run without our open source IReceiveEventHandler implementation.
       // Log exception
     }
     if (equoAppUrl != null) {
@@ -115,10 +115,10 @@ public class SinglePagePart {
     if (ctxBundle != null) {
       BundleContext ctx = ctxBundle.getBundleContext();
       if (ctx != null) {
-        ServiceReference<IEventHandler> serviceReference =
-            (ServiceReference<IEventHandler>) ctx.getServiceReference(IEventHandler.class);
+        ServiceReference<IReceiveEventHandler> serviceReference = (ServiceReference<
+            IReceiveEventHandler>) ctx.getServiceReference(IReceiveEventHandler.class);
         if (serviceReference != null) {
-          IEventHandler eventHandler = ctx.getService(serviceReference);
+          IReceiveEventHandler eventHandler = ctx.getService(serviceReference);
           if (eventHandler instanceof EquoWebSocketServiceImpl) {
             return Optional.of((EquoWebSocketServiceImpl) eventHandler);
           }
