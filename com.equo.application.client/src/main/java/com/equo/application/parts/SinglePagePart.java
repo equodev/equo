@@ -115,8 +115,8 @@ public class SinglePagePart {
     if (ctxBundle != null) {
       BundleContext ctx = ctxBundle.getBundleContext();
       if (ctx != null) {
-        ServiceReference<IReceiveEventHandler> serviceReference =
-            (ServiceReference<IReceiveEventHandler>) ctx.getServiceReference(IReceiveEventHandler.class);
+        ServiceReference<IReceiveEventHandler> serviceReference = (ServiceReference<
+            IReceiveEventHandler>) ctx.getServiceReference(IReceiveEventHandler.class);
         if (serviceReference != null) {
           IReceiveEventHandler eventHandler = ctx.getService(serviceReference);
           if (eventHandler instanceof EquoWebSocketServiceImpl) {
