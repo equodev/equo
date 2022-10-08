@@ -277,11 +277,12 @@ function create(): EquoService<EquoComm> {
 const EquoCommService = EquoService.get<EquoComm>(ID, create)
 
 window.addEventListener('load', () => {
+  const id: string = UUID.getUuid()
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  EquoCommService.send('__equo_init')
+  EquoCommService.send('__equo_init', id)
   window.addEventListener('beforeunload', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    EquoCommService.send('__equo_uninit')
+    EquoCommService.send('__equo_uninit', id)
   })
 })
 
