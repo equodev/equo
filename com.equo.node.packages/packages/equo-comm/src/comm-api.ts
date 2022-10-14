@@ -141,7 +141,7 @@ export class EquoComm {
         } else if (typeof message.error !== 'undefined' && callback?.onError) {
           Promise
             .resolve((async () => {
-              return (callback.onError as OnErrorCallback)(message.error as SDKCommError)
+              (callback.onError as OnErrorCallback)(message.error as SDKCommError)
             })())
             .catch(error => {
               // Log it
@@ -296,10 +296,10 @@ const EquoCommService = EquoService.get<EquoComm>(ID, create)
 window.addEventListener('load', () => {
   const id: string = UUID.getUuid()
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  EquoCommService.send('__equo_init', id)
+  EquoCommService.send('__equo_init', id).catch(() => {})
   window.addEventListener('beforeunload', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    EquoCommService.send('__equo_uninit', id)
+    EquoCommService.send('__equo_uninit', id).catch(() => {})
   })
 })
 
