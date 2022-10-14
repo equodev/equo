@@ -1,29 +1,27 @@
 plugins {
-    checkstyle
-    id("com.moowork.node") version "1.3.1"
+  checkstyle
+  id("com.github.node-gradle.node") version "3.4.0"
 }
 
 allprojects {
-    repositories { mavenCentral() }
+  apply(plugin = "checkstyle")
 
-    apply(plugin = "checkstyle")
+  checkstyle {
+    toolVersion = "8.43"
+  }
 
-    checkstyle {
-      toolVersion = "8.43"
-    }
-
-    tasks.withType<org.gradle.language.jvm.tasks.ProcessResources> { 
-      dependsOn(":yarn_install")
-    }
+  tasks.withType<org.gradle.language.jvm.tasks.ProcessResources> {
+    dependsOn(":yarn_install")
+  }
 }
 
 val node_version: String by project
 val yarn_version: String by project
 
 node {
-  download = true
-  version = node_version
-  yarnVersion = yarn_version
+  download.set(true)
+  version.set(node_version)
+  yarnVersion.set(yarn_version)
 }
 
 tasks.named("yarn_install") {

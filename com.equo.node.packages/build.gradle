@@ -1,4 +1,6 @@
-apply plugin: "com.moowork.node"
+plugins {
+  id "com.github.node-gradle.node"
+}
 
 task yarnBuild(type: YarnTask) {
   dependsOn yarn_install
@@ -44,5 +46,7 @@ node {
 }
 
 processResources {
-  from yarnBuild
+  from yarnBuild {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+  }
 }
