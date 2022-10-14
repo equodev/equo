@@ -113,19 +113,19 @@ export class EquoComm {
                 this.sendToJava({ actionId: message.callbackId as string, payload: response })
               })
               .catch(error => {
-                const myError = {
+                const userError = {
                   code: -1,
                   message: ''
                 }
                 if (typeof error === 'string') {
-                  myError.message = error
-                  this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
+                  userError.message = error
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
                 } else if (typeof error !== 'undefined') {
                   if (typeof error.code === 'number') {
-                    myError.code = error.code
+                    userError.code = error.code
                   }
-                  myError.message = JSON.stringify(error)
-                  this.sendToJava({ actionId: message.callbackId as string, payload: myError, error: '1' })
+                  userError.message = JSON.stringify(error)
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
                 }
               })
           } else {
@@ -150,12 +150,12 @@ export class EquoComm {
         }
       } else {
         if (typeof message.callbackId !== 'undefined') {
-          const ERROR_CALLBACK_DOES_NOT_EXISTS = 'An event handler does not exist for the user event \'' + message.actionId + '\''
-          const myError = {
+          const ERROR_CALLBACK_DOES_NOT_EXIST = 'An event handler does not exist for the user event \'' + message.actionId + '\''
+          const error = {
             code: 255,
-            message: ERROR_CALLBACK_DOES_NOT_EXISTS
+            message: ERROR_CALLBACK_DOES_NOT_EXIST
           }
-          this.sendToJava({ actionId: message.callbackId, payload: myError, error: '1' })
+          this.sendToJava({ actionId: message.callbackId, payload: error, error: '1' })
         }
       }
     }
