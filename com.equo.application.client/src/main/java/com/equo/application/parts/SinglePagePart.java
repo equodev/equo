@@ -40,7 +40,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.equo.comm.api.internal.IReceiveEventHandler;
+import com.equo.comm.common.handler.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 
 /**

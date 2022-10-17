@@ -49,7 +49,7 @@ import com.equo.application.model.EquoMenuItem;
 import com.equo.application.model.EquoMenuItemSeparator;
 import com.equo.application.model.Menu;
 import com.equo.comm.api.ICommService;
-import com.equo.comm.api.internal.IReceiveEventHandler;
+import com.equo.comm.common.handler.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 import com.equo.logging.client.api.Logger;
 import com.equo.node.packages.tests.common.ChromiumSetup;
