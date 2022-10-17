@@ -113,11 +113,19 @@ export class EquoComm {
                 this.sendToJava({ actionId: message.callbackId as string, payload: response })
               })
               .catch(error => {
+                const userError = {
+                  code: -1,
+                  message: ''
+                }
                 if (typeof error === 'string') {
-                  this.sendToJava({ actionId: message.callbackId as string, error: error })
+                  userError.message = error
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
                 } else if (typeof error !== 'undefined') {
-                  const ERROR_AS_STRING = JSON.stringify(error)
-                  this.sendToJava({ actionId: message.callbackId as string, error: ERROR_AS_STRING })
+                  if (typeof error.code === 'number') {
+                    userError.code = error.code
+                  }
+                  userError.message = JSON.stringify(error)
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
                 }
               })
           } else {
@@ -133,12 +141,21 @@ export class EquoComm {
         } else if (typeof message.error !== 'undefined' && callback?.onError) {
           Promise
             .resolve((async () => {
-              return (callback.onError as OnErrorCallback)(message.error as SDKCommError)
+              (callback.onError as OnErrorCallback)(message.error as SDKCommError)
             })())
             .catch(error => {
               // Log it
               console.error(error)
             })
+        }
+      } else {
+        if (typeof message.callbackId !== 'undefined') {
+          const ERROR_CALLBACK_DOES_NOT_EXIST = 'An event handler does not exist for the user event \'' + message.actionId + '\''
+          const error = {
+            code: 255,
+            message: ERROR_CALLBACK_DOES_NOT_EXIST
+          }
+          this.sendToJava({ actionId: message.callbackId, payload: error, error: '1' })
         }
       }
     }
@@ -279,10 +296,10 @@ const EquoCommService = EquoService.get<EquoComm>(ID, create)
 window.addEventListener('load', () => {
   const id: string = UUID.getUuid()
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  EquoCommService.send('__equo_init', id)
+  EquoCommService.send('__equo_init', id).catch(() => {})
   window.addEventListener('beforeunload', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    EquoCommService.send('__equo_uninit', id)
+    EquoCommService.send('__equo_uninit', id).catch(() => {})
   })
 })
 
