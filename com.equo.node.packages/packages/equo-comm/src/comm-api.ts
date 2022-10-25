@@ -26,6 +26,9 @@ import { UUID } from './util'
 export type OnSuccessCallback<T> = (response: T) => any
 export type OnErrorCallback = (error: SDKCommError) => any
 export type Payload = any
+export interface SendArgs {
+  sequential: boolean
+};
 export interface CallbackArgs {
   once: boolean
 };
@@ -173,7 +176,7 @@ export class EquoComm {
     }
   }
 
-  private sendToJava(userEvent: UserEvent, callback?: UserEventCallback): void {
+  private sendToJava(userEvent: UserEvent, callback?: UserEventCallback, args?: SendArgs): void {
     const event: string = JSON.stringify({
       actionId: userEvent.actionId,
       payload: userEvent.payload,
@@ -182,9 +185,10 @@ export class EquoComm {
     })
     // @ts-expect-error
     if (typeof window.equoSend !== 'undefined') {
+      const request: string = typeof args?.sequential !== 'undefined' ? ('&-' + event) : event
       // @ts-expect-error
       window.equoSend({
-        request: event,
+        request: request,
         onSuccess: (response: any) => {
           let jsonResponse
           try {
@@ -237,7 +241,7 @@ export class EquoComm {
      * @param {Payload} [payload] - Optional
      * @returns {Promise<T | any>}
      */
-  public async send<T>(actionId: string, payload?: Payload): Promise<T | any> {
+  public async send<T>(actionId: string, payload?: Payload, args?: SendArgs): Promise<T | any> {
     return await new Promise<T | any>((resolve, reject) => {
       const userEvent: UserEvent = { actionId: actionId, payload: payload }
       const callback: UserEventCallback = { onSuccess: resolve, onError: reject, args: { once: true } }
@@ -245,7 +249,7 @@ export class EquoComm {
         callback.id = UUID.getUuid()
         this.on(callback.id, resolve, reject, callback.args)
       }
-      this.sendToJava(userEvent, callback)
+      this.sendToJava(userEvent, callback, args)
     })
   };
 
@@ -296,10 +300,10 @@ const EquoCommService = EquoService.get<EquoComm>(ID, create)
 window.addEventListener('load', () => {
   const id: string = UUID.getUuid()
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  EquoCommService.send('__equo_init', id).catch(() => {})
+  EquoCommService.send('__equo_init', id, { sequential: true }).catch(() => {})
   window.addEventListener('beforeunload', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    EquoCommService.send('__equo_uninit', id).catch(() => {})
+    EquoCommService.send('__equo_uninit', id, { sequential: true }).catch(() => {})
   })
 })
 
