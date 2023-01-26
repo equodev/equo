@@ -31,6 +31,7 @@ Bundle-ActivationPolicy:
     osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.1.14))',\
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.testing.common.internal)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.debug.api)',\
     osgi.identity;filter:='(osgi.identity=com.equo.builders.tests)'
 
 -runbundles: \
@@ -174,5 +175,6 @@ Bundle-ActivationPolicy:
 	com.equo.contribution.provider;version=snapshot,\
 	com.equo.testing.common.internal;version=snapshot,\
 	com.equo.comm.api;version=latest,\
+	com.equo.debug.api;version=latest,\
 	com.equo.comm.ws.provider;version=latest,\
 	com.equo.testing.common;version='[2.1.0,2.1.1)'

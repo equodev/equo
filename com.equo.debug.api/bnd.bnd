@@ -1,0 +1,11 @@
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: \
+	com.equo.debug.api,\
+	com.equo.debug.devtools.model
+-buildpath: \
+	osgi.cmpn,\
+	org.eclipse.osgi,\
+	org.eclipse.osgi.services,\
+	com.google.gson,\
+	com.equo.logging.client.api
+-privatepackage: com.equo.debug.devtools
