@@ -1,73 +1,63 @@
 Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
--include: https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundle.bnd,\
-    https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundlecoverage.bnd,\
-    ${build}/equochromium.bnd
-
--includeresource: \
-    resources/
-
--runproperties.logging: logger.bundle=com.equo.node.packages.tests
-
+-include: https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundle.minimal.bnd,\
+	https://dl.equo.dev/testing-commons/${testing_commons_version}/testbundlecoverage.bnd,\
+	${build}/equochromium.bnd
+     
+-privatepackage: com.equo.debug.devtools.tests
 -buildpath: \
-    com.google.gson;version='[2.8.2,2.8.3)',\
-    com.equo.aer.api;version=latest,\
-    com.equo.analytics.client.api;version=latest,\
-    com.equo.analytics.internal.api;version=latest,\
-    com.equo.application.client;version=latest,\
-    com.equo.contribution.api;version=latest,\
-    com.equo.logging.client.api;version=latest,\
-    com.equo.server.api;version=latest,\
-    com.equo.testing.common;version=latest,\
-    com.equo.comm.api;version=latest,\
-    com.equo.comm.ws.provider;version=latest,\
-    org.eclipse.e4.ui.model.workbench,\
-    org.eclipse.e4.ui.workbench.renderers.swt,\
-    org.eclipse.e4.ui.workbench,\
-    org.eclipse.e4.ui.workbench.swt,\
-    org.eclipse.emf.common;version='2.18.0',\
-    org.eclipse.emf.ecore;version='2.21.0',\
-    org.eclipse.emf.ecore.xmi,\
-    org.eclipse.swt.chromium,\
-    Java-WebSocket,\
-    org.mockito.mockito-all,\
-    org.awaitility;version='[4.0.2,4.0.3)',\
-    org.hamcrest
+	osgi.cmpn,\
+	org.eclipse.osgi,\
+	org.eclipse.e4.core.di,\
+	org.eclipse.e4.core.contexts,\
+	javax.inject,\
+	com.equo.debug.api;version=latest,\
+	org.mockito.mockito-all,\
+	com.google.gson,\
+	com.equo.testing.common,\
+	org.eclipse.swt.chromium,\
+	com.equo.comm.ws.provider;version=latest,\
+	org.awaitility;version='[4.0.2,4.0.3)',\
+	com.equo.logging.client.api
+-runproperties.core: \
+	equinox.use.ds=true,\
+	ds.delayed.keepInstances=true,\
+	equinox.scr.dontDisposeInstances=true,\
+	osgi.compatibility.bootdelegation=true
+-runproperties.console: \
+	osgi.console=
 
--privatepackage: \
-    com.equo.node.packages.tests,\
-    com.equo.node.packages.tests.common,\
-    com.equo.node.packages.tests.handlers,\
-    com.equo.node.packages.tests.mocks,\
-    com.equo.node.packages.tests.util
-
+-runbundles.console: \
+	org.eclipse.equinox.console,\
+	org.apache.felix.gogo.command,\
+	org.apache.felix.gogo.runtime,\
+	org.apache.felix.gogo.shell
 -runrequires: \
-    osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.server.provider)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.application.client)',\
-    osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.1.14))',\
-    osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.testing.common.internal)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.logging.client.core.provider)',\
-    osgi.identity;filter:='(osgi.identity=ch.qos.logback.slf4j)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.debug.api)',\
-    osgi.identity;filter:='(osgi.identity=com.equo.node.packages.tests)'
-
+	osgi.identity;filter:='(osgi.identity=com.equo.debug.tests)',\
+	osgi.identity;filter:='(osgi.identity=com.equo.debug.api)',\
+	osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
+	osgi.identity;filter:='(osgi.identity=com.equo.comm.common.util)',\
+	osgi.identity;filter:='(osgi.identity=com.equo.testing.common.internal)'
+-runee: JavaSE-1.8
+-runfw: org.eclipse.osgi;version='3.15.200.v20200214-1600'
 -runbundles: \
 	Java-WebSocket;version='[1.5.1,1.5.2)',\
 	assertj-core;version='[3.16.0,3.16.1)',\
 	ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.core;version='[1.1.2,1.1.3)',\
-	ch.qos.logback.slf4j;version='[1.1.2,1.1.3)',\
 	com.equo.aer.api;version=snapshot,\
 	com.equo.aer.internal.api;version=snapshot,\
 	com.equo.analytics.internal.api;version=snapshot,\
+	com.equo.application.client;version=snapshot,\
 	com.equo.contribution.api;version=snapshot,\
+	com.equo.debug.api;version=snapshot,\
+	com.equo.debug.tests;version=snapshot,\
 	com.equo.logging.client.api;version=snapshot,\
-	com.equo.node.packages.tests;version=snapshot,\
 	com.equo.server.api;version=snapshot,\
 	com.equo.server.offline.api;version=snapshot,\
 	com.equo.server.provider;version=snapshot,\
+	com.equo.testing.common;version='[2.1.0,2.1.1)',\
+	com.equo.testing.common.internal;version=snapshot,\
 	com.fasterxml.jackson.core.jackson-annotations;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-core;version='[2.9.9,2.9.10)',\
 	com.fasterxml.jackson.core.jackson-databind;version='[2.9.93,2.9.94)',\
@@ -166,6 +156,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.eclipse.reddeer.uiforms;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench;version='[2.9.0,2.9.1)',\
 	org.eclipse.reddeer.workbench.core;version='[2.9.0,2.9.1)',\
+	org.eclipse.swt;version='[3.114.0,3.114.1)',\
 	org.eclipse.swt.chromium;version='[76.0.10,76.0.11)',\
 	org.eclipse.text;version='[3.10.100,3.10.101)',\
 	org.eclipse.ui;version='[3.116.0,3.116.1)',\
@@ -192,12 +183,5 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.w3c.dom.svg;version='[1.1.0,1.1.1)',\
 	org.xbill.dns;version='[2.0.8,2.0.9)',\
 	org.yaml.snakeyaml;version='[1.14.0,1.14.1)',\
-	com.equo.contribution.provider;version=snapshot,\
-	com.equo.testing.common.internal;version=snapshot,\
-	org.eclipse.swt;version='[3.114.0,3.114.1)',\
-	com.equo.logging.client.core.provider;version=snapshot,\
-	com.equo.application.client;version=snapshot,\
 	com.equo.comm.api;version=latest,\
-	com.equo.comm.ws.provider;version=latest,\
-	com.equo.debug.api;version=latest,\
-	com.equo.testing.common;version='[2.1.0,2.1.1)'
+	com.equo.comm.ws.provider;version=latest

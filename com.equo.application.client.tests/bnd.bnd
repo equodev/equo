@@ -9,6 +9,7 @@ Bundle-ActivationPolicy:
 	com.equo.testing.common.internal;version=latest,\
 	com.equo.application.client;version=latest,\
 	com.equo.comm.api;version=latest,\
+	com.equo.debug.api;version=latest,\
 	org.awaitility;version='[4.0.2,4.0.3)',\
 	org.eclipse.e4.ui.workbench,\
 	org.eclipse.e4.ui.model.workbench,\
@@ -19,6 +20,7 @@ Bundle-ActivationPolicy:
     osgi.identity;filter:='(osgi.identity=com.equo.application.client.tests)',\
     osgi.identity;filter:='(osgi.identity=com.equo.comm.ws.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.application.client)',\
+    osgi.identity;filter:='(osgi.identity=com.equo.debug.api)',\
     osgi.identity;filter:='(osgi.identity=com.equo.server.provider)',\
     osgi.identity;filter:='(osgi.identity=com.equo.contribution.provider)',\
     osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.1.14))'
@@ -35,6 +37,7 @@ Bundle-ActivationPolicy:
 	com.equo.analytics.internal.api;version=snapshot,\
 	com.equo.application.client;version=snapshot,\
 	com.equo.application.client.tests;version=snapshot,\
+	com.equo.debug.api;version=snapshot,\
 	com.equo.contribution.api;version=snapshot,\
 	com.equo.logging.client.api;version=snapshot,\
 	com.equo.server.api;version=snapshot,\

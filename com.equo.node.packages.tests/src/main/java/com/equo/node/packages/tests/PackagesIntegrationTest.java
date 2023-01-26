@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
 
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -133,7 +134,8 @@ public class PackagesIntegrationTest {
 
   private void forceBrowserToStart() {
     Listener[] listeners = chromium.getListeners(SWT.Paint);
-    assertThat(listeners.length > 0);
+    await().timeout(Duration.ofSeconds(5))
+        .untilAsserted(() -> assertThat(listeners).hasSizeGreaterThan(0));
     Event event = new Event();
     event.type = SWT.Paint;
     event.display = display;
