@@ -133,6 +133,8 @@ public class DevtoolsTest {
     event.type = SWT.Paint;
     event.display = display;
     event.widget = chromium;
-    listeners[0].handleEvent(event);
+    for (Listener listener : listeners) {
+      listener.handleEvent(event);
+    }
   }
 }
