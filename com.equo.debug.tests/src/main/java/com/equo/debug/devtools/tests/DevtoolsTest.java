@@ -103,13 +103,11 @@ public class DevtoolsTest {
         @Override
         public void paintControl(PaintEvent paintEvent) {
           if (!needStopPaintListener.get()) {
-            new Thread(() -> {
-              if (chromium == paintEvent.widget) {
-                needStopPaintListener.set(true);
-                mockDevtool.startDebug(debugPort);
-                started.set(true);
-              }
-            }).start();
+            if (chromium == paintEvent.widget) {
+              needStopPaintListener.set(true);
+              mockDevtool.startDebug(debugPort);
+              started.set(true);
+            }
           }
           if (paintListener != null) {
             chromium.removePaintListener(paintListener);
