@@ -56,10 +56,8 @@ public class SinglePagePart {
   private MPart thisPart;
 
   private Browser browser;
-
-  private PaintListener paintListener;
-
-  static AtomicBoolean needStopPaintListener;
+  
+  private static boolean done;
 
   private static final String DEBUG_PROPERTY = "org.eclipse.swt.chromium.remote-debugging-port";
 
@@ -119,25 +117,23 @@ public class SinglePagePart {
 
     // init debug mode if it is necessary
     if (!System.getProperty(DEBUG_PROPERTY).isEmpty()) {
-      paintListener = new PaintListener() {
+      done = false;
+      PaintListener paintListener = new PaintListener() {
         @Override
         public void paintControl(PaintEvent paintEvent) {
-          if (!needStopPaintListener.get()) {
-            Thread thread = new Thread(() -> {
-              if (browser == paintEvent.widget) {
-                needStopPaintListener.set(true);
+          if (!done) {
+            if (browser == paintEvent.widget) {
+              done = true;
+              Thread thread = new Thread(() -> {
                 devtool.startDebug(System.getProperty(DEBUG_PROPERTY));
-              }
-            });
-            thread.setDaemon(true);
-            thread.start();
-          }
-          if (paintListener != null) {
-            browser.removePaintListener(paintListener);
+              });
+              thread.setDaemon(true);
+              thread.start();
+              browser.removePaintListener(this);
+            }
           }
         }
       };
-      needStopPaintListener = new AtomicBoolean(false);
       browser.addPaintListener(paintListener);
     }
   }

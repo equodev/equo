@@ -103,13 +103,11 @@ public class DevtoolsTest {
         @Override
         public void paintControl(PaintEvent paintEvent) {
           if (!needStopPaintListener.get()) {
-            new Thread(() -> {
-              if (chromium == paintEvent.widget) {
-                needStopPaintListener.set(true);
-                mockDevtool.startDebug(debugPort);
-                started.set(true);
-              }
-            }).start();
+            if (chromium == paintEvent.widget) {
+              needStopPaintListener.set(true);
+              mockDevtool.startDebug(debugPort);
+              started.set(true);
+            }
           }
           if (paintListener != null) {
             chromium.removePaintListener(paintListener);
@@ -133,6 +131,8 @@ public class DevtoolsTest {
     event.type = SWT.Paint;
     event.display = display;
     event.widget = chromium;
-    listeners[0].handleEvent(event);
+    for (Listener listener : listeners) {
+      listener.handleEvent(event);
+    }
   }
 }
