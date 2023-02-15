@@ -114,10 +114,10 @@ public class DevtoolsTest {
           }
         }
       };
+      
+      chromium.addPaintListener(paintListener);
 
       forceBrowserToStart();
-
-      chromium.addPaintListener(paintListener);
     });
     await().untilTrue(started);
     verify(mockDevtool).startDebug("8888");
