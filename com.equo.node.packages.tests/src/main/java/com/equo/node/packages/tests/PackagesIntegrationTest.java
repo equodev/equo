@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.awaitility.Awaitility.await;
 
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -49,7 +50,7 @@ import com.equo.application.model.EquoMenuItem;
 import com.equo.application.model.EquoMenuItemSeparator;
 import com.equo.application.model.Menu;
 import com.equo.comm.api.ICommService;
-import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.common.handler.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 import com.equo.logging.client.api.Logger;
 import com.equo.node.packages.tests.common.ChromiumSetup;
@@ -76,7 +77,7 @@ public class PackagesIntegrationTest {
   protected ICommService commService;
 
   @Inject
-  protected IEventHandler eventHandler;
+  protected IReceiveEventHandler eventHandler;
 
   protected Browser chromium;
 
@@ -133,7 +134,8 @@ public class PackagesIntegrationTest {
 
   private void forceBrowserToStart() {
     Listener[] listeners = chromium.getListeners(SWT.Paint);
-    assertThat(listeners.length > 0);
+    await().timeout(Duration.ofSeconds(5))
+        .untilAsserted(() -> assertThat(listeners).hasSizeGreaterThan(0));
     Event event = new Event();
     event.type = SWT.Paint;
     event.display = display;

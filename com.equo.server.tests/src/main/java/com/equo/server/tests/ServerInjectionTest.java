@@ -46,7 +46,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.equo.comm.api.ICommService;
-import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.common.handler.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
 import com.equo.server.api.IEquoServer;
 import com.equo.testing.common.util.EquoRule;
@@ -62,7 +62,7 @@ public class ServerInjectionTest {
   protected ICommService commService;
 
   @Inject
-  protected IEventHandler eventHandler;
+  protected IReceiveEventHandler eventHandler;
 
   protected Browser chromium;
 

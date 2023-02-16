@@ -1,4 +1,4 @@
-Bundle-Version: 2.0.1.${tstamp}
+Bundle-Version: 2.0.2.${tstamp}
 Export-Package: \
     com.equo.application.api,\
     com.equo.application.model,\
@@ -63,7 +63,8 @@ Export-Package: \
     org.eclipse.emf.common;version='2.18.0',\
     osgi.cmpn,\
     org.slf4j.api;version='1.7.30',\
-    com.equo.logging.client.api;version=latest
+    com.equo.logging.client.api;version=latest,\
+    com.equo.debug.api;version=latest
 Private-Package: \
     com.equo.application.handlers,\
     com.equo.application.impl,\

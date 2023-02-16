@@ -26,6 +26,9 @@ import { UUID } from './util'
 export type OnSuccessCallback<T> = (response: T) => any
 export type OnErrorCallback = (error: SDKCommError) => any
 export type Payload = any
+export interface SendArgs {
+  sequential: boolean
+};
 export interface CallbackArgs {
   once: boolean
 };
@@ -55,9 +58,9 @@ export class EquoComm {
   private readonly ws?: WebSocket
 
   /**
-       * @name EquoComm
-       * @class
-       */
+   * @name EquoComm
+   * @class
+   */
   constructor(port?: number) {
     this.ws = this.getWebSocketIfExists(port)
     if (typeof this.ws === 'undefined') {
@@ -78,7 +81,7 @@ export class EquoComm {
 
     const HOST: string = '127.0.0.1'
 
-    var ws: WebSocket = new WebSocket(`ws://${HOST}:${port}`)
+    const ws: WebSocket = new WebSocket(`ws://${HOST}:${port}`)
 
     // Binds functions to the listeners for the comm.
     ws.onopen = (event: any): void => {
@@ -95,33 +98,67 @@ export class EquoComm {
   }
 
   private receiveMessage(event: any): void {
-    var message: SDKMessage = this.processMessage(event)
+    const message: SDKMessage = this.processMessage(event)
     if (message) {
-      var actionId: string = message.actionId
+      const actionId: string = message.actionId
       if (this.userEventCallbacks.has(actionId)) {
-        var callback: UserEventCallback | undefined = this.userEventCallbacks.get(message.actionId)
+        const callback: UserEventCallback | undefined = this.userEventCallbacks.get(message.actionId)
         if (callback?.args?.once) {
           this.userEventCallbacks.delete(actionId)
         }
-        // Success and error callbacks are not implemented yet
         if (typeof message.error === 'undefined') {
           if (typeof message.callbackId !== 'undefined') {
-            try {
-              var response: any = callback?.onSuccess(message.payload)
-              this.sendToJava({ actionId: message.callbackId, payload: response })
-            } catch (error) {
-              if (typeof error === 'string') {
-                this.sendToJava({ actionId: message.callbackId, error: error })
-              } else if (typeof error !== 'undefined') {
-                const ERROR_AS_STRING = JSON.stringify(error)
-                this.sendToJava({ actionId: message.callbackId, error: ERROR_AS_STRING })
-              }
-            }
+            Promise
+              .resolve((async () => {
+                return callback?.onSuccess(message.payload)
+              })())
+              .then(response => {
+                this.sendToJava({ actionId: message.callbackId as string, payload: response })
+              })
+              .catch(error => {
+                const userError = {
+                  code: -1,
+                  message: ''
+                }
+                if (typeof error === 'string') {
+                  userError.message = error
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
+                } else if (typeof error !== 'undefined') {
+                  if (typeof error.code === 'number') {
+                    userError.code = error.code
+                  }
+                  userError.message = JSON.stringify(error)
+                  this.sendToJava({ actionId: message.callbackId as string, payload: userError, error: '1' })
+                }
+              })
           } else {
-            callback?.onSuccess(message.payload)
+            Promise
+              .resolve((async () => {
+                return callback?.onSuccess(message.payload)
+              })())
+              .catch(error => {
+                // Log it
+                console.error(error)
+              })
           }
         } else if (typeof message.error !== 'undefined' && callback?.onError) {
-          callback.onError(message.error as SDKCommError)
+          Promise
+            .resolve((async () => {
+              (callback.onError as OnErrorCallback)(message.error as SDKCommError)
+            })())
+            .catch(error => {
+              // Log it
+              console.error(error)
+            })
+        }
+      } else {
+        if (typeof message.callbackId !== 'undefined') {
+          const ERROR_CALLBACK_DOES_NOT_EXIST = 'An event handler does not exist for the user event \'' + message.actionId + '\''
+          const error = {
+            code: 255,
+            message: ERROR_CALLBACK_DOES_NOT_EXIST
+          }
+          this.sendToJava({ actionId: message.callbackId, payload: error, error: '1' })
         }
       }
     }
@@ -139,8 +176,8 @@ export class EquoComm {
     }
   }
 
-  private sendToJava(userEvent: UserEvent, callback?: UserEventCallback): void {
-    var event: string = JSON.stringify({
+  private sendToJava(userEvent: UserEvent, callback?: UserEventCallback, args?: SendArgs): void {
+    const event: string = JSON.stringify({
       actionId: userEvent.actionId,
       payload: userEvent.payload,
       error: userEvent.error,
@@ -148,11 +185,12 @@ export class EquoComm {
     })
     // @ts-expect-error
     if (typeof window.equoSend !== 'undefined') {
+      const request: string = typeof args?.sequential !== 'undefined' ? ('&-' + event) : event
       // @ts-expect-error
       window.equoSend({
-        request: event,
+        request: request,
         onSuccess: (response: any) => {
-          var jsonResponse
+          let jsonResponse
           try {
             jsonResponse = JSON.parse(response)
           } catch (error) {
@@ -160,29 +198,39 @@ export class EquoComm {
           }
           callback?.onSuccess(jsonResponse)
         },
-        onFailure: (code: number, message: string) => { if (typeof callback?.onError !== 'undefined') { callback.onError({ code, message }) } },
+        onFailure: (code: number, message: string) => {
+          if (code === -1 && message === 'Unexpected call to CefQueryCallback_N::finalize()') {
+            return
+          }
+          if (typeof callback?.onError !== 'undefined') {
+            callback.onError({ code, message })
+          }
+        },
         persistent: !callback?.args?.once
       })
     } else if (typeof this.ws !== 'undefined') {
       // Wait until the state of the comm is not ready and send the message when it is...
-      this.waitForCommConnection(this, () => {
+      this.waitForCommConnection(() => {
         this.ws?.send(event)
       })
     }
   }
 
   // Make the function wait until the connection is made...
-  private waitForCommConnection(comm: EquoComm, callback: Function): void {
+  private waitForCommConnection(callback: Function): void {
     setTimeout(
       () => {
         if (typeof this.ws !== 'undefined') {
           if (this.ws.readyState === WebSocket.OPEN) {
-            if (callback != null) {
-              callback()
-            }
+            callback()
           } else {
-            comm.waitForCommConnection(comm, callback)
+            this.waitForCommConnection(callback)
           }
+          // @ts-expect-error
+        } else if (typeof window.equoSend === 'undefined') {
+          this.waitForCommConnection(callback)
+        } else {
+          callback()
         }
       }, 5) // wait 5 milisecond for the connection...
   };
@@ -193,31 +241,36 @@ export class EquoComm {
      * @param {Payload} [payload] - Optional
      * @returns {Promise<T | any>}
      */
-  public async send<T>(actionId: string, payload?: Payload): Promise<T | any> {
+  public async send<T>(actionId: string, payload?: Payload, args?: SendArgs): Promise<T | any> {
     return await new Promise<T | any>((resolve, reject) => {
-      var userEvent: UserEvent = { actionId: actionId, payload: payload }
-      var callback: UserEventCallback = { onSuccess: resolve, onError: reject, args: { once: true } }
+      const userEvent: UserEvent = { actionId: actionId, payload: payload }
+      const callback: UserEventCallback = { onSuccess: resolve, onError: reject, args: { once: true } }
       if (typeof this.ws !== 'undefined') {
         callback.id = UUID.getUuid()
         this.on(callback.id, resolve, reject, callback.args)
       }
-      this.sendToJava(userEvent, callback)
+      this.sendToJava(userEvent, callback, args)
     })
   };
 
   /**
      * Listens for an event with the given name.
-     * @param {string} userEventId
+     * @param {string} userEventActionId
      * @param {OnSuccessCallback<any>} onSuccessCallback
      * @param {OnErrorCallback} onErrorCallback - Optional
-     * @param {CallbackArgs} callbackArgs - Optional
+     * @param {CallbackArgs} args - Optional
      * @returns {void}
      */
   public on(userEventActionId: string, onSuccessCallback: OnSuccessCallback<any>, onErrorCallback?: OnErrorCallback, args?: CallbackArgs): void {
-    var callback: UserEventCallback = { onSuccess: onSuccessCallback, onError: onErrorCallback, args: args }
+    const callback: UserEventCallback = { onSuccess: onSuccessCallback, onError: onErrorCallback, args: args }
     this.userEventCallbacks.set(userEventActionId, callback)
   };
 
+  /**
+   * Removes an event with the given name
+   * @param {string} userEventActionId
+   * @returns {void}
+   */
   public remove(userEventActionId: string): void {
     this.userEventCallbacks.delete(userEventActionId)
   }
@@ -226,7 +279,7 @@ export class EquoComm {
 const ID = 'equo-comm'
 
 function create(): EquoService<EquoComm> {
-  var port: number | undefined
+  let port: number | undefined
   // @ts-expect-error
   if (typeof window.equoSend === 'undefined') {
     const queryParams: URLSearchParams = new URLSearchParams(
@@ -243,5 +296,15 @@ function create(): EquoService<EquoComm> {
 }
 
 const EquoCommService = EquoService.get<EquoComm>(ID, create)
+
+window.addEventListener('load', () => {
+  const id: string = UUID.getUuid()
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  EquoCommService.send('__equo_init', id, { sequential: true }).catch(() => {})
+  window.addEventListener('beforeunload', () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EquoCommService.send('__equo_uninit', id, { sequential: true }).catch(() => {})
+  })
+})
 
 export { EquoCommService }

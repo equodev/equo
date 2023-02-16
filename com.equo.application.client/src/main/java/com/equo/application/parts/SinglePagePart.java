@@ -25,6 +25,7 @@ package com.equo.application.parts;
 import static com.equo.application.util.IConstants.MAIN_URL_KEY;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -34,14 +35,17 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.chromium.Browser;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.equo.comm.api.internal.IEventHandler;
+import com.equo.comm.common.handler.IReceiveEventHandler;
 import com.equo.comm.ws.provider.EquoWebSocketServiceImpl;
+import com.equo.debug.api.DevtoolsDebugApi;
 
 /**
  * Main part for Equo apps, where the browser with the web front-end is placed.
@@ -52,6 +56,15 @@ public class SinglePagePart {
   private MPart thisPart;
 
   private Browser browser;
+  
+  private static boolean done;
+
+  private static final String DEBUG_PROPERTY = "org.eclipse.swt.chromium.remote-debugging-port";
+
+  private static final String DEBUG_PORT_PROPERTY = "chromium.port";
+
+  @Inject
+  private DevtoolsDebugApi devtool;
 
   @Inject
   public SinglePagePart(Composite parent) {
@@ -72,18 +85,25 @@ public class SinglePagePart {
   public void createControls(Composite parent) {
     String equoAppUrl = removeTrailingSlashes(thisPart.getProperties().get(MAIN_URL_KEY));
     int equoWsPort = -1;
+    String debugPort = System.getProperty(DEBUG_PORT_PROPERTY);
     try {
       Optional<EquoWebSocketServiceImpl> websocket = findWsEventHandlerInstance();
       if (websocket.isPresent()) {
         equoWsPort = websocket.get().getPort();
       }
     } catch (Exception e) {
-      // Could happen if the app is run without our open source IEventHandler implementation.
+      // Could happen if the app is run without our open source IReceiveEventHandler implementation.
       // Log exception
     }
     if (equoAppUrl != null) {
       Composite composite = new Composite(parent, SWT.NONE);
       composite.setLayout(GridLayoutFactory.fillDefaults().create());
+      // set debug property if it is necessary
+      if (debugPort != null) {
+        if (System.getProperty(DEBUG_PROPERTY).isEmpty()) {
+          devtool.setDebugProperty(debugPort);
+        }
+      }
       browser = new Browser(composite, SWT.NONE);
       StringBuilder sb = new StringBuilder();
       sb.append(equoAppUrl);
@@ -93,6 +113,28 @@ public class SinglePagePart {
       }
       browser.setUrl(sb.toString());
       browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    }
+
+    // init debug mode if it is necessary
+    if (!System.getProperty(DEBUG_PROPERTY).isEmpty()) {
+      done = false;
+      PaintListener paintListener = new PaintListener() {
+        @Override
+        public void paintControl(PaintEvent paintEvent) {
+          if (!done) {
+            if (browser == paintEvent.widget) {
+              done = true;
+              Thread thread = new Thread(() -> {
+                devtool.startDebug(System.getProperty(DEBUG_PROPERTY));
+              });
+              thread.setDaemon(true);
+              thread.start();
+              browser.removePaintListener(this);
+            }
+          }
+        }
+      };
+      browser.addPaintListener(paintListener);
     }
   }
 
@@ -115,10 +157,10 @@ public class SinglePagePart {
     if (ctxBundle != null) {
       BundleContext ctx = ctxBundle.getBundleContext();
       if (ctx != null) {
-        ServiceReference<IEventHandler> serviceReference =
-            (ServiceReference<IEventHandler>) ctx.getServiceReference(IEventHandler.class);
+        ServiceReference<IReceiveEventHandler> serviceReference = (ServiceReference<
+            IReceiveEventHandler>) ctx.getServiceReference(IReceiveEventHandler.class);
         if (serviceReference != null) {
-          IEventHandler eventHandler = ctx.getService(serviceReference);
+          IReceiveEventHandler eventHandler = ctx.getService(serviceReference);
           if (eventHandler instanceof EquoWebSocketServiceImpl) {
             return Optional.of((EquoWebSocketServiceImpl) eventHandler);
           }

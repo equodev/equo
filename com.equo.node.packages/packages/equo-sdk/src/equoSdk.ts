@@ -30,7 +30,7 @@ export namespace EquoSDK {
   const comm: EquoComm = EquoCommService
 
   const EQUO_EVENTS = {
-    OPEN_BROWSER: 'openBrowser',
+    CREATE_WINDOW: 'createWindow',
     UPDATE_BROWSER: 'updateBrowser',
     ADD_SHORTCUT: '_addShortcut',
     REMOVE_SHORTCUT: '_removeShortcut'
@@ -39,13 +39,13 @@ export namespace EquoSDK {
   /**
      * Initializes and opens a browser.
      * @function
-     * @name openBrowser
+     * @name createWindow
      * @param {BrowserParams} browserParams
      * @returns {void}
      */
-  export function openBrowser(browserParams: BrowserParams): void {
+  export function createWindow(browserParams: BrowserParams): void {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    comm.send(EQUO_EVENTS.OPEN_BROWSER, browserParams)
+    comm.send(EQUO_EVENTS.CREATE_WINDOW, browserParams)
   }
   /**
      * Updates a browser.
